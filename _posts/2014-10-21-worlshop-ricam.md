@@ -4,7 +4,7 @@ title:      "RICAM Workshop"
 subtitle:   "Variational methods in imaging"
 date:       2014-10-21 12:00:00
 author:     "Gabirel Peyré"
-header-img: "/img/hokusai-0.jpg"
+header-img: "../img/hokusai-0.jpg"
 ---
 
 Together with Christoph Schnoor, I am organizing next week a workshop at [RICAM in Linz, Austria](http://www.ricam.oeaw.ac.at/specsem/specsem2014/workshop2/), within the [Special Semester on New Trends in Calculus of Variations](http://www.ricam.oeaw.ac.at/specsem/specsem2014).
