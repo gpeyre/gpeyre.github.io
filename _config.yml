@@ -1,11 +1,15 @@
-# Site settings
-title: Gabriel Peyré's site
+# Usign the Clean Blog theme
+
+title: Homepage of Gabriel Peyré
+author: Gabriel Peyré
 email: gabriel.peyre@ceremade.dauphine.fr
-description: > # this means to ignore newlines until "baseurl:"
-  Web site of Gabriel Peyré
-baseurl: "" # the subpath of your site, e.g. /blog/
-url: "http://gpeyre.github.io" # the base hostname & protocol for your site
+description: Homepage of Gabriel Peyré
+baseurl: ""
+url: "http://gpeyre.github.io/"
 github_username:  gpeyre
 
 # Build settings
 markdown: kramdown
+permalink: pretty
+paginate: 5
+exclude: ["node_modules"]
