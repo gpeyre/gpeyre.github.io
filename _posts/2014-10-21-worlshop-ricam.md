@@ -3,7 +3,7 @@ layout:     post
 title:      "RICAM Workshop"
 subtitle:   "Variational methods in imaging"
 date:       2014-10-21 12:00:00
-author:     "Gabirel Peyré"
+author:     "Gabriel Peyré"
 header-img: "../img/hokusai-0.jpg"
 ---
 
