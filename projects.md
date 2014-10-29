@@ -12,3 +12,4 @@ header-img: "../img/hokusai-0.jpg"
 * [GdR MIA](https://fadili.users.greyc.fr/mia/): a research group in France for mathematics of imaging.
 * [Σ-Vision project](../sigma-vision/): my current ERC project.
 * [Natimages project](https://www.ceremade.dauphine.fr/~peyre/natimages/): a former ANR project.
+
