@@ -31,29 +31,32 @@ Team leaders
 PhDs and post-docs
 -------------------
 
-* [Jingwei Liang](): PhD
-* [Jonathan Vacher](): PhD
-* [Quentin Denoyelle](): PhD
-* [Guillaume Tartavel](): PhD
-* [Bernhard Schmitzer](): Post-doc
-* [Lénaïc Chizat'](): PhD
+* [Lénaïc Chizat](https://www.ceremade.dauphine.fr/~chizat/): PhD
+* [Quentin Denoyelle](https://www.ceremade.dauphine.fr/~denoyelle/): PhD
+* [Jingwei Liang](https://www.greyc.fr/user/400): PhD
+* [Bernhard Schmitzer](https://www.ceremade.dauphine.fr/~schmitzer/): Post-doc
+* [Guillaume Tartavel](http://perso.telecom-paristech.fr/~tartavel/): PhD
+* [Jonathan Vacher](https://www.ceremade.dauphine.fr/~vacher/): PhD
 
 Former students
 -------------------
 
 * [Vincent Duval](https://www.ceremade.dauphine.fr/~vduval/): Post-doc
+* [Charles Deledalle](http://www.ceremade.dauphine.fr/~deledall/): Postdoc
+* [Sira Ferradans](http://www.gpi.upf.edu/static/sira/Sira_Ferradans/Me.html): Post-doc
+* [Mohammad Golbabaee](http://people.epfl.ch/mohammad.golbabaei/): Post-doc
+* [Giacomo Nardi](http://www.ceremade.dauphine.fr/~nardi/): Post-doc
 * [Hugo Raguet](http://www.ceremade.dauphine.fr/~raguet/): PhD
 * [Samuel Vaiter](http://www.ceremade.dauphine.fr/~vaiter/): PhD
-* [Charles Deledalle](http://www.ceremade.dauphine.fr/~deledall/): Postdoc
 * [Gui-Song Xia](http://perso.telecom-paristech.fr/~xia/): Post-doc
-* [Sira Ferradans](http://www.gpi.upf.edu/static/sira/Sira_Ferradans/Me.html): Post-doc
-* [Giacomo Nardi](http://www.ceremade.dauphine.fr/~nardi/): Post-doc
-* [Mohammad Golbabaee](http://people.epfl.ch/mohammad.golbabaei/): Post-doc
 
 Collaborators
 -------------------
 
-* [François-Xavier Vialard](https://www.ceremade.dauphine.fr/~vialard/): theme 1/2 co-leader
+* [Jean-David Benamou](https://who.rocq.inria.fr/Jean-David.Benamou/): INRIA
+* [Guillaume Carlier](https://www.ceremade.dauphine.fr/~carlier/): Univ. Paris-Dauphine
+* [Marco Cuturi](http://www.iip.ist.i.kyoto-u.ac.jp/member/cuturi/): Kyoto Univ.
 * [Christophe Chesneau](http://www.math.unicaen.fr/~chesneau/): Univ. Caen
 * [Charles Dossal](http://www.math.u-bordeaux.fr/~dossal/): Univ. Bordeaux 1
-
+* [Jean-Marie Mirebeau](https://www.ceremade.dauphine.fr/~mirebeau/Page_de_Jean-Marie_Mirebeau/Main_page.html): Univ. Paris-Dauphine
+* [François-Xavier Vialard](https://www.ceremade.dauphine.fr/~vialard/): Univ. Paris-Dauphine
