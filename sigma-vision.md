@@ -42,7 +42,7 @@ Former students
 -------------------
 
 * [Vincent Duval](https://www.ceremade.dauphine.fr/~vduval/): Post-doc
-* [Charles Deledalle](http://www.ceremade.dauphine.fr/~deledall/): Postdoc
+* [Charles Deledalle](http://www.ceremade.dauphine.fr/~deledall/): Post-doc
 * [Sira Ferradans](http://www.gpi.upf.edu/static/sira/Sira_Ferradans/Me.html): Post-doc
 * [Mohammad Golbabaee](http://people.epfl.ch/mohammad.golbabaei/): Post-doc
 * [Giacomo Nardi](http://www.ceremade.dauphine.fr/~nardi/): Post-doc

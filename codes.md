@@ -5,6 +5,8 @@ description: "for reproductible research"
 header-img: "../img/hokusai-0.jpg"
 ---
 
+
+
 You can find below Matlab code to reproduce the figures of some of my articles. All the code are hosted on Github, and you can retrieve them either as .zip file or as a git repository.
 
 * Stein Unbiased GrAdient estimator of the Risk (SUGAR) for multiple parameter selection (C. Deledalle, S. Vaiter, G. Peyré, J. Fadili),, [Article](https://hal.archives-ouvertes.fr/hal-00987295), [Code](https://github.com/deledalle/sugar)
