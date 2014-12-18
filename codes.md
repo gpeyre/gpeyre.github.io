@@ -7,9 +7,12 @@ header-img: "../img/hokusai-0.jpg"
 
 
 
-You can find below Matlab code to reproduce the figures of some of my articles. All the code are hosted on Github, and you can retrieve them either as .zip file or as a git repository.
+You can find below Matlab code to reproduce the figures of some of my articles. All the code are hosted [on my Github page](https://github.com/gpeyre), and you can retrieve them either as .zip file or as a git repository.
 
-* Stein Unbiased GrAdient estimator of the Risk (SUGAR) for multiple parameter selection (C. Deledalle, S. Vaiter, G. Peyré, J. Fadili),, [Article](https://hal.archives-ouvertes.fr/hal-00987295), [Code](https://github.com/deledalle/sugar)
+* Iterative Bregman Projections for Regularized Transportation Problems (J-D. Benamou, G. Carlier, M. Cuturi, L. Nenna, G. Peyré),
+[Article](https://hal.archives-ouvertes.fr/hal-01096124),
+[Code](https://github.com/gpeyre/2014-SISC-BregmanOT).
+* Stein Unbiased GrAdient estimator of the Risk (SUGAR) for multiple parameter selection (C. Deledalle, S. Vaiter, G. Peyré, J. Fadili), [Article](https://hal.archives-ouvertes.fr/hal-00987295), [Code](https://github.com/deledalle/sugar)
 * Variational Texture Synthesis with Sparsity and Spectrum Constraints (G. Tartavel, Y. Gousseau and G. Peyre), [Article](https://hal.archives-ouvertes.fr/hal-00881847/), [Code](https://bitbucket.org/gtartavel/variational_synthesis)
 * Sliced and Radon Wasserstein Barycenters of Measures (N. Bonneel, J. Rabin, G. Peyre, H. Pfister), [Article](http://hal.archives-ouvertes.fr/hal-00881872), [Code](https://github.com/gpeyre/2014-JMIV-SlicedTransport)
 * Finsler Steepest Descent with Applications to Piecewise-regular Curve Evolution (G. Charpiat, G. Nardi, G. Peyre, F-X. Vialard), [Article](http://hal.archives-ouvertes.fr/hal-00839635), [Code](https://github.com/gpeyre/2013-IFB-FinslerGradient)
