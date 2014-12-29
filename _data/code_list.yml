@@ -1,0 +1,84 @@
+- name: Iterative Bregman Projections for Regularized Transportation Problems
+  authors: J-D. Benamou, G. Carlier, M. Cuturi, L. Nenna, G. Peyré
+  article: https://hal.archives-ouvertes.fr/hal-01096124
+  code: https://github.com/gpeyre/2014-SISC-BregmanOT
+
+- name: Stein Unbiased GrAdient estimator of the Risk (SUGAR) for multiple parameter selection
+  authors: C. Deledalle, S. Vaiter, G. Peyré, J. Fadili
+  article: https://hal.archives-ouvertes.fr/hal-00987295
+  code: https://github.com/deledalle/sugar
+
+- name: Variational Texture Synthesis with Sparsity and Spectrum Constraints
+  authors: G. Tartavel, Y. Gousseau and G. Peyre
+  article: https://hal.archives-ouvertes.fr/hal-00881847/
+  code: https://bitbucket.org/gtartavel/variational_synthesis
+
+- name: Sliced and Radon Wasserstein Barycenters of Measures
+  authors: N. Bonneel, J. Rabin, G. Peyre, H. Pfister
+  article: http://hal.archives-ouvertes.fr/hal-00881872
+  code: https://github.com/gpeyre/2014-JMIV-SlicedTransport
+
+- name: Finsler Steepest Descent with Applications to Piecewise-regular Curve Evolution
+  authors: G. Charpiat, G. Nardi, G. Peyre, F-X. Vialard
+  article: http://hal.archives-ouvertes.fr/hal-00839635
+  code: https://github.com/gpeyre/2013-IFB-FinslerGradient
+
+- name: Regularized Discrete Optimal Transport
+  authors: S. Ferradans, N. Papadakis, G. Peyre, J-F. Aujol
+  article: http://arxiv.org/abs/1307.5551
+  code: https://github.com/gpeyre/2013-SIIMS-regularized-ot
+
+- name: Synthesizing and Mixing Stationary Gaussian Texture Models
+  authors: G-S. Xia, S. Ferradans, G. Peyre, J-F. Aujol
+  article: http://hal.archives-ouvertes.fr/hal-00816342
+  code: https://github.com/gpeyre/2013-SIIMS-gaussian-textures
+
+- name: Optimal Transport with Proximal Splitting
+  authors: N. Papadakis, G. Peyre, E. Oudet
+  article: http://hal.archives-ouvertes.fr/hal-00816211
+  code: https://github.com/gpeyre/2013-SIIMS-ot-splitting
+
+- name: Adaptive estimation of the density matrix in quantum homodyne tomography with noisy data
+  authors: P. Alquier, K.Meziani, G.Peyre
+  article: http://arxiv.org/abs/1301.7644
+  code: https://github.com/gpeyre/2012-IP-stats-quantic
+
+- name: Non-local Active Contours
+  authors: M. Jung, G. Peyre, L. Cohen
+  article: http://hal.archives-ouvertes.fr/hal-00650735
+  code: https://github.com/gpeyre/2012-SIIMS-nl-ac
+
+- name: Approximation of Maximal Cheeger Sets by Projection
+  authors: G. Carlier, M. Comte, G. Peyre
+  article: http://hal.archives-ouvertes.fr/hal-00359736
+  code: https://github.com/gpeyre/2009-M3AN-cheeger
+
+- name: Derivatives with Respect to Metrics and Applications, Subgradient Marching Algorithm
+  authors: F.  Benmansour, G. Carlier, G. Peyre, F. Santambrogio
+  article: http://hal.archives-ouvertes.fr/hal-00360794
+  code: https://github.com/gpeyre/2010-Numerische-SubGrad
+
+- name: A Numerical Exploration of Compressed Sampling Recovery
+  authors: C. Dossal, G. Peyre, J. Fadili
+  article: http://hal.archives-ouvertes.fr/hal-00402455
+  code: https://github.com/gpeyre/2010-LAA-numerical-cs
+
+- name: Total Variation Projection with First Order Schemes
+  authors: J. Fadili, G. Peyre
+  article: http://hal.archives-ouvertes.fr/hal-00380491
+  code: https://github.com/gpeyre/2011-TIP-tv-projection
+
+- name: Sharp Support Recovery from Noisy Random Measurements by L1 minimization
+  authors: C. Dossal, M.L. Chabanol, G. Peyre, J. Fadili
+  article: http://hal.archives-ouvertes.fr/hal-00553670
+  code: https://github.com/gpeyre/2011-ACHA-support-ident
+
+- name: Locally Parallel Texture Modeling
+  authors: P. Maurel, J.F. Aujol, G. Peyre
+  article: http://hal.archives-ouvertes.fr/hal-00415779
+  code: https://github.com/gpeyre/2011-SIIMS-tv-hilbert
+
+- name: Compressive Wave Computation
+  authors: L. Demanet and G. Peyre
+  article: http://hal.archives-ouvertes.fr/hal-00368919
+  code: https://github.com/gpeyre/2011-FOCM-cwc
