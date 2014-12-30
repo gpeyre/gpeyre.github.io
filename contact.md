@@ -15,6 +15,8 @@ My office
 
 Office B631, [CEREMADE](https://www.ceremade.dauphine.fr/), [Université Paris-Dauphine](http://www.dauphine.fr/).
 
+It is on the sixth floor, the corridor on the right when you get out of the elevators. 
+
 Address
 --------------
 
