@@ -1,3 +1,8 @@
+- name: Entropic Wasserstein Gradient Flows
+  authors: G. Peyré
+  article: http://arxiv.org/abs/1502.06216
+  code: https://github.com/gpeyre/2015-SIIMS-wasserstein-jko
+
 - name: Iterative Bregman Projections for Regularized Transportation Problems
   authors: J-D. Benamou, G. Carlier, M. Cuturi, L. Nenna, G. Peyré
   article: https://hal.archives-ouvertes.fr/hal-01096124
