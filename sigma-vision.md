@@ -34,6 +34,7 @@ PhDs and post-docs
 * [Lénaïc Chizat](https://www.ceremade.dauphine.fr/~chizat/): PhD
 * [Quentin Denoyelle](https://www.ceremade.dauphine.fr/~denoyelle/): PhD
 * [Jingwei Liang](https://www.greyc.fr/user/400): PhD
+* [Dario Prandi](http://darioprandi.com/): Post-doc
 * [Bernhard Schmitzer](https://www.ceremade.dauphine.fr/~schmitzer/): Post-doc
 * [Guillaume Tartavel](http://perso.telecom-paristech.fr/~tartavel/): PhD
 * [Jonathan Vacher](https://www.ceremade.dauphine.fr/~vacher/): PhD
@@ -58,5 +59,6 @@ Collaborators
 * [Marco Cuturi](http://www.iip.ist.i.kyoto-u.ac.jp/member/cuturi/): Kyoto Univ.
 * [Christophe Chesneau](http://www.math.unicaen.fr/~chesneau/): Univ. Caen
 * [Charles Dossal](http://www.math.u-bordeaux.fr/~dossal/): Univ. Bordeaux 1
+* [Yann Goussau](http://perso.telecom-paristech.fr/~gousseau/): Telecom ParisTech
 * [Jean-Marie Mirebeau](https://www.ceremade.dauphine.fr/~mirebeau/Page_de_Jean-Marie_Mirebeau/Main_page.html): Univ. Paris-Dauphine
 * [François-Xavier Vialard](https://www.ceremade.dauphine.fr/~vialard/): Univ. Paris-Dauphine
