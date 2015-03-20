@@ -5,25 +5,12 @@ description: "of Gabriel Peyré"
 header-img: "img/hokusai-0.jpg"
 ---
 
-    <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
-    <script type="text/javascript" src="http://demo.villekaravirta.com/biblist/bib-list.js"></script>
-    <link rel="stylesheet" href="http://demo.villekaravirta.com/biblist/bib-publication-list.css">
 
-
-  <noscript>
-    <!-- bibtex source hidden by default, show it if JS disabled -->
-    <style>
-    #bibtex { display: block;}
-    </style>
-  </noscript>
-
-  <table id="pubTable" class="display"></table>
-
-    <script type="text/javascript">
-    		    $(document).ready(function() {
-            	bibtexify("#bibtex", "pubTable");
-        		});
-    </script>
+  <!--
+  <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+  <script type="text/javascript" src="http://demo.villekaravirta.com/biblist/bib-list.js"></script>
+<link rel="stylesheet" href="http://demo.villekaravirta.com/biblist/bib-publication-list.css">
+-->
 
   <pre id="bibtex" style="display:none;">
     %%%%%%%%%%%%%%%%%%%%%%%%% PREPRINTS %%%%%%%%%%%%%%%%%%%%%%%%
@@ -1443,3 +1430,22 @@ header-img: "img/hokusai-0.jpg"
 }
 
   </pre>
+
+    <script src="{{ "/js/bib-list.js " | prepend: site.baseurl }}"></script>
+    <link rel="stylesheet"  href="{{ "/css/bib-publication-list.css " | prepend: site.baseurl }}">
+
+
+    <noscript>
+      <!-- bibtex source hidden by default, show it if JS disabled -->
+      <style>
+      #bibtex { display: block;}
+      </style>
+    </noscript>
+
+    <table id="pubTable" class="display"></table>
+
+      <script type="text/javascript">
+      		    $(document).ready(function() {
+              	bibtexify("#bibtex", "pubTable", {'visualization': 0});
+          		});
+      </script>
