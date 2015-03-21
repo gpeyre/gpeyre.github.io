@@ -2492,8 +2492,63 @@ var bibtexify = (function($) {
         return str;
     };
     // put here the list of journals
+    var conferenceURL = function(str){
+      str = str.replace('ICIP\'14', '<a href="http://icip2014.wp.mines-telecom.fr/">ICIP\'14</a>')
+      .replace('ICASSP\'14', '<a href="http://www.icassp2014.org/">ICASSP\'14</a>')
+      .replace('NIPS\'14', '<a href="https://nips.cc/Conferences/2014/">NIPS\'14</a>')
+      .replace('SSVM\'15', '<a href="http://ssvm2015.math.u-bordeaux.fr/">SSVM\'15</a>')
+      .replace('SSVM\'13', '<a href="http://www.gris.informatik.tu-darmstadt.de/ssvm2013/">SSVM\'13</a>')
+      .replace('Sampta\'13', '<a href="http://www.univie.ac.at/nuhag-php/event_NEW/make.php?event=SampTA2013">SampTA\'13</a>')
+      .replace('SPARS\'13', '<a href="http://spars2013.epfl.ch/">SPARS\'13</a>')
+      .replace('ICIP\'12', '<a href="http://icip2012.com/">ICIP\'12</a>')
+      .replace('NCMIP\'12', '<a href="http://complement.farman.ens-cachan.fr/NCMIP_2012.html">NCMIP\'12</a>')
+      .replace('ICML\'12', '<a href="http://icml.cc/2012/">ICML\'12</a>')
+      .replace('Gretsi\'11', '<a href="http://www.gretsi.fr/">Gretsi\'11</a>')
+      .replace('Sampta\'11', '<a href="http://sampta2011.ntu.edu.sg/">Sampta\'11</a>')
+      .replace('SSVM\'11', '<a href="http://www.springer.com/gp/book/9783642247842">SSVM\'11</a>')
+      .replace('ICIP\'11', '<a href="http://www.icip2011.org/">ICIP\'11</a>')
+      .replace('EMMCVPR 2011', '<a href="http://emmcvpr11.csd.uwo.ca/">EMMCVPR 2011</a>')
+      .replace('EUSIPCO 2011', '<a href="http://www.eurasip.org/Proceedings/Eusipco/Eusipco2011/">EUSIPCO 2011</a>')
+      .replace('SPARS 2011', '<a href="http://www.see.ed.ac.uk/drupal/spars2011">SPARS 2011</a>')
+      .replace('ISBI\'10', '<a href="http://www.biomedicalimaging.org/archive/2010/">ISBI\'10</a>')
+      .replace('CVPR\'10', '<a href="http://ieeexplore.ieee.org/xpl/mostRecentIssue.jsp?punumber=5521876">CVPR\'10</a>')
+      .replace('ECCV\'10', '<a href="http://www.ics.forth.gr/eccv2010/intro.php">ECCV\'10</a>')
+      .replace('ICCV\'09', '<a href="http://yokoya.naist.jp/iccv2009/">ICCV\'09</a>')
+      .replace('ITW\'09', '<a href="http://www.deis.unical.it/itw2009/">ITW\'09</a>')
+      .replace('ICIP\'09', '<a href="http://www.signalprocessingsociety.org/calendar/15/22-ICIP-09/">ICIP\'09</a>');
+      return str;
+    }
+    // put here the list of journals
     var journalURL = function(str){
-      str = str.replace('Journal of Mathematical Imaging and Vision', '<a href="http://www.springer.com/computer/image+processing/journal/10851">Journal of Mathematical Imaging and Vision</a>');
+      str = str.replace('Journal of Mathematical Imaging and Vision', '<a href="http://www.springer.com/computer/image+processing/journal/10851">Journal of Mathematical Imaging and Vision</a>')
+      .replace('Information and Inference', '<a href="http://imaiai.oxfordjournals.org/">Information and Inference</a>')
+      .replace('SIAM Journal on Scientific Computing', '<a href="http://www.siam.org/journals/sisc.php">SIAM Journal on Scientific Computing</a>')
+      .replace('SIAM Journal on Imaging Sciences', '<a href="http://www.siam.org/journals/siims.php">SIAM Journal on Imaging Sciences</a>')
+      .replace('Foundations of Computational Mathematics', '<a href="http://www.springer.com/mathematics/computational+science+%26+engineering/journal/10208">Foundations of Computational Mathematics</a>')
+      .replace('Statistica Sinica', '<a href="http://www3.stat.sinica.edu.tw/statistica/">Statistica Sinica</a>')
+      .replace('Applied and Computational Harmonic Analysis', '<a href="http://www.journals.elsevier.com/applied-and-computational-harmonic-analysis/">Applied and Computational Harmonic Analysis</a>')
+      .replace('IEEE Transactions on Information Theory', '<a href="http://ieeexplore.ieee.org/xpl/RecentIssue.jsp?reload=true&punumber=18">IEEE Transactions on Information Theory</a>')
+      .replace('Image and Vision Computing', '<a href="http://www.journals.elsevier.com/image-and-vision-computing/">Image and Vision Computing</a>')
+      .replace('Inverse Problems', '<a href="http://iopscience.iop.org/0266-5611">Inverse Problems</a>')
+      .replace('IEEE Transactions on Image Processing', '<a href="http://www.signalprocessingsociety.org/publications/periodicals/image-processing/">IEEE Transactions on Image Processing</a>')
+      .replace('Mathematical Models and Methods in Applied Sciences', '<a href="http://www.worldscientific.com/worldscinet/m3as">Mathematical Models and Methods in Applied Sciences</a>')
+      .replace('Computer Vision and Image Understanding', '<a href="http://www.journals.elsevier.com/computer-vision-and-image-understanding/">Computer Vision and Image Understanding</a>')
+      .replace('IEEE Journal of Selected Topics in Signal Processing', '<a href="http://www.signalprocessingsociety.org/publications/periodicals/jstsp/">IEEE Journal of Selected Topics in Signal Processing</a>')
+      .replace('Inverse Problems and Imaging', '<a href="https://aimsciences.org/journals/home.jsp?journalID=11">Inverse Problems and Imaging</a>')
+      .replace('IEEE Computing in Science and Engineering', '<a href="http://www.computer.org/web/computingnow/cise">IEEE Computing in Science and Engineering</a>')
+      .replace('IEEE Transactions on Pattern Analysis and Machine Intelligence', '<a href="http://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=34">IEEE Transactions on Pattern Analysis and Machine Intelligence</a>')
+      .replace('Linear Algebra and Applications', '<a href="http://www.journals.elsevier.com/linear-algebra-and-its-applications/">Linear Algebra and Applications</a>')
+      .replace('IEEE Transaction on Signal Processing', '<a href="http://www.signalprocessingsociety.org/publications/periodicals/tsp/">IEEE Transaction on Signal Processing</a>')
+      .replace('Numerische Mathematik', '<a href="http://link.springer.com/journal/211">Numerische Mathematik</a>')
+      .replace('Foundations and Trends in Computer Graphics and Vision', '<a href="http://www.nowpublishers.com/CGV">Foundations and Trends in Computer Graphics and Vision</a>')
+      .replace('ESAIM: Mathematical Modelling and Numerical Analysis', '<a href="http://journals.cambridge.org/action/displayJournal?jid=MZA">ESAIM: Mathematical Modelling and Numerical Analysis</a>')
+      .replace('Networks and Eterogeneous Media', '<a href="https://aimsciences.org/journals/home.jsp?journalID=9">Networks and Eterogeneous Media</a>')
+      .replace('Communications on Pure and Applied Mathematics', '<a href="http://onlinelibrary.wiley.com/journal/10.1002/%28ISSN%291097-0312">Communications on Pure and Applied Mathematics</a>')
+      .replace('International Journal for Computational Vision and Biomechanics', '<a href="https://web.fe.up.pt/~ijcvb/">International Journal for Computational Vision and Biomechanics</a>')
+      .replace('SIAM Multiscale Modeling and Simulation', '<a href="http://www.siam.org/journals/mms.php">SIAM Multiscale Modeling and Simulation</a>')
+      .replace('Numerical Algorithms', '<a href="http://link.springer.com/journal/11075">Numerical Algorithms</a>')
+      .replace('International Journal of Computer Vision', '<a href="http://link.springer.com/journal/11263">International Journal of Computer Vision</a>')
+      .replace('ACM Transactions on Graphics', '<a href="http://tog.acm.org/">ACM Transactions on Graphics</a>');
       return str;
     }
     // put here the list of co-authors
@@ -2575,7 +2630,7 @@ var bibtexify = (function($) {
         // the main function which turns the entry into HTML
         entry2html: function(entryData, bib) {
             var itemStr = htmlify(bib2html[entryData.entryType.toLowerCase()](entryData));
-            itemStr += bib2html.links(entryData);
+            // itemStr += bib2html.links(entryData);
             itemStr += bib2html.bibtex(entryData);
             if (bib.options.tweet && entryData.url) {
                 itemStr += bib2html.tweet(entryData, bib);
@@ -2652,13 +2707,16 @@ var bibtexify = (function($) {
         // helper functions for formatting different types of bibtex entries
         inproceedings: function(entryData) {
             return this.authors2html(entryData.author) + " (" + entryData.year + "). " +
-                entryData.title + ". In <em>" + entryData.booktitle +
+                "<a href=\"" + entryData.url + "\">" + entryData.title + "</a>" +
+                ". In <em>" + conferenceURL(entryData.booktitle) +
                 ((entryData.pages)?", pp. " + entryData.pages:"") +
                 ((entryData.address)?", " + entryData.address:"") + ".<\/em>";
         },
         article: function(entryData) {
             return this.authors2html(entryData.author) + " (" + entryData.year + "). " +
-                entryData.title + ". <em>" + journalURL(entryData.journal) + ", " +
+                "<a href=\"" + entryData.url + "\">" + entryData.title + "</a>" +
+                ". <em>" +
+                journalURL(entryData.journal) + ", " +
                 entryData.volume +
                 ((entryData.number)?"(" + entryData.number + ")":"") +
                 ((entryData.pages)?", pp. " + entryData.pages:"") +
@@ -2677,20 +2735,23 @@ var bibtexify = (function($) {
         },
         techreport: function(entryData) {
             return this.authors2html(entryData.author) + " (" + entryData.year + "). " +
-                entryData.title + ". " +
+                "<a href=\"" + entryData.url + "\">" + entryData.title + "</a>. " +
                 entryData.type + " " +
                 entryData.institution + ":" +
                 entryData.number + ". ";
         },
         book: function(entryData) {
             return this.authors2html(entryData.author) + " (" + entryData.year + "). " +
-                " <em>" + entryData.title + "<\/em>, " +
+                " <em>" +
+                "<a href=\"" + entryData.url + "\">" + entryData.title + "</a>" +
+                "<\/em>, " +
                 entryData.publisher + ", " + entryData.year +
                 ((entryData.issn)?", ISBN: " + entryData.issn + ".":".");
         },
         inbook: function(entryData) {
             return this.authors2html(entryData.author) + " (" + entryData.year + "). " +
-                entryData.chapter + " in <em>" + entryData.title + "<\/em>, " +
+                "<a href=\"" + entryData.url + "\">" + entryData.title + "</a>" +
+                ", in <em>" + entryData.chapter + "<\/em>, " +
                 ((entryData.editor)?" Edited by " + entryData.editor + ", ":"") +
                 entryData.publisher +
                 ((entryData.pages)?", pp. " + entryData.pages:"") +
@@ -2721,7 +2782,7 @@ var bibtexify = (function($) {
             'article': 'Journal',
             'book': 'Book',
             'conference': '',
-            'inbook': 'Book chapter',
+            'inbook': 'Chapter',
             'incollection': '',
             'inproceedings': 'Conference',
             'manual': 'Manual',
@@ -2729,7 +2790,7 @@ var bibtexify = (function($) {
             'misc': 'Misc',
             'phdthesis': 'PhD Thesis',
             'proceedings': 'Conference proceeding',
-            'techreport': 'Technical report',
+            'techreport': 'Preprint',
             'unpublished': 'Unpublished'}
     };
     // format a phd thesis similarly to masters thesis
