@@ -2706,21 +2706,27 @@ var bibtexify = (function($) {
         },
         // helper functions for formatting different types of bibtex entries
         inproceedings: function(entryData) {
-            return this.authors2html(entryData.author) + " (" + entryData.year + "). " +
-                "<a href=\"" + entryData.url + "\">" + entryData.title + "</a>" +
-                ". In <em>" + conferenceURL(entryData.booktitle) +
+            return this.authors2html(entryData.author) +
+                ". " +
+                "<em><a href=\"" + entryData.url + "\">" + entryData.title + "</a><\/em>" +
+                ". In " + conferenceURL(entryData.booktitle) +
                 ((entryData.pages)?", pp. " + entryData.pages:"") +
-                ((entryData.address)?", " + entryData.address:"") + ".<\/em>";
+                ((entryData.address)?", " + entryData.address:"") +
+                ", " + entryData.year  +
+                ".";
         },
         article: function(entryData) {
-            return this.authors2html(entryData.author) + " (" + entryData.year + "). " +
-                "<a href=\"" + entryData.url + "\">" + entryData.title + "</a>" +
-                ". <em>" +
+            return this.authors2html(entryData.author) +
+                ". " +
+                "<em><a href=\"" + entryData.url + "\">" + entryData.title + "</a><\/em>" +
+                ". " +
                 journalURL(entryData.journal) + ", " +
                 entryData.volume +
                 ((entryData.number)?"(" + entryData.number + ")":"") +
                 ((entryData.pages)?", pp. " + entryData.pages:"") +
-                ((entryData.address)?entryData.address + ".":"") + ".<\/em>";
+                ((entryData.address)?entryData.address + ".":"") +
+                ", " + entryData.year +
+                ".";
         },
         misc: function(entryData) {
             return this.authors2html(entryData.author) + " (" + entryData.year + "). " +
@@ -2734,14 +2740,17 @@ var bibtexify = (function($) {
             entryData.organization + ", " + entryData.school + ".";
         },
         techreport: function(entryData) {
-            return this.authors2html(entryData.author) + " (" + entryData.year + "). " +
-                "<a href=\"" + entryData.url + "\">" + entryData.title + "</a>. " +
+            return this.authors2html(entryData.author) +
+                ". " +
+                "<em><a href=\"" + entryData.url + "\">" + entryData.title + "</a><\/em>. " +
                 entryData.type + " " +
                 entryData.institution + ":" +
-                entryData.number + ". ";
+                entryData.number +
+                ", " + entryData.year +
+                ". ";
         },
         book: function(entryData) {
-            return this.authors2html(entryData.author) + " (" + entryData.year + "). " +
+            return this.authors2html(entryData.author)  +
                 " <em>" +
                 "<a href=\"" + entryData.url + "\">" + entryData.title + "</a>" +
                 "<\/em>, " +
@@ -2749,15 +2758,17 @@ var bibtexify = (function($) {
                 ((entryData.issn)?", ISBN: " + entryData.issn + ".":".");
         },
         inbook: function(entryData) {
-            return this.authors2html(entryData.author) + " (" + entryData.year + "). " +
-                "<a href=\"" + entryData.url + "\">" + entryData.title + "</a>" +
-                ", in <em>" + entryData.chapter + "<\/em>, " +
+            return this.authors2html(entryData.author) +
+                ". " +
+                "<em><a href=\"" + entryData.url + "\">" + entryData.title + "</a><\/em>" +
+                ", in " + entryData.chapter + "<\/em>, " +
                 ((entryData.editor)?" Edited by " + entryData.editor + ", ":"") +
                 entryData.publisher +
                 ((entryData.pages)?", pp. " + entryData.pages:"") +
-                ((entryData.series)?", <em>" + entryData.series + "<\/em>":"") +
+                ((entryData.series)?", <em>" + entryData.series + "":"") +
                 ((entryData.volume)?", Vol. " + entryData.volume + "":"") +
                 ((entryData.issn)?", ISBN: " + entryData.issn + "":"") +
+                ", " + entryData.year +
                 ".";
         },
         // weights of the different types of entries; used when sorting
