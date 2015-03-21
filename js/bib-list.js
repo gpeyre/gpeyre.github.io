@@ -2491,6 +2491,85 @@ var bibtexify = (function($) {
             .replace(/--/g, '%E2%80%93');
         return str;
     };
+    // put here the list of journals
+    var journalURL = function(str){
+      str = str.replace('Journal of Mathematical Imaging and Vision', '<a href="http://www.springer.com/computer/image+processing/journal/10851">Journal of Mathematical Imaging and Vision</a>');
+      return str;
+    }
+    // put here the list of co-authors
+    var authorURL = function(str) {
+        str = str.replace('G. Peyr&eacute;', '<a href="http://gpeyre.github.io">G. Peyr&eacute;</a>')
+        .replace('C. Dossal', '<a href="http://www.math.u-bordeaux1.fr/%7edossal/">C. Dossal</a>')
+        .replace('J. Fadili', '<a href="http://www.greyc.ensicaen.fr/%7ejfadili/">J. Fadili</a>')
+        .replace('H. Raguet', '<a href="http://www.ceremade.dauphine.fr/%7eraguet/">H. Raguet</a>')
+        .replace('J. Rabin', '<a href="https://sites.google.com/site/rabinjulien/">J. Rabin</a>')
+        .replace('S. Vaiter', '<a href="http://samuelvaiter.com/">S. Vaiter</a>')
+        .replace('N. Schmidt', '<a href="http://www.ceremade.dauphine.fr/%7eschmidt/">N. Schmidt</a>')
+        .replace('Y. Fregnac', '<a href="http://www.unic.cnrs-gif.fr/people/Yves_Fr%C3%A9gnac/">Y. Fregnac</a>')
+        .replace('J. Delon', '<a href="http://perso.telecom-paristech.fr/%7edelon/Site/Home.html">J. Delon</a>')
+        .replace('M. Bernot', '<a href="http://www.umpa.ens-lyon.fr/labo.php?login=mbernot">M. Bernot</a>')
+        .replace('S. Bougleux', '<a href="http://greyc.stlo.unicaen.fr/bougleux/">S. Bougleux</a>')
+        .replace('L. D. Cohen', '<a href="http://www.ceremade.dauphine.fr/%7ecohen/">L. D. Cohen</a>')
+        .replace('C. Chesneau', '<a href="http://www.math.unicaen.fr/%7echesneau/">C. Chesneau</a>')
+        .replace('P. Maurel', '<a href="http://www.normalesup.org/%7epmaurel/">P. Maurel</a>')
+        .replace('J-F. Aujol', '<a href="http://www.math.u-bordeaux1.fr/%7ejaujol/">J-F. Aujol</a>')
+        .replace('M. Kachour', '<a href="https://sites.google.com/site/maherkachourhomepage/home">M. Kachour</a>')
+        .replace('M. Jung', '<a href="https://sites.google.com/site/miyounjungr">M. Jung</a>')
+        .replace('W. G. Kropatsch', '<a href="http://www.prip.tuwien.ac.at/people/krw">W. G. Kropatsch</a>')
+        .replace('A. Ion', '<a href="http://www.prip.tuwien.ac.at/people/ion">A. Ion</a>')
+        .replace('M. L. Chabanol', '<a href="http://www.math.u-bordeaux1.fr/%7echabanol/">M. L. Chabanol</a>')
+        .replace('G. Carlier', '<a href="http://www.ceremade.dauphine.fr/%7ecarlier/">G. Carlier</a>')
+        .replace('M. Comte', '<a href="http://www.ann.jussieu.fr/%7ecomte/">M. Comte</a>')
+        .replace('I. Ionescu', '<a href="http://www.lama.univ-savoie.fr/%7eionescu/">I. Ionescu</a>')
+        .replace('P. E. Roland', '<a href="http://ki.se/ki/jsp/polopoly.jsp?d=6049&l=en">P. E. Roland</a>')
+        .replace('J. Elder', '<a href="http://elderlab.yorku.ca/%7eelder/">J. Elder</a>')
+        .replace('R. Keriven', '<a href="http://www.acute3d.com/">R. Keriven</a>')
+        .replace('M. Pechaud', '<a href="http://mickaelpechaud.free.fr/">M. Pechaud</a>')
+        .replace('F. Benmansour', '<a href="http://cvlab.epfl.ch/%7efbenmans/">F. Benmansour</a>')
+        .replace('F. Santambrogio', '<a href="http://www.math.u-psud.fr/%7esantambr/">F. Santambrogio</a>')
+        .replace('N. Ouarti', '<a href="http://nouarti.free.fr/">N. Ouarti</a>')
+        .replace('S. Mallat', '<a href="http://www.di.ens.fr/%7emallat/">S. Mallat</a>')
+        .replace('E. LePennec', '<a href="http://www.cmap.polytechnique.fr/%7elepennec/">E. LePennec</a>')
+        .replace('J-L. Starck', '<a href="http://jstarck.free.fr/jstarck/Home.html">J-L. Starck</a>')
+        .replace('V. Beck', '<a href="http://www.univ-orleans.fr/mapmo/membres/beck/index.html">V. Beck</a>')
+        .replace('J. Malick', '<a href="http://www.inrialpes.fr/bipop/people/malick/">J. Malick</a>')
+        .replace('L. Demanet', '<a href="http://math.mit.edu/icg/people/laurent.html">L. Demanet</a>')
+        .replace('T. Oleskiw', '<a href="http://www.oleskiw.ca/">T. Oleskiw</a>')
+        .replace('A. Yakubovich', '<a href="http://elderlab.yorku.ca/%7ealex/">A. Yakubovich</a>')
+        .replace('L. Jacques', '<a href="http://www.tele.ucl.ac.be/member.php?id=169">L. Jacques</a>')
+        .replace('L. Duval', '<a href="http://www.laurent-duval.eu/">L. Duval</a>')
+        .replace('C. Chaux', '<a href="http://www.latp.univ-mrs.fr/%7ecaroline.chaux/index.html">C. Chaux</a>')
+        .replace('C. Deledalle', '<a href="http://www.math.u-bordeaux1.fr/%7ecdeledal/">C. Deledalle</a>')
+        .replace('S. Ferradans', '<a href="http://www.ceremade.dauphine.fr/%7esira/">S. Ferradans</a>')
+        .replace('G-S. Xia', '<a href="https://sites.google.com/site/link2xgs/">G-S. Xia</a>')
+        .replace('N. Papadakis', '<a href="http://www.math.u-bordeaux1.fr/%7enpapadak/">N. Papadakis</a>')
+        .replace('G. Tartavel', '<a href="http://perso.telecom-paristech.fr/%7etartavel/">G. Tartavel</a>')
+        .replace('Y. Gousseau', '<a href="http://perso.telecom-paristech.fr/%7egousseau/">Y. Gousseau</a>')
+        .replace('P. Alquier', '<a href="http://alquier.ensae.net/">P. Alquier</a>')
+        .replace('K. Meziani', '<a href="http://www.dauphine.fr/fr/cv-enseignants/enseignants/cv/katia-meziani.html">K. Meziani</a>')
+        .replace('J. Salmon', '<a href="http://josephsalmon.eu/">J. Salmon</a>')
+        .replace('E. Oudet', '<a href="http://www-ljk.imag.fr/membres/Edouard.Oudet/">E. Oudet</a>')
+        .replace('V. Duval', '<a href="https://www.ceremade.dauphine.fr/%7eduval/">V. Duval</a>')
+        .replace('M. Golbabaee', '<a href="http://lts2www.epfl.ch/people/golbabaee/">M. Golbabaee</a>')
+        .replace('G. Charpiat', '<a href="http://www-sop.inria.fr/members/Guillaume.Charpiat/">G. Charpiat</a>')
+        .replace('F-X. Vialard', '<a href="https://www.ceremade.dauphine.fr/%7evialard/">F-X. Vialard</a>')
+        .replace('G. Nardi', '<a href="https://www.ceremade.dauphine.fr/%7enardi/CNRS-CEREMADE.html">G. Nardi</a>')
+        .replace('N. Bonneel', '<a href="http://liris.cnrs.fr/%7enbonneel/">N. Bonneel</a>')
+        .replace('H. Pfister', '<a href="http://vcg.seas.harvard.edu/">H. Pfister</a>')
+        .replace('J. Bleyer', '<a href="https://sites.google.com/site/bleyerjeremy/">J. Bleyer</a>')
+        .replace('J-M. Mirebeau', '<a href="https://www.ceremade.dauphine.fr/%7emirebeau">J-M. Mirebeau</a>')
+        .replace('L. Perronnet', '<a href="https://www.irisa.fr/visages/members/lorraine.perronnet/index">L. Perronnet</a>')
+        .replace('M. E. Vilarchao', '<a href="http://www.unic.cnrs-gif.fr/people/Maria-Eugenia_Vilarchao/">M. E. Vilarchao</a>')
+        .replace('D. E. Shulz', '<a href="http://www.unic.cnrs-gif.fr/people/Daniel_Shulz/">D. E. Shulz</a>')
+        .replace('I. Ferezou', '<a href="http://www.unic.cnrs-gif.fr/people/Isabelle_Ferezou/">I. Ferezou</a>')
+        .replace('J-D. Benamou', '<a href="https://who.rocq.inria.fr/Jean-David.Benamou/">J-D. Benamou</a>')
+        .replace('M. Cuturi', '<a href="http://www.iip.ist.i.kyoto-u.ac.jp/member/cuturi/">M. Cuturi</a>')
+        .replace('L. Nenna', '<a href="https://who.rocq.inria.fr/Luca.Nenna/">L. Nenna</a>')
+        .replace('R. Luke', '<a href="http://num.math.uni-goettingen.de/%7er.luke/">A. Rolet</a>')
+        .replace('A. Rolet', '<a href="http://www.iip.ist.i.kyoto-u.ac.jp/member/rolet/">A. Rolet</a>')
+        .replace('J. Liang', '<a href="https://www.greyc.fr/users/jliang">J. Liang</a>');
+        return str;
+    };
     // helper functions to turn a single bibtex entry into HTML
     var bib2html = {
         // the main function which turns the entry into HTML
@@ -2511,7 +2590,7 @@ var bibtexify = (function($) {
                 if (index > 0) { authorsStr += ", "; }
                 authorsStr += authorData[index].last;
             }
-            return htmlify(authorsStr);
+            return authorURL( htmlify(authorsStr) );
         },
         // adds links to the PDF or url of the item
         links: function(entryData) {
@@ -2579,7 +2658,7 @@ var bibtexify = (function($) {
         },
         article: function(entryData) {
             return this.authors2html(entryData.author) + " (" + entryData.year + "). " +
-                entryData.title + ". <em>" + entryData.journal + ", " +
+                entryData.title + ". <em>" + journalURL(entryData.journal) + ", " +
                 entryData.volume +
                 ((entryData.number)?"(" + entryData.number + ")":"") +
                 ((entryData.pages)?", pp. " + entryData.pages:"") +
