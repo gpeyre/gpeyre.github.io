@@ -2710,7 +2710,7 @@ var bibtexify = (function($) {
         inproceedings: function(entryData) {
             return this.authors2html(entryData.author) +
                 ". " +
-                "<em><a href=\"" + entryData.url + "\">" + entryData.title + "</a><\/em>" +
+                "<em><a href=\"" + ((entryData.url)?entryData.url:"") + "\">" + entryData.title + "</a><\/em>" +
                 ". In " + conferenceURL(entryData.booktitle) +
                 ((entryData.pages)?", pp. " + entryData.pages:"") +
                 ((entryData.address)?", " + entryData.address:"") +
