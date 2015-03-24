@@ -2515,7 +2515,8 @@ var bibtexify = (function($) {
       .replace('ECCV\'10', '<a href="http://www.ics.forth.gr/eccv2010/intro.php">ECCV\'10</a>')
       .replace('ICCV\'09', '<a href="http://yokoya.naist.jp/iccv2009/">ICCV\'09</a>')
       .replace('ITW\'09', '<a href="http://www.deis.unical.it/itw2009/">ITW\'09</a>')
-      .replace('ICIP\'09', '<a href="http://www.signalprocessingsociety.org/calendar/15/22-ICIP-09/">ICIP\'09</a>');
+      .replace('ICIP\'09', '<a href="http://www.signalprocessingsociety.org/calendar/15/22-ICIP-09/">ICIP\'09</a>')
+      .replace('IPMI\'15', '<a href="http://ipmi2015.cs.ucl.ac.uk/">IPMI\'15</a>');
       return str;
     }
     // put here the list of journals
@@ -2622,7 +2623,8 @@ var bibtexify = (function($) {
         .replace('L. Nenna', '<a href="https://who.rocq.inria.fr/Luca.Nenna/">L. Nenna</a>')
         .replace('R. Luke', '<a href="http://num.math.uni-goettingen.de/%7er.luke/">A. Rolet</a>')
         .replace('A. Rolet', '<a href="http://www.iip.ist.i.kyoto-u.ac.jp/member/rolet/">A. Rolet</a>')
-        .replace('J. Liang', '<a href="https://www.greyc.fr/users/jliang">J. Liang</a>');
+        .replace('J. Liang', '<a href="https://www.greyc.fr/users/jliang">J. Liang</a>')
+        .replace('A. Gramfort', '<a href="http://alexandre.gramfort.net/">A. Gramfort</a>');
         return str;
     };
     // helper functions to turn a single bibtex entry into HTML
