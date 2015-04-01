@@ -2625,11 +2625,6 @@ var bibtexify = (function($) {
         .replace('A. Rolet', '<a href="http://www.iip.ist.i.kyoto-u.ac.jp/member/rolet/">A. Rolet</a>')
         .replace('J. Liang', '<a href="https://www.greyc.fr/users/jliang">J. Liang</a>')
         .replace('A. Gramfort', '<a href="http://alexandre.gramfort.net/">A. Gramfort</a>');
-        .replace('J. Solomon', '<a href="web.stanford.edu/~justso1/">J. Solomon</a>');
-        .replace('F. de Goes', '<a href="http://fernandodegoes.org/">F. de Goes</a>');
-        .replace('A. Butscher', '<a href="http://autodeskresearch.com/people/adrianbutscher">A. Butscher</a>');
-        .replace('A. Nguyen', '<a href="http://graphics.stanford.edu/~anguyen/">A. Nguyen</a>');
-        .replace('L. Guibas', '<L. Guibas href="http://geometry.stanford.edu/member/guibas/">L. Guibas</a>');
         return str;
     };
     // helper functions to turn a single bibtex entry into HTML
