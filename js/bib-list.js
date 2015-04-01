@@ -2605,7 +2605,7 @@ var bibtexify = (function($) {
         .replace('K. Meziani', '<a href="http://www.dauphine.fr/fr/cv-enseignants/enseignants/cv/katia-meziani.html">K. Meziani</a>')
         .replace('J. Salmon', '<a href="http://josephsalmon.eu/">J. Salmon</a>')
         .replace('E. Oudet', '<a href="http://www-ljk.imag.fr/membres/Edouard.Oudet/">E. Oudet</a>')
-        .replace('V. Duval', '<a href="https://www.ceremade.dauphine.fr/%7eduval/">V. Duval</a>')
+        .replace('V. Duval', '<a href="https://who.rocq.inria.fr/Vincent.Duval/">V. Duval</a>')
         .replace('M. Golbabaee', '<a href="http://lts2www.epfl.ch/people/golbabaee/">M. Golbabaee</a>')
         .replace('G. Charpiat', '<a href="http://www-sop.inria.fr/members/Guillaume.Charpiat/">G. Charpiat</a>')
         .replace('F-X. Vialard', '<a href="https://www.ceremade.dauphine.fr/%7evialard/">F-X. Vialard</a>')
@@ -2625,6 +2625,11 @@ var bibtexify = (function($) {
         .replace('A. Rolet', '<a href="http://www.iip.ist.i.kyoto-u.ac.jp/member/rolet/">A. Rolet</a>')
         .replace('J. Liang', '<a href="https://www.greyc.fr/users/jliang">J. Liang</a>')
         .replace('A. Gramfort', '<a href="http://alexandre.gramfort.net/">A. Gramfort</a>');
+        .replace('J. Solomon', '<a href="web.stanford.edu/~justso1/">J. Solomon</a>');
+        .replace('F. de Goes', '<a href="http://fernandodegoes.org/">F. de Goes</a>');
+        .replace('A. Butscher', '<a href="http://autodeskresearch.com/people/adrianbutscher">A. Butscher</a>');
+        .replace('A. Nguyen', '<a href="http://graphics.stanford.edu/~anguyen/">A. Nguyen</a>');
+        .replace('L. Guibas', '<L. Guibas href="http://geometry.stanford.edu/member/guibas/">L. Guibas</a>');
         return str;
     };
     // helper functions to turn a single bibtex entry into HTML
