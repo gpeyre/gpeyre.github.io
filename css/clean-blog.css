@@ -2,6 +2,7 @@ body {
   font-family: 'Lora', 'Times New Roman', serif;
   font-size: 18px;
   color: #404040;
+  text-align: justify;
 }
 p {
   line-height: 1.5;
