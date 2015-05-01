@@ -1,4 +1,4 @@
-- name: Entropic Wasserstein Gradient Flows
+- name: Convolutional Wasserstein Distances
   authors: J. Solomon, F. de Goes, G. Peyré and M. Cuturi
   article: 
   code: https://github.com/gpeyre/2015-SIGGRAPH-convolutional-ot
