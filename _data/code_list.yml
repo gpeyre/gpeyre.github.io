@@ -1,4 +1,9 @@
 - name: Entropic Wasserstein Gradient Flows
+  authors: J. Solomon, F. de Goes, G. Peyré and M. Cuturi
+  article: 
+  code: https://github.com/gpeyre/2015-SIGGRAPH-convolutional-ot
+  
+- name: Entropic Wasserstein Gradient Flows
   authors: G. Peyré
   article: http://arxiv.org/abs/1502.06216
   code: https://github.com/gpeyre/2015-SIIMS-wasserstein-jko
