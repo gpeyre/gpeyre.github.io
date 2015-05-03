@@ -2,7 +2,7 @@
 layout: page
 title: "Books"
 description: "in french"
-header-img: "img/hokusai-0.jpg"
+header-img: "img/paysages-paris.jpg"
 ---
 
 <p align="center">

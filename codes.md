@@ -2,7 +2,7 @@
 layout: page
 title: "Codes"
 description: "for reproductible research"
-header-img: "../img/hokusai-0.jpg"
+header-img: "img/paysages-paris.jpg"
 ---
 
 

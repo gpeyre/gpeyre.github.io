@@ -2,7 +2,7 @@
 layout: page
 title: "Teaching"
 description: "Master 2 MVA"
-header-img: "../img/hokusai-0.jpg"
+header-img: "img/paysages-paris.jpg"
 ---
 
 This is the homepage for my course _Sparsity and compressed sensing_ in Master 2 [Mathématiques, Vision, Apprentissage - MVA](http://www.math.ens-cachan.fr/version-francaise/formations/master-mva/).

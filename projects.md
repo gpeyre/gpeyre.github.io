@@ -2,7 +2,7 @@
 layout: page
 title: "Projects"
 description: "in Paris-Dauphine"
-header-img: "../img/hokusai-0.jpg"
+header-img: "img/paysages-paris.jpg"
 ---
 
 

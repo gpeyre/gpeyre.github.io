@@ -2,7 +2,7 @@
 layout: page
 title: "Contact"
 description: "Have questions?"
-header-img: "../img/hokusai-0.jpg"
+header-img: "img/ecriture.jpg"
 ---
 
 About me

@@ -2,13 +2,17 @@
 layout: page
 title: "Σ-Vision"
 description: "ERC Project"
-header-img: "../img/hokusai-0.jpg"
+header-img: "img/paysages-paris.jpg"
 ---
 
 
 Presentation
 -------------------
-Σ-Vision (Sparsity, Image and Geometry to Model Adaptively Visual Processings) is a research group financed by the ERC Starting Grant program. Σ-Vision will develop the next generation algorithms and methodologies for image processing. These algorithms will rely on several mathematical breakthroughs in image modeling: structured sparsity, geometric representations and adaptivity. They will be implemented using fast optimization codes that can handle massive datasets with gigapixels images and videos. These algorithms will have far reaching applications in computer vision, graphics and neuroscience. These cutting edge mathematical approaches will go beyond traditional image processing scenarios and impact significantly object recognition, dynamical special effects and exploration of the visual cortex.
+Σ-Vision (Sparsity, Image and Geometry to Model Adaptively Visual Processings) is a research group financed by the [ERC](http://erc.europa.eu/) [Starting Grant](http://erc.europa.eu/starting-grants) program. Σ-Vision will develop the next generation algorithms and methodologies for image processing. These algorithms will rely on several mathematical breakthroughs in image modeling using tools such as sparse regularization, optimal transport and non-smooth optimization. They will be implemented using fast algorithms that can handle massive datasets with gigapixels images and videos. These algorithms will have far reaching applications in computer vision, graphics and neuroscience. These cutting edge mathematical approaches will go beyond traditional image processing scenarios and impact significantly supper-resolution imaging, image and movie synthesis and understanding of the visual cortex.
+
+<div align="middle">
+<img src="../img/sigma-vision-logo-small.jpg" width="300" align="middle"/>
+</div>
 
 Research Interests
 -------------------
@@ -36,7 +40,6 @@ PhDs and post-docs
 * [Jingwei Liang](https://www.greyc.fr/user/400): PhD
 * [Dario Prandi](http://darioprandi.com/): Post-doc
 * [Bernhard Schmitzer](https://www.ceremade.dauphine.fr/~schmitzer/): Post-doc
-* [Guillaume Tartavel](http://perso.telecom-paristech.fr/~tartavel/): PhD
 * [Jonathan Vacher](https://www.ceremade.dauphine.fr/~vacher/): PhD
 
 Former students
@@ -48,6 +51,7 @@ Former students
 * [Mohammad Golbabaee](http://people.epfl.ch/mohammad.golbabaei/): Post-doc
 * [Giacomo Nardi](http://www.ceremade.dauphine.fr/~nardi/): Post-doc
 * [Hugo Raguet](http://www.ceremade.dauphine.fr/~raguet/): PhD
+* [Guillaume Tartavel](http://perso.telecom-paristech.fr/~tartavel/): PhD
 * [Samuel Vaiter](http://www.ceremade.dauphine.fr/~vaiter/): PhD
 * [Gui-Song Xia](http://perso.telecom-paristech.fr/~xia/): Post-doc
 
