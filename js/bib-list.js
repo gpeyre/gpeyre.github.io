@@ -2629,6 +2629,8 @@ var bibtexify = (function($) {
         .replace('F. de Goes', '<a href="http://fernandodegoes.org/">F. de Goes</a>')
         .replace('A. Butscher', '<a href="http://autodeskresearch.com/people/adrianbutscher">A. Butscher</a>')
         .replace('A. Nguyen', '<a href="http://graphics.stanford.edu/~anguyen/">A. Nguyen</a>')
+        .replace('B. Schmitzer', '<a href="https://www.ceremade.dauphine.fr/~schmitzer/">B. Schmitzer</a>')
+        .replace('L. Chizat', '<a href="https://www.ceremade.dauphine.fr/~chizat/">L. Chizat</a>')         
         .replace('L. Guibas', '<L. Guibas href="http://geometry.stanford.edu/member/guibas/">L. Guibas</a>');
         return str;
     };
