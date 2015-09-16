@@ -1,6 +1,6 @@
 - name: Convolutional Wasserstein Distances
   authors: J. Solomon, F. de Goes, G. Peyré and M. Cuturi
-  article: 
+  article: https://hal.archives-ouvertes.fr/CEREMADE/hal-01188953v1
   code: https://github.com/gpeyre/2015-SIGGRAPH-convolutional-ot
   
 - name: Entropic Wasserstein Gradient Flows
