@@ -16,27 +16,3 @@ exclude: ["node_modules"]
 
 gems:
   - jekyll-feed
-
-# bibliographic setting
-scholar:
-  style: apa
-  locale: en
-
-  sort_by: none
-  order: ascending
-
-#  bibliography_template: "{{reference}}"
-  bibliography_template: {{reference}}
-
-  source: ./_bibliography
-  bibliography: references.bib
-
-
-  replace_strings: true
-  join_strings:    true
-
-  details_dir:    bibliography
-  details_layout: bibtex.html
-  details_link:   Details
-
-  query: "@*"
