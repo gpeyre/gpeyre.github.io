@@ -14,5 +14,6 @@ permalink: pretty
 paginate: 5
 exclude: ["node_modules"]
 
+name: Gabriel Peyré, recent works
 gems:
   - jekyll-feed
