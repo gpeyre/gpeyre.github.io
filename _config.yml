@@ -14,6 +14,9 @@ permalink: pretty
 paginate: 5
 exclude: ["node_modules"]
 
+gems:
+  - jekyll-feed
+
 # bibliographic setting
 scholar:
   style: apa
