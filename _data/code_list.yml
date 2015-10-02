@@ -1,8 +1,28 @@
+- name: Exact Support Recovery for Sparse Spikes Deconvolution
+  authors: V. Duval and G. Peyré
+  article: https://hal.archives-ouvertes.fr/hal-00839635/
+  code: https://github.com/gpeyre/2013-FOCM-SparseSpikes
+
+- name: An automated workflow for the anatomo-functional mapping of the barrel cortex
+  authors: L. Perronnet, E. Vilarchao, G. Hucher, D. Shulz, G. Peyré, I. Ferezou
+  article: https://hal.archives-ouvertes.fr/hal-01196436
+  code: https://github.com/gpeyre/2014-NeuroMeth-barrels
+
+- name: Sparse Spikes Deconvolution on Thin Grids
+  authors: V. Duval and G. Peyré
+  article: https://hal.archives-ouvertes.fr/hal-01135200
+  code: https://github.com/gpeyre/2015-IP-lasso-cbp
+
+- name: Minimax and adaptive estimation of the Wigner function in quantum homodyne tomography with noisy data
+  authors: Karim Lounici, Katia Meziani, Gabriel Peyré
+  article: http://arxiv.org/abs/1506.06941
+  code: https://github.com/gpeyre/2015-AOS-AdaptiveWigner
+
 - name: Convolutional Wasserstein Distances
   authors: J. Solomon, F. de Goes, G. Peyré and M. Cuturi
   article: https://hal.archives-ouvertes.fr/CEREMADE/hal-01188953v1
   code: https://github.com/gpeyre/2015-SIGGRAPH-convolutional-ot
-  
+
 - name: Entropic Wasserstein Gradient Flows
   authors: G. Peyré
   article: http://arxiv.org/abs/1502.06216
