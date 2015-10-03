@@ -5,7 +5,7 @@ description: "in Paris-Dauphine"
 header-img: "img/paysages-paris.jpg"
 ---
 
-
+* [Mokaplan](https://team.inria.fr/mokaplan/): a joint INRIA/CNRS/Paris-Dauphine research group on _numerical calculus of variations_.
 * [Numerical Tours](http://www.numerical-tours.com): a repository to Matlab/Scilab/Python explorations of mathematical data processing.
 * [GT stat/image](http://gtstatimage.weebly.com/): our seminar on stats and imaging.
 * [Chaire END](http://chaire-end.weebly.com/): our chaire on high dimensional data processing.

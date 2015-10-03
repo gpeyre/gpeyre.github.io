@@ -8,7 +8,7 @@ header-img: "img/ecriture.jpg"
 About me
 ---------------
 
-I am [CNRS](http://www.cnrs.fr/) senior researcher (DR2), working at [CEREMADE](https://www.ceremade.dauphine.fr/), [Université Paris-Dauphine](http://www.dauphine.fr/).
+I am [CNRS](http://www.cnrs.fr/) senior researcher (DR2), working at [CEREMADE](https://www.ceremade.dauphine.fr/), [Université Paris-Dauphine](http://www.dauphine.fr/). I am also a member of the [Mokaplan](https://team.inria.fr/mokaplan/) INRIA/CNRS/Paris-Dauphine research group.
 
 My office
 ---------------
