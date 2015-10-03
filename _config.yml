@@ -7,6 +7,7 @@ description: Homepage of Gabriel Peyré
 baseurl: ""
 url: "http://gpeyre.github.io/"
 github_username:  gpeyre
+twitter_username: gabrielpeyre
 
 # Build settings
 markdown: kramdown
