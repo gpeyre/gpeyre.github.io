@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      "Conference"
-subtitle:   "Second Workshop on Optimization for Image and Signal Processing"
+subtitle:   "Mathematics and Image Analysis (MIA'16)"
 date:       2015-10-05 12:00:00
 author:     "Gabriel Peyré"
 header-img: "../img/hokusai-0.jpg"
