@@ -2549,6 +2549,7 @@ var bibtexify = (function($) {
       .replace('SIAM Multiscale Modeling and Simulation', '<a href="http://www.siam.org/journals/mms.php">SIAM Multiscale Modeling and Simulation</a>')
       .replace('Numerical Algorithms', '<a href="http://link.springer.com/journal/11075">Numerical Algorithms</a>')
       .replace('International Journal of Computer Vision', '<a href="http://link.springer.com/journal/11263">International Journal of Computer Vision</a>')
+      .replace('Journal of Neuroscience Methods', '<a href="http://www.journals.elsevier.com/journal-of-neuroscience-methods/">Journal of Neuroscience Methods</a>')
       .replace('ACM Transactions on Graphics', '<a href="http://tog.acm.org/">ACM Transactions on Graphics</a>');
       return str;
     }
@@ -2630,7 +2631,9 @@ var bibtexify = (function($) {
         .replace('A. Butscher', '<a href="http://autodeskresearch.com/people/adrianbutscher">A. Butscher</a>')
         .replace('A. Nguyen', '<a href="http://graphics.stanford.edu/~anguyen/">A. Nguyen</a>')
         .replace('B. Schmitzer', '<a href="https://www.ceremade.dauphine.fr/~schmitzer/">B. Schmitzer</a>')
-        .replace('L. Chizat', '<a href="https://www.ceremade.dauphine.fr/~chizat/">L. Chizat</a>')         
+        .replace('L. Chizat', '<a href="https://www.ceremade.dauphine.fr/~chizat/">L. Chizat</a>')
+        .replace('D.E. Shulz', '<a href="https://www.unic.cnrs-gif.fr/people/Daniel_Shulz/">D.E. Shulz</a>')
+        .replace('C. Monier', '<a href="https://www.unic.cnrs-gif.fr/people/Cyril_Monier/">C. Monier</a>')
         .replace('L. Guibas', '<L. Guibas href="http://geometry.stanford.edu/member/guibas/">L. Guibas</a>');
         return str;
     };
