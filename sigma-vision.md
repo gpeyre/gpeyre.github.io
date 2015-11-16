@@ -37,10 +37,11 @@ PhDs and post-docs
 
 * [Lénaïc Chizat](https://www.ceremade.dauphine.fr/~chizat/): PhD
 * [Quentin Denoyelle](https://www.ceremade.dauphine.fr/~denoyelle/): PhD
+* [Aude Genevay](https://www.ceremade.dauphine.fr/~genevay/): PhD
 * [Jingwei Liang](https://www.greyc.fr/user/400): PhD
 * [Dario Prandi](http://darioprandi.com/): Post-doc
-* [Clarice Poon](http://darioprandi.com/): Post-doc
-* [Bernhard Schmitzer](http://www.damtp.cam.ac.uk/user/cmhsp2/): Post-doc
+* [Clarice Poon](http://www.damtp.cam.ac.uk/user/cmhsp2/): Post-doc
+* [Bernhard Schmitzer](https://www.ceremade.dauphine.fr/~schmitzer/): Post-doc
 * [Jonathan Vacher](https://www.ceremade.dauphine.fr/~vacher/): PhD
 
 Former students
