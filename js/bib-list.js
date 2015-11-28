@@ -2550,6 +2550,8 @@ var bibtexify = (function($) {
       .replace('Numerical Algorithms', '<a href="http://link.springer.com/journal/11075">Numerical Algorithms</a>')
       .replace('International Journal of Computer Vision', '<a href="http://link.springer.com/journal/11263">International Journal of Computer Vision</a>')
       .replace('Journal of Neuroscience Methods', '<a href="http://www.journals.elsevier.com/journal-of-neuroscience-methods/">Journal of Neuroscience Methods</a>')
+      .replace('Interfaces and Free Boundaries', '<a href="http://www.ems-ph.org/journals/journal.php?jrn=ifb">Interfaces and Free Boundaries</a>')
+      .replace('Mathematical Programming', '<a href="http://www.springer.com/mathematics/journal/10107">Mathematical Programming</a>')
       .replace('ACM Transactions on Graphics', '<a href="http://tog.acm.org/">ACM Transactions on Graphics</a>');
       return str;
     }
@@ -2634,6 +2636,11 @@ var bibtexify = (function($) {
         .replace('L. Chizat', '<a href="https://www.ceremade.dauphine.fr/~chizat/">L. Chizat</a>')
         .replace('D.E. Shulz', '<a href="https://www.unic.cnrs-gif.fr/people/Daniel_Shulz/">D.E. Shulz</a>')
         .replace('C. Monier', '<a href="https://www.unic.cnrs-gif.fr/people/Cyril_Monier/">C. Monier</a>')
+        .replace('L. Foubert', '<a href="https://www.unic.cnrs-gif.fr/people/Luc_Foubert/">L. Foubert</a>')
+        .replace('K. Lounici', '<a href="http://people.math.gatech.edu/~klounici6/">K. Lounici</a>')
+        .replace('M.E. Vilarchao', '<a href="https://www.unic.cnrs-gif.fr/people/Maria-Eugenia_Vilarchao/">M.E. Vilarchao</a>')
+        .replace('A. I. Meso', '<a href="http://www.int.univ-amu.fr/_MESO-Andrew_?lang=fr">A. I. Meso</a>')
+        .replace('L. Perrinet', '<a href="http://www.int.univ-amu.fr/PERRINET-Laurent">L. Perrinet</a>')
         .replace('L. Guibas', '<L. Guibas href="http://geometry.stanford.edu/member/guibas/">L. Guibas</a>');
         return str;
     };
