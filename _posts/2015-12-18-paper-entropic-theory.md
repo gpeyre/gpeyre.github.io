@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "New Papers"
+title:      "New Paper"
 subtitle:   "Theoretical Foundations of Entropic Transport"
 date:       2015-12-18 12:00:00
 author:     "Gabriel Peyré"

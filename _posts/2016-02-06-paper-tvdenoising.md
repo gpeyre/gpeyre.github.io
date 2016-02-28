@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "New Papers"
+title:      "New Paper"
 subtitle:   "Geometric properties of solutions to the total variation denoising problem"
 date:       2016-02-05 12:00:00
 author:     "Gabriel Peyré"
