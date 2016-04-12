@@ -1,3 +1,13 @@
+- name: Geometric properties of solutions to the total variation denoising problem
+  authors: A. Chambolle, V. Duval, G. Peyré, C. Poon
+  article: http://arxiv.org/abs/1602.00087
+  code: https://github.com/gpeyre/2016-IP-tv-denoising
+
+- name: A Smoothed Dual Approach for Variational Wasserstein Problems
+  authors: M. Cuturi, G. Peyré.
+  article: http://arxiv.org/abs/1503.02533
+  code: https://github.com/gpeyre/2015-SIIMS-wasserstein-dual
+
 - name: Exact Support Recovery for Sparse Spikes Deconvolution
   authors: V. Duval and G. Peyré
   article: https://hal.archives-ouvertes.fr/hal-00839635/
