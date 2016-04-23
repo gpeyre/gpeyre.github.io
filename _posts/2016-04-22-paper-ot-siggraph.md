@@ -2,7 +2,7 @@
 layout:     post
 title:      "Papers"
 subtitle:   "Two optimal transport related papers at SIGGRAPH 2016"
-date:       2016-04-23 12:00:00
+date:       2016-04-22 12:00:00
 author:     "Gabriel Peyré"
 header-img: "../img/ecriture.jpg"
 ---
