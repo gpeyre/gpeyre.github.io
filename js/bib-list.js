@@ -2502,7 +2502,6 @@ var bibtexify = (function($) {
       .replace('SPARS\'13', '<a href="http://spars2013.epfl.ch/">SPARS\'13</a>')
       .replace('ICIP\'12', '<a href="http://icip2012.com/">ICIP\'12</a>')
       .replace('NCMIP\'12', '<a href="http://complement.farman.ens-cachan.fr/NCMIP_2012.html">NCMIP\'12</a>')
-      .replace('ICML\'12', '<a href="http://icml.cc/2012/">ICML\'12</a>')
       .replace('Gretsi\'11', '<a href="http://www.gretsi.fr/">Gretsi\'11</a>')
       .replace('Sampta\'11', '<a href="http://sampta2011.ntu.edu.sg/">Sampta\'11</a>')
       .replace('SSVM\'11', '<a href="http://www.springer.com/gp/book/9783642247842">SSVM\'11</a>')
@@ -2516,7 +2515,10 @@ var bibtexify = (function($) {
       .replace('ICCV\'09', '<a href="http://yokoya.naist.jp/iccv2009/">ICCV\'09</a>')
       .replace('ITW\'09', '<a href="http://www.deis.unical.it/itw2009/">ITW\'09</a>')
       .replace('ICIP\'09', '<a href="http://www.signalprocessingsociety.org/calendar/15/22-ICIP-09/">ICIP\'09</a>')
-      .replace('IPMI\'15', '<a href="http://ipmi2015.cs.ucl.ac.uk/">IPMI\'15</a>');
+      .replace('IPMI\'15', '<a href="http://ipmi2015.cs.ucl.ac.uk/">IPMI\'15</a>')
+      .replace('ICML', '<a href="http://icml.cc/">ICML</a>')
+      .replace('SIGGRAPH', '<a href="http://www.siggraph.org/">SIGGRAPH</a>')
+      .replace('AISTATS', '<a href="http://www.aistats.org/">AISTATS</a>');
       return str;
     }
     // put here the list of journals
@@ -2552,7 +2554,8 @@ var bibtexify = (function($) {
       .replace('Journal of Neuroscience Methods', '<a href="http://www.journals.elsevier.com/journal-of-neuroscience-methods/">Journal of Neuroscience Methods</a>')
       .replace('Interfaces and Free Boundaries', '<a href="http://www.ems-ph.org/journals/journal.php?jrn=ifb">Interfaces and Free Boundaries</a>')
       .replace('Mathematical Programming', '<a href="http://www.springer.com/mathematics/journal/10107">Mathematical Programming</a>')
-      .replace('ACM Transactions on Graphics', '<a href="http://tog.acm.org/">ACM Transactions on Graphics</a>');
+      .replace('ACM Transactions on Graphics', '<a href="http://tog.acm.org/">ACM Transactions on Graphics</a>')
+      .replace('Annals of the Institute of Statistical Mathematics', '<a href="http://www.ism.ac.jp/editsec/aism/index.html</a>');
       return str;
     }
     // put here the list of co-authors
@@ -2641,7 +2644,13 @@ var bibtexify = (function($) {
         .replace('M.E. Vilarchao', '<a href="https://www.unic.cnrs-gif.fr/people/Maria-Eugenia_Vilarchao/">M.E. Vilarchao</a>')
         .replace('A. I. Meso', '<a href="http://www.int.univ-amu.fr/_MESO-Andrew_?lang=fr">A. I. Meso</a>')
         .replace('L. Perrinet', '<a href="http://www.int.univ-amu.fr/PERRINET-Laurent">L. Perrinet</a>')
-        .replace('L. Guibas', '<L. Guibas href="http://geometry.stanford.edu/member/guibas/">L. Guibas</a>');
+        .replace('L. Guibas', '<href="http://geometry.stanford.edu/member/guibas/">L. Guibas</a>')
+        .replace('V. Kim', '<href="http://vovakim.com/">V. Kim</a>')
+        .replace('S. Sra', '<href="http://suvrit.de/">S. Sra</a>')
+        .replace('F. Bach', '<href="http://www.di.ens.fr/~fbach/">F. Bach</a>')
+        .replace('C. Poon', '<href="http://www.damtp.cam.ac.uk/user/cmhsp2/">C. Poon</a>')
+        .replace('A. Genevay', '<href="https://fr.linkedin.com/in/audegenevay">A. Genevay</a>')
+        .replace('A. Chambolle', '<href="http://www.cmap.polytechnique.fr/~antonin/">A. Chambolle</a>');
         return str;
     };
     // helper functions to turn a single bibtex entry into HTML
