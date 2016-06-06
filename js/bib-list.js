@@ -2555,7 +2555,7 @@ var bibtexify = (function($) {
       .replace('Interfaces and Free Boundaries', '<a href="http://www.ems-ph.org/journals/journal.php?jrn=ifb">Interfaces and Free Boundaries</a>')
       .replace('Mathematical Programming', '<a href="http://www.springer.com/mathematics/journal/10107">Mathematical Programming</a>')
       .replace('ACM Transactions on Graphics', '<a href="http://tog.acm.org/">ACM Transactions on Graphics</a>')
-      .replace('Annals of the Institute of Statistical Mathematics', '<a href="http://www.ism.ac.jp/editsec/aism/index.html</a>');
+      .replace('Annals of the Institute of Statistical Mathematics', '<a href="http://www.ism.ac.jp/editsec/aism/index.html">Annals of the Institute of Statistical Mathematics</a>');
       return str;
     }
     // put here the list of co-authors
@@ -2644,13 +2644,13 @@ var bibtexify = (function($) {
         .replace('M.E. Vilarchao', '<a href="https://www.unic.cnrs-gif.fr/people/Maria-Eugenia_Vilarchao/">M.E. Vilarchao</a>')
         .replace('A. I. Meso', '<a href="http://www.int.univ-amu.fr/_MESO-Andrew_?lang=fr">A. I. Meso</a>')
         .replace('L. Perrinet', '<a href="http://www.int.univ-amu.fr/PERRINET-Laurent">L. Perrinet</a>')
-        .replace('L. Guibas', '<href="http://geometry.stanford.edu/member/guibas/">L. Guibas</a>')
-        .replace('V. Kim', '<href="http://vovakim.com/">V. Kim</a>')
-        .replace('S. Sra', '<href="http://suvrit.de/">S. Sra</a>')
-        .replace('F. Bach', '<href="http://www.di.ens.fr/~fbach/">F. Bach</a>')
-        .replace('C. Poon', '<href="http://www.damtp.cam.ac.uk/user/cmhsp2/">C. Poon</a>')
-        .replace('A. Genevay', '<href="https://fr.linkedin.com/in/audegenevay">A. Genevay</a>')
-        .replace('A. Chambolle', '<href="http://www.cmap.polytechnique.fr/~antonin/">A. Chambolle</a>');
+        .replace('L. Guibas', '<a href="http://geometry.stanford.edu/member/guibas/">L. Guibas</a>')
+        .replace('V. Kim', '<a href="http://vovakim.com/">V. Kim</a>')
+        .replace('S. Sra', '<a href="http://suvrit.de/">S. Sra</a>')
+        .replace('F. Bach', '<a href="http://www.di.ens.fr/~fbach/">F. Bach</a>')
+        .replace('C. Poon', '<a href="http://www.damtp.cam.ac.uk/user/cmhsp2/">C. Poon</a>')
+        .replace('A. Genevay', '<a href="https://fr.linkedin.com/in/audegenevay">A. Genevay</a>')
+        .replace('A. Chambolle', '<a href="http://www.cmap.polytechnique.fr/~antonin/">A. Chambolle</a>');
         return str;
     };
     // helper functions to turn a single bibtex entry into HTML
