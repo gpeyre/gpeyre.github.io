@@ -2517,7 +2517,6 @@ var bibtexify = (function($) {
       .replace('ICIP\'09', '<a href="http://www.signalprocessingsociety.org/calendar/15/22-ICIP-09/">ICIP\'09</a>')
       .replace('IPMI\'15', '<a href="http://ipmi2015.cs.ucl.ac.uk/">IPMI\'15</a>')
       .replace('ICML', '<a href="http://icml.cc/">ICML</a>')
-      .replace('SIGGRAPH', '<a href="http://www.siggraph.org/">SIGGRAPH</a>')
       .replace('AISTATS', '<a href="http://www.aistats.org/">AISTATS</a>');
       return str;
     }
@@ -2555,6 +2554,7 @@ var bibtexify = (function($) {
       .replace('Interfaces and Free Boundaries', '<a href="http://www.ems-ph.org/journals/journal.php?jrn=ifb">Interfaces and Free Boundaries</a>')
       .replace('Mathematical Programming', '<a href="http://www.springer.com/mathematics/journal/10107">Mathematical Programming</a>')
       .replace('ACM Transactions on Graphics', '<a href="http://tog.acm.org/">ACM Transactions on Graphics</a>')
+      .replace('SIGGRAPH', '<a href="http://www.siggraph.org/">SIGGRAPH</a>')
       .replace('Annals of the Institute of Statistical Mathematics', '<a href="http://www.ism.ac.jp/editsec/aism/index.html">Annals of the Institute of Statistical Mathematics</a>');
       return str;
     }
