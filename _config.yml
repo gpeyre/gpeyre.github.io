@@ -18,3 +18,4 @@ exclude: ["node_modules"]
 name: Gabriel Peyré, recent works
 gems:
   - jekyll-feed
+  - jekyll-paginate
