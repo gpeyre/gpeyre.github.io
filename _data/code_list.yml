@@ -1,8 +1,3 @@
-- name: été à tête
-  authors: A. Chambolle, V. Duval, G. Peyré, C. Poon
-  article: http://arxiv.org/abs/1602.00087
-  code: https://github.com/gpeyre/2016-IP-tv-denoising
-
 - name: Geometric properties of solutions to the total variation denoising problem
   authors: A. Chambolle, V. Duval, G. Peyré, C. Poon
   article: http://arxiv.org/abs/1602.00087
