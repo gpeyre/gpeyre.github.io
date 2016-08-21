@@ -1,3 +1,13 @@
+- name: Gromov-Wasserstein Averaging of Kernel and Distance Matrices
+  authors: Gabriel Peyré, Marco Cuturi, Justin Solomon
+  article: https://hal.archives-ouvertes.fr/hal-01322992
+  code: https://github.com/gpeyre/2016-ICML-gromov-wasserstein
+
+- name: Basics of Shannon entropic coding theory
+  authors: G. Peyré
+  article: https://hal.archives-ouvertes.fr/hal-01343890
+  code: https://github.com/gpeyre/2016-shannon-theory
+
 - name: Geometric properties of solutions to the total variation denoising problem
   authors: A. Chambolle, V. Duval, G. Peyré, C. Poon
   article: http://arxiv.org/abs/1602.00087
