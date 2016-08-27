@@ -35,7 +35,8 @@ Team leaders
 PhDs and post-docs
 -------------------
 
-* [Lénaïc Chizat](https://www.ceremade.dauphine.fr/~chizat/): PhD
+* [Paul Catala](https://www.ceremade.dauphine.fr/): PhD
+* [Lénaïc Chizat](http://lchizat.github.io/): PhD
 * [Quentin Denoyelle](https://www.ceremade.dauphine.fr/~denoyelle/): PhD
 * [Aude Genevay](https://www.ceremade.dauphine.fr/~genevay/): PhD
 * [Jingwei Liang](https://www.greyc.fr/user/400): PhD
