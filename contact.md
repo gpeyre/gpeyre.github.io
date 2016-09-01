@@ -8,22 +8,20 @@ header-img: "img/ecriture.jpg"
 About me
 ---------------
 
-I am [CNRS](http://www.cnrs.fr/) senior researcher (DR2), working at [CEREMADE](https://www.ceremade.dauphine.fr/), [Université Paris-Dauphine](http://www.dauphine.fr/). I am also a member of the [Mokaplan](https://team.inria.fr/mokaplan/) INRIA/CNRS/Paris-Dauphine research group.
+I am [CNRS](http://www.cnrs.fr/) senior researcher (DR2), working at [DMA](www.dma.ens.fr), [École Normale Supérieure](http://www.ens.fr/). I am also an associate member of the [Mokaplan](https://team.inria.fr/mokaplan/) INRIA/CNRS/Paris-Dauphine research group.
 
 My office
 ---------------
 
-Office B631, [CEREMADE](https://www.ceremade.dauphine.fr/), [Université Paris-Dauphine](http://www.dauphine.fr/).
-
-It is on the sixth floor, the corridor on the right when you get out of the elevators. 
+Office D4, [[DMA](www.dma.ens.fr), [École Normale Supérieure](http://www.ens.fr/). It is on the ground floor, in the centrale part of the school.
 
 Address
 --------------
 
 
-CEREMADE, Université Paris-Dauphine, Place du Maréchal De Lattre De Tassigny, 75775 Paris Cedex 16, FRANCE.
+DMA, Ecole Normale Supérieure, 45 rue d'Ulm - F 75230 PARIS cedex 05, FRANCE.
 
-<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2624.3801604812447!2d2.273451!3d48.870028999999995!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e6655922d250b7%3A0x3393b4fa95ac9e83!2sUniversit%C3%A9+Paris-Dauphine!5e0!3m2!1sfr!2sfr!4v1413900824925"
+<iframe src="https://www.google.fr/maps/place/%C3%89cole+Normale+Sup%C3%A9rieure/@48.8419929,2.3436813,17.52z/data=!4m5!3m4!1s0x0:0x3b69748ca3b78f0d!8m2!3d48.8422058!4d2.3451687?hl=fr"
 width="600"
 height="350"
 frameborder="0"
@@ -32,9 +30,9 @@ style="border:0"></iframe>
 Phone
 ---------------
 
-+33-(0)1-44-05-48-71
+--
 
 Email
 ---------------
 
-[Email me](mailto:gabriel.peyre'at'ceremade.dauphine.fr)
+[Email me](mailto:gabriel.peyre'at'ens.fr)
