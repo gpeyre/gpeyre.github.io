@@ -8,24 +8,19 @@ header-img: "img/ecriture.jpg"
 About me
 ---------------
 
-I am [CNRS](http://www.cnrs.fr/) senior researcher (DR2), working at [DMA](www.dma.ens.fr), [École Normale Supérieure](http://www.ens.fr/). I am also an associate member of the [Mokaplan](https://team.inria.fr/mokaplan/) INRIA/CNRS/Paris-Dauphine research group.
+I am [CNRS](http://www.cnrs.fr/) senior researcher (DR2), working at the  [DMA](http://www.dma.ens.fr), [École Normale Supérieure](http://www.ens.fr/). I am also an associate member of the [Mokaplan](https://team.inria.fr/mokaplan/) INRIA/CNRS/Paris-Dauphine research group.
 
 My office
 ---------------
 
-Office D4, [[DMA](www.dma.ens.fr), [École Normale Supérieure](http://www.ens.fr/). It is on the ground floor, in the centrale part of the school.
+Office D4, [DMA](http://www.dma.ens.fr), [École Normale Supérieure](http://www.ens.fr/). It is on the ground floor, in the central part of the school.
 
 Address
 --------------
 
-
 DMA, Ecole Normale Supérieure, 45 rue d'Ulm - F 75230 PARIS cedex 05, FRANCE.
 
-<iframe src="https://www.google.fr/maps/place/%C3%89cole+Normale+Sup%C3%A9rieure/@48.8419929,2.3436813,17.52z/data=!4m5!3m4!1s0x0:0x3b69748ca3b78f0d!8m2!3d48.8422058!4d2.3451687?hl=fr"
-width="600"
-height="350"
-frameborder="0"
-style="border:0"></iframe>
+<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1824.8588503554436!2d2.343681280075036!3d48.841992857283074!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x3b69748ca3b78f0d!2s%C3%89cole+Normale+Sup%C3%A9rieure!5e0!3m2!1sfr!2sfr!4v1472731149333" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
 
 Phone
 ---------------
