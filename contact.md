@@ -13,7 +13,7 @@ I am [CNRS](http://www.cnrs.fr/) senior researcher (DR2), working at the  [DMA](
 My office
 ---------------
 
-Office D4, [DMA](http://www.dma.ens.fr), [École Normale Supérieure](http://www.ens.fr/). It is on the ground floor, in the central part of the school.
+Office J4, [DMA](http://www.dma.ens.fr), [École Normale Supérieure](http://www.ens.fr/). It is on the ground floor, in the central part of the school, [see the map](/img/plan-ulm.png).
 
 Address
 --------------
