@@ -7,4 +7,4 @@ author:     "Gabriel Peyré"
 header-img: "../img/ecriture.jpg"
 ---
 
-We are starting a new seminar ["Imaging in Paris"](https://imaging-in-paris.github.io/), which will occur the first Thursday of each month. The program is already amazing. Save the dates!
+We are starting a new seminar [Imaging in Paris](https://imaging-in-paris.github.io/), which will occur the first Thursday of each month. The program is already amazing. Save the dates!
