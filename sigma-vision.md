@@ -40,12 +40,10 @@ PhDs and post-docs
 * [Quentin Denoyelle](https://www.ceremade.dauphine.fr/~denoyelle/): PhD
 * [Aude Genevay](https://www.ceremade.dauphine.fr/~genevay/): PhD
 * [Jingwei Liang](https://www.greyc.fr/user/400): PhD
-* [Dario Prandi](http://darioprandi.com/): Post-doc
-* [Clarice Poon](http://www.damtp.cam.ac.uk/user/cmhsp2/): Post-doc
 * [Bernhard Schmitzer](https://www.ceremade.dauphine.fr/~schmitzer/): Post-doc
 * [Jonathan Vacher](https://www.ceremade.dauphine.fr/~vacher/): PhD
 
-Former students
+Alumni
 -------------------
 
 * [Vincent Duval](https://www.ceremade.dauphine.fr/~vduval/): Post-doc
@@ -53,6 +51,8 @@ Former students
 * [Sira Ferradans](http://www.gpi.upf.edu/static/sira/Sira_Ferradans/Me.html): Post-doc
 * [Mohammad Golbabaee](http://people.epfl.ch/mohammad.golbabaei/): Post-doc
 * [Giacomo Nardi](http://www.ceremade.dauphine.fr/~nardi/): Post-doc
+* [Clarice Poon](http://www.damtp.cam.ac.uk/user/cmhsp2/): Post-doc
+* [Dario Prandi](http://darioprandi.com/): Post-doc
 * [Hugo Raguet](http://www.ceremade.dauphine.fr/~raguet/): PhD
 * [Guillaume Tartavel](http://perso.telecom-paristech.fr/~tartavel/): PhD
 * [Samuel Vaiter](http://www.ceremade.dauphine.fr/~vaiter/): PhD
