@@ -2,7 +2,7 @@
 layout:     post
 title:      "20 New Python Tours"
 subtitle:   "Wavelets, sparsity, active contours, 3-D meshes, etc."
-date:       2016-09-06 12:00:00
+date:       2016-09-17 12:00:00
 author:     "Gabriel Peyré"
 header-img: "../img/ecriture.jpg"
 ---
