@@ -61,7 +61,7 @@
 - name: Variational Texture Synthesis with Sparsity and Spectrum Constraints
   authors: G. Tartavel, Y. Gousseau and G. Peyre
   article: https://hal.archives-ouvertes.fr/hal-00881847/
-  code: https://bitbucket.org/gtartavel/variational_synthesis
+  code: https://github.com/gpeyre/2015-JMIV-texture-synthesis
 
 - name: Sliced and Radon Wasserstein Barycenters of Measures
   authors: N. Bonneel, J. Rabin, G. Peyre, H. Pfister
