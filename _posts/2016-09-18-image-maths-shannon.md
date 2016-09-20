@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      "Article Images des Mathématiques"
-subtitle:   "Claude Shannon et la Compression de Données"
+subtitle:   "Claude Shannon et la Compression des Données"
 date:       2016-09-18 08:00:00
 author:     "Gabriel Peyré"
 header-img: "../img/ecriture.jpg"
