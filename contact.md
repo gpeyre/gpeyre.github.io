@@ -13,7 +13,7 @@ I am [CNRS](http://www.cnrs.fr/) senior researcher (DR2), working at the  [DMA](
 My office
 ---------------
 
-![View from my office](../img/view.jpg)
+<img src"=../img/view.jpg" width="300" alt="View from my office"/>
 
 [DMA](http://www.dma.ens.fr), [École Normale Supérieure](http://www.ens.fr/), office T19, roof tops of the DMA, stairs B, 4th level.
 
