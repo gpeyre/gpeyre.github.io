@@ -13,7 +13,11 @@ I am [CNRS](http://www.cnrs.fr/) senior researcher (DR2), working at the  [DMA](
 My office
 ---------------
 
-Office J4, [DMA](http://www.dma.ens.fr), [École Normale Supérieure](http://www.ens.fr/). It is on the ground floor, in the central part of the school, [see the map](/img/plan-ulm.png).
+![View from my office](../img/view.jpg)
+
+[DMA](http://www.dma.ens.fr), [École Normale Supérieure](http://www.ens.fr/), office T19, roof tops of the DMA, stairs B, 4th level.
+
+
 
 Address
 --------------
@@ -25,7 +29,7 @@ DMA, Ecole Normale Supérieure, 45 rue d'Ulm - F 75230 PARIS cedex 05, FRANCE.
 Phone
 ---------------
 
---
+(+33)144322039
 
 Email
 ---------------
