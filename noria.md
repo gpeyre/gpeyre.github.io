@@ -15,8 +15,8 @@ Research Interests
 -------------------
 
 * _Theme 1 - Generalized OT for vision and graphics_.
-* _Theme 2 - Stochastic OT approach for high-dimensional inference_.
-* _Theme 3 - Metric learning_.
+* _Theme 2 - Stochastic OT approaches for high-dimensional inference_.
+* _Theme 3 - OT across several metric spaces_.
 
 
 Collaborators
