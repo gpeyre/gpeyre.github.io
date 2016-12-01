@@ -1,13 +1,9 @@
 ---
-layout: page
+layout: page-notitle
 title: "NORIA"
 description: "ERC Project"
-header-img: "img/paysages-paris.jpg"
+header-img: "img/noria-header-gray.jpg"
 ---
-
-<div align="middle">
-<img src="../img/noria-logo-small.jpg" width="600" align="middle"/>
-</div>
 
 
 Presentation
