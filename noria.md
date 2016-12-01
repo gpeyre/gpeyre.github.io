@@ -2,7 +2,7 @@
 layout: page-notitle
 title: "NORIA"
 description: "ERC Project"
-header-img: "img/noria-header-gray.jpg"
+header-img: "img/noria-header-gray.png"
 ---
 
 
