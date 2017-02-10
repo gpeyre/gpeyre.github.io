@@ -17,7 +17,7 @@ My office
 <img src="../img/view-large.jpg" alt="View from my office" width="100%">
 </p>
 
-[DMA](http://www.dma.ens.fr), [École Normale Supérieure](http://www.ens.fr/), office T19, roof tops of the DMA, stairs B, 4th level. You can [check the map to come to my office](./img/map-ulm.pdf).
+[DMA](http://www.dma.ens.fr), [École Normale Supérieure](http://www.ens.fr/), office T19, roof tops of the DMA, stairs B, 4th level. You can [check the map to come to my office](../img/map-ulm.pdf).
 
 
 
