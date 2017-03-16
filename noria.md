@@ -8,15 +8,15 @@ header-img: "img/noria-header-gray.png"
 
 Presentation
 -------------------
-NORIA (Numerical Optimal tRansport for ImAging) is a research group financed by the [ERC](http://erc.europa.eu/) [Consolidator Grant](https://erc.europa.eu/funding-and-grants/funding-schemes/consolidator-grants) program. Optimal Transport (OT) theory provides a powerful framework to manipulate probability distributions using simple and intuitive geometric principles. OT distances compare favorably to all other alternatives, notably Euclidean metrics or information divergences, whose outputs are particularly sensitive to changes in quantization and are not suitable to compare point clouds. Because of these and many more favorable properties, OT should be a standard tool in imaging sciences where probability distributions are routinely used. However, at this time, OT is but a confidential tool restricted to niche applications. OT is barely used because it is complex mathematically, which hinders its dissemination in more applied fields, and because it consumes substantial computational resources when used naively. NORIA will address these two bottlenecks and develop the next generation of theoretical, numerical and algorithmic advances to enable large-scale optimal transport computations in imaging sciences.
+NORIA (Numerical Optimal tRansport for ImAging) is a research group financed by the [ERC](http://erc.europa.eu/) [Consolidator Grant](https://erc.europa.eu/funding-and-grants/funding-schemes/consolidator-grants) program. Optimal Transport (OT) theory provides a powerful framework to manipulate probability distributions using simple and intuitive geometric principles. OT distances compare favorably to all other alternatives, notably Euclidean metrics or information divergences, whose outputs are particularly sensitive to changes in quantization and are not suitable to compare point clouds. Because of these and many more favorable properties, OT should be a standard tool in imaging sciences where probability distributions are routinely used. However, at this time, OT is but a confidential tool restricted to niche applications. OT is barely used because it is complex mathematically, which hinders its dissemination in more applied fields, and because it consumes substantial computational resources when used naively. NORIA will address these two bottlenecks and develop the next generation of theoretical, numerical and algorithmic advances to enable large-scale optimal transport computations in imaging sciences and machine learning.
 
 
 Research Interests
 -------------------
 
-* _Theme 1 - Generalized OT for vision and graphics_.
-* _Theme 2 - Stochastic OT approaches for high-dimensional inference_.
-* _Theme 3 - OT across several metric spaces_.
+* _Theme 1 - Optimal Transport for Imaging Sciences_.
+* _Theme 2 - Optimal Transport for Machine Learning_.
+* _Theme 3 - Optimal Transport across several metric spaces_.
 
 
 Collaborators
