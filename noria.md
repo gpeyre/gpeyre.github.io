@@ -26,16 +26,32 @@ Collaborators
 * [Nicolas Bonneel](http://liris.cnrs.fr/~nbonneel/): CNRS.
 * [Guillaume Carlier](https://www.ceremade.dauphine.fr/~carlier/): Univ. Paris-Dauphine.
 * [Marco Cuturi](http://www.marcocuturi.net): ENSAE.
+* [Yohann de Castro](https://www.normalesup.org/~decastro/): Paris-sud and INRIA.
 * [Vincent Duval](https://who.rocq.inria.fr/Vincent.Duval/index.html): INRIA.
 * [Jalal Fadili](http://www.greyc.ensicaen.fr/~jfadili/): ENSICaen.
 * [Justin Solomon](http://people.csail.mit.edu/jsolomon/): MIT.
-* [François-Xavier Vialard](https://www.ceremade.dauphine.fr/~vialard/): Univ. Paris-Dauphine
+* [François-Xavier Vialard](https://www.ceremade.dauphine.fr/~vialard/): Univ. Paris-Dauphine.
+
+
+Visitors
+-------------------
+
+* [Didier Henrion](https://homepages.laas.fr/henrion/): LAAS-CNRS, Oct. 2017.
 
 PhDs and post-docs
 -------------------
 
 * [Paul Catala](https://www.ceremade.dauphine.fr/): PhD
 * [Lénaïc Chizat](http://lchizat.github.io/): PhD
+* [Augustin Cosse](http://www.augustincosse.com/): postdoc.
+* [Gwendoline de Bie](https://www.linkedin.com/in/gwendoline-de-bie-696348bb?ppe=1): PhD.
 * [Quentin Denoyelle](https://www.ceremade.dauphine.fr/~denoyelle/): PhD
+* [Guillaume Garrigos](http://www.guillaume-garrigos.com/): postdoc.
 * [Aude Genevay](https://www.ceremade.dauphine.fr/~genevay/): PhD
+* [Nicolas Keriven](http://people.irisa.fr/Nicolas.Keriven/): postdoc (funded by CFM-ENS).
+
+
+Former students
+-------------------
+
 * [Jonathan Vacher](https://www.ceremade.dauphine.fr/~vacher/): PhD
