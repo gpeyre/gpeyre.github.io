@@ -41,7 +41,7 @@ Visitors
 PhDs and post-docs
 -------------------
 
-* [Paul Catala](https://www.ceremade.dauphine.fr/): PhD
+* [Paul Catala](https://www.math.ens.fr/fiche-membre/fiche-membre.php?id_membre=361): PhD
 * [Lénaïc Chizat](http://lchizat.github.io/): PhD
 * [Augustin Cosse](http://www.augustincosse.com/): postdoc.
 * [Gwendoline de Bie](https://www.linkedin.com/in/gwendoline-de-bie-696348bb?ppe=1): PhD.
@@ -49,6 +49,7 @@ PhDs and post-docs
 * [Guillaume Garrigos](http://www.guillaume-garrigos.com/): postdoc.
 * [Aude Genevay](https://www.ceremade.dauphine.fr/~genevay/): PhD
 * [Nicolas Keriven](http://people.irisa.fr/Nicolas.Keriven/): postdoc (funded by CFM-ENS).
+* [Tony Silveti-Falls](https://archive-www.greyc.fr/index.html): PhD.
 
 
 Former students
