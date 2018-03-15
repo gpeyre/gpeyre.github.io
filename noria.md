@@ -31,18 +31,19 @@ Collaborators
 * [Jalal Fadili](http://www.greyc.ensicaen.fr/~jfadili/): ENSICaen.
 * [Justin Solomon](http://people.csail.mit.edu/jsolomon/): MIT.
 * [François-Xavier Vialard](https://www.ceremade.dauphine.fr/~vialard/): Univ. Paris-Dauphine.
-
+* [Jérome Malick](https://ljk.imag.fr/membres/Jerome.Malick/): CNRS, Grenoble. 
 
 Visitors
 -------------------
 
 * [Didier Henrion](https://homepages.laas.fr/henrion/): LAAS-CNRS, Oct. 2017.
+* [Clarice Poon](http://www.damtp.cam.ac.uk/user/cmhsp2/): Cambridge, Feb. 2018.
+* [Mathieu Blondel](http://mblondel.org/):  NTT, May 2018.
 
 PhDs and post-docs
 -------------------
 
 * [Paul Catala](https://www.math.ens.fr/fiche-membre/fiche-membre.php?id_membre=361): PhD
-* [Lénaïc Chizat](http://lchizat.github.io/): PhD
 * [Augustin Cosse](http://www.augustincosse.com/): postdoc.
 * [Gwendoline de Bie](https://www.linkedin.com/in/gwendoline-de-bie-696348bb?ppe=1): PhD.
 * [Quentin Denoyelle](https://www.ceremade.dauphine.fr/~denoyelle/): PhD
@@ -55,4 +56,5 @@ PhDs and post-docs
 Former students
 -------------------
 
+* [Lénaïc Chizat](http://lchizat.github.io/): PhD
 * [Jonathan Vacher](https://www.ceremade.dauphine.fr/~vacher/): PhD
