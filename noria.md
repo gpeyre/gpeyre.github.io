@@ -31,7 +31,7 @@ Collaborators
 * [Jalal Fadili](http://www.greyc.ensicaen.fr/~jfadili/): ENSICaen.
 * [Justin Solomon](http://people.csail.mit.edu/jsolomon/): MIT.
 * [François-Xavier Vialard](https://www.ceremade.dauphine.fr/~vialard/): Univ. Paris-Dauphine.
-* [Jérome Malick](https://ljk.imag.fr/membres/Jerome.Malick/): CNRS, Grenoble. 
+* [Jérome Malick](https://ljk.imag.fr/membres/Jerome.Malick/): CNRS, Grenoble.
 
 Visitors
 -------------------
@@ -39,22 +39,26 @@ Visitors
 * [Didier Henrion](https://homepages.laas.fr/henrion/): LAAS-CNRS, Oct. 2017.
 * [Clarice Poon](http://www.damtp.cam.ac.uk/user/cmhsp2/): Cambridge, Feb. 2018.
 * [Mathieu Blondel](http://mblondel.org/):  NTT, May 2018.
+* [Gui-Song Xia](http://captain.whu.edu.cn/xia_En.html): Wuhan University, Nov-Dec. 2018.
 
 PhDs and post-docs
 -------------------
 
-* [Paul Catala](https://www.math.ens.fr/fiche-membre/fiche-membre.php?id_membre=361): PhD
-* [Augustin Cosse](http://www.augustincosse.com/): postdoc.
+* [Paul Catala](https://www.math.ens.fr/fiche-membre/fiche-membre.php?id_membre=361): PhD.
+* [Augustin Cosse](http://www.augustincosse.com/): postdoc (funded by FSMP).
 * [Gwendoline de Bie](https://www.linkedin.com/in/gwendoline-de-bie-696348bb?ppe=1): PhD.
-* [Quentin Denoyelle](https://www.ceremade.dauphine.fr/~denoyelle/): PhD
-* [Guillaume Garrigos](http://www.guillaume-garrigos.com/): postdoc.
-* [Aude Genevay](https://www.ceremade.dauphine.fr/~genevay/): PhD
+* [Aude Genevay](https://www.ceremade.dauphine.fr/~genevay/): PhD.
 * [Nicolas Keriven](http://people.irisa.fr/Nicolas.Keriven/): postdoc (funded by CFM-ENS).
+* [Arthur Mensch](https://www.amensch.fr/): postdoc.
+* [Andrea Natale](https://team.inria.fr/mokaplan/publications/): postdoc.
+* [Thibault Séjourné](http://www.theses.fr/s208785): PhD.
 * [Tony Silveti-Falls](https://archive-www.greyc.fr/index.html): PhD.
 
 
 Former students
 -------------------
 
-* [Lénaïc Chizat](http://lchizat.github.io/): PhD
-* [Jonathan Vacher](https://www.ceremade.dauphine.fr/~vacher/): PhD
+* [Lénaïc Chizat](http://lchizat.github.io/): PhD.
+* [Jonathan Vacher](https://www.ceremade.dauphine.fr/~vacher/): PhD.
+* [Quentin Denoyelle](https://www.ceremade.dauphine.fr/~denoyelle/): PhD.
+* [Guillaume Garrigos](http://www.guillaume-garrigos.com/): postdoc.
