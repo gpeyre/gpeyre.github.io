@@ -1,12 +1,14 @@
 ---
 layout: page
 title: "Projects"
-description: "in Paris-Dauphine"
-header-img: "img/paysages-paris.jpg"
+description: ""
+header-img: "img/louis-village.jpg"
 ---
 
 * [Mokaplan](https://team.inria.fr/mokaplan/): a joint INRIA/CNRS/Paris-Dauphine research group on _numerical calculus of variations_.
 * [Numerical Tours](http://www.numerical-tours.com): a repository to Matlab/Scilab/Python explorations of mathematical data processing.
+* [Mathematical Tours](mathematical-tours.github): course notes on data sciences and general audience articles.
+* [Computational Optimal Transport](optimaltransport.github): site web for a book on computational OT.
 * [Noria](../noria/): my current ERC project.
 * [Σ-Vision](../sigma-vision/): my previous ERC project.
 * [Imaging in Paris](http://imaging-in-paris.github.io): our monthly seminar on imaging sciances.

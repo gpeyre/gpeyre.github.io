@@ -2,14 +2,20 @@
 layout: page
 title: "Teaching"
 description: "Master 2 MVA"
-header-img: "img/paysages-paris.jpg"
+header-img: "img/louis-arbres.jpg"
 ---
 
-This is the homepage for my course _Sparsity and compressed sensing_ in Master 2 [Mathématiques, Vision, Apprentissage - MVA](http://www.math.ens-cachan.fr/version-francaise/formations/master-mva/).
+This is the homepage for my course in Master 2 [Mathématiques, Vision, Apprentissage - MVA](http://www.math.ens-cachan.fr/version-francaise/formations/master-mva/).
 
 Description
 -----------------
-This course reviews the applications of sparse representations in image processing, with an emphasis on the compressed sensing method. It alternates between the exposition of the theory and a practical implementation of the methods.	Sparsity has recently emerged as a fundamental tool in image processing. It allows one to take into account the compressibility of images in a well chosen representation. It leads to state of the art methods to regularize inverse problems such as super-resolution, medical imaging and astrophysical imaging. It is also at the heart of compressed sensing, a revolutionary method to sample data in an already compressed form.
+
+Evolution of the course:
+- Since 2019: _Computational Optimal Transport_
+- 2017-2019: _Mathematical Foundation of Data Sciences_
+- 2008-2016: _Sparsity and compressed sensing_
+
+The course presents an overview of the mathematics of data sciences. This includes in particular tools from convex optimization, compressed sensing and optimal transport. It showcases application in machine learning and imaging sciences.
 
 
 Pre-requisite
@@ -25,25 +31,9 @@ Attending all the numerical tours, a mini-project with a report and an oral pres
 Ressources
 -----------------
 
-* [A Wavelet Tour of Signal Processing, 3rd edition : the sparse way](http://www.wavelet-tour.com/), Stephane Mallat, Academic Press, 2008.
-* [The Numerical Tours of Signal Processing](http://www.numerical-tours.com/), Gabriel Peyré (including course notes, slides and Matlab tours).
-
-
-List of lectures
------------------
-
-1. Introduction: Fourier and Wavelet analyses - [Slides](http://fr.slideshare.net/gpeyre/signal-processin-course-approximation) -
-	Numerics: [Image Approximation with Orthogonal Bases](http://gpeyre.github.io/numerical-tours/matlab/coding_1_approximation/).
-2. Inverse problems and variational regularization - [Slides](http://fr.slideshare.net/gpeyre/suivre-signal-processing-course-inverse-problems-regularization) -
-	Numerics: [Image Deconvolution using Variational Method](http://gpeyre.github.io/numerical-tours/matlab/inverse_2_deconvolution_variational/).
-3. Sparsity and L1 regularization - [Slides](http://fr.slideshare.net/gpeyre/signal-processing-course-sparse-regularization-of-inverse-problems) -
-	Numerics: [Inpainting using Sparse Regularization](http://gpeyre.github.io/numerical-tours/matlab/inverse_5_inpainting_sparsity/).
-4. Convex optimization for imaging - [Slides](http://fr.slideshare.net/gpeyre/signal-processing-course-convex-optimization) -  Numerics: [Primal-Dual Proximal Splitting](http://gpeyre.github.io/numerical-tours/matlab/optim_5_primal_dual/).
-5. Compressed Sensing - [Slides](http://fr.slideshare.net/gpeyre/signal-processing-course-compressed-sensing) -
-	Numerics: [Compressed sensing phase transition](http://gpeyre.github.io/numerical-tours/matlab/optim_4b_dr/).
-6. Theoretical performance guarantees of sparse recovery - [Slides](http://fr.slideshare.net/gpeyre/signal-processing-course-theory-for-sparse-recovery) -
-	Numerics: Mini-project help desk.
-7. Mini-projects oral exam.
+* [Numerical Tours](http://www.numerical-tours.com): a repository to Matlab/Scilab/Python explorations of mathematical data processing.
+* [Mathematical Tours](mathematical-tours.github): course notes on data sciences and general audience articles.
+* [Computational Optimal Transport](optimaltransport.github): site web for a book on computational OT.
 
 
 Other MVA courses on the web
