@@ -44,13 +44,11 @@ Visitors
 PhDs and post-docs
 -------------------
 
+* [Felicien Bourdin](http://www.math.ens.fr/fiche-membre/fiche-membre.php?id_membre=447): PhD.
 * [Paul Catala](https://www.math.ens.fr/fiche-membre/fiche-membre.php?id_membre=361): PhD.
 * [Augustin Cosse](http://www.augustincosse.com/): postdoc (funded by FSMP).
 * [Gwendoline de Bie](https://www.linkedin.com/in/gwendoline-de-bie-696348bb?ppe=1): PhD.
-* [Aude Genevay](https://www.ceremade.dauphine.fr/~genevay/): PhD.
-* [Nicolas Keriven](http://people.irisa.fr/Nicolas.Keriven/): postdoc (funded by CFM-ENS).
 * [Arthur Mensch](https://www.amensch.fr/): postdoc.
-* [Andrea Natale](https://team.inria.fr/mokaplan/publications/): postdoc.
 * [Thibault Séjourné](http://www.theses.fr/s208785): PhD.
 * [Tony Silveti-Falls](https://archive-www.greyc.fr/index.html): PhD.
 
@@ -58,6 +56,9 @@ PhDs and post-docs
 Former students
 -------------------
 
+* [Andrea Natale](https://team.inria.fr/mokaplan/publications/): postdoc.
+* [Nicolas Keriven](http://people.irisa.fr/Nicolas.Keriven/): postdoc (funded by CFM-ENS).
+* [Aude Genevay](https://www.ceremade.dauphine.fr/~genevay/): PhD.
 * [Lénaïc Chizat](http://lchizat.github.io/): PhD.
 * [Jonathan Vacher](https://www.ceremade.dauphine.fr/~vacher/): PhD.
 * [Quentin Denoyelle](https://www.ceremade.dauphine.fr/~denoyelle/): PhD.
