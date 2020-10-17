@@ -53,7 +53,7 @@ PhDs and post-docs
 * [Flavien Léger](https://flavienleger.github.io/): postdoc.
 * [Arthur Mensch](https://www.amensch.fr/): postdoc.
 * [Pierre Roussillon](https://proussillon.gitlab.io/)
-* [Thibault Séjourné](http://www.theses.fr/s208785): PhD.
+* [Thibault Séjourné](https://thibsej.github.io/): PhD.
 * [Tony Silveti-Falls](https://archive-www.greyc.fr/index.html): PhD.
 * [Shuangjian Zhang](http://zhang.kelvin.shuangjian.info/): postdoc.
 * [Léa Saint Raymond](http://www.ihmc.ens.fr/SAINT-RAYMOND-Lea-3638.html): postdoc.
