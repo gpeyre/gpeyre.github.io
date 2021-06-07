@@ -46,26 +46,30 @@ Visitors
 PhDs and post-docs
 -------------------
 
-* [Felicien Bourdin](http://www.math.ens.fr/fiche-membre/fiche-membre.php?id_membre=447): PhD.
-* [Paul Catala](https://www.math.ens.fr/fiche-membre/fiche-membre.php?id_membre=361): PhD.
-* [Augustin Cosse](http://www.augustincosse.com/): postdoc (funded by FSMP).
-* [Gwendoline de Bie](https://www.linkedin.com/in/gwendoline-de-bie-696348bb?ppe=1): PhD.
-* [Flavien Léger](https://flavienleger.github.io/): postdoc.
-* [Arthur Mensch](https://www.amensch.fr/): postdoc.
-* [Pierre Roussillon](https://proussillon.gitlab.io/)
-* [Thibault Séjourné](https://thibsej.github.io/): PhD.
-* [Tony Silveti-Falls](https://archive-www.greyc.fr/index.html): PhD.
-* [Shuangjian Zhang](http://zhang.kelvin.shuangjian.info/): postdoc.
-* [Léa Saint Raymond](http://www.ihmc.ens.fr/SAINT-RAYMOND-Lea-3638.html): postdoc.
 * [Pierre Ablin](https://pierreablin.com/): postdoc.
+* Raphaël Barboni: PhD.
+* [Felicien Bourdin](http://www.math.ens.fr/fiche-membre/fiche-membre.php?id_membre=447): PhD.
+* [Matt Colbrook](http://www.damtp.cam.ac.uk/user/mjc249/home.html): postdoc (funded by FSMP).
+* [Pierre Roussillon](https://proussillon.gitlab.io/): Postdoc.
+* [Thibault Séjourné](https://thibsej.github.io/): PhD.
+* Michael Sander: PhD.
+* [Othmane Sebbouh](https://othmanesebbouh.github.io/): PhD.
+* [Shuangjian Zhang](http://zhang.kelvin.shuangjian.info/): postdoc.
 
 Former students
 -------------------
 
-* [Andrea Natale](https://team.inria.fr/mokaplan/publications/): postdoc.
-* [Nicolas Keriven](http://people.irisa.fr/Nicolas.Keriven/): postdoc (funded by CFM-ENS).
-* [Aude Genevay](https://www.ceremade.dauphine.fr/~genevay/): PhD.
+* [Paul Catala](https://www.math.ens.fr/fiche-membre/fiche-membre.php?id_membre=361): PhD.
 * [Lénaïc Chizat](http://lchizat.github.io/): PhD.
-* [Jonathan Vacher](https://www.ceremade.dauphine.fr/~vacher/): PhD.
+* [Augustin Cosse](http://www.augustincosse.com/): postdoc (funded by FSMP).
+* [Gwendoline de Bie](https://www.linkedin.com/in/gwendoline-de-bie-696348bb?ppe=1): PhD.
 * [Quentin Denoyelle](https://www.ceremade.dauphine.fr/~denoyelle/): PhD.
 * [Guillaume Garrigos](http://www.guillaume-garrigos.com/): postdoc.
+* [Aude Genevay](https://www.ceremade.dauphine.fr/~genevay/): PhD.
+* [Nicolas Keriven](http://people.irisa.fr/Nicolas.Keriven/): postdoc (funded by CFM-ENS).
+* [Flavien Léger](https://flavienleger.github.io/): postdoc.
+* [Arthur Mensch](https://www.amensch.fr/): postdoc.
+* [Andrea Natale](https://team.inria.fr/mokaplan/publications/): postdoc.
+* [Léa Saint Raymond](http://www.ihmc.ens.fr/SAINT-RAYMOND-Lea-3638.html): postdoc.
+* [Tony Silveti-Falls](https://archive-www.greyc.fr/index.html): PhD.
+* [Jonathan Vacher](https://www.ceremade.dauphine.fr/~vacher/): PhD.
