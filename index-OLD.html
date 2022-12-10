@@ -5,7 +5,6 @@ description: "Homepage of Gabriel Peyré"
 header-img: "img/paysages-paris.jpg"
 ---
 
-
 {% for post in paginator.posts %}
 <div class="post-preview">
     <a href="{{ post.url | prepend: site.baseurl }}">
@@ -22,7 +21,6 @@ header-img: "img/paysages-paris.jpg"
 </div>
 <hr>
 {% endfor %}
-
 
 <!-- Pager -->
 {% if paginator.total_pages > 1 %}

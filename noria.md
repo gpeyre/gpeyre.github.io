@@ -26,9 +26,10 @@ Collaborators
 * [Nicolas Bonneel](http://liris.cnrs.fr/~nbonneel/): CNRS.
 * [Mathieu Blondel](http://mblondel.org/): Google Brain.
 * [Guillaume Carlier](https://www.ceremade.dauphine.fr/~carlier/): Univ. Paris-Dauphine.
-* [Marco Cuturi](http://www.marcocuturi.net): ENSAE and Google Brain.
+* [Marco Cuturi](http://www.marcocuturi.net): ENSAE and Apple.
 * [Vincent Duval](https://who.rocq.inria.fr/Vincent.Duval/index.html): INRIA.
 * [Jalal Fadili](http://www.greyc.ensicaen.fr/~jfadili/): ENSICaen.
+* [Remi Gribonval](https://people.irisa.fr/Remi.Gribonval/): INRIA.
 * [Jérome Malick](https://ljk.imag.fr/membres/Jerome.Malick/): CNRS, Grenoble.
 * [Justin Solomon](http://people.csail.mit.edu/jsolomon/): MIT.
 * [François-Xavier Vialard](https://www.ceremade.dauphine.fr/~vialard/): Univ. Paris-Est.
@@ -42,23 +43,27 @@ Visitors
 * [Clarice Poon](https://cmhsp2.github.io/): Cambridge, Feb. 2018.
 * [Mathieu Blondel](http://mblondel.org/):  NTT, May 2018.
 * [Gui-Song Xia](http://captain.whu.edu.cn/xia_En.html): Wuhan University, Nov-Dec. 2018.
+* [Zhenzhang Ye](https://vision.in.tum.de/members/yez), Munich, 2022.
 
 PhDs and post-docs
 -------------------
 
-* [Pierre Ablin](https://pierreablin.com/): postdoc.
-* Raphaël Barboni: PhD.
-* [Felicien Bourdin](http://www.math.ens.fr/fiche-membre/fiche-membre.php?id_membre=447): PhD.
-* [Matt Colbrook](http://www.damtp.cam.ac.uk/user/mjc249/home.html): postdoc (funded by FSMP).
-* [Pierre Roussillon](https://proussillon.gitlab.io/): Postdoc.
-* [Thibault Séjourné](https://thibsej.github.io/): PhD.
-* Michael Sander: PhD.
+* [Raphaël Barboni](https://scholar.google.com/citations?user=tEu2ONgAAAAJ&hl=en): PhD.
+* [Michael Sander](https://michaelsdr.github.io/): PhD.
 * [Othmane Sebbouh](https://othmanesebbouh.github.io/): PhD.
 * [Shuangjian Zhang](http://zhang.kelvin.shuangjian.info/): postdoc.
+* [Sibylle Marcotte](), PhD.
+* [Zaccharie Ramzi](https://zaccharieramzi.fr/), Postdoc.
+
 
 Former students
 -------------------
 
+* [Felicien Bourdin](http://www.math.ens.fr/fiche-membre/fiche-membre.php?id_membre=447): PhD.
+* [Matt Colbrook](http://www.damtp.cam.ac.uk/user/mjc249/home.html): postdoc (funded by FSMP).
+* [Pierre Roussillon](https://proussillon.gitlab.io/): Postdoc.
+* [Thibault Séjourné](https://thibsej.github.io/): PhD.
+* [Pierre Ablin](https://pierreablin.com/): postdoc.
 * [Paul Catala](https://www.math.ens.fr/fiche-membre/fiche-membre.php?id_membre=361): PhD.
 * [Lénaïc Chizat](http://lchizat.github.io/): PhD.
 * [Augustin Cosse](http://www.augustincosse.com/): postdoc (funded by FSMP).
