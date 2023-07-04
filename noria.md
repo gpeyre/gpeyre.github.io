@@ -44,6 +44,7 @@ Visitors
 * [Mathieu Blondel](http://mblondel.org/):  NTT, May 2018.
 * [Gui-Song Xia](http://captain.whu.edu.cn/xia_En.html): Wuhan University, Nov-Dec. 2018.
 * [Zhenzhang Ye](https://vision.in.tum.de/members/yez), Munich, 2022.
+* [Dimitri Meunier](https://dimitri-meunier.github.io/), London, ELLIS PhD, 2023.
 
 PhDs and post-docs
 -------------------
@@ -51,9 +52,10 @@ PhDs and post-docs
 * [Raphaël Barboni](https://scholar.google.com/citations?user=tEu2ONgAAAAJ&hl=en): PhD.
 * [Michael Sander](https://michaelsdr.github.io/): PhD.
 * [Othmane Sebbouh](https://othmanesebbouh.github.io/): PhD.
-* [Shuangjian Zhang](http://zhang.kelvin.shuangjian.info/): postdoc.
-* [Sibylle Marcotte](), PhD.
+* [Sibylle Marcotte](https://www.math.ens.psl.eu/instructor/sibylle-marcotte/), PhD.
 * [Zaccharie Ramzi](https://zaccharieramzi.fr/), Postdoc.
+* [Francisco Lima](https://www.it.pt/Members/Index/35492), Postdoc.
+* [Valérie Castin](), PhD.
 
 
 Former students
@@ -78,3 +80,4 @@ Former students
 * [Léa Saint Raymond](http://www.ihmc.ens.fr/SAINT-RAYMOND-Lea-3638.html): postdoc.
 * [Tony Silveti-Falls](https://archive-www.greyc.fr/index.html): PhD.
 * [Jonathan Vacher](https://www.ceremade.dauphine.fr/~vacher/): PhD.
+* [Shuangjian Zhang](http://zhang.kelvin.shuangjian.info/): postdoc.
