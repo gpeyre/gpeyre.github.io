@@ -26,6 +26,7 @@ Collaborators
 * [Nicolas Bonneel](http://liris.cnrs.fr/~nbonneel/): CNRS.
 * [Mathieu Blondel](http://mblondel.org/): Google Brain.
 * [Guillaume Carlier](https://www.ceremade.dauphine.fr/~carlier/): Univ. Paris-Dauphine.
+* [Laura Cantini](https://research.pasteur.fr/fr/member/laura-cantini/): CNRS and Pasteur.
 * [Marco Cuturi](http://www.marcocuturi.net): ENSAE and Apple.
 * [Vincent Duval](https://who.rocq.inria.fr/Vincent.Duval/index.html): INRIA.
 * [Jalal Fadili](http://www.greyc.ensicaen.fr/~jfadili/): ENSICaen.
@@ -50,13 +51,14 @@ PhDs and post-docs
 -------------------
 
 * [Raphaël Barboni](https://scholar.google.com/citations?user=tEu2ONgAAAAJ&hl=en): PhD.
-* [Michael Sander](https://michaelsdr.github.io/): PhD.
-* [Othmane Sebbouh](https://othmanesebbouh.github.io/): PhD.
+* [Valérie Castin](), PhD.
+* [Geert-Jan Huizing](https://gjhuizing.github.io/), PhD.
+* [Francisco Lima](https://www.it.pt/Members/Index/35492), Postdoc.
 * [Sibylle Marcotte](https://www.math.ens.psl.eu/instructor/sibylle-marcotte/), PhD.
 * [Zaccharie Ramzi](https://zaccharieramzi.fr/), Postdoc.
-* [Francisco Lima](https://www.it.pt/Members/Index/35492), Postdoc.
-* [Valérie Castin](), PhD.
-
+* [Jules Samaran](https://github.com/jules-samaran), PhD.
+* [Michael Sander](https://michaelsdr.github.io/): PhD.
+* [Othmane Sebbouh](https://othmanesebbouh.github.io/): PhD.
 
 Former students
 -------------------
