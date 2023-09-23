@@ -71,7 +71,13 @@ def main():
             bib_database = bibtexparser.loads(bibtex_str)
             for entry in bib_database.entries:
                 if 'author' in entry:
-                    entry['author'] = replace_latex_chars(entry['author'])
+                    authors = entry['author'].split(' and ')
+                    if len(authors) > 1:
+                        formatted_authors = ', '.join(authors[:-1]) + ' and ' + authors[-1]
+                    else:
+                        formatted_authors = authors[0]
+                    entry['author'] = replace_latex_chars(formatted_authors)  # Format authors and replace special characters
+                    
                 if 'pages' in entry:
                     entry['pages'] = replace_double_hyphen(entry['pages'])
                 year = entry.get('year', 'Unknown Year')
