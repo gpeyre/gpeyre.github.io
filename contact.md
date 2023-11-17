@@ -8,7 +8,7 @@ header-img: "img/ecriture.jpg"
 About me
 ---------------
 
-I am [CNRS](http://www.cnrs.fr/) senior researcher (DR2), working at the  [DMA](http://www.dma.ens.fr), [École Normale Supérieure](http://www.ens.fr/). I am also an associate member of the [Mokaplan](https://team.inria.fr/mokaplan/) INRIA/CNRS/Paris-Dauphine research group.
+I am [CNRS](http://www.cnrs.fr/)  researcher, working at the  [DMA](http://www.dma.ens.fr), [École Normale Supérieure](http://www.ens.fr/). 
 
 My office
 ---------------
