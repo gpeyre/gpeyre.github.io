@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.6.22)  30 JUL 2024 13:37
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.6.22)  30 JUL 2024 13:55
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -154,7 +154,7 @@ Here is how much of TeX's memory you used:
  20015 multiletter control sequences out of 15000+600000
  477254 words of font info for 59 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 54i,7n,62p,572b,216s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 54i,7n,62p,751b,216s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2022/texmf-dist/fonts/
 type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2022/texmf-dist/fonts/t
 ype1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2022/texmf-dist/fonts/ty
@@ -170,7 +170,7 @@ onts/cm/cmsy7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfon
 ts/cm/cmti10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfont
 s/symbols/msbm10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/ams
 fonts/symbols/msbm7.pfb>
-Output written on ConjectureSupportPreserving.pdf (2 pages, 155863 bytes).
+Output written on ConjectureSupportPreserving.pdf (2 pages, 155210 bytes).
 PDF statistics:
  81 PDF objects out of 1000 (max. 8388607)
  48 compressed objects within 1 object stream
