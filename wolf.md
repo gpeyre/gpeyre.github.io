@@ -8,10 +8,9 @@ header-img: "img/wolf-logo.jpg"
 
 Presentation
 -------------------
-WOLF (Numerical Optimal tRansport for ImAging) is a research project financed by the [ERC](http://erc.europa.eu/) [Advanced Grant](https://erc.europa.eu/apply-grant/advanced-grant) program. 
+WOLF (Wasserstein Flow Learning for Multi-Omics) is a research project financed by the [ERC](http://erc.europa.eu/) [Advanced Grant](https://erc.europa.eu/apply-grant/advanced-grant) program. 
 
-
-Optimal Transport (OT) theory provides a powerful framework to manipulate probability distributions using simple and intuitive geometric principles. OT distances compare favorably to all other alternatives, notably Euclidean metrics or information divergences, whose outputs are particularly sensitive to changes in quantization and are not suitable to compare point clouds. Because of these and many more favorable properties, OT should be a standard tool in imaging sciences where probability distributions are routinely used. However, at this time, OT is but a confidential tool restricted to niche applications. OT is barely used because it is complex mathematically, which hinders its dissemination in more applied fields, and because it consumes substantial computational resources when used naively. NORIA will address these two bottlenecks and develop the next generation of theoretical, numerical and algorithmic advances to enable large-scale optimal transport computations in imaging sciences and machine learning.
+Single cell molecular profiling allows to map cellular development at an unprecedented level of detail. Optimal transport (OT) enables the analysis of this dynamical process as a trajectory inference problem, using OT flows. These flows treat cells as particles evolving on an energy landscape over an "omics" space (such as transcriptomic, epigenomic, proteomic and location). Learning this model from large scale omics datasets poses however formidable mathematical and computational challenges, which will be tackled by WOLF. The first one is the joint learning of both the gene embedding space and the energy landscape. Existing approaches use ad-hoc Euclidean embeddings, ignoring biological relationships between genes. WOLF will develop a new type of non-Euclidean OT flows, which takes into account complex genetic relations. The second challenge is the fusion of multiple omics dataset (for instance transcriptomics, proteomic and space) without having access to an explicit pairing between the cells across the omics. Multi-omics is the next frontier in developmental analysis, and the corresponding trajectories cannot be captured with existing OT flows. WOLF will develop a new class of multi-linear OT flows where interaction terms couple particles together across different omics. These advances will be integrated in an efficient computational package where the parameters of the models are learned using parallelizable OT flow solvers. Leveraging the connexion between OT flows and attention mechanisms in deep learning, these methods will be approximated using transformers architectures and optimized using implicit differentiation. These theoretical and numerical contributions will work hand in hand to offer the first comprehensive framework for multi-omics trajectory inference. This will unlock biological findings for the characterization of developmental molecular pathways and the understanding of disease mechanisms.
 
 Collaborators
 -------------------
@@ -33,10 +32,10 @@ Visitors
 PhDs and post-docs
 -------------------
 
-* [Anna Audit](): PhD
+* [Anna Audit](https://research.pasteur.fr/fr/member/anna-audit/): PhD
 * [Raphaël Barboni](https://scholar.google.com/citations?user=tEu2ONgAAAAJ&hl=en): PhD.
 * [Valérie Castin](https://samuelhurault.netlify.app/), PhD.
-* [Samuel Hurault](): postdoc.
+* [Samuel Hurault](https://samuelhurault.netlify.app/): postdoc.
 * [Jérémie Kalfon](https://www.jkobject.com/): PhD.
 * [Francisco Lima](https://www.it.pt/Members/Index/35492), Postdoc.
 * [Sibylle Marcotte](https://www.math.ens.psl.eu/instructor/sibylle-marcotte/), PhD.
