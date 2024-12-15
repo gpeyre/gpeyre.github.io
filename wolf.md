@@ -1,5 +1,5 @@
 ---
-layout: page-notitle
+layout: page
 title: "WOLF"
 description: "ERC Project"
 header-img: "img/louis-arbres.jpg"
