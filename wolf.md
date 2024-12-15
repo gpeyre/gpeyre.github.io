@@ -2,7 +2,7 @@
 layout: page
 title: "WOLF"
 description: "ERC Project"
-header-img: "img/louis-arbres.jpg"
+header-img: "img/wolf-logo.jpg"
 ---
 
 
