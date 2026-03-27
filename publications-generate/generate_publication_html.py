@@ -598,6 +598,7 @@ header-img: "img/louis-livres.jpg"
     --radius: 24px;
     color: var(--ink);
     line-height: 1.6;
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   }}
 
   .publications-page * {{
@@ -642,6 +643,7 @@ header-img: "img/louis-livres.jpg"
     border-radius: 18px;
     background: rgba(255, 255, 255, 0.94);
     color: var(--ink);
+    font-family: inherit;
     font-size: 1rem;
     outline: none;
     transition: border-color 0.2s ease, transform 0.2s ease;
@@ -658,6 +660,7 @@ header-img: "img/louis-livres.jpg"
     border-radius: 16px;
     background: rgba(255, 255, 255, 0.94);
     color: var(--ink);
+    font-family: inherit;
     font-weight: 700;
     cursor: pointer;
   }}
@@ -678,6 +681,7 @@ header-img: "img/louis-livres.jpg"
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.8);
     color: var(--ink);
+    font-family: inherit;
     font-weight: 700;
     cursor: pointer;
     transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
@@ -734,8 +738,9 @@ header-img: "img/louis-livres.jpg"
 
   .publications-page .year-heading h2 {{
     margin: 0;
-    font-family: "Iowan Old Style", "Palatino Linotype", serif;
+    font-family: inherit;
     font-size: clamp(1.8rem, 2.2vw, 2.4rem);
+    font-weight: 800;
     letter-spacing: -0.04em;
   }}
 
@@ -801,8 +806,10 @@ header-img: "img/louis-livres.jpg"
 
   .publications-page .publication-card h3 {{
     margin: 0;
+    font-family: inherit;
     font-size: 1.24rem;
     line-height: 1.2;
+    font-weight: 800;
     letter-spacing: -0.02em;
   }}
 
@@ -856,6 +863,7 @@ header-img: "img/louis-livres.jpg"
     border-radius: 12px;
     border: 1px solid var(--line);
     background: rgba(255, 255, 255, 0.7);
+    font-family: inherit;
     font-size: 0.92rem;
     font-weight: 700;
   }}
