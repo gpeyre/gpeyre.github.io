@@ -13,7 +13,7 @@ import unicodedata
 
 ROOT = Path(__file__).resolve().parent
 BIBTEX_DIR = ROOT / "bibtex"
-OUTPUT_HTML = ROOT / "publication.html"
+OUTPUT_HTML = ROOT.parent / "publications.html"
 
 
 CATEGORY_BY_FILE = {
