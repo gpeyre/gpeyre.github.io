@@ -597,8 +597,10 @@ header-img: "img/louis-livres.jpg"
     --shadow: 0 18px 35px rgba(36, 25, 14, 0.08);
     --radius: 24px;
     color: var(--ink);
+    font-size: 16px;
     line-height: 1.6;
     font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-align: left;
   }}
 
   .publications-page * {{
@@ -608,6 +610,10 @@ header-img: "img/louis-livres.jpg"
   .publications-page a {{
     color: inherit;
     text-decoration: none;
+  }}
+
+  .publications-page p {{
+    margin: 0;
   }}
 
   .publications-page .page-shell {{
