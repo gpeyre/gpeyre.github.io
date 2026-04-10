@@ -42,29 +42,6 @@
     padding: 4px 0 48px;
   }
 
-  .publications-page .top-home {
-    margin: 0 0 12px;
-  }
-
-  .publications-page .home-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 7px 12px;
-    border-radius: 999px;
-    border: 1px solid var(--line);
-    background: rgba(255, 255, 255, 0.82);
-    color: var(--ink);
-    font-weight: 700;
-    font-size: 0.95rem;
-  }
-
-  .publications-page .home-link:hover {
-    border-color: rgba(175, 63, 38, 0.3);
-    background: rgba(175, 63, 38, 0.08);
-    color: var(--accent-deep);
-  }
-
   .publications-page .toolbar {
     position: sticky;
     top: 16px;
@@ -166,22 +143,6 @@
     margin: 18px 2px 0;
     color: var(--muted);
     font-size: 0.95rem;
-  }
-
-  .publications-page .source-warning {
-    display: none;
-    margin: 14px 0 0;
-    padding: 11px 14px;
-    border-radius: 12px;
-    border: 1px solid rgba(175, 63, 38, 0.35);
-    background: rgba(175, 63, 38, 0.12);
-    color: #612116;
-    font-size: 0.93rem;
-    font-weight: 700;
-  }
-
-  .publications-page .source-warning.visible {
-    display: block;
   }
 
   .publications-page .year-section {
@@ -413,7 +374,6 @@
 <body>
 <div class="publications-page">
   <main class="page-shell">
-    <p class="top-home"><a class="home-link" href="https://www.gpeyre.com/">Home</a></p>
     <section class="toolbar" aria-label="Publication filters">
       <div class="search-row">
         <input id="search-input" class="search-input" type="search" placeholder="Search publications, authors, venues, years, or DOI..." disabled>
@@ -424,7 +384,6 @@
         <span id="status-text">Loading publications...</span>
         <span>Tip: press <kbd>/</kbd> to focus search</span>
       </div>
-      <p id="source-warning" class="source-warning" role="status" aria-live="polite"></p>
     </section>
 
     <div id="loading-state" class="loading-state">Loading BibTeX files and building the publication list...</div>
@@ -3184,37 +3143,37 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
     const BIB_FILES = [
       {
         id: "journal",
-        path: `${BASE_URL}/publications-bibtex/peyre-biblio-journal.bib`,
+        path: `${BASE_URL}/publications-generate/bibtex/peyre-biblio-journal.bib`,
         category: "journal",
         label: "Journal Articles",
       },
       {
         id: "conference",
-        path: `${BASE_URL}/publications-bibtex/peyre-biblio-conf-en.bib`,
+        path: `${BASE_URL}/publications-generate/bibtex/peyre-biblio-conf-en.bib`,
         category: "conference",
         label: "Conference Papers",
       },
       {
         id: "conference-fr",
-        path: `${BASE_URL}/publications-bibtex/peyre-biblio-conf-fr.bib`,
+        path: `${BASE_URL}/publications-generate/bibtex/peyre-biblio-conf-fr.bib`,
         category: "conference-fr",
         label: "French Conferences",
       },
       {
         id: "preprint",
-        path: `${BASE_URL}/publications-bibtex/peyre-biblio-preprint.bib`,
+        path: `${BASE_URL}/publications-generate/bibtex/peyre-biblio-preprint.bib`,
         category: "preprint",
         label: "Preprints",
       },
       {
         id: "book-chapter",
-        path: `${BASE_URL}/publications-bibtex/peyre-biblio-book-chap.bib`,
+        path: `${BASE_URL}/publications-generate/bibtex/peyre-biblio-book-chap.bib`,
         category: "book-chapter",
         label: "Book Chapters",
       },
       {
         id: "book",
-        path: `${BASE_URL}/publications-bibtex/peyre-biblio-book.bib`,
+        path: `${BASE_URL}/publications-generate/bibtex/peyre-biblio-book.bib`,
         category: "book",
         label: "Books",
       },
@@ -3286,7 +3245,6 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
       statusText: document.getElementById("status-text"),
       root: document.getElementById("publications-root"),
       footerNote: document.getElementById("footer-note"),
-      sourceWarning: document.getElementById("source-warning"),
     };
 
     function collapseWhitespace(text) {
@@ -3939,19 +3897,10 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
         const fetchedCount = loaded.filter((x) => x.mode === "fetched").length;
         const embeddedCount = loaded.length - fetchedCount;
         dom.footerNote.textContent = `Generated dynamically from ${BIB_FILES.length} BibTeX files (${fetchedCount} fetched, ${embeddedCount} embedded fallback).`;
-        if (embeddedCount > 0) {
-          dom.sourceWarning.textContent = `Warning: not fully rendered from publications-bibtex/ (${embeddedCount} fallback source${embeddedCount === 1 ? "" : "s"} used).`;
-          dom.sourceWarning.classList.add("visible");
-        } else {
-          dom.sourceWarning.textContent = "";
-          dom.sourceWarning.classList.remove("visible");
-        }
         setupFilters();
       } catch (error) {
         dom.loadingState.innerHTML = `Could not build publications dynamically: ${escapeHtml(error.message)}`;
         dom.statusText.textContent = "Loading failed.";
-        dom.sourceWarning.textContent = "Warning: this page is not rendered from publications-bibtex/.";
-        dom.sourceWarning.classList.add("visible");
       }
     }
 
