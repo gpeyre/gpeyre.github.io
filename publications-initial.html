@@ -42,6 +42,26 @@
     padding: 4px 0 48px;
   }
 
+  .publications-page .home-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 16px;
+    border-radius: 16px;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 0.95rem;
+    white-space: nowrap;
+  }
+
+  .publications-page .home-link:hover {
+    border-color: rgba(175, 63, 38, 0.3);
+    background: rgba(175, 63, 38, 0.08);
+    color: var(--accent-deep);
+  }
+
   .publications-page .toolbar {
     position: sticky;
     top: 16px;
@@ -49,7 +69,10 @@
     margin: 0 0 24px;
     padding: 18px;
     border-radius: 24px;
-    background: rgba(255, 250, 243, 0.9);
+    background-image: linear-gradient(rgba(255, 250, 243, 0.2), rgba(255, 250, 243, 0.2)), url("img/louis-livres.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     border: 1px solid rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(18px);
     box-shadow: var(--shadow);
@@ -57,7 +80,7 @@
 
   .publications-page .search-row {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     gap: 12px;
     align-items: center;
   }
@@ -141,8 +164,24 @@
     justify-content: space-between;
     gap: 12px;
     margin: 18px 2px 0;
-    color: var(--muted);
+    color: #000;
     font-size: 0.95rem;
+  }
+
+  .publications-page .source-warning {
+    display: none;
+    margin: 14px 0 0;
+    padding: 11px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(175, 63, 38, 0.35);
+    background: rgba(175, 63, 38, 0.12);
+    color: #612116;
+    font-size: 0.93rem;
+    font-weight: 700;
+  }
+
+  .publications-page .source-warning.visible {
+    display: block;
   }
 
   .publications-page .year-section {
@@ -184,14 +223,15 @@
   .publications-page .publication-card {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     min-height: 100%;
-    padding: 22px;
+    padding: 18px 64px 18px 18px;
     border-radius: var(--radius);
     background: var(--surface-strong);
     border: 1px solid rgba(50, 65, 88, 0.08);
     box-shadow: 0 16px 34px rgba(52, 38, 20, 0.06);
     transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    position: relative;
   }
 
   .publications-page .publication-card:hover {
@@ -203,37 +243,10 @@
     display: none;
   }
 
-  .publications-page .card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-  }
-
-  .publications-page .badge,
-  .publications-page .year-pill {
-    display: inline-flex;
-    align-items: center;
-    padding: 7px 11px;
-    border-radius: 999px;
-    font-size: 0.8rem;
-    font-weight: 700;
-  }
-
-  .publications-page .badge {
-    background: var(--accent-soft);
-    color: var(--accent-deep);
-  }
-
-  .publications-page .year-pill {
-    background: rgba(40, 89, 79, 0.1);
-    color: var(--sage);
-  }
-
   .publications-page .publication-card h3 {
     margin: 0;
     font-family: inherit;
-    font-size: 1.24rem;
+    font-size: 1.12rem;
     line-height: 1.2;
     font-weight: 800;
     letter-spacing: -0.02em;
@@ -247,8 +260,7 @@
   }
 
   .publications-page .authors,
-  .publications-page .venue,
-  .publications-page .details {
+  .publications-page .citation-line {
     margin: 0;
   }
 
@@ -257,14 +269,13 @@
     font-size: 0.98rem;
   }
 
-  .publications-page .venue {
+  .publications-page .citation-line {
     color: var(--sage);
     font-weight: 700;
-  }
-
-  .publications-page .details {
-    color: var(--muted);
-    font-size: 0.94rem;
+    font-size: 0.93rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .publications-page .me {
@@ -272,32 +283,71 @@
     color: var(--accent-deep);
   }
 
-  .publications-page .actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: auto;
-    padding-top: 8px;
+  .publications-page .citation-line a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.14em;
+    text-decoration-color: rgba(175, 63, 38, 0.35);
   }
 
-  .publications-page .action-link,
-  .publications-page .doi-text {
+  .publications-page .bibtex-details {
+    margin-top: 2px;
+  }
+
+  .publications-page .bibtex-summary {
+    position: absolute;
+    top: 14px;
+    right: 14px;
     display: inline-flex;
     align-items: center;
-    min-height: 38px;
-    padding: 9px 12px;
-    border-radius: 12px;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
     border: 1px solid var(--line);
-    background: rgba(255, 255, 255, 0.7);
-    font-family: inherit;
-    font-size: 0.92rem;
-    font-weight: 700;
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--accent-deep);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    list-style: none;
   }
 
-  .publications-page .action-link.primary {
-    border-color: rgba(175, 63, 38, 0.25);
-    background: rgba(175, 63, 38, 0.09);
-    color: var(--accent-deep);
+  .publications-page .bibtex-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .publications-page .bibtex-box {
+    margin-top: 8px;
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.74);
+  }
+
+  .publications-page .copy-bibtex {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 10px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--ink);
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .publications-page .bibtex-code {
+    margin: 8px 0 0;
+    max-height: 240px;
+    overflow: auto;
+    white-space: pre-wrap;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: #273142;
   }
 
   .publications-page .empty-state {
@@ -376,7 +426,8 @@
   <main class="page-shell">
     <section class="toolbar" aria-label="Publication filters">
       <div class="search-row">
-        <input id="search-input" class="search-input" type="search" placeholder="Search publications, authors, venues, years, or DOI..." disabled>
+        <a class="home-link" href="https://www.gpeyre.com/">Home</a>
+        <input id="search-input" class="search-input" type="search" placeholder="Search publications, authors, venues, years, or arXiv..." disabled>
         <button id="clear-search" class="ghost-button" type="button" disabled>Clear</button>
       </div>
       <div id="filter-row" class="filter-row"></div>
@@ -384,6 +435,7 @@
         <span id="status-text">Loading publications...</span>
         <span>Tip: press <kbd>/</kbd> to focus search</span>
       </div>
+      <p id="source-warning" class="source-warning" role="status" aria-live="polite"></p>
     </section>
 
     <div id="loading-state" class="loading-state">Loading BibTeX files and building the publication list...</div>
@@ -3143,37 +3195,37 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
     const BIB_FILES = [
       {
         id: "journal",
-        path: `${BASE_URL}/publications-generate/bibtex/peyre-biblio-journal.bib`,
+        path: `${BASE_URL}/publications-bibtex/peyre-biblio-journal.bib`,
         category: "journal",
         label: "Journal Articles",
       },
       {
         id: "conference",
-        path: `${BASE_URL}/publications-generate/bibtex/peyre-biblio-conf-en.bib`,
+        path: `${BASE_URL}/publications-bibtex/peyre-biblio-conf-en.bib`,
         category: "conference",
         label: "Conference Papers",
       },
       {
         id: "conference-fr",
-        path: `${BASE_URL}/publications-generate/bibtex/peyre-biblio-conf-fr.bib`,
+        path: `${BASE_URL}/publications-bibtex/peyre-biblio-conf-fr.bib`,
         category: "conference-fr",
         label: "French Conferences",
       },
       {
         id: "preprint",
-        path: `${BASE_URL}/publications-generate/bibtex/peyre-biblio-preprint.bib`,
+        path: `${BASE_URL}/publications-bibtex/peyre-biblio-preprint.bib`,
         category: "preprint",
         label: "Preprints",
       },
       {
         id: "book-chapter",
-        path: `${BASE_URL}/publications-generate/bibtex/peyre-biblio-book-chap.bib`,
+        path: `${BASE_URL}/publications-bibtex/peyre-biblio-book-chap.bib`,
         category: "book-chapter",
         label: "Book Chapters",
       },
       {
         id: "book",
-        path: `${BASE_URL}/publications-generate/bibtex/peyre-biblio-book.bib`,
+        path: `${BASE_URL}/publications-bibtex/peyre-biblio-book.bib`,
         category: "book",
         label: "Books",
       },
@@ -3245,6 +3297,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
       statusText: document.getElementById("status-text"),
       root: document.getElementById("publications-root"),
       footerNote: document.getElementById("footer-note"),
+      sourceWarning: document.getElementById("source-warning"),
     };
 
     function collapseWhitespace(text) {
@@ -3387,6 +3440,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
                   entryType,
                   key,
                   fields: parseBibtexFields(body),
+                  raw: content.slice(start, cursor + 1),
                 });
                 cursor += 1;
                 break;
@@ -3514,6 +3568,22 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
       return { doi: clean, doiUrl: "" };
     }
 
+    function extractArxivId(text) {
+      const clean = collapseWhitespace(text);
+      if (!clean) {
+        return "";
+      }
+      const idMatch = clean.match(/\b(\d{4}\.\d{4,5}(v\d+)?)\b/i);
+      if (idMatch) {
+        return idMatch[1];
+      }
+      const absMatch = clean.match(/arxiv\.org\/abs\/([^/?#\s]+)/i);
+      if (absMatch) {
+        return absMatch[1];
+      }
+      return "";
+    }
+
     function parseAuthors(raw) {
       return (raw || "")
         .split(/\s+and\s+/i)
@@ -3561,42 +3631,33 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
           fallbackLabel
       );
       const details = [];
-      if (fields.publisher) {
+      const volume = latexToUnicode(fields.volume || "");
+      const number = latexToUnicode(fields.number || "");
+      if (volume && number) {
+        details.push(`${volume}(${number})`);
+      } else if (volume) {
+        details.push(volume);
+      } else if (number) {
+        details.push(`(${number})`);
+      }
+      if (fields.pages) {
+        details.push(latexToUnicode(fields.pages).replace(/--/g, "-"));
+      }
+      if (!details.length && fields.publisher) {
         const publisher = latexToUnicode(fields.publisher);
         if (publisher && publisher !== venue) {
           details.push(publisher);
         }
       }
-      if (fields.institution) {
+      if (!details.length && fields.institution) {
         const institution = latexToUnicode(fields.institution);
         if (institution && institution !== venue) {
           details.push(institution);
         }
       }
-      if (fields.volume) {
-        details.push(`Vol. ${latexToUnicode(fields.volume)}`);
-      }
-      if (fields.number) {
-        details.push(`No. ${latexToUnicode(fields.number)}`);
-      }
-      if (fields.pages) {
-        details.push(`pp. ${latexToUnicode(fields.pages).replace(/--/g, "-")}`);
-      }
-      if (fields.isbn) {
-        details.push(`ISBN ${latexToUnicode(fields.isbn)}`);
-      }
-      if (fields.issn) {
-        details.push(`ISSN ${latexToUnicode(fields.issn)}`);
-      }
-      if (fields.type) {
-        const typeText = latexToUnicode(fields.type);
-        if (typeText && !venue.includes(typeText)) {
-          details.push(typeText);
-        }
-      }
       return {
         venue,
-        details: details.join(" • "),
+        details: details.join(", "),
       };
     }
 
@@ -3609,13 +3670,21 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
       const venueData = buildVenue(entry.fields, source.label);
       const url = normalizeUrl(latexToUnicode(entry.fields.url || ""));
       const doiData = normalizeDoi(latexToUnicode(entry.fields.doi || ""), url);
+      const arxivId =
+        extractArxivId(doiData.doi) ||
+        extractArxivId(doiData.doiUrl) ||
+        extractArxivId(url);
+      const isPublished = Boolean(collapseWhitespace(entry.fields.journal || entry.fields.booktitle));
+      const isArxivPreprint = source.category === "preprint" && Boolean(arxivId) && !isPublished;
+      const venue = isArxivPreprint ? "" : venueData.venue;
+      const details = isArxivPreprint ? "" : venueData.details;
 
       const searchBlob = asciiFold(
         [
           title,
           formatAuthors(authors),
-          venueData.venue,
-          venueData.details,
+          venue,
+          details,
           yearText,
           source.label,
           doiData.doi,
@@ -3635,11 +3704,14 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
         yearSort,
         title,
         authors,
-        venue: venueData.venue,
-        details: venueData.details,
+        venue,
+        details,
         url,
         doi: doiData.doi,
         doiUrl: doiData.doiUrl,
+        arxivId,
+        isPublished,
+        bibtex: (entry.raw || "").trim(),
         searchBlob,
       };
     }
@@ -3682,36 +3754,50 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
         ? `<a href="${escapeHtml(publication.url)}" target="_blank" rel="noreferrer">${escapeHtml(publication.title)}</a>`
         : escapeHtml(publication.title);
 
-      const links = [];
-      if (publication.url) {
-        links.push(
-          `<a class="action-link primary" href="${escapeHtml(publication.url)}" target="_blank" rel="noreferrer">Open paper</a>`
-        );
+      const citationParts = [];
+      if (publication.venue) {
+        citationParts.push(escapeHtml(publication.venue));
+        if (publication.details) {
+          citationParts.push(escapeHtml(publication.details));
+        }
+        if (publication.year && publication.year !== "Unknown") {
+          citationParts.push(escapeHtml(publication.year));
+        }
+      } else if (publication.arxivId && !publication.isPublished) {
+        const arxivLabel = `arXiv:${publication.arxivId}`;
+        const arxivUrl = publication.url && /arxiv\.org\/abs\//i.test(publication.url)
+          ? publication.url
+          : (publication.doiUrl && /arxiv\.org\/abs\//i.test(publication.doiUrl) ? publication.doiUrl : "");
+        if (arxivUrl) {
+          citationParts.push(`<a href="${escapeHtml(arxivUrl)}" target="_blank" rel="noreferrer">${escapeHtml(arxivLabel)}</a>`);
+        } else {
+          citationParts.push(escapeHtml(arxivLabel));
+        }
+        if (publication.year && publication.year !== "Unknown") {
+          citationParts.push(escapeHtml(publication.year));
+        }
       }
-      if (publication.doiUrl && publication.doiUrl !== publication.url) {
-        const label = publication.doi.startsWith("10.") || publication.doi.startsWith("http") ? "DOI" : "Reference";
-        links.push(
-          `<a class="action-link" href="${escapeHtml(publication.doiUrl)}" target="_blank" rel="noreferrer">${label}</a>`
-        );
-      } else if (publication.doi) {
-        links.push(`<span class="doi-text">${escapeHtml(publication.doi)}</span>`);
-      }
-
-      const details = publication.details
-        ? `<p class="details">${escapeHtml(publication.details)}</p>`
+      const citationLine = citationParts.length
+        ? `<p class="citation-line">${citationParts.join(", ")}</p>`
+        : "";
+      const bibtex = publication.bibtex
+        ? `
+          <details class="bibtex-details">
+            <summary class="bibtex-summary" title="Show BibTeX">Bib</summary>
+            <div class="bibtex-box">
+              <button class="copy-bibtex" type="button">Copy</button>
+              <pre class="bibtex-code"><code>${escapeHtml(publication.bibtex)}</code></pre>
+            </div>
+          </details>
+        `
         : "";
 
       return `
         <article class="publication-card" data-category="${escapeHtml(publication.category)}" data-year="${escapeHtml(publication.year)}" data-search="${escapeHtml(publication.searchBlob)}">
-          <div class="card-header">
-            <span class="badge">${escapeHtml(publication.categoryLabel)}</span>
-            <span class="year-pill">${escapeHtml(publication.year)}</span>
-          </div>
           <h3>${title}</h3>
           <p class="authors">${renderAuthors(publication.authors)}</p>
-          <p class="venue">${escapeHtml(publication.venue)}</p>
-          ${details}
-          <div class="actions">${links.join("")}</div>
+          ${citationLine}
+          ${bibtex}
         </article>
       `;
     }
@@ -3760,6 +3846,51 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
         `;
       });
       dom.root.innerHTML = sections.join("\n");
+    }
+
+    function setupBibtexCopy() {
+      dom.root.addEventListener("click", async (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) {
+          return;
+        }
+        const button = target.closest(".copy-bibtex");
+        if (!(button instanceof HTMLButtonElement)) {
+          return;
+        }
+        const code = button.parentElement?.querySelector("code");
+        const text = code ? code.textContent || "" : "";
+        if (!text.trim()) {
+          return;
+        }
+
+        let copied = false;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          try {
+            await navigator.clipboard.writeText(text);
+            copied = true;
+          } catch (_) {
+            copied = false;
+          }
+        }
+        if (!copied) {
+          const textarea = document.createElement("textarea");
+          textarea.value = text;
+          textarea.style.position = "fixed";
+          textarea.style.opacity = "0";
+          document.body.appendChild(textarea);
+          textarea.focus();
+          textarea.select();
+          copied = document.execCommand("copy");
+          document.body.removeChild(textarea);
+        }
+
+        const previous = button.textContent;
+        button.textContent = copied ? "Copied" : "Copy failed";
+        window.setTimeout(() => {
+          button.textContent = previous || "Copy";
+        }, 1200);
+      });
     }
 
     function setupFilters() {
@@ -3890,6 +4021,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
         renderFilters(publications);
         renderSections(publications);
+        setupBibtexCopy();
 
         dom.searchInput.disabled = false;
         dom.clearButton.disabled = false;
@@ -3897,10 +4029,19 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
         const fetchedCount = loaded.filter((x) => x.mode === "fetched").length;
         const embeddedCount = loaded.length - fetchedCount;
         dom.footerNote.textContent = `Generated dynamically from ${BIB_FILES.length} BibTeX files (${fetchedCount} fetched, ${embeddedCount} embedded fallback).`;
+        if (embeddedCount > 0) {
+          dom.sourceWarning.textContent = `Warning: not fully rendered from publications-bibtex/ (${embeddedCount} fallback source${embeddedCount === 1 ? "" : "s"} used).`;
+          dom.sourceWarning.classList.add("visible");
+        } else {
+          dom.sourceWarning.textContent = "";
+          dom.sourceWarning.classList.remove("visible");
+        }
         setupFilters();
       } catch (error) {
         dom.loadingState.innerHTML = `Could not build publications dynamically: ${escapeHtml(error.message)}`;
         dom.statusText.textContent = "Loading failed.";
+        dom.sourceWarning.textContent = "Warning: this page is not rendered from publications-bibtex/.";
+        dom.sourceWarning.classList.add("visible");
       }
     }
 

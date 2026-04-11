@@ -3,24 +3,65 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Publications (Dynamic)</title>
+  <title>Publications // Terminal Mode</title>
 <style>
+  html,
+  body {
+    margin: 0;
+    background: #000;
+  }
+
+  body {
+    min-height: 100vh;
+    font-family: "Courier New", "Lucida Console", Monaco, monospace;
+  }
+
   .publications-page {
-    --surface: rgba(255, 252, 247, 0.9);
-    --surface-strong: #fffdf9;
-    --ink: #1e2430;
-    --muted: #5a6473;
-    --line: rgba(48, 62, 84, 0.12);
-    --accent-soft: rgba(175, 63, 38, 0.12);
-    --accent-deep: #7a2619;
-    --sage: #28594f;
-    --shadow: 0 18px 35px rgba(36, 25, 14, 0.08);
-    --radius: 24px;
-    color: var(--ink);
+    --bg: #020402;
+    --bg-alt: #041006;
+    --panel: rgba(3, 12, 4, 0.9);
+    --text: #b7ffb7;
+    --text-dim: #79cb79;
+    --line: #2f7d3a;
+    --line-bright: #58df6a;
+    --warn: #ffcb6b;
+    color: var(--text);
     font-size: 16px;
-    line-height: 1.6;
-    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+    text-shadow: 0 0 8px rgba(90, 255, 120, 0.2);
     text-align: left;
+    min-height: 100vh;
+    padding: 12px 10px 38px;
+    background:
+      radial-gradient(150% 130% at 50% 0%, #0a1d0d 0%, #020402 50%, #000 100%);
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  .publications-page::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(120, 255, 150, 0.07) 0,
+      rgba(120, 255, 150, 0.07) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    opacity: 0.24;
+    z-index: 100;
+  }
+
+  .publications-page::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    box-shadow: inset 0 0 160px rgba(0, 0, 0, 0.85);
+    z-index: 99;
   }
 
   .publications-page * {
@@ -28,7 +69,7 @@
   }
 
   .publications-page a {
-    color: inherit;
+    color: #d5ffd5;
     text-decoration: none;
   }
 
@@ -42,74 +83,108 @@
     padding: 4px 0 48px;
   }
 
-  .publications-page .home-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 14px 16px;
-    border-radius: 16px;
-    border: 1px solid var(--line);
-    background: rgba(255, 255, 255, 0.95);
-    color: var(--ink);
-    font-weight: 700;
-    font-size: 0.95rem;
-    white-space: nowrap;
-  }
-
-  .publications-page .home-link:hover {
-    border-color: rgba(175, 63, 38, 0.3);
-    background: rgba(175, 63, 38, 0.08);
-    color: var(--accent-deep);
-  }
-
   .publications-page .toolbar {
     position: sticky;
-    top: 16px;
+    top: 8px;
     z-index: 10;
-    margin: 0 0 24px;
-    padding: 18px;
-    border-radius: 24px;
-    background-image: linear-gradient(rgba(255, 250, 243, 0.2), rgba(255, 250, 243, 0.2)), url("img/louis-livres.jpg");
+    margin: 0 0 20px;
+    padding: 14px;
+    border-radius: 0;
+    border: 2px solid var(--line-bright);
+    background:
+      linear-gradient(rgba(0, 0, 0, 0.78), rgba(0, 0, 0, 0.78)),
+      url("img/louis-livres.jpg");
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
-    border: 1px solid rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(18px);
-    box-shadow: var(--shadow);
+    box-shadow:
+      0 0 0 2px rgba(0, 0, 0, 0.9) inset,
+      0 0 20px rgba(88, 223, 106, 0.3);
+  }
+
+  .publications-page .ascii-banner {
+    margin: 0 0 8px;
+    white-space: pre;
+    overflow-x: auto;
+    color: #a6ffa6;
+    font-size: 0.72rem;
+    line-height: 1.1;
+    opacity: 0.95;
+  }
+
+  .publications-page .terminal-prompt {
+    margin: 0 0 10px;
+    color: #c9ffc9;
+    font-size: 0.86rem;
+  }
+
+  .publications-page .terminal-prompt::after {
+    content: "_";
+    margin-left: 3px;
+    animation: blink-cursor 1s steps(1, end) infinite;
   }
 
   .publications-page .search-row {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
-    gap: 12px;
+    gap: 8px;
     align-items: center;
+  }
+
+  .publications-page .home-link,
+  .publications-page .ghost-button,
+  .publications-page .search-input {
+    border: 2px solid var(--line);
+    border-radius: 0;
+    background: rgba(2, 10, 3, 0.95);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.93rem;
+    box-shadow: inset 0 0 0 1px rgba(140, 255, 140, 0.08);
+  }
+
+  .publications-page .home-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .publications-page .home-link::before {
+    content: "[";
+    margin-right: 3px;
+  }
+
+  .publications-page .home-link::after {
+    content: "]";
+    margin-left: 3px;
+  }
+
+  .publications-page .home-link:hover,
+  .publications-page .ghost-button:hover {
+    border-color: var(--line-bright);
+    color: #e6ffe6;
+    background: rgba(6, 22, 8, 0.95);
   }
 
   .publications-page .search-input {
     width: 100%;
-    padding: 16px 18px;
-    border: 1px solid var(--line);
-    border-radius: 18px;
-    background: rgba(255, 255, 255, 0.94);
-    color: var(--ink);
-    font-family: inherit;
-    font-size: 1rem;
+    padding: 11px 12px;
     outline: none;
-    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .publications-page .search-input::placeholder {
+    color: #9ad99a;
   }
 
   .publications-page .search-input:focus {
-    border-color: rgba(175, 63, 38, 0.45);
-    transform: translateY(-1px);
+    border-color: var(--line-bright);
+    box-shadow: 0 0 0 1px rgba(88, 223, 106, 0.35), inset 0 0 0 1px rgba(140, 255, 140, 0.15);
   }
 
   .publications-page .ghost-button {
-    padding: 14px 16px;
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    background: rgba(255, 255, 255, 0.94);
-    color: var(--ink);
-    font-family: inherit;
+    padding: 11px 12px;
     font-weight: 700;
     cursor: pointer;
   }
@@ -117,45 +192,45 @@
   .publications-page .filter-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 14px;
+    gap: 6px;
+    margin-top: 10px;
   }
 
   .publications-page .filter-chip {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    padding: 11px 14px;
+    gap: 8px;
+    padding: 7px 10px;
     border: 1px solid var(--line);
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.8);
-    color: var(--ink);
+    border-radius: 0;
+    background: rgba(3, 14, 5, 0.95);
+    color: var(--text-dim);
     font-family: inherit;
+    font-size: 0.85rem;
     font-weight: 700;
     cursor: pointer;
-    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
   }
 
   .publications-page .filter-chip span {
     display: inline-grid;
     place-items: center;
-    min-width: 24px;
-    padding: 2px 6px;
-    border-radius: 999px;
-    background: rgba(40, 89, 79, 0.1);
-    color: var(--sage);
-    font-size: 0.82rem;
+    min-width: 20px;
+    padding: 1px 5px;
+    border: 1px solid var(--line);
+    border-radius: 0;
+    background: #000;
+    color: #9ff79f;
+    font-size: 0.77rem;
   }
 
   .publications-page .filter-chip:hover,
   .publications-page .filter-chip.active {
-    transform: translateY(-1px);
-    border-color: rgba(175, 63, 38, 0.3);
+    border-color: var(--line-bright);
+    color: #e3ffe3;
   }
 
   .publications-page .filter-chip.active {
-    background: rgba(175, 63, 38, 0.12);
-    color: var(--accent-deep);
+    background: rgba(8, 34, 12, 0.95);
   }
 
   .publications-page .status-row {
@@ -163,20 +238,20 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    margin: 18px 2px 0;
-    color: #000;
-    font-size: 0.95rem;
+    margin: 10px 1px 0;
+    color: #d4ffd4;
+    font-size: 0.86rem;
   }
 
   .publications-page .source-warning {
     display: none;
-    margin: 14px 0 0;
-    padding: 11px 14px;
-    border-radius: 12px;
-    border: 1px solid rgba(175, 63, 38, 0.35);
-    background: rgba(175, 63, 38, 0.12);
-    color: #612116;
-    font-size: 0.93rem;
+    margin: 10px 0 0;
+    padding: 8px 10px;
+    border: 1px solid var(--warn);
+    border-radius: 0;
+    background: rgba(45, 29, 0, 0.65);
+    color: #ffd888;
+    font-size: 0.84rem;
     font-weight: 700;
   }
 
@@ -185,12 +260,14 @@
   }
 
   .publications-page .year-section {
-    margin-top: 28px;
-    padding: 24px;
-    border-radius: 28px;
-    background: var(--surface);
-    border: 1px solid rgba(255, 255, 255, 0.7);
-    box-shadow: 0 20px 40px rgba(51, 38, 19, 0.06);
+    margin-top: 16px;
+    padding: 14px;
+    border-radius: 0;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    box-shadow:
+      0 0 0 1px rgba(88, 223, 106, 0.15) inset,
+      0 0 18px rgba(50, 160, 70, 0.14);
   }
 
   .publications-page .year-heading {
@@ -198,45 +275,68 @@
     align-items: baseline;
     justify-content: space-between;
     gap: 16px;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
+    border-bottom: 1px dashed rgba(114, 219, 130, 0.35);
+    padding-bottom: 6px;
   }
 
   .publications-page .year-heading h2 {
     margin: 0;
-    font-family: inherit;
-    font-size: clamp(1.8rem, 2.2vw, 2.4rem);
-    font-weight: 800;
-    letter-spacing: -0.04em;
+    font-size: clamp(1.15rem, 2vw, 1.55rem);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .publications-page .year-heading h2::before {
+    content: ">> ";
+    color: #81ff81;
   }
 
   .publications-page .year-heading p {
     margin: 0;
-    color: var(--muted);
+    color: var(--text-dim);
+    font-size: 0.82rem;
   }
 
   .publications-page .publication-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px;
+    gap: 10px;
   }
 
   .publications-page .publication-card {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
     min-height: 100%;
-    padding: 18px 64px 18px 18px;
-    border-radius: var(--radius);
-    background: var(--surface-strong);
-    border: 1px solid rgba(50, 65, 88, 0.08);
-    box-shadow: 0 16px 34px rgba(52, 38, 20, 0.06);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    padding: 11px 52px 10px 11px;
+    border-radius: 0;
+    background: linear-gradient(180deg, rgba(2, 14, 5, 0.95), rgba(2, 9, 4, 0.95));
+    border: 1px solid rgba(114, 219, 130, 0.4);
+    box-shadow: inset 0 0 0 1px rgba(100, 220, 120, 0.12);
     position: relative;
   }
 
   .publications-page .publication-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 24px 40px rgba(52, 38, 20, 0.1);
+    border-color: #8eff8e;
+    box-shadow:
+      inset 0 0 0 1px rgba(142, 255, 142, 0.25),
+      0 0 12px rgba(126, 255, 126, 0.2);
+  }
+
+  @keyframes blink-cursor {
+    0% {
+      opacity: 1;
+    }
+    49% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 0;
+    }
   }
 
   .publications-page .publication-card[hidden] {
@@ -245,18 +345,23 @@
 
   .publications-page .publication-card h3 {
     margin: 0;
-    font-family: inherit;
-    font-size: 1.12rem;
-    line-height: 1.2;
-    font-weight: 800;
-    letter-spacing: -0.02em;
+    font-size: 0.96rem;
+    line-height: 1.25;
+    font-weight: 700;
+    color: #ddffdd;
+  }
+
+  .publications-page .publication-card h3::before {
+    content: "> ";
+    color: #7dff7d;
   }
 
   .publications-page .publication-card h3 a {
+    color: inherit;
     text-decoration: underline;
-    text-decoration-thickness: 0.08em;
-    text-underline-offset: 0.14em;
-    text-decoration-color: rgba(175, 63, 38, 0.35);
+    text-decoration-style: dotted;
+    text-underline-offset: 0.15em;
+    text-decoration-color: rgba(129, 255, 129, 0.55);
   }
 
   .publications-page .authors,
@@ -265,54 +370,54 @@
   }
 
   .publications-page .authors {
-    color: #2e3541;
-    font-size: 0.98rem;
+    color: #9ce99c;
+    font-size: 0.86rem;
   }
 
   .publications-page .citation-line {
-    color: var(--sage);
-    font-weight: 700;
-    font-size: 0.93rem;
+    color: #7ed5ff;
+    font-size: 0.84rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
   .publications-page .me {
-    font-weight: 800;
-    color: var(--accent-deep);
+    color: #f4fff4;
+    background: rgba(120, 255, 140, 0.14);
+    padding: 0 2px;
   }
 
   .publications-page .citation-line a {
     color: inherit;
     text-decoration: underline;
-    text-decoration-thickness: 0.08em;
+    text-decoration-style: dotted;
     text-underline-offset: 0.14em;
-    text-decoration-color: rgba(175, 63, 38, 0.35);
   }
 
   .publications-page .bibtex-details {
-    margin-top: 2px;
+    margin-top: 0;
   }
 
   .publications-page .bibtex-summary {
     position: absolute;
-    top: 14px;
-    right: 14px;
+    top: 10px;
+    right: 10px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 8px;
-    border: 1px solid var(--line);
-    background: rgba(255, 255, 255, 0.9);
-    color: var(--accent-deep);
-    font-size: 0.68rem;
-    font-weight: 800;
-    letter-spacing: 0.01em;
+    width: 30px;
+    height: 30px;
+    border-radius: 0;
+    border: 1px solid var(--line-bright);
+    background: rgba(0, 15, 2, 0.96);
+    color: #c7ffc7;
+    font-size: 0.61rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
     cursor: pointer;
     list-style: none;
+    text-shadow: none;
   }
 
   .publications-page .bibtex-summary::-webkit-details-marker {
@@ -321,73 +426,70 @@
 
   .publications-page .bibtex-box {
     margin-top: 8px;
-    padding: 10px;
+    padding: 8px;
     border: 1px solid var(--line);
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.74);
+    border-radius: 0;
+    background: rgba(0, 6, 1, 0.95);
   }
 
   .publications-page .copy-bibtex {
     display: inline-flex;
     align-items: center;
-    padding: 6px 10px;
+    padding: 4px 8px;
     border: 1px solid var(--line);
-    border-radius: 10px;
-    background: #fff;
-    color: var(--ink);
-    font-size: 0.82rem;
+    border-radius: 0;
+    background: rgba(5, 20, 7, 0.95);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.76rem;
     font-weight: 700;
     cursor: pointer;
   }
 
   .publications-page .bibtex-code {
-    margin: 8px 0 0;
-    max-height: 240px;
+    margin: 7px 0 0;
+    max-height: 220px;
     overflow: auto;
     white-space: pre-wrap;
-    font-size: 0.82rem;
-    line-height: 1.45;
-    color: #273142;
+    font-size: 0.75rem;
+    line-height: 1.35;
+    color: #adffad;
+  }
+
+  .publications-page .empty-state,
+  .publications-page .loading-state {
+    margin-top: 16px;
+    padding: 14px 12px;
+    border-radius: 0;
+    border: 1px dashed var(--line);
+    background: rgba(2, 10, 3, 0.95);
+    color: var(--text-dim);
+    font-size: 0.86rem;
   }
 
   .publications-page .empty-state {
     display: none;
-    margin-top: 22px;
-    padding: 36px 28px;
     text-align: center;
-    border-radius: 28px;
-    border: 1px dashed rgba(50, 65, 88, 0.18);
-    background: rgba(255, 252, 247, 0.8);
-    color: var(--muted);
-  }
-
-  .publications-page .loading-state {
-    margin-top: 22px;
-    padding: 24px 28px;
-    border-radius: 18px;
-    border: 1px solid rgba(50, 65, 88, 0.15);
-    background: rgba(255, 252, 247, 0.8);
-    color: var(--muted);
   }
 
   .publications-page .footer-note {
-    margin-top: 26px;
-    color: var(--muted);
+    margin-top: 18px;
+    color: var(--text-dim);
     text-align: right;
-    font-size: 0.88rem;
+    font-size: 0.78rem;
   }
 
   .publications-page kbd {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 26px;
-    padding: 2px 8px;
-    border-radius: 10px;
-    border: 1px solid rgba(50, 65, 88, 0.14);
-    background: rgba(255, 255, 255, 0.84);
-    color: var(--ink);
-    font-size: 0.82rem;
+    min-width: 24px;
+    padding: 1px 6px;
+    border-radius: 0;
+    border: 1px solid var(--line);
+    background: #000;
+    color: #e5ffe5;
+    font-size: 0.76rem;
     font-family: inherit;
     font-weight: 700;
   }
@@ -399,16 +501,17 @@
   }
 
   @media (max-width: 720px) {
-    .publications-page .page-shell {
-      padding-top: 0;
-    }
-
-    .publications-page .year-section {
-      padding: 22px;
+    .publications-page {
+      padding: 8px 6px 26px;
     }
 
     .publications-page .toolbar {
-      top: 10px;
+      top: 4px;
+      padding: 10px;
+    }
+
+    .publications-page .ascii-banner {
+      font-size: 0.62rem;
     }
 
     .publications-page .search-row,
@@ -425,6 +528,13 @@
 <div class="publications-page">
   <main class="page-shell">
     <section class="toolbar" aria-label="Publication filters">
+      <pre class="ascii-banner" aria-hidden="true">   ____       _     _ _           _   _                 
+  |  _ \ _   _| |__ | (_) ___ __ _| |_(_) ___  _ __  ___ 
+  | |_) | | | | '_ \| | |/ __/ _` | __| |/ _ \| '_ \/ __|
+  |  __/| |_| | |_) | | | (_| (_| | |_| | (_) | | | \__ \
+  |_|    \__,_|_.__/|_|_|\___\__,_|\__|_|\___/|_| |_|___/
+  [ ARCHIVE NODE // G.PEYRE // SEARCHABLE BIBTeX CONSOLE ]</pre>
+      <p class="terminal-prompt">$ query database --mode fast --retro true</p>
       <div class="search-row">
         <a class="home-link" href="https://www.gpeyre.com/">Home</a>
         <input id="search-input" class="search-input" type="search" placeholder="Search publications, authors, venues, years, or arXiv..." disabled>
@@ -3783,7 +3893,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
       const bibtex = publication.bibtex
         ? `
           <details class="bibtex-details">
-            <summary class="bibtex-summary" title="Show BibTeX">Bib</summary>
+            <summary class="bibtex-summary" title="Show BibTeX">BTX</summary>
             <div class="bibtex-box">
               <button class="copy-bibtex" type="button">Copy</button>
               <pre class="bibtex-code"><code>${escapeHtml(publication.bibtex)}</code></pre>
