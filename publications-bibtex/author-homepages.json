@@ -1,8 +1,8 @@
 {
   "generated_at": "2026-04-11T11:57:42Z",
   "source": "publications-bibtex/*.bib + user-provided full-name canonicalization",
-  "total_authors": 153,
-  "total_with_homepage": 145,
+  "total_authors": 152,
+  "total_with_homepage": 144,
   "authors": [
     {
       "name": "Adrian Butscher",
@@ -11,8 +11,8 @@
         "Adrian Butscher"
       ],
       "key": "a butscher",
-      "homepage": "https://dblp.org/pid/83/8697",
-      "source": "dblp-profile"
+      "homepage": "https://www.research.autodesk.com/people/adrian-butscher/",
+      "source": "manual-user"
     },
     {
       "name": "Adrian Ion",
@@ -41,8 +41,8 @@
         "Alexander Yakubovich"
       ],
       "key": "a yakubovich",
-      "homepage": "https://dblp.org/pid/125/9202",
-      "source": "dblp-profile"
+      "homepage": "https://scholar.google.com/citations?user=QxZU7aEAAAAJ&hl=en",
+      "source": "manual-user"
     },
     {
       "name": "Alexandre Gramfort",
@@ -61,8 +61,8 @@
         "Andrew Isaac Meso"
       ],
       "key": "a i meso",
-      "homepage": "https://dblp.org/pid/40/1126",
-      "source": "dblp-profile"
+      "homepage": "https://laurentperrinet.github.io/author/andrew-isaac-meso/",
+      "source": "manual-user"
     },
     {
       "name": "Andy Nguyen",
@@ -71,8 +71,8 @@
         "Andy Nguyen"
       ],
       "key": "a nguyen",
-      "homepage": "https://dblp.org/pid/227/2685",
-      "source": "dblp-profile"
+      "homepage": "https://scholar.google.com/citations?user=PXbJSLcAAAAJ&hl=en",
+      "source": "manual-user"
     },
     {
       "name": "Antoine Rolet",
@@ -81,8 +81,8 @@
         "Antoine Rolet"
       ],
       "key": "a rolet",
-      "homepage": "https://dblp.org/pid/183/6929",
-      "source": "dblp-profile"
+      "homepage": "https://arolet.github.io/",
+      "source": "manual-user"
     },
     {
       "name": "Antonin Chambolle",
@@ -101,8 +101,8 @@
         "Arthur Mensch"
       ],
       "key": "a mensch",
-      "homepage": "https://dblp.org/pid/266/2622",
-      "source": "dblp-profile"
+      "homepage": "https://fr.wikipedia.org/wiki/Arthur_Mensch",
+      "source": "manual-user"
     },
     {
       "name": "Aude Genevay",
@@ -111,8 +111,8 @@
         "Aude Genevay"
       ],
       "key": "a genevay",
-      "homepage": "https://dblp.org/pid/180/1425",
-      "source": "dblp-profile"
+      "homepage": "https://audeg.github.io/",
+      "source": "manual-user"
     },
     {
       "name": "Benjamin Charlier",
@@ -121,8 +121,8 @@
         "Benjamin Charlier"
       ],
       "key": "benjamin charlier",
-      "homepage": "https://dblp.org/pid/144/7428",
-      "source": "dblp-profile"
+      "homepage": "https://miat.inrae.fr/bcharlier/",
+      "source": "manual-user"
     },
     {
       "name": "Bernhard Schmitzer",
@@ -131,8 +131,8 @@
         "Bernhard Schmitzer"
       ],
       "key": "b schmitzer",
-      "homepage": "https://dblp.org/pid/16/1934",
-      "source": "dblp-profile"
+      "homepage": "https://ot.cs.uni-goettingen.de/",
+      "source": "manual-user"
     },
     {
       "name": "Boris Muzellec",
@@ -141,8 +141,8 @@
         "Boris Muzellec"
       ],
       "key": "b muzellec",
-      "homepage": "https://dblp.org/pid/186/8010",
-      "source": "dblp-profile"
+      "homepage": "https://borismuzellec.github.io/",
+      "source": "manual-user"
     },
     {
       "name": "Charles Dossal",
@@ -329,22 +329,12 @@
       "aliases": [
         "F-X Vialard",
         "F-X. Vialard",
-        "François-Xavier Vialard"
+        "François-Xavier Vialard",
+        "Francois-Xavier Vialard"
       ],
       "key": "f x vialard",
       "homepage": "http://angkor.univ-mlv.fr/~vialard/",
       "source": "manual-user"
-    },
-    {
-      "name": "François-Xavier Vialard",
-      "aliases": [
-        "F-X. Vialard",
-        "Francois-Xavier Vialard",
-        "François-Xavier Vialard"
-      ],
-      "key": "francois xavier vialard",
-      "homepage": "https://dblp.org/pid/09/8280",
-      "source": "dblp-profile"
     },
     {
       "name": "Fred M. Ngole Mboula",
@@ -799,16 +789,6 @@
       "source": "manual-user"
     },
     {
-      "name": "Lauraine Perronnet",
-      "aliases": [
-        "L. Perronnet",
-        "Lauraine Perronnet"
-      ],
-      "key": "l perronnet",
-      "homepage": "https://lowpe.github.io/lorraineperronnet/",
-      "source": "manual-user"
-    },
-    {
       "name": "Laurent D. Cohen",
       "aliases": [
         "L.D. Cohen",
@@ -867,6 +847,16 @@
       ],
       "key": "l guibas",
       "homepage": "https://scholar.google.com/citations?user=5JlEyTAAAAAJ&hl=en",
+      "source": "manual-user"
+    },
+    {
+      "name": "Lorraine Perronnet",
+      "aliases": [
+        "L. Perronnet",
+        "Lorraine Perronnet"
+      ],
+      "key": "l perronnet",
+      "homepage": "https://lowpe.github.io/lorraineperronnet/",
       "source": "manual-user"
     },
     {
