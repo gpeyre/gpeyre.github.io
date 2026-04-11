@@ -85,7 +85,7 @@
 
   .publications-page .toolbar {
     position: sticky;
-    top: 8px;
+    top: 0;
     z-index: 10;
     margin: 0 0 20px;
     padding: 14px;
@@ -494,6 +494,655 @@
     font-weight: 700;
   }
 
+  .style-switcher {
+    position: fixed;
+    top: 10px;
+    right: 12px;
+    z-index: 350;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border: 1px solid #5ce65e;
+    background: rgba(0, 10, 2, 0.9);
+    color: #c8ffc8;
+    font-family: "Courier New", "Lucida Console", Monaco, monospace;
+    font-size: 0.78rem;
+    box-shadow: 0 0 10px rgba(90, 255, 120, 0.25);
+  }
+
+  .style-switcher label {
+    font-weight: 700;
+    text-transform: lowercase;
+  }
+
+  .style-switcher select {
+    border: 1px solid #5ce65e;
+    border-radius: 0;
+    background: #000;
+    color: #c8ffc8;
+    font-family: inherit;
+    font-size: 0.78rem;
+    padding: 3px 4px;
+    outline: none;
+  }
+
+  body:not([data-style="oldschool"]) .publications-page::before,
+  body:not([data-style="oldschool"]) .publications-page::after {
+    display: none;
+  }
+
+  body[data-style="standard"] {
+    background: #edf1f4;
+  }
+
+  body[data-style="standard"] .style-switcher {
+    border-color: #b6c2ce;
+    background: rgba(255, 255, 255, 0.96);
+    color: #1f2a37;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  body[data-style="standard"] .style-switcher select {
+    border-color: #b6c2ce;
+    background: #fff;
+    color: #1f2a37;
+  }
+
+  body[data-style="standard"] .publications-page {
+    background: linear-gradient(180deg, #f7fafc 0%, #eef3f8 100%);
+    color: #1e2430;
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-shadow: none;
+    letter-spacing: 0;
+  }
+
+  body[data-style="standard"] .publications-page a {
+    color: inherit;
+  }
+
+  body[data-style="standard"] .publications-page .ascii-banner,
+  body[data-style="standard"] .publications-page .terminal-prompt {
+    display: none;
+  }
+
+  body[data-style="standard"] .publications-page .toolbar {
+    border-radius: 16px;
+    border: 1px solid rgba(44, 60, 80, 0.18);
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 16px 34px rgba(15, 23, 42, 0.08);
+  }
+
+  body[data-style="standard"] .publications-page .home-link::before,
+  body[data-style="standard"] .publications-page .home-link::after,
+  body[data-style="standard"] .publications-page .publication-card h3::before {
+    content: none;
+  }
+
+  body[data-style="standard"] .publications-page .home-link,
+  body[data-style="standard"] .publications-page .ghost-button,
+  body[data-style="standard"] .publications-page .search-input {
+    border: 1px solid rgba(62, 79, 100, 0.22);
+    border-radius: 10px;
+    background: #fff;
+    color: #1e2430;
+    box-shadow: none;
+  }
+
+  body[data-style="standard"] .publications-page .filter-chip {
+    border: 1px solid rgba(62, 79, 100, 0.22);
+    border-radius: 999px;
+    background: #fff;
+    color: #2b3645;
+  }
+
+  body[data-style="standard"] .publications-page .filter-chip span {
+    border: 0;
+    border-radius: 999px;
+    background: rgba(40, 89, 79, 0.12);
+    color: #28594f;
+  }
+
+  body[data-style="standard"] .publications-page .status-row {
+    color: #1f2937;
+  }
+
+  body[data-style="standard"] .publications-page .year-section {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(62, 79, 100, 0.16);
+    border-radius: 18px;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+  }
+
+  body[data-style="standard"] .publications-page .year-heading {
+    border-bottom: 1px solid rgba(62, 79, 100, 0.15);
+  }
+
+  body[data-style="standard"] .publications-page .year-heading h2::before {
+    content: "";
+  }
+
+  body[data-style="standard"] .publications-page .publication-card {
+    border-radius: 14px;
+    border: 1px solid rgba(62, 79, 100, 0.14);
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+  }
+
+  body[data-style="standard"] .publications-page .publication-card h3 {
+    color: #1f2937;
+  }
+
+  body[data-style="standard"] .publications-page .authors {
+    color: #334155;
+  }
+
+  body[data-style="standard"] .publications-page .citation-line {
+    color: #28594f;
+  }
+
+  body[data-style="standard"] .publications-page .me {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+    font-weight: 700;
+  }
+
+  body[data-style="standard"] .publications-page .bibtex-summary {
+    border-radius: 8px;
+    border: 1px solid rgba(62, 79, 100, 0.2);
+    background: #fff;
+    color: #334155;
+  }
+
+  body[data-style="standard"] .publications-page .bibtex-box,
+  body[data-style="standard"] .publications-page .loading-state,
+  body[data-style="standard"] .publications-page .empty-state {
+    border-radius: 10px;
+    border: 1px solid rgba(62, 79, 100, 0.16);
+    background: #fff;
+    color: #475569;
+  }
+
+  body[data-style="arty"] {
+    background:
+      radial-gradient(circle at 12% 0%, rgba(185, 118, 62, 0.2), transparent 42%),
+      radial-gradient(circle at 88% 18%, rgba(220, 158, 98, 0.16), transparent 40%),
+      #1e120b;
+  }
+
+  body[data-style="arty"] .style-switcher {
+    border-color: #d1a466;
+    background: rgba(32, 18, 9, 0.9);
+    color: #f7d6a4;
+    box-shadow: 0 0 12px rgba(209, 164, 102, 0.35);
+    font-family: Georgia, "Times New Roman", serif;
+  }
+
+  body[data-style="arty"] .style-switcher select {
+    border-color: #d1a466;
+    background: #29180e;
+    color: #f3d3a3;
+  }
+
+  body[data-style="arty"] .publications-page {
+    background:
+      linear-gradient(rgba(25, 13, 6, 0.72), rgba(25, 13, 6, 0.72)),
+      url("https://www.transparenttextures.com/patterns/old-map.png"),
+      radial-gradient(circle at 20% 0%, rgba(139, 88, 44, 0.25), transparent 45%),
+      radial-gradient(circle at 85% 20%, rgba(196, 140, 83, 0.2), transparent 40%),
+      linear-gradient(180deg, #2b1b0f 0%, #1a1009 75%);
+    color: #f3d9b1;
+    font-family: Georgia, "Times New Roman", serif;
+    text-shadow: none;
+  }
+
+  body[data-style="arty"] .publications-page .toolbar {
+    border: 1px solid #c79658;
+    border-radius: 14px;
+    background:
+      linear-gradient(rgba(24, 14, 8, 0.76), rgba(24, 14, 8, 0.76)),
+      url("https://www.transparenttextures.com/patterns/brushed-alum-dark.png"),
+      url("img/louis-livres.jpg");
+    background-size: auto, auto, cover;
+    box-shadow:
+      0 0 0 1px rgba(207, 155, 96, 0.28) inset,
+      0 14px 30px rgba(0, 0, 0, 0.42);
+  }
+
+  body[data-style="arty"] .publications-page .ascii-banner,
+  body[data-style="arty"] .publications-page .terminal-prompt {
+    display: none;
+  }
+
+  body[data-style="arty"] .publications-page .home-link::before,
+  body[data-style="arty"] .publications-page .home-link::after,
+  body[data-style="arty"] .publications-page .publication-card h3::before {
+    content: none;
+  }
+
+  body[data-style="arty"] .publications-page .home-link,
+  body[data-style="arty"] .publications-page .ghost-button,
+  body[data-style="arty"] .publications-page .search-input {
+    border: 1px solid #c79658;
+    border-radius: 9px;
+    background: rgba(39, 22, 11, 0.93);
+    color: #f5d9b0;
+    box-shadow: inset 0 0 0 1px rgba(223, 170, 109, 0.15);
+  }
+
+  body[data-style="arty"] .publications-page .filter-chip {
+    border: 1px solid #b88952;
+    border-radius: 999px;
+    background: rgba(43, 26, 13, 0.9);
+    color: #f1cf9f;
+  }
+
+  body[data-style="arty"] .publications-page .filter-chip span {
+    border: 1px solid rgba(197, 143, 83, 0.65);
+    background: rgba(30, 17, 8, 0.9);
+    color: #ffd49a;
+  }
+
+  body[data-style="arty"] .publications-page .status-row {
+    color: #f3dcb8;
+  }
+
+  body[data-style="arty"] .publications-page .year-section {
+    border: 1px solid rgba(199, 151, 88, 0.62);
+    border-radius: 12px;
+    background:
+      linear-gradient(rgba(26, 15, 8, 0.88), rgba(26, 15, 8, 0.88)),
+      url("https://www.transparenttextures.com/patterns/dark-leather.png");
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.36);
+  }
+
+  body[data-style="arty"] .publications-page .year-heading {
+    border-bottom: 1px dashed rgba(209, 164, 102, 0.62);
+  }
+
+  body[data-style="arty"] .publications-page .year-heading h2::before {
+    content: "§ ";
+    color: #e8b776;
+  }
+
+  body[data-style="arty"] .publications-page .publication-card {
+    border: 1px solid rgba(196, 140, 83, 0.62);
+    border-radius: 11px;
+    background:
+      linear-gradient(180deg, rgba(39, 23, 12, 0.95), rgba(26, 15, 8, 0.95)),
+      url("https://www.transparenttextures.com/patterns/classy-fabric.png");
+    box-shadow:
+      inset 0 0 0 1px rgba(229, 178, 117, 0.14),
+      0 10px 20px rgba(0, 0, 0, 0.28);
+  }
+
+  body[data-style="arty"] .publications-page .publication-card h3 {
+    color: #ffdfb4;
+    font-variant: small-caps;
+  }
+
+  body[data-style="arty"] .publications-page .authors {
+    color: #e8bf8c;
+  }
+
+  body[data-style="arty"] .publications-page .citation-line {
+    color: #f0cf9f;
+  }
+
+  body[data-style="arty"] .publications-page .bibtex-summary {
+    border-radius: 6px;
+    border: 1px solid #c89658;
+    background: rgba(35, 20, 10, 0.95);
+    color: #ffdeaf;
+  }
+
+  body[data-style="arty"] .publications-page .bibtex-box,
+  body[data-style="arty"] .publications-page .loading-state,
+  body[data-style="arty"] .publications-page .empty-state {
+    border: 1px solid rgba(189, 137, 80, 0.62);
+    border-radius: 8px;
+    background: rgba(20, 12, 6, 0.9);
+    color: #e6c699;
+  }
+
+  body[data-style="surprise"] {
+    background: #100727;
+  }
+
+  body[data-style="surprise"] .style-switcher {
+    border-color: #7bf6ff;
+    background: rgba(14, 8, 34, 0.9);
+    color: #d8f7ff;
+    box-shadow: 0 0 12px rgba(123, 246, 255, 0.4);
+    font-family: "Trebuchet MS", "Avenir Next", Arial, sans-serif;
+  }
+
+  body[data-style="surprise"] .style-switcher select {
+    border-color: #7bf6ff;
+    background: #1c1140;
+    color: #d8f7ff;
+  }
+
+  body[data-style="surprise"] .publications-page {
+    background:
+      linear-gradient(125deg, rgba(255, 78, 208, 0.15), rgba(124, 101, 255, 0.2), rgba(47, 224, 255, 0.14)),
+      radial-gradient(circle at 8% 12%, rgba(255, 156, 233, 0.18), transparent 36%),
+      radial-gradient(circle at 88% 0%, rgba(115, 245, 255, 0.25), transparent 32%),
+      linear-gradient(180deg, #12082d 0%, #1f0f4f 52%, #110728 100%);
+    color: #f8f2ff;
+    font-family: "Trebuchet MS", "Avenir Next", Arial, sans-serif;
+    text-shadow: none;
+    letter-spacing: 0.01em;
+  }
+
+  body[data-style="surprise"] .publications-page .ascii-banner,
+  body[data-style="surprise"] .publications-page .terminal-prompt {
+    display: none;
+  }
+
+  body[data-style="surprise"] .publications-page .toolbar {
+    border-radius: 18px;
+    border: 1px solid rgba(134, 248, 255, 0.62);
+    background:
+      linear-gradient(rgba(15, 8, 35, 0.8), rgba(15, 8, 35, 0.8)),
+      url("https://www.transparenttextures.com/patterns/cartographer.png");
+    box-shadow:
+      0 0 0 1px rgba(236, 122, 255, 0.22) inset,
+      0 18px 34px rgba(0, 0, 0, 0.38),
+      0 0 34px rgba(128, 255, 255, 0.18);
+  }
+
+  body[data-style="surprise"] .publications-page .home-link::before,
+  body[data-style="surprise"] .publications-page .home-link::after,
+  body[data-style="surprise"] .publications-page .publication-card h3::before {
+    content: none;
+  }
+
+  body[data-style="surprise"] .publications-page .home-link,
+  body[data-style="surprise"] .publications-page .ghost-button,
+  body[data-style="surprise"] .publications-page .search-input {
+    border: 1px solid rgba(124, 241, 255, 0.65);
+    border-radius: 12px;
+    background: rgba(26, 14, 58, 0.88);
+    color: #ebf9ff;
+    box-shadow: 0 0 0 1px rgba(255, 131, 251, 0.16) inset;
+  }
+
+  body[data-style="surprise"] .publications-page .filter-chip {
+    border: 1px solid rgba(123, 241, 255, 0.6);
+    border-radius: 999px;
+    background: rgba(26, 14, 58, 0.7);
+    color: #d9f9ff;
+  }
+
+  body[data-style="surprise"] .publications-page .filter-chip span {
+    border: 0;
+    border-radius: 999px;
+    background: rgba(255, 120, 244, 0.2);
+    color: #ffd5fb;
+  }
+
+  body[data-style="surprise"] .publications-page .status-row {
+    color: #f5e6ff;
+  }
+
+  body[data-style="surprise"] .publications-page .year-section {
+    border-radius: 16px;
+    border: 1px solid rgba(123, 241, 255, 0.52);
+    background:
+      linear-gradient(145deg, rgba(34, 19, 74, 0.84), rgba(22, 11, 45, 0.84));
+    box-shadow:
+      0 12px 26px rgba(0, 0, 0, 0.32),
+      0 0 0 1px rgba(255, 120, 244, 0.16) inset;
+  }
+
+  body[data-style="surprise"] .publications-page .year-heading {
+    border-bottom: 1px dashed rgba(255, 134, 253, 0.6);
+  }
+
+  body[data-style="surprise"] .publications-page .year-heading h2::before {
+    content: "✦ ";
+    color: #ffb6fb;
+  }
+
+  body[data-style="surprise"] .publications-page .publication-card {
+    border: 1px solid rgba(122, 240, 255, 0.5);
+    border-radius: 14px;
+    background:
+      linear-gradient(145deg, rgba(47, 27, 95, 0.9), rgba(25, 13, 55, 0.9));
+    box-shadow:
+      0 8px 16px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(255, 128, 250, 0.12) inset;
+    transform: rotate(-0.35deg);
+  }
+
+  body[data-style="surprise"] .publications-page .publication-card:nth-child(even) {
+    transform: rotate(0.35deg);
+  }
+
+  body[data-style="surprise"] .publications-page .publication-card h3 {
+    color: #ffffff;
+  }
+
+  body[data-style="surprise"] .publications-page .authors {
+    color: #cbf6ff;
+  }
+
+  body[data-style="surprise"] .publications-page .citation-line {
+    color: #ffd3ff;
+  }
+
+  body[data-style="surprise"] .publications-page .bibtex-summary {
+    border-radius: 10px;
+    border: 1px solid rgba(123, 241, 255, 0.6);
+    background: rgba(25, 13, 53, 0.92);
+    color: #d9f8ff;
+  }
+
+  body[data-style="surprise"] .publications-page .bibtex-box,
+  body[data-style="surprise"] .publications-page .loading-state,
+  body[data-style="surprise"] .publications-page .empty-state {
+    border-radius: 12px;
+    border: 1px solid rgba(124, 241, 255, 0.45);
+    background: rgba(21, 11, 47, 0.9);
+    color: #e9f8ff;
+  }
+
+  body[data-style="textonly"] {
+    background: #fff;
+  }
+
+  body[data-style="textonly"] .style-switcher {
+    border: 1px solid #cfcfcf;
+    background: #fff;
+    color: #222;
+    box-shadow: none;
+    font-family: "Times New Roman", Times, serif;
+  }
+
+  body[data-style="textonly"] .style-switcher select {
+    border: 1px solid #cfcfcf;
+    background: #fff;
+    color: #111;
+  }
+
+  body[data-style="textonly"] .publications-page {
+    background: #fff;
+    color: #111;
+    text-shadow: none;
+    letter-spacing: 0;
+    font-family: "Times New Roman", Times, serif;
+    padding-top: 24px;
+  }
+
+  body[data-style="textonly"] .publications-page .toolbar {
+    position: sticky;
+    top: 0;
+    border: 0;
+    border-bottom: 1px solid #ddd;
+    border-radius: 0;
+    box-shadow: none;
+    background: #fff;
+    padding: 0 0 12px;
+  }
+
+  body[data-style="textonly"] .publications-page .ascii-banner,
+  body[data-style="textonly"] .publications-page .terminal-prompt,
+  body[data-style="textonly"] .publications-page .source-warning,
+  body[data-style="textonly"] .publications-page .footer-note {
+    display: none;
+  }
+
+  body[data-style="textonly"] .publications-page .home-link::before,
+  body[data-style="textonly"] .publications-page .home-link::after,
+  body[data-style="textonly"] .publications-page .publication-card h3::before {
+    content: none;
+  }
+
+  body[data-style="textonly"] .publications-page .home-link,
+  body[data-style="textonly"] .publications-page .ghost-button,
+  body[data-style="textonly"] .publications-page .search-input {
+    border: 1px solid #d9d9d9;
+    border-radius: 0;
+    background: #fff;
+    color: #111;
+    box-shadow: none;
+  }
+
+  body[data-style="textonly"] .publications-page .filter-row {
+    gap: 8px;
+  }
+
+  body[data-style="textonly"] .publications-page .filter-chip {
+    border: 0;
+    border-bottom: 1px solid #ddd;
+    border-radius: 0;
+    background: transparent;
+    color: #444;
+    padding: 3px 0;
+  }
+
+  body[data-style="textonly"] .publications-page .filter-chip.active {
+    color: #000;
+    font-weight: 700;
+    border-bottom-color: #000;
+  }
+
+  body[data-style="textonly"] .publications-page .filter-chip span {
+    border: 0;
+    background: transparent;
+    color: #666;
+    padding: 0;
+  }
+
+  body[data-style="textonly"] .publications-page .status-row {
+    color: #111;
+  }
+
+  body[data-style="textonly"] .publications-page .year-section {
+    margin-top: 10px;
+    padding: 8px 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  body[data-style="textonly"] .publications-page .year-heading {
+    border: 0;
+    margin-bottom: 8px;
+    padding-bottom: 0;
+  }
+
+  body[data-style="textonly"] .publications-page .year-heading h2,
+  body[data-style="textonly"] .publications-page .year-heading p {
+    color: #111;
+  }
+
+  body[data-style="textonly"] .publications-page .year-heading h2::before {
+    content: "";
+  }
+
+  body[data-style="textonly"] .publications-page .publication-grid {
+    display: block;
+  }
+
+  body[data-style="textonly"] .publications-page .publication-card {
+    margin: 0 0 12px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  body[data-style="textonly"] .publications-page .publication-card:hover {
+    box-shadow: none;
+    border-color: transparent;
+  }
+
+  body[data-style="textonly"] .publications-page .publication-card h3,
+  body[data-style="textonly"] .publications-page .authors,
+  body[data-style="textonly"] .publications-page .citation-line {
+    color: #111;
+  }
+
+  body[data-style="textonly"] .publications-page .citation-line {
+    white-space: normal;
+  }
+
+  body[data-style="textonly"] .publications-page .me {
+    color: inherit;
+    background: transparent;
+    padding: 0;
+    font-weight: 700;
+  }
+
+  body[data-style="textonly"] .publications-page .bibtex-summary {
+    position: static;
+    width: auto;
+    height: auto;
+    border: 0;
+    border-bottom: 1px dotted #666;
+    border-radius: 0;
+    background: transparent;
+    color: #333;
+    padding: 0;
+    margin-top: 2px;
+    display: inline;
+  }
+
+  body[data-style="textonly"] .publications-page .bibtex-box {
+    border: 1px solid #ddd;
+    border-radius: 0;
+    background: #fafafa;
+    color: #222;
+  }
+
+  body[data-style="textonly"] .publications-page .copy-bibtex {
+    border: 1px solid #ccc;
+    border-radius: 0;
+    background: #fff;
+    color: #111;
+  }
+
+  @media (max-width: 720px) {
+    .style-switcher {
+      top: auto;
+      bottom: 8px;
+      right: 8px;
+      padding: 5px 6px;
+      font-size: 0.72rem;
+    }
+
+    .style-switcher select {
+      font-size: 0.72rem;
+      max-width: 125px;
+    }
+  }
+
   @media (max-width: 940px) {
     .publications-page .publication-grid {
       grid-template-columns: 1fr;
@@ -506,7 +1155,7 @@
     }
 
     .publications-page .toolbar {
-      top: 4px;
+      top: 0;
       padding: 10px;
     }
 
@@ -524,7 +1173,17 @@
   }
 </style>
 </head>
-<body>
+<body data-style="standard">
+<div class="style-switcher" aria-label="Style switcher">
+  <label for="style-mode">Style</label>
+  <select id="style-mode">
+    <option value="standard">standard</option>
+    <option value="oldschool">old school</option>
+    <option value="arty">arty</option>
+    <option value="textonly">text only</option>
+    <option value="surprise">surprise</option>
+  </select>
+</div>
 <div class="publications-page">
   <main class="page-shell">
     <section class="toolbar" aria-label="Publication filters">
@@ -3408,7 +4067,46 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
       root: document.getElementById("publications-root"),
       footerNote: document.getElementById("footer-note"),
       sourceWarning: document.getElementById("source-warning"),
+      styleMode: document.getElementById("style-mode"),
     };
+
+    const STYLE_STORAGE_KEY = "publications-style-mode";
+    const STYLE_MODES = new Set(["oldschool", "standard", "arty", "textonly", "surprise"]);
+
+    function applyStyleMode(mode) {
+      const safeMode = STYLE_MODES.has(mode) ? mode : "standard";
+      document.body.setAttribute("data-style", safeMode);
+      if (dom.styleMode && dom.styleMode.value !== safeMode) {
+        dom.styleMode.value = safeMode;
+      }
+    }
+
+    function setupStyleMode() {
+      let initialMode = "standard";
+      try {
+        const saved = window.localStorage.getItem(STYLE_STORAGE_KEY);
+        if (saved && STYLE_MODES.has(saved)) {
+          initialMode = saved;
+        }
+      } catch (_) {
+        initialMode = "standard";
+      }
+
+      applyStyleMode(initialMode);
+      if (!dom.styleMode) {
+        return;
+      }
+
+      dom.styleMode.addEventListener("change", () => {
+        const next = dom.styleMode.value;
+        applyStyleMode(next);
+        try {
+          window.localStorage.setItem(STYLE_STORAGE_KEY, document.body.getAttribute("data-style") || "standard");
+        } catch (_) {
+          // Ignore storage errors (private mode / blocked storage).
+        }
+      });
+    }
 
     function collapseWhitespace(text) {
       return (text || "").replace(/\s+/g, " ").trim();
@@ -4115,6 +4813,8 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
       });
       return Promise.all(fetches);
     }
+
+    setupStyleMode();
 
     async function main() {
       try {
