@@ -479,6 +479,76 @@
     font-size: 0.78rem;
   }
 
+  .publications-page .coauthors-section {
+    margin-top: 20px;
+    padding: 12px;
+    border: 1px solid var(--line);
+    background: rgba(2, 10, 3, 0.95);
+  }
+
+  .publications-page .coauthors-title {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #d9ffd9;
+  }
+
+  .publications-page .coauthors-help {
+    margin: 6px 0 10px;
+    color: var(--text-dim);
+    font-size: 0.8rem;
+  }
+
+  .publications-page .coauthors-list {
+    column-width: 220px;
+    column-gap: 10px;
+  }
+
+  .publications-page .coauthor-item {
+    break-inside: avoid;
+    margin: 0 0 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 6px;
+    border: 1px solid var(--line);
+    background: rgba(5, 20, 7, 0.95);
+  }
+
+  .publications-page .coauthor-button {
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .publications-page .coauthor-button:hover {
+    color: #e6ffe6;
+  }
+
+  .publications-page .coauthor-count {
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    white-space: nowrap;
+  }
+
+  .publications-page .coauthor-url {
+    font-size: 0.75rem;
+    white-space: nowrap;
+    color: #d5ffd5;
+    text-decoration: underline;
+    text-underline-offset: 1px;
+  }
+
+  .publications-page .coauthor-url.missing {
+    opacity: 0.55;
+    text-decoration: none;
+    cursor: default;
+  }
+
   .publications-page kbd {
     display: inline-flex;
     align-items: center;
@@ -559,7 +629,7 @@
   }
 
   body[data-style="standard"] .publications-page a {
-    color: inherit;
+    color: #0b2618;
   }
 
   body[data-style="standard"] .publications-page .ascii-banner,
@@ -646,7 +716,7 @@
     color: inherit;
     background: transparent;
     padding: 0;
-    font-weight: 700;
+    font-weight: inherit;
   }
 
   body[data-style="standard"] .publications-page .bibtex-summary {
@@ -663,6 +733,30 @@
     border: 1px solid rgba(62, 79, 100, 0.16);
     background: #fff;
     color: #475569;
+  }
+
+  body[data-style="standard"] .publications-page .coauthors-section {
+    border-radius: 12px;
+    border: 1px solid rgba(62, 79, 100, 0.16);
+    background: #fff;
+    color: #334155;
+  }
+
+  body[data-style="standard"] .publications-page .coauthor-item {
+    border-radius: 8px;
+    border: 1px solid rgba(62, 79, 100, 0.14);
+    background: #f9fbfd;
+    color: #0b2618;
+  }
+
+  body[data-style="standard"] .publications-page .coauthor-button,
+  body[data-style="standard"] .publications-page .coauthor-count,
+  body[data-style="standard"] .publications-page .coauthor-url {
+    color: #0b2618;
+  }
+
+  body[data-style="standard"] .publications-page .coauthor-url.missing {
+    color: #5c6f66;
   }
 
   body[data-style="arty"] {
@@ -805,6 +899,22 @@
     border-radius: 8px;
     background: rgba(20, 12, 6, 0.9);
     color: #e6c699;
+  }
+
+  body[data-style="arty"] .publications-page .coauthors-section {
+    border: 1px solid rgba(189, 137, 80, 0.62);
+    border-radius: 10px;
+    background: rgba(20, 12, 6, 0.9);
+    color: #e6c699;
+  }
+
+  body[data-style="arty"] .publications-page .coauthor-item {
+    border-color: rgba(196, 140, 83, 0.62);
+    background: rgba(30, 17, 8, 0.9);
+  }
+
+  body[data-style="arty"] .publications-page .coauthor-url {
+    color: #ffd89e;
   }
 
   body[data-style="surprise"] {
@@ -950,6 +1060,22 @@
     color: #e9f8ff;
   }
 
+  body[data-style="surprise"] .publications-page .coauthors-section {
+    border-radius: 12px;
+    border: 1px solid rgba(124, 241, 255, 0.45);
+    background: rgba(21, 11, 47, 0.9);
+    color: #e9f8ff;
+  }
+
+  body[data-style="surprise"] .publications-page .coauthor-item {
+    border-color: rgba(122, 240, 255, 0.5);
+    background: rgba(34, 19, 74, 0.84);
+  }
+
+  body[data-style="surprise"] .publications-page .coauthor-url {
+    color: #ffd3ff;
+  }
+
   body[data-style="textonly"] {
     background: #fff;
   }
@@ -1009,6 +1135,10 @@
     background: #fff;
     color: #111;
     box-shadow: none;
+  }
+
+  body[data-style="textonly"] .publications-page a {
+    color: #0b2618;
   }
 
   body[data-style="textonly"] .publications-page .filter-row {
@@ -1097,7 +1227,7 @@
     color: inherit;
     background: transparent;
     padding: 0;
-    font-weight: 700;
+    font-weight: inherit;
   }
 
   body[data-style="textonly"] .publications-page .bibtex-summary {
@@ -1126,6 +1256,30 @@
     border-radius: 0;
     background: #fff;
     color: #111;
+  }
+
+  body[data-style="textonly"] .publications-page .coauthors-section {
+    border: 1px solid #ddd;
+    border-radius: 0;
+    background: #fafafa;
+    color: #222;
+  }
+
+  body[data-style="textonly"] .publications-page .coauthor-item {
+    border: 1px solid #e2e2e2;
+    border-radius: 0;
+    background: #fff;
+    color: #0b2618;
+  }
+
+  body[data-style="textonly"] .publications-page .coauthor-button,
+  body[data-style="textonly"] .publications-page .coauthor-count,
+  body[data-style="textonly"] .publications-page .coauthor-url {
+    color: #0b2618;
+  }
+
+  body[data-style="textonly"] .publications-page .coauthor-url.missing {
+    color: #6b7d74;
   }
 
   @media (max-width: 720px) {
@@ -1214,6 +1368,13 @@
     </div>
 
     <div id="publications-root"></div>
+
+    <section id="coauthors-section" class="coauthors-section" hidden>
+      <h3 class="coauthors-title">Co-authors</h3>
+      <p class="coauthors-help">Click a name to filter publications by this author.</p>
+      <div id="coauthors-list" class="coauthors-list"></div>
+    </section>
+
     <p class="footer-note" id="footer-note"></p>
   </main>
 </div>
@@ -1227,7 +1388,7 @@
 
 @Article{2025-Peyre-MathsIA,
     title = "The Mathematics of Artificial Intelligence",
-    author = "G. Peyr{\'e}",
+    author = "Gabriel Peyré",
      journal = "Gazette SMF",
      year = "2025",
      number = 184, 
@@ -1236,7 +1397,7 @@
 
 @Article{2025-Poon-SRLasso,
     title = "Super-resolved Lasso",
-    author = "C. Poon and G. Peyr{\'e}",
+    author = "Clarice Poon and Gabriel Peyré",
      journal = "Information and Inference",
      year = "2025",
      url = {https://arxiv.org/abs/2311.09928},
@@ -1244,7 +1405,7 @@
 
 @Article{2025-Kalfon-scPRINT,
     title = "scPRINT: pre-training on 50 million cells allows robust gene network predictions", 
-    author = "J. Kalfon and J. Samaran and G. Peyr{\'e} and L. Cantini",
+    author = "Jérémie Kalfon and Jules Samaran and Gabriel Peyré and Laura Cantini",
      doi = "10.1101/2024.07.29.605556",
     journal = "Nature Communications", 
      year = "2025",
@@ -1254,7 +1415,7 @@
 
 @Article{2025-Barboni-ResNet,
     title = "Understanding the training of infinitely deep and wide ResNets with Conditional Optimal Transport", 
-    author = "R. Barboni and G Peyr{\'e} and F-X. Vialard",
+    author = "Raphaël Barboni and Gabriel Peyré and François-Xavier Vialard",
     journal = "Communications on Pure and Applied Mathematics", 
      doi = "2403.12887",
      year = "2025",
@@ -1264,7 +1425,7 @@
 
 @Article{2025-Huizing-stories,
     title = "Learning cell fate landscapes from spatial transcriptomics using Fused Gromov-Wasserstein", 
-    author = "G-J. Huizing and J. Samaran and G. Peyr{\'e} and L. Cantini",
+    author = "Geert-Jan Huizing and Jules Samaran and Gabriel Peyré and Laura Cantini",
     journal = "Nature Methods", 
      doi = "10.1101/2024.07.26.605241",
      year = "2025",
@@ -1278,7 +1439,7 @@
 
 @Article{2024-Samaran-scConfluence,
     title = "scConfluence : single-cell diagonal integration with regularized Inverse Optimal Transport on weakly connected features", 
-    author = "J. Samaran and G. Peyr{\'e} and L.  Cantini",
+    author = "Jules Samaran and Gabriel Peyré and Laura Cantini",
     journal = "Nature Communications", 
      doi = "10.1101/2024.02.26.582051",
      year = "2024",
@@ -1293,7 +1454,7 @@
 
 @Article{2023-Huizing-Mowgli,
     title = "Paired single-cell multi-omics data integration with Mowgli",
-    author = "G-J. Huizing and M. Deutschmann and G. Peyr{\'e} and L. Cantini",
+    author = "Geert-Jan Huizing and Ina Maria Deutschmann and Gabriel Peyré and Laura Cantini",
      journal = "Nature Communications", 
      year = "2023",
      volume = 14, 
@@ -1305,7 +1466,7 @@
 
 @Article{2023-Poon-SmoothSolvers,
     title = "Smooth over-parameterized solvers for non-smooth structured optimization",
-    author = "C. Poon and G. Peyr{\'e}",
+    author = "Clarice Poon and Gabriel Peyré",
      journal = "Mathematical Programming",
 	   volume={201},
 	  pages={897--952},
@@ -1317,7 +1478,7 @@
 
 @Article{2023-Poon-Certifs,
     title = "The geometry of off-the-grid compressed sensing",
-    author = "C. Poon and N. Keriven and G. Peyr{\'e}",
+    author = "Clarice Poon and Nicolas Keriven and Gabriel Peyré",
      journal = "Foundations of Computational Mathematics",
 	   volume={23},
 	  number={1},
@@ -1335,7 +1496,7 @@
 
 @Article{2022-Huizing-omics,
     title = "Optimal Transport improves cell-cell similarity inference in single-cell omics data",
-    author = "G-J. Huizing and G. Peyr{\'e} and L. Cantini",
+    author = "Geert-Jan Huizing and Gabriel Peyré and Laura Cantini",
      journal = "Bioinformatics",
 	   volume={38},
 	  number={8},
@@ -1347,7 +1508,7 @@
 
 @Article{2022-Poon-DOF,
     title = "Degrees of freedom for off-the-grid sparse estimation",
-    author = "C. Poon and G. Peyr{\'e}",
+    author = "Clarice Poon and Gabriel Peyré",
      journal = "Bernoulli",
 	   volume={28},
 	  number={3},
@@ -1367,7 +1528,7 @@
 
 @Article{2021-Heitz-MetricLearning-JMIV,
     title = "Ground Metric Learning on Graphs",
-    author = "M. Heitz and N. Bonneel and D. Coeurjolly and M. Cuturi and G. Peyr{\'e}",
+    author = "Matthieu Heitz and Nicolas Bonneel and David Coeurjolly and Marco Cuturi and Gabriel Peyré",
      journal = "Journal of Mathematical Imaging and Vision",
 	   volume={63},
 	  number={1},
@@ -1384,7 +1545,7 @@
 
 @Article{2019-Denoyelle-IP,
     title = "The Sliding Frank-Wolfe Algorithm and its Application to Super-Resolution Microscopy",
-    author = "Q. Denoyelle and V. Duval and G. Peyr{\'e} and E. Soubies",
+    author = "Quentin Denoyelle and Vincent Duval and Gabriel Peyré and Emmanuel Soubies",
      journal = "Inverse Problems",
   volume={36},
   number={1},
@@ -1398,7 +1559,7 @@
 
 @Article{2019-peyre-ejam,
     title = "Quantum Entropic Regularization of Matrix-Valued Optimal Transport",
-    author = "G. Peyr{\'e} and L. Chizat and F-X. Vialard and J. Solomon",
+    author = "Gabriel Peyré and Lénaïc Chizat and François-Xavier Vialard and Justin Solomon",
      institution = "Arxiv",
      journal = "European Journal of Applied Mathematics",
   volume={30},
@@ -1412,7 +1573,7 @@
 
 @Article{2019-Catala-LowRank,
     title = "A Low-Rank Approach to Off-The-Grid Sparse Deconvolution",
-    author = "P. Catala and V. Duval and  G. Peyr{\'e}",
+    author = "Paul Catala and Vincent Duval and Gabriel Peyré",
     journal = "SIAM Journal on Imaging Sciences",
   volume={12},
   number={3},
@@ -1426,7 +1587,7 @@
 
 @Article{2019-Poon-MultiDim,
     title = "Multi-dimensional Sparse Super-resolution",
-    author = "C. Poon and  G. Peyr{\'e}",
+    author = "Clarice Poon and Gabriel Peyré",
      journal = "SIAM Journal on Mathematical Analysis",
   volume={51},
   number={1},
@@ -1439,7 +1600,7 @@
 
 @Article{2019-Peyre-computational-ot,
     title = "Computational Optimal Transport",
-    author = "G. Peyr{\'e} and M. Cuturi",
+    author = "Gabriel Peyré and Marco Cuturi",
      journal = "Foundations and Trends in Machine Learning",
   volume={51},
   number={1},
@@ -1456,7 +1617,7 @@
 
 @article{cuturi2018semidual,
   title={Semidual Regularized Optimal Transport},
-  author={M. Cuturi and G. Peyr{\'e}},
+  author={Marco Cuturi and Gabriel Peyré},
   doi = {10.1137/18M1208654},
   journal={SIAM Review},
   volume={60},
@@ -1471,7 +1632,7 @@
 @Article{2018-vacher-neco,
     title = "Bayesian Modeling of Motion Perception using Dynamical Stochastic
  Textures",
-    author = "J. Vacher and  A. I. Meso and G. Peyr{\'e} and L. Perrinet",
+    author = "Jonathan Vacher and Andrew Isaac Meso and Gabriel Peyré and Laurent Perrinet",
     journal = "Neural Computation",
     volume  = "30",
     number = 12,
@@ -1483,7 +1644,7 @@
 
 @Article{2018-Fadili-stratifiable,
     title = "Sensitivity Analysis for Mirror-Stratifiable Convex Functions",
-    author = "J. Fadili and J. Malick and G. Peyr{\'e}",
+    author = "Jalal Fadili and Jérôme Malick and Gabriel Peyré",
      journal = "SIAM Journal on Optimization",
     volume  = "28",
     number = "4",
@@ -1497,7 +1658,7 @@
 
 @Article{2018-Liang-PD,
     title = "Local Linear Convergence Analysis of Primal-Dual Splitting Methods",
-    author = "J. Liang and J. Fadili and G. Peyr{\'e}",
+    author = "Jingwei Liang and Jalal Fadili and Gabriel Peyré",
     journal = "Optimization",
     volume  = "67",
     number = 6,
@@ -1511,7 +1672,7 @@
 
 @Article{2018-chizat-mcom,
     title = "Scaling Algorithms for Unbalanced Transport Problems",
-     author = "L. Chizat and G. Peyr{\'e}  and B. Schmitzer and F-X. Vialard",
+     author = "Lénaïc Chizat and Gabriel Peyré and Bernhard Schmitzer and François-Xavier Vialard",
      journal = "Mathematics of Computation",
     volume  = "87",
     pages = "2563--2609",
@@ -1522,7 +1683,7 @@
 
 @Article{2018-chizat-unbalanced,
     title = "Unbalanced Optimal Transport: Geometry and Kantorovich Formulation",
-     author = "L. Chizat and G. Peyr{\'e}  and B. Schmitzer and F-X. Vialard",
+     author = "Lénaïc Chizat and Gabriel Peyré and Bernhard Schmitzer and François-Xavier Vialard",
      journal = "Journal of Functional Analysis",
     volume  = "274",
     number = 11,
@@ -1535,7 +1696,7 @@
 
 @Article{2018-schmitz-siims,
     title = "Wasserstein Dictionary Learning: Optimal Transport-based unsupervised non-linear dictionary learning",
-    author = "M. Schmitz and M. Heitz and N. Bonneel and F. M. Ngole Mboula and D. Coeurjolly and M. Cuturi and  G. Peyr{\'e} and J-L. Starck",
+    author = "Morgan Schmitz and Matthieu Heitz and Nicolas Bonneel and Fred M. Ngole Mboula and David Coeurjolly and Marco Cuturi and Gabriel Peyré and Jean-Luc Starck",
     journal = "SIAM Journal on Imaging Sciences",
     volume  = "11",
     number = 1,
@@ -1546,7 +1707,7 @@
 
 @Article{2018-chizat-focm,
     title = "An Interpolating Distance between Optimal Transport and {Fisher-Rao}",
-     author = "L. Chizat and B. Schmitzer and G. Peyr{\'e} and F-X. Vialard",
+     author = "Lénaïc Chizat and Bernhard Schmitzer and Gabriel Peyré and François-Xavier Vialard",
 	journal = "Foundations of Computational Mathematics",
 	doi = "10.1007/s10208-016-9331-y",
     volume  = "18",
@@ -1559,7 +1720,7 @@
 
 @Article{2018-lounici-aos,
     title = "Adaptive sup-norm estimation of the {Wigner} function in noisy quantum homodyne tomography",
-     author = "K. Lounici and K. Meziani and G. Peyr{\'e}",
+     author = "Karim Lounici and Kathia Meziani and Gabriel Peyré",
      journal = "The Annals of Statistics",
       volume= 46,
       number = 3,
@@ -1575,7 +1736,7 @@
 
 @Article{2017-vaiter-ps-consistency,
     title = "Model Consistency of Partly Smooth Regularizers",
-     author = "S. Vaiter and G. Peyr{\'e} and J. Fadili",
+     author = "Samuel Vaiter and Gabriel Peyré and Jalal Fadili",
      journal = "IEEE Transactions on Information Theory",
     volume  = "64",
     number = "3",
@@ -1589,7 +1750,7 @@
 
 @Article{2017-duval-IP-cbp,
     title = "Sparse Spikes Super-resolution on Thin Grids {II}: the Continuous Basis Pursuit",
-     author = "V. Duval and G. Peyr{\'e}",
+     author = "Vincent Duval and Gabriel Peyré",
      journal = "Inverse Problems",
   volume={33},
   number={9},
@@ -1601,7 +1762,7 @@
 
 @Article{2017-denoyelle-jafa,
     title = "Support Recovery for Sparse Super-Resolution of Positive Measures",
-     author = "Q. Denoyelle and V. Duval and G. Peyr{\'e}",
+     author = "Quentin Denoyelle and Vincent Duval and Gabriel Peyré",
      journal = "Journal of Fourier Analysis and Applications",
     volume  = "23",
     number = "5",
@@ -1613,7 +1774,7 @@
 
 @Article{2017-vaiter-AISM,
     title = "The Degrees of Freedom of Partly Smooth Regularizers",
-     author = "S. Vaiter and C. Deledalle and G. Peyr{\'e} and J. Fadili and C. Dossal",
+     author = "Samuel Vaiter and Charles-Alban Deledalle and Gabriel Peyré and Jalal Fadili and Charles Dossal",
      journal = "Annals of the Institute of Statistical Mathematics",
     volume  = "69",
     pages = "791--832",
@@ -1626,7 +1787,7 @@
 
 @Article{2017-carlier-SIMA,
     title = "Convergence of Entropic Schemes for Optimal Transport and Gradient Flows",
-     author = "G. Carlier and V. Duval and G. Peyr{\'e} and B. Schmitzer",
+     author = "Guillaume Carlier and Vincent Duval and Gabriel Peyré and Bernhard Schmitzer",
      journal = "SIAM Journal on Mathematical Analysis",
     volume  = "49",
     number = "2",
@@ -1639,7 +1800,7 @@
 
 @Article{2017-chambolle-ip,
     title = "Geometric properties of solutions to the total variation denoising problem",
-     author = "A. Chambolle and V. Duval and G. Peyr{\'e} and C. Poon",
+     author = "Antonin Chambolle and Vincent Duval and Gabriel Peyré and Clarice Poon",
      journal = "Inverse Problems",
     volume  = "33",
     number = "1",
@@ -1651,7 +1812,7 @@
 
 @Article{2017-Duval-IP-lasso,
     title = "Sparse Spikes Super-resolution on Thin Grids {I}: the LASSO",
-     author = "V. Duval and G. Peyr{\'e}",
+     author = "Vincent Duval and Gabriel Peyré",
       journal = "Inverse Problems",
     volume  = "33",
     number = "5",
@@ -1663,7 +1824,7 @@
 
 @Article{2017-Liang-SIOPT,
     title = "Activity Identification and Local Linear Convergence of Forward--Backward-type methods",
-    author = "J. Liang and J. Fadili and G. Peyr{\'e}",
+    author = "Jingwei Liang and Jalal Fadili and Gabriel Peyré",
      journal = "SIAM Journal on Optimization",
     volume  = "27",
     number = "1",
@@ -1676,7 +1837,7 @@
 
 @Article{2017-Liang-JOTA,
     title = "Local Convergence Properties of Douglas--Rachford and Alternating Direction Method of Multipliers",
-    author = "J. Liang and J. Fadili and G. Peyr{\'e}",
+    author = "Jingwei Liang and Jalal Fadili and Gabriel Peyré",
      journal = "Journal of Optimization Theory and Applications",
     volume  = "172",
     number = "3",
@@ -1692,7 +1853,7 @@
 
 @Article{2016-tartavel-siims,
     title = "Wasserstein Loss for Image Synthesis and Restoration",
-     author = "G. Tartavel and G. Peyr{\'e} and Y. Gousseau",
+     author = "Guillaume Tartavel and Gabriel Peyré and Yann Gousseau",
      journal = "SIAM Journal on Imaging Sciences",
     volume  = " 9",
     number = 4,
@@ -1704,7 +1865,7 @@
 
 @Article{2016-liang-mathprog,
     title = "Convergence Rates with Inexact Non-expansive Operators",
-    author = "J. Liang and J. Fadili and G. Peyr{\'e}",
+    author = "Jingwei Liang and Jalal Fadili and Gabriel Peyré",
     journal = "Mathematical Programming",
     volume  = "159",
     number = "1",
@@ -1717,7 +1878,7 @@
 
 @Article{2016-solomon-gw,
     title = "Entropic Metric Alignment for Correspondence Problems",
-    author = "J. Solomon and G. Peyr{\'e} and V. Kim and S. Sra",
+    author = "Justin Solomon and Gabriel Peyré and Vladimir Kim and Suvrit Sra",
 	journal = "ACM Transactions on Graphics (Proc. SIGGRAPH 2016)",
     volume  = "35",
     number = 4,
@@ -1729,7 +1890,7 @@
 
 @Article{2016-bonneel-barycoord,
     title = "Wasserstein Barycentric Coordinates: Histogram Regression Using Optimal Transport",
-    author = "N. Bonneel and G. Peyr{\'e} and M. Cuturi",
+    author = "Nicolas Bonneel and Gabriel Peyré and Marco Cuturi",
 	journal = "ACM Transactions on Graphics (Proc. SIGGRAPH 2016)",
     volume  = "35",
     number = 4,
@@ -1742,7 +1903,7 @@
 
 @Article{2016-charpiat-ifb,
     title = "Finsler Steepest Descent with Applications to Piecewise-regular Curve Evolution",
-    author = "G. Charpiat and G. Nardi and G. Peyr{\'e} and  F-X. Vialard",
+    author = "Guillaume Charpiat and Giacomo Nardi and Gabriel Peyré and François-Xavier Vialard",
     journal = "Interfaces and Free Boundaries",
     volume  = 18,
     number =  1,
@@ -1754,7 +1915,7 @@
 
 @Article{2016-Perronnet-jneurometh,
     title = "An automated workflow for the anatomo-functional mapping of the barrel cortex",
-    author = "L. Perronnet and M.E. Vilarchao and G. Hucher and D.E. Shulz and G. Peyr{\'e} and I. Ferezou",
+    author = "Lauraine Perronnet and Maria Eeugenia Vilarchao and Guillaume Hucher and Daniel E. Shulz and Gabriel Peyré and Isabelle Ferezou",
           journal = "Journal of Neuroscience Methods",
           volume = 263,
           number = 1,
@@ -1767,7 +1928,7 @@
 
 @Article{2016-Cuturi-siims,
     title = "A Smoothed Dual Approach for Variational Wasserstein Problems",
-    author = "M. Cuturi and G. Peyr{\'e}",
+    author = "Marco Cuturi and Gabriel Peyré",
 	  journal = {SIAM Journal on Imaging Sciences},
      year = "2016",
      volume = 9,
@@ -1779,7 +1940,7 @@
 
 @Article{2016-bleyer-m2an,
     title = "A Gamma-Convergence Result for the Upper Bound Limit Analysis of Plates",
-    author = "J. Bleyer and G. Carlier and V. Duval and J-M. Mirebeau and G. Peyr{\'e}",
+    author = "Jérôme Bleyer and Guillaume Carlier and Vincent Duval and Jean-Marie Mirebeau and Gabriel Peyré",
      journal = "ESAIM: Mathematical Modelling and Numerical Analysis",
  volume = "50",
  number = "1",
@@ -1792,7 +1953,7 @@
 
 @Article{2016-nardi-siims,
     title = "Geodesics on Shape Spaces with Bounded Variation and Sobolev Metrics",
-     author = "G. Nardi and G. Peyr{\'e} and  F-X. Vialard",
+     author = "Giacomo Nardi and Gabriel Peyré and François-Xavier Vialard",
 	  journal = {SIAM Journal on Imaging Sciences},
 	  doi = "10.1137/15100518X",
 	  volume = 9,
@@ -1805,7 +1966,7 @@
 
 @Article{2016-Raguet-jneurometh,
     title = "Spatially Structured Sparse Morphological Component Separation for Voltage-Sensitive Dye Optical Imaging",
-    author = "H. Raguet and C. Monier and L. Foubert and I. Ferezou and Y. Fregnac and G. Peyr{\'e}",
+    author = "Hugo Raguet and Cyril Monier and Luc Foubert and Isabelle Ferezou and Yves Frégnac and Gabriel Peyré",
     journal = "Journal of Neuroscience Methods",
     year = "2016",
      Volume = 257,
@@ -1821,7 +1982,7 @@
 
 
 @Article{2015-Peyre-siims,
-  author = {G. Peyr{\'e}},
+  author = {Gabriel Peyré},
   title = {Entropic Approximation of {Wasserstein} Gradient Flows},
   year = {2015},
   journal = {SIAM Journal on Imaging Sciences},
@@ -1834,7 +1995,7 @@
 
 @Article{2015-solomon-siggraph,
     title = "Convolutional Wasserstein Distances: Efficient Optimal Transportation on Geometric Domains",
-    author = "J. Solomon and F. de Goes and G. Peyr{\'e} and M. Cuturi and A. Butscher and A. Nguyen and T. Du and L. Guibas",
+    author = "Justin Solomon and Fernando de Goes and Gabriel Peyré and Marco Cuturi and Adrian Butscher and Andy Nguyen and Tao Du and Leonidas Guibas",
 	journal = "ACM Transactions on Graphics (Proc. SIGGRAPH 2015)",
 	volume = 34,
 	number = 4,
@@ -1847,7 +2008,7 @@
 
 @Article{2015-benamou-cisc,
     title = "Iterative {Bregman} Projections for Regularized Transportation Problems",
-    author = "J-D. Benamou and G. Carlier and M. Cuturi and L. Nenna and G. Peyr{\'e}",
+    author = "Jean-David Benamou and Guillaume Carlier and Marco Cuturi and Luca Nenna and Gabriel Peyré",
 	journal = "SIAM Journal on Scientific Computing",
  	 volume = "37",
 	 number = 2,
@@ -1859,7 +2020,7 @@
 
 @Article{2015-vaiter-iai,
     title = "Model Selection with Low Complexity Priors",
-    author = "S. Vaiter and M. Golbabaee and J. Fadili and G. Peyr{\'e}",
+    author = "Samuel Vaiter and Mokhtar Golbabaee and Jalal Fadili and Gabriel Peyré",
      journal = "Information and Inference",
      volume = "4",
      number = 3,
@@ -1871,7 +2032,7 @@
 
 @Article{2015-tartavel-jmiv,
     title = "Variational Texture Synthesis with Sparsity and Spectrum Constraints",
-    author = "G. Tartavel and Y. Gousseau and G. Peyr{\'e}",
+    author = "Guillaume Tartavel and Yann Gousseau and Gabriel Peyré",
      journal = "Journal of Mathematical Imaging and Vision",
      volume = "52",
      number = 1,
@@ -1883,7 +2044,7 @@
 
 @Article{2015-duval-focm,
     title = "Exact Support Recovery for Sparse Spikes Deconvolution",
-   	author = "V. Duval and G. Peyr{\'e}",
+   	author = "Vincent Duval and Gabriel Peyré",
 	journal = "Foundations of Computational Mathematics",
   volume = "15",
   number = 5,
@@ -1895,7 +2056,7 @@
 
 @Article{2015-bonneel-siims,
     title = "Sliced and Radon Wasserstein Barycenters of Measures",
-    author = "N. Bonneel and J. Rabin and G. Peyr{\'e} and H. Pfister",
+    author = "Nicolas Bonneel and Julien Rabin and Gabriel Peyré and Hanspeter Pfister",
   journal = "Journal of Mathematical Imaging and Vision",
   doi = "10.1007/s10851-014-0506-3",
   volume = 51,
@@ -1911,7 +2072,7 @@
 
 @Article{2014-deledalle-siims,
     title = "Stein Unbiased GrAdient estimator of the Risk (SUGAR) for multiple parameter selection",
-    author = "C. Deledalle and S. Vaiter and G. Peyr{\'e} and J. Fadili",
+    author = "Charles-Alban Deledalle and Samuel Vaiter and Gabriel Peyré and Jalal Fadili",
      journal = "SIAM Journal on Imaging Sciences",
      doi = "10.1137/140968045",
      volume = 7,
@@ -1923,7 +2084,7 @@
 
 @Article{2014-ferradans-siims,
     title = "Regularized Discrete Optimal Transport",
-   	author = "S. Ferradans and N. Papadakis and G. Peyr{\'e} and J-F. Aujol",
+   	author = "Santiago Ferradans and Nicolas Papadakis and Gabriel Peyré and Jean-François Aujol",
      journal = "SIAM Journal on Imaging Sciences",
      volume = 7,
      number = 3,
@@ -1935,7 +2096,7 @@
 
 @Article{2014-xia-siims,
     title = "Synthesizing and Mixing Stationary Gaussian Texture Models",
-   	author = "G-S. Xia and S. Ferradans and G. Peyr{\'e} and J-F. Aujol",
+   	author = "Gui-Song Xia and Santiago Ferradans and Gabriel Peyré and Jean-François Aujol",
      journal = "SIAM Journal on Imaging Sciences",
      year = "2014",
 	volume = 7,
@@ -1947,7 +2108,7 @@
 
 @Article{2014-papadakis-siims,
     title = "Optimal Transport with Proximal Splitting",
-   	author = "N. Papadakis and G. Peyr{\'e} and E. Oudet",
+   	author = "Nicolas Papadakis and Gabriel Peyré and Édouard Oudet",
 	journal = "SIAM Journal on Imaging Sciences",
 	volume = 7,
 	number = 1,
@@ -1965,7 +2126,7 @@
 
 @Article{2013-alquier-ip,
     title = "Adaptive estimation of the density matrix in quantum homodyne tomography with noisy data",
-   	author = "P. Alquier and K. Meziani and G. Peyr{\'e}",
+   	author = "Pierre Alquier and Kathia Meziani and Gabriel Peyré",
      journal = "Inverse Problems",
 	doi = "doi:10.1088/0266-5611/29/7/075017",
 	 volume = 29,
@@ -1978,7 +2139,7 @@
 
 @Article{2013-raguet-siims,
     title = "A Generalized Forward-Backward Splitting",
-   	author = "H. Raguet and J. Fadili and G. Peyr{\'e}",
+   	author = "Hugo Raguet and Jalal Fadili and Gabriel Peyré",
      journal = "SIAM Journal on Imaging Sciences",
      year = "2013",
 	volume = 6,
@@ -1991,7 +2152,7 @@
 
 @Article{2013-elder-imvis,
     title = "On Growth and Formlets: Sparse Multi-Scale Coding of Planar Shape",
-   author = "J. Elder and T. Oleskiw and A. Yakubovich and G. Peyr{\'e}",
+   author = "James Elder and Tim Oleskiw and Alexander Yakubovich and Gabriel Peyré",
      journal = "Image and Vision Computing",
      year = 2013,
      volume = 31,
@@ -2003,7 +2164,7 @@
 
 @Article{2013-vaiter-info,
     title = "Robust Sparse Analysis Regularization",
-   	author = "S. Vaiter and G. Peyr{\'e} and C. Dossal and J. Fadili",
+   	author = "Samuel Vaiter and Gabriel Peyré and Charles Dossal and Jalal Fadili",
      journal = "IEEE Transactions on Information Theory",
     volume = 59,
     number = 4,
@@ -2016,7 +2177,7 @@
 
 @Article{2013-vaiter-acha,
     title = "Local Behavior of Sparse Analysis Regularization: Applications to Risk Estimation",
-   	author = "S. Vaiter and C. Deledalle and G. Peyr{\'e} and J. Fadili and C. Dossal",
+   	author = "Samuel Vaiter and Charles-Alban Deledalle and Gabriel Peyré and Jalal Fadili and Charles Dossal",
      journal = "Applied and Computational Harmonic Analysis",
 	volume = 35,
 	number = 3,
@@ -2030,7 +2191,7 @@
 
 @Article{2013-kachour-statsinica,
     title = "The degrees of freedom of penalized l1 minimization",
-   	author = "C. Dossal and M. Kachour and  J. Fadili and G. Peyr{\'e} and C. Chesneau",
+   	author = "Charles Dossal and Maher Kachour and Jalal Fadili and Gabriel Peyré and Christophe Chesneau",
 	journal = "Statistica Sinica",
 	volume = 23,
 	number = 2,
@@ -2047,7 +2208,7 @@
 
 @Article{2012-jung-siims,
     title = "Nonlocal Active Contours",
-   	author = "M. Jung and G. Peyr{\'e} and L. D. Cohen",
+   	author = "Min Jung and Gabriel Peyré and Laurent D. Cohen",
      journal = "SIAM Journal on Imaging Sciences",
 	volume = 5,
 	number = 3,
@@ -2060,7 +2221,7 @@
 
 @Article{2012-dossal-acha,
     title = "Sharp Support Recovery from Noisy Random Measurements by L1 minimization",
-   author = "C. Dossal and M.L. Chabanol and G. Peyr{\'e} and J. Fadili",
+   author = "Charles Dossal and Marie-Line Chabanol and Gabriel Peyré and Jalal Fadili",
    journal = "Applied and Computational Harmonic Analysis",
    doi = "10.1016/j.acha.2011.09.003",
 	volume = 33,
@@ -2080,7 +2241,7 @@
 
 @Article{2011-peyre-cise,
     title = "The Numerical Tours of Signal Processing - Advanced Computational Signal and Image Processing",
-   author = "G. Peyr{\'e}",
+   author = "Gabriel Peyré",
      journal = "IEEE Computing in Science and Engineering",
      volume =  13,
      number =  4,
@@ -2094,7 +2255,7 @@
 
 @Article{2011-jacques-sigpro,
     title = "A Panorama on Multiscale Geometric Representations, Intertwining Spatial, Directional and Frequency Selectivity",
-   author = "L. Jacques and  L. Duval and C. Chaux and G. Peyr{\'e}",
+   author = "Laurent Jacques and Laurent Duval and Corinne Chaux and Gabriel Peyré",
      journal = "Signal Processing",
      volume = 91,
      number = 12,
@@ -2107,7 +2268,7 @@
 
 @Article{peyre-ipi-11,
     title = "Non-local Regularization of Inverse Problems",
-   author = "G. Peyr{\'e} and S. Bougleux and L. D. Cohen",
+   author = "Gabriel Peyré and Sébastien Bougleux and Laurent D. Cohen",
      journal = "Inverse Problems and Imaging",
      volume = 5,
      number = 2,
@@ -2121,7 +2282,7 @@
 
 @Article{peyre-ieee-stsp-11,
     title = "A Review of Adaptive Image Representations",
-   author = "G. Peyr{\'e}",
+   author = "Gabriel Peyré",
      journal = "IEEE Journal of Selected Topics in Signal Processing",
      doi = "doi:10.1109/JSTSP.2011.2120592",
      volume = 5,
@@ -2134,7 +2295,7 @@
 
 @Article{ion-cviu-11,
     title = "Matching 2D and 3D Articulated Shapes Using the Eccentricity Transform",
-   author = "A. Ion and N. M. Artner and G. Peyr{\'e} and W. G. Kropatsch and L. D. Cohen",
+   author = "Adrian Ion and Nicole M. Artner and Gabriel Peyré and Walter G. Kropatsch and Laurent D. Cohen",
      journal = "Computer Vision and Image Understanding",
      volume = 115,
      number = 6,
@@ -2147,7 +2308,7 @@
 
 @Article{maurel-siims-11,
     title = "Locally Parallel Texture Modeling",
-   author = "P. Maurel and J-F. Aujol and G. Peyr{\'e}",
+   author = "Pierre Maurel and Jean-François Aujol and Gabriel Peyré",
      journal = "SIAM Journal on Imaging Sciences",
      volume =  4,
      number = 1,
@@ -2161,7 +2322,7 @@
 
 @ARTICLE{carlier-m3as-11,
     title = "A Projection Approach to the Numerical Analysis of Limit Load Problems",
-   author = "G. Carlier and M. Comte and I. Ionescu and G. Peyr{\'e}",
+   author = "Guillaume Carlier and Myriam Comte and Ioan Ionescu and Gabriel Peyré",
      journal = "Mathematical Models and Methods in Applied Sciences",
      doi = "doi:10.1142/S0218202511005325",
      volume =  21,
@@ -2174,7 +2335,7 @@
 
 @ARTICLE{demanet-focm-11-cwc,
     title = "Compressive Wave Computation",
-   author = "L. Demanet and G. Peyr{\'e}",
+   author = "Laurent Demanet and Gabriel Peyré",
      journal = "Foundations of Computational Mathematics",
      year = "2011",
      volume = 11,
@@ -2192,7 +2353,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 @Article{peyre-fnt-10,
-  author =	"G. Peyr{\'e} and M. Pechaud and R. Keriven and L.D. Cohen",
+  author =	"Gabriel Peyré and Michael Pechaud and Renaud Keriven and Laurent D. Cohen",
   title =	"Geodesic Methods in Computer Vision and Graphics",
   journal =	"Foundations and Trends in Computer Graphics and Vision",
   volume = 5,
@@ -2206,7 +2367,7 @@
 
 @ARTICLE{fadili-tip-10-tv,
     title = "Total Variation Projection with First Order Schemes",
-   author = "J. Fadili and G. Peyr{\'e}",
+   author = "Jalal Fadili and Gabriel Peyré",
      journal = "IEEE Transactions on Image Processing",
      year = "2011",
      volume = 20,
@@ -2222,7 +2383,7 @@
 
 @ARTICLE{peyre-siims-10-mcalearned,
     title = "Learning the Morphological Diversity",
-   author = "G. Peyr{\'e} and J. Fadili and J-L. Starck",
+   author = "Gabriel Peyré and Jalal Fadili and Jean-Luc Starck",
      journal = "SIAM Journal on Imaging Sciences",
      volume = 3,
      number = 3,
@@ -2235,7 +2396,7 @@
 
 @ARTICLE{benmansour-numerishe-10-fmderivative,
     title = "Derivatives with Respect to Metrics and Applications: Subgradient Marching Algorithm",
-   author = "F. Benmansour and G. Carlier and G. Peyr{\'e} and F. Santambrogio",
+   author = "Fethallah Benmansour and Guillaume Carlier and Gabriel Peyré and Filippo Santambrogio",
      journal = "Numerische Mathematik",
      volume = 116,
      number = 3,
@@ -2250,7 +2411,7 @@
 
 @ARTICLE{peyre-tsp-10-bestbasis-cs,
     title = "Best Basis Compressed Sensing",
-   author = "G. Peyr{\'e}",
+   author = "Gabriel Peyré",
      journal = "IEEE Transaction on Signal Processing",
      volume = 58,
      number = 5,
@@ -2269,7 +2430,7 @@
 
 @ARTICLE{dossal-laa-09,
     title = "A Numerical Exploration of Compressed Sampling Recovery",
-   author = "C. Dossal and G. Peyr{\'e} and J. Fadili",
+   author = "Charles Dossal and Gabriel Peyré and Jalal Fadili",
      journal = "Linear Algebra and Applications",
      volume = 432,
      number =  7,
@@ -2283,7 +2444,7 @@
 
 @ARTICLE{benmansour-nem-09,
     title = "Numerical Approximation of Continuous Traffic Congestion Equilibria",
-   author = "F. Benmansour and G. Carlier and G. Peyr{\'e} and F. Santambrogio",
+   author = "Fethallah Benmansour and Guillaume Carlier and Gabriel Peyré and Filippo Santambrogio",
      journal = "Networks and Eterogeneous Media",
      number = 4,
      volume = 3,
@@ -2297,7 +2458,7 @@
 
 @ARTICLE{peyre-pami-09,
     title = "Texture Synthesis with Grouplets",
-   author = "G. Peyr{\'e}",
+   author = "Gabriel Peyré",
      journal = "IEEE Transactions on Pattern Analysis and Machine Intelligence",
      number = 32,
      volume = 4,
@@ -2309,7 +2470,7 @@
 }
 
 @Article{peyre-cviu-09,
-  author =	"G. Peyr{\'e}",
+  author =	"Gabriel Peyré",
   title =	"Manifold models for signals and images",
   journal =	"Computer Vision and Image Understanding",
   volume =	"113",
@@ -2325,7 +2486,7 @@
 
 @Article{peyre-jmiv-09,
   title =	"Sparse Modeling of Textures",
-  author =	"G. Peyr{\'e}",
+  author =	"Gabriel Peyré",
   journal =	"Journal of Mathematical Imaging and Vision",
   volume =  34,
   number = 1,
@@ -2338,7 +2499,7 @@
 
 @Article{carlier-m2an-09,
   title =	"Approximation of Maximal Cheeger Sets by Projection",
-  author =	"G. Carlier and M. Comte and G. Peyr{\'e}",
+  author =	"Guillaume Carlier and Myriam Comte and Gabriel Peyré",
   journal =	"ESAIM: Mathematical Modelling and Numerical Analysis",
   volume =	"43",
   number =	"1",
@@ -2357,7 +2518,7 @@
 
 @Article{peyre-mms-08,
   title =	"Image Processing with Non-local Spectral Bases",
-  author =	"G. Peyr{\'e}",
+  author =	"Gabriel Peyré",
   journal =	"SIAM Multiscale Modeling and Simulation",
   volume =	"7",
   number =	"2",
@@ -2371,7 +2532,7 @@
 
 @Article{peyre-ijcvb-08,
   title =	"Heuristically Driven Front Propagation for Fast Geodesic Extraction",
-  author =	"G. Peyr{\'e} and L. D. Cohen",
+  author =	"Gabriel Peyré and Laurent D. Cohen",
   journal =	"International Journal for Computational Vision and Biomechanics",
   volume =	"1",
   number =	"1",
@@ -2383,7 +2544,7 @@
 
 @Article{peyre-cpam-08,
   title =	"Orthogonal Bandlet Bases for Geometric Images Approximation",
-  author =	"S. Mallat and G. Peyr{\'e}",
+  author =	"Stéphane Mallat and Gabriel Peyré",
   journal =	"Communications on Pure and Applied Mathematics",
   volume =	"61",
   number =	"9",
@@ -2403,7 +2564,7 @@
 
 @Article{peyre-numeralgo-07,
   title =	"A review of Bandlet methods for geometrical image representation",
-  author =	"S. Mallat and G. Peyr{\'e}",
+  author =	"Stéphane Mallat and Gabriel Peyré",
   journal =	"Numerical Algorithms",
   year = 	"2007",
   number =	"3",
@@ -2421,7 +2582,7 @@
 
 
 @article{peyre-ijcv-06,
- author = {G. Peyr{\'e} and L. D. Cohen},
+ author = {Gabriel Peyré and Laurent D. Cohen},
  title = {Geodesic Remeshing Using Front Propagation},
  journal = {International Journal of Computer Vision},
  volume = {69},
@@ -2442,7 +2603,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
  @Article{peyre-siggraph-05,
-  author =	"G. Peyr{\'e} and S. Mallat",
+  author =	"Gabriel Peyré and Stéphane Mallat",
   title =	"Surface compression with geometric bandelets",
   journal =	"ACM Transactions on Graphics (Proc. SIGGRAPH 2005)",
   volume =	"24",
@@ -2465,7 +2626,7 @@
 
 @inproceedings{2026-Marcotte-Intrinsic,
     title = "Intrinsic training dynamics of deep neural networks", 
-    author = "S. Marcotte and G. Peyré and R. Gribonval",
+    author = "Sibylle Marcotte and Gabriel Peyré and Rémi Gribonval",
      institution = "ArXiv",
      doi = "2508.07370",
       booktitle = {Proc. ICLR'26},
@@ -2477,7 +2638,7 @@
 
 @inproceedings{2025-Marcotte-Transformative,
     title = "Transformative or Conservative? Conservation laws for ResNets and Transformers", 
-    author = "S. Marcotte and R. Gribonval and G. Peyr{\'e}",
+    author = "Sibylle Marcotte and Rémi Gribonval and Gabriel Peyré",
       booktitle = {Proc. ICML'25},
      year = "2025",
      url = {https://arxiv.org/abs/2506.06194},
@@ -2486,7 +2647,7 @@
 
 @inproceedings{2025-Furuya-Transformers-Univ,
     title = "Transformers are Universal In-context Learners", 
-    author = "T. Furuya and M. V. de Hoop and G. Peyr{\'e}",
+    author = "Takashi Furuya and Maarten V. de Hoop and Gabriel Peyré",
       booktitle = {Proc. ICLR'25},
      doi = "2408.01367",
      year = "2025",
@@ -2495,7 +2656,7 @@
 
 @inproceedings{2025-Sander-Transformers-NextToken,
     title = "Towards Understanding the Universality of Transformers for Next-Token Prediction", 
-    author = "M. Sander and Gabriel Peyr{\'e}",
+    author = "Michael Sander and Gabriel Peyré",
       booktitle = {Proc. ICLR'25},
      doi = "2410.03011",
      year = "2025",
@@ -2507,7 +2668,7 @@
 
 @inproceedings{2024-Marcotte-Momentum,
     title = "Keep the Momentum: Conservation Laws beyond Euclidean Gradient Flows",
-    author = "S. Marcotte and R. Gribonval and G. Peyr{\'e}",
+    author = "Sibylle Marcotte and Rémi Gribonval and Gabriel Peyré",
       booktitle = {Proc. ICML'24},
      number = "2405.12888",
      year = "2024",
@@ -2516,7 +2677,7 @@
 
 @inproceedings{2024-Sander-InContext,
     title = "How do Transformers perform In-Context Autoregressive Learning?", 
-    author = "M. E. Sander and R. Giryes and T. Suzuki and M. Blondel and G. Peyr{\'e}",
+    author = "Michael E. Sander and Raja Giryes and Taiji Suzuki and Mathieu Blondel and Gabriel Peyré",
       booktitle = {Proc. ICML'24},
      number = "2402.05787",
      year = "2024",
@@ -2525,7 +2686,7 @@
 
 @inproceedings{2024-Castin-LipAttention,
     title = "How Smooth Is Attention?", 
-    author = "V. Castin and P. Ablin and G. Peyr{\'e}",
+    author = "Valérie Castin and Pierre Ablin and Gabriel Peyré",
       booktitle = {Proc. ICML'24},
      year = "2024",
      url = {https://arxiv.org/abs/2312.14820},
@@ -2534,7 +2695,7 @@
 
 @inproceedings{2024-Ye-Hypergradients,
     title = "Enhancing Hypergradients Estimation: A Study of Preconditioning and Reparameterization", 
-    author = "Z. Ye and G. Peyr{\'e} and D. Cremers and P. Ablin",
+    author = "Zhenzhang Ye and Gabriel Peyré and Daniel Cremers and Pierre Ablin",
       booktitle = {Proc. AISTATS'24},
      year = "2024",
      url = {https://arxiv.org/abs/2402.16748},
@@ -2544,7 +2705,7 @@
 
 @inproceedings{2024-Sebbouh-StructuredGW,
     title = "Structured Transforms Across Spaces with Cost-Regularized Optimal Transport",
-    author = "O. Sebbouh and M. Cuturi and G. Peyr{\'e}",
+    author = "Othmane Sebbouh and Marco Cuturi and Gabriel Peyré",
       booktitle = {Proc. AISTATS'24},
      number = "2311.05788",
      year = "2024",
@@ -2554,7 +2715,7 @@
 
 @inproceedings{2024-Andrade-iOT,
     title = "Sparsistency for Inverse Optimal Transport",
-    author = "F. Andrade and G. Peyr{\'e} and C. Poon",
+    author = "Francisco Andrade and Gabriel Peyré and Clarice Poon",
       booktitle = {Proc. ICLR'24},
      number = "2310.05461",
      year = "2024",
@@ -2568,7 +2729,7 @@
 
 @inproceedings{2023-Marcotte-Lie,
     title = "Abide by the Law and Follow the Flow: Conservation Laws for Gradient Flows",
-    author = "S. Marcotte and R. Gribonval and G. Peyr{\'e}",
+    author = "Sibylle Marcotte and Rémi Gribonval and Gabriel Peyré",
       booktitle = {Proc. NeurIPS'23},
      number = "2307.00144",
      year = "2023",
@@ -2577,7 +2738,7 @@
 
 @inproceedings{2023-Sander-topk,
     title = "Fast, Differentiable and Sparse Top-k: a Convex Analysis Perspective",
-    author = "M. Sander and J. Puigcerver and J. Djolonga and G. Peyr{\'e} and M. Blondel",
+    author = "Michael Sander and Joan Puigcerver and Josip Djolonga and Gabriel Peyré and Mathieu Blondel",
       booktitle = {Proc. ICML'23},
      institution = "ArXiv",
      number = "2302.01425",
@@ -2592,7 +2753,7 @@
 
 @inproceedings{2022-Sander-NODE,
     title = "Do Residual Neural Networks discretize Neural Ordinary Differential Equations?",
-    author = "M. Sander and P. Ablin and G. Peyr{\'e}",
+    author = "Michael Sander and Pierre Ablin and Gabriel Peyré",
       booktitle = {Proc. NeurIPS'22},
      institution = "ArXiv",
      number = "2205.14612",
@@ -2602,7 +2763,7 @@
 
 @inproceedings{2022-Barboni-RKHSResNet,
     title = "Global convergence of ResNets: From finite to infinite width using linear parameterization",
-    author = "R. Barboni and G. Peyr{\'e} and F-X Vialard",
+    author = "Raphaël Barboni and Gabriel Peyré and François-Xavier Vialard",
       booktitle = {Proc. NeurIPS'22},
      institution = "HAL",
      number = "03473699",
@@ -2612,7 +2773,7 @@
 
 @inproceedings{2022-Scetbon-GW,
     title = "Linear-Time Gromov Wasserstein Distances using Low Rank Couplings and Costs",
-    author = "M. Scetbon and G. Peyr{\'e} and M. Cuturi",
+    author = "Meyer Scetbon and Gabriel Peyré and Marco Cuturi",
      booktitle = {Proc. ICML'22},
      institution = "Arxiv",
      number = "2106.01128",
@@ -2624,7 +2785,7 @@
 
 @inproceedings{2022-huizing-wasserstein-eigenvectors,
     title = "Unsupervised Ground Metric Learning using Wasserstein Eigenvectors",
-    author = "G-J. Huizing and L. Cantini and G. Peyr{\'e}",
+    author = "Geert-Jan Huizing and Laura Cantini and Gabriel Peyré",
      booktitle = {Proc. ICML'22},
      institution = "Arxiv",
      number = "2102.06278",
@@ -2634,7 +2795,7 @@
 
 @inproceedings{2022-sander-sinkformers,
     title = "Sinkformers: Transformers with Doubly Stochastic Attention",
-    author = "M. E. Sander and P. Ablin and M. Blondel and G. Peyr{\'e}",
+    author = "Michael E. Sander and Pierre Ablin and Mathieu Blondel and Gabriel Peyré",
      booktitle = {Proc. AISTATS'22},
      year = "2022",
      url = {https://arxiv.org/abs/2110.11773},
@@ -2642,7 +2803,7 @@
 
 @inproceedings{2022-Sejourne-Translation,
     title = "Faster Unbalanced Optimal Transport: Translation invariant Sinkhorn and 1-D Frank-Wolfe",
-    author = "T. Séjourn{\'e} and F-X. Vialard and G. Peyr{\'e}",
+    author = "Thibault Séjourné and François-Xavier Vialard and Gabriel Peyré",
      booktitle = {Proc. AISTATS'22},
      year = "2022",
      url = {https://arxiv.org/abs/2201.00730},
@@ -2650,7 +2811,7 @@
 
 @inproceedings{2022-Sebbouh-RSGDA,
     title = "Randomized Stochastic Gradient Descent Ascent",
-    author = "O. Sebbouh and M. Cuturi and G. Peyr{\'e}",
+    author = "Othmane Sebbouh and Marco Cuturi and Gabriel Peyré",
      booktitle = {Proc. AISTATS'22},
      year = "2022",
      url = {https://arxiv.org/abs/2111.13162},
@@ -2658,7 +2819,7 @@
 
 @inproceedings{2022-ablin-manifold,
     title = "Fast and accurate optimization on the orthogonal manifold without retraction",
-    author = "P. Ablin and G. Peyr{\'e}",
+    author = "Pierre Ablin and Gabriel Peyré",
      booktitle = {Proc. AISTATS'22},
      year = "2022",
      url = {https://arxiv.org/abs/2102.07432},
@@ -2672,7 +2833,7 @@
 
 @inproceedings{2021-Poon-noncvxpro,
     title = "Smooth Bilevel Programming for Sparse Regularization",
-    author = "C. Poon and G. Peyr{\'e}",
+    author = "Clarice Poon and Gabriel Peyré",
      booktitle = {Proc. NeurIPS'21},
      year = "2021",
      url = {https://arxiv.org/abs/2106.01429},
@@ -2680,7 +2841,7 @@
 
 @inproceedings{2021-sejourne-gw-unbalanced,
     title = "The Unbalanced Gromov Wasserstein Distance: Conic Formulation and Relaxation",
-    author = "T. Séjourn{\'e} and F-X. Vialard and G. Peyr{\'e}",
+    author = "Thibault Séjourné and François-Xavier Vialard and Gabriel Peyré",
      booktitle = {Proc. NeurIPS'21},
      year = "2021",
      url = {http://arxiv.org/abs/2009.04266},
@@ -2689,7 +2850,7 @@
 
 @inproceedings{2021-Scetbon-lowrank,
     title = "Low-Rank Sinkhorn Factorization",
-    author = "M. Scetbon and M. Cuturi and G. Peyr{\'e}",
+    author = "Meyer Scetbon and Marco Cuturi and Gabriel Peyré",
      booktitle = {Proc. ICML'21},
      year = "2021",
      url = {https://arxiv.org/abs/2103.04737},
@@ -2697,7 +2858,7 @@
 
 @inproceedings{2021-sander-momentum-networks,
     title = "Momentum Residual Neural Networks",
-    author = "M. E. Sander and P. Ablin and M. Blondel and G. Peyr{\'e}",
+    author = "Michael E. Sander and Pierre Ablin and Mathieu Blondel and Gabriel Peyré",
      booktitle = {Proc. ICML'21},
      year = "2021",
      url = {https://arxiv.org/abs/2102.07870},
@@ -2710,7 +2871,7 @@
 
 @inproceedings{2020-Janati-Gaussians,
     title = "Entropic Optimal Transport between (Unbalanced) Gaussian Measures has a Closed Form",
-    author = "H. Janati and B. Muzellec and G. Peyr{\'e} and M. Cuturi",
+    author = "Hicham Janati and Boris Muzellec and Gabriel Peyré and Marco Cuturi",
      booktitle = {Proc. NeurIPS'20},
      year = "2020",
      url = {https://arxiv.org/abs/2006.02572},
@@ -2718,7 +2879,7 @@
 
 @inproceedings{2020-Mensch-OnlineSinkhorn,
     title = "Online Sinkhorn: optimal transportation distances from sample streams",
-    author = "A. Mensch and G. Peyr{\'e}",
+    author = "Arthur Mensch and Gabriel Peyré",
      booktitle = {Proc. NeurIPS'20},
      year = "2020",
      url = {https://arxiv.org/abs/2003.01415},
@@ -2726,7 +2887,7 @@
 
 @inproceedings{2020-Chizat-EntropicFaster,
     title = "Faster Wasserstein Distance Estimation with the Sinkhorn Divergence",
-    author = "L. Chizat and P. Roussillon and F. L{\'e}ger and F-X. Vialard and G. Peyr{\'e}",
+    author = "Lénaïc Chizat and Pierre Roussillon and Florian Léger and François-Xavier Vialard and Gabriel Peyré",
      booktitle = {Proc. NeurIPS'20},
      year = "2020",
      url = {https://hal.archives-ouvertes.fr/hal-02867271},
@@ -2734,7 +2895,7 @@
 
 @inproceedings{2020-Zhang-colt,
     title = "Wasserstein Control of Mirror Langevin Monte Carlo",
-    author = "K. S. Zhang and G. Peyr{\'e} and J. Fadili and M. Pereyra",
+    author = "Kelvin S. Zhang and Gabriel Peyré and Jalal Fadili and Marcelo Pereyra",
      booktitle = {Proc. COLT'20},
      year = "2020",
      url = {https://arxiv.org/abs/2002.04363},
@@ -2742,7 +2903,7 @@
 
 @inproceedings{2020-Ablin-icml,
     title = "Super-efficiency of automatic differentiation for functions defined as a minimum",
-    author = "P. Ablin and G. Peyr{\'e} and T. Moreau",
+    author = "Pierre Ablin and Gabriel Peyré and Thomas Moreau",
      booktitle = {Proc. ICML'20},
         year = "2020",
      url = {https://arxiv.org/abs/2002.03722},
@@ -2756,7 +2917,7 @@
 
 @inproceedings{2019-Keriven-GNN,
     title = "Universal Invariant and Equivariant Graph Neural Networks",
-    author = "N. Keriven and G. Peyr{\'e}",
+    author = "Nicolas Keriven and Gabriel Peyré",
      booktitle = {Proc. NeurIPS'19},
      year = "2019",
      url = {http://arxiv.org/abs/1905.04943},
@@ -2764,7 +2925,7 @@
 
 @inproceedings{2019-Mensch-icml,
     title = "Geometric Losses for Distributional Learning",
-    author = "A. Mensch and M. Blondel and G. Peyr{\'e}",
+    author = "Arthur Mensch and Mathieu Blondel and Gabriel Peyré",
  	booktitle = {Proc. ICML'19},
      year = "2019",
      url = {https://arxiv.org/abs/1905.06005},
@@ -2772,7 +2933,7 @@
 
 @inproceedings{2019-deBie-icml,
     title = "Stochastic Deep Networks",
-    author = "G. de Bie and G. Peyr{\'e} and M. Cuturi",
+    author = "Gwendoline De Bie and Gabriel Peyré and Marco Cuturi",
  	booktitle = {Proc. ICML'19},
      year = "2019",
      url = {https://arxiv.org/abs/1811.07429},
@@ -2781,7 +2942,7 @@
 @inproceedings{2019-Feydy-aistats,
     title = "Interpolating between Optimal Transport and MMD
 using Sinkhorn Divergences",
-    author = "J. Feydy and T. S{\'e}journ{\'e} and F-X. Vialard and S. Amari and A. Trouv{\'e} and G. Peyr{\'e}",
+    author = "Jean Feydy and Thibault Séjourné and François-Xavier Vialard and Shun-ichi Amari and Alain Trouvé and Gabriel Peyré",
  	booktitle = {Proc. AISTATS'19},
      year = "2019",
      url = {https://arxiv.org/abs/1810.08278},
@@ -2790,7 +2951,7 @@ using Sinkhorn Divergences",
 
 @inproceedings{2019-Genevay-aistats,
     title = "Sample Complexity of Sinkhorn divergences",
-    author = "A. Genevay and L. Chizat and F. Bach and M. Cuturi and G. Peyr{\'e}",
+    author = "Aude Genevay and Lénaïc Chizat and Francis Bach and Marco Cuturi and Gabriel Peyré",
  	booktitle = {Proc. AISTATS'19},
      year = "2019",
      url = {https://arxiv.org/abs/1810.02733},
@@ -2799,7 +2960,7 @@ using Sinkhorn Divergences",
 @inproceedings{2019-Garrigos-aistats,
     title = "
 Model Consistency for Learning with Mirror-Stratifiable Regularizers",
-    author = "J. Fadili and G. Garrigos and J. Malick and G. Peyr{\'e}",
+    author = "Jalal Fadili and Gilles Garrigos and Jérôme Malick and Gabriel Peyré",
  	booktitle = {Proc. AISTATS'19},
      year = "2019",
      url = {http://arxiv.org/abs/1803.08381},
@@ -2807,7 +2968,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2019-Poon-aistats,
     title = "Support Localization and the Fisher Metric for off-the-grid Sparse Regularization",
-    author = "C. Poon and N. Keriven and G. Peyr{\'e}",
+    author = "Clarice Poon and Nicolas Keriven and Gabriel Peyré",
  	booktitle = {Proc. AISTATS'19},
      year = "2019",
      url = {https://arxiv.org/abs/1810.03340},
@@ -2822,7 +2983,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2018-Genevay-aistats,
     title = "Learning Generative Models with Sinkhorn Divergences",
-    author = "A. Genevay and G. Peyr{\'e} and M. Cuturi",
+    author = "Aude Genevay and Gabriel Peyré and Marco Cuturi",
  	booktitle = {Proc. AISTATS'18},
      year = "2018",
      pages = "1608--1617",
@@ -2835,7 +2996,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2017-feydy-miccai,
     title = "Optimal Transport for Diffeomorphic Registration",
-     author = "Jean Feydy and Benjamin Charlier and Francois-Xavier Vialard and Gabriel Peyr{\'e}",
+     author = "Jean Feydy and Benjamin Charlier and François-Xavier Vialard and Gabriel Peyré",
 	booktitle = {Proc. MICCAI'17},
      year = "2017",
      doi = "10.1007/978-3-319-66182-7_34",
@@ -2850,7 +3011,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2016-genevay-nips,
     title = "Stochastic Optimization for Large-scale Optimal Transport",
-     author = "A. Genevay and M. Cuturi and G. Peyr{\'e} and F. Bach",
+     author = "Aude Genevay and Marco Cuturi and Gabriel Peyré and Francis Bach",
 	booktitle = {Proc. NIPS'16},
 	publisher = {Curran Associates, Inc.},
 	editor = {D. D. Lee and U. V. Luxburg and I. Guyon and R. Garnett},
@@ -2861,7 +3022,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2016-degraux-nips,
     title = "Sparse Support Recovery with Non-smooth Loss Functions",
-     author = "K. Degraux and G. Peyr{\'e} and J. Fadili and L. Jacques",
+     author = "Kévin Degraux and Gabriel Peyré and Jalal Fadili and Laurent Jacques",
 	booktitle = {Proc. NIPS'16},
 	publisher = {Curran Associates, Inc.},
 	editor = {D. D. Lee and U. V. Luxburg and I. Guyon and R. Garnett},
@@ -2873,7 +3034,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2016-liang-nips,
     title = "A Multi-step Inertial Forward-Backward Splitting Method for Non-convex Optimization",
-    author = "J. Liang and J. Fadili and G. Peyr{\'e}",
+    author = "Jingwei Liang and Jalal Fadili and Gabriel Peyré",
 	booktitle = {Proc. NIPS'16},
 	publisher = {Curran Associates, Inc.},
 	editor = {D. D. Lee and U. V. Luxburg and I. Guyon and R. Garnett},
@@ -2884,7 +3045,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2016-peyre-icml,
     title = "Gromov-Wasserstein Averaging of Kernel and Distance Matrices",
-    author = "G. Peyr{\'e} and  M. Cuturi and J. Solomon",
+    author = "Gabriel Peyré and Marco Cuturi and Justin Solomon",
 	booktitle = "Proc. ICML'16",
 	pages = "2664--2672",
 	url = {https://hal.archives-ouvertes.fr/hal-01322992},
@@ -2894,7 +3055,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2016-rolet-aistats,
     title = "Fast Dictionary Learning with a Smoothed Wasserstein Loss",
-    author = "A. Rolet and  M. Cuturi and G. Peyr{\'e}",
+    author = "Antoine Rolet and Marco Cuturi and Gabriel Peyré",
 	booktitle = "Proc. AISTATS'16",
 	pages = "630--638",
 	url = {http://jmlr.org/proceedings/papers/v51/rolet16.html},
@@ -2909,7 +3070,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2015-vacher-nips,
     title = "Biologically Inspired Dynamic Textures for Probing Motion Perception",
-    author = "J. Vacher and  A. I. Meso and G. Peyr{\'e} and L. Perrinet",
+    author = "Jonathan Vacher and Andrew Isaac Meso and Gabriel Peyré and Laurent Perrinet",
 	booktitle = "Proc. NIPS'15",
    publisher = {Curran Associates, Inc.},
 	pages = "1909--1917",
@@ -2920,7 +3081,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2015-Duval-NDSC,
     title = "The Non Degenerate Source Condition: Support Robustness for Discrete and Continuous Sparse Deconvolution",
-    author = "V. Duval and G. Peyr{\'e}",
+    author = "Vincent Duval and Gabriel Peyré",
 	booktitle = "Proc. IEEE CAMSAP'15",
 	doi = "10.1109/CAMSAP.2015.7383733",
 	pages = "49--52",
@@ -2931,7 +3092,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2015-Gramfort-OTNeuro,
     title = "Fast Optimal Transport Averaging of Neuroimaging Data",
-    author = "A. Gramfort and G. Peyr{\'e} and M. Cuturi",
+    author = "Alexandre Gramfort and Gabriel Peyré and Marco Cuturi",
 	booktitle = "Proc. IPMI'15",
 	pages="261--272",
 	isbn="978-3-319-19992-4",
@@ -2942,7 +3103,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2015-Liang-DR,
     title = "Activity Identification and Local Linear Convergence of Douglas-Rachford/ADMM under Partial Smoothness",
-    author = "J. Liang and J. Fadili and G. Peyr{\'e} and R. Luke",
+    author = "Jingwei Liang and Jalal Fadili and Gabriel Peyré and Russell Luke",
 	booktitle = "Proc. SSVM'15",
 	pages = "642--653",
 	isbn = "978-3-319-18461-6",
@@ -2959,7 +3120,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2014-Liang-LinConvFB,
     title = "Local Linear Convergence of Forward-Backward under Partial Smoothness",
-    author = "J. Liang and J. Fadili and G. Peyr{\'e}",
+    author = "Jingwei Liang and Jalal Fadili and Gabriel Peyré",
 	booktitle = "Proc. NIPS'14",
     Pages = "1970--1978",
      year = "2014",
@@ -2968,7 +3129,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2014-Liang-ICIP,
     title = "On the convergence rates of proximal splitting algorithms",
-    author = "J. Liang and J. Fadili and G. Peyr{\'e}",
+    author = "Jingwei Liang and Jalal Fadili and Gabriel Peyré",
      booktitle = "Proc. ICIP'14",
 	pages = "4146--4150",
 	doi = "10.1109/ICIP.2014.7025842",
@@ -2978,7 +3139,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2014-Liang-ICASSP,
     title = "Iteration-Complexity of a Generalized Forward Backward Splitting Algorithm",
-   	author = "J. Liang and J. Fadili and G. Peyr{\'e}",
+   	author = "Jingwei Liang and Jalal Fadili and Gabriel Peyré",
      booktitle = "Proc. ICASSP'14",
      year = "2014",
      url = {http://arxiv.org/abs/1310.6636},
@@ -2991,7 +3152,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2013-spars-score,
     title = "Stein COnsistent Risk Estimator (SCORE) for hard thresholding",
-   	author = "C. Deledalle and G. Peyr{\'e} and J. Fadili",
+   	author = "Charles-Alban Deledalle and Gabriel Peyré and Jalal Fadili",
      booktitle = "Proc. SPARS'13",
      year = "2013",
      url = {http://hal.archives-ouvertes.fr/hal-00776303},
@@ -2999,7 +3160,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2013-sampta-decomposable,
     title = "Stable Recovery with Analysis Decomposable Priors",
-   	author = "J. Fadili and G. Peyr{\'e} and S. Vaiter and C. Deledalle and J. Salmon",
+   	author = "Jalal Fadili and Gabriel Peyré and Samuel Vaiter and Charles-Alban Deledalle and Joseph Salmon",
      booktitle = "Proc. Sampta'13",
      year = "2013",
 	pages = "113--116",
@@ -3009,7 +3170,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2013-sampta-polyhedral,
     title = "Robust Polyhedral Regularization",
-   	author = "S. Vaiter  and G. Peyr{\'e} and J. Fadili",
+   	author = "Samuel Vaiter and Gabriel Peyré and Jalal Fadili",
      booktitle = "Proc. Sampta'13",
 	pages = "156--159",
      year = "2013",
@@ -3019,7 +3180,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2013-ssvm-mixing,
     title = "Static and Dynamic Texture Mixing Using Optimal Transport",
-   	author = "S. Ferradans and G-S. Xia  and G. Peyr{\'e} and J-F. Aujol",
+   	author = "Santiago Ferradans and Gui-Song Xia and Gabriel Peyré and Jean-François Aujol",
      booktitle = "Proc. SSVM'13",
      year = "2013",
      url = {http://hal.archives-ouvertes.fr/hal-00662720},
@@ -3033,7 +3194,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2013-ssvm-sparse-synthesis,
     title = "Constrained Sparse Texture Synthesis",
-   	author = "G. Tartavel and Y. Gousseau and G. Peyr{\'e}",
+   	author = "Guillaume Tartavel and Yann Gousseau and Gabriel Peyré",
      booktitle = "Proc. SSVM'13",
      year = "2013",
      url = {http://hal.archives-ouvertes.fr/hal-00798570/},
@@ -3049,7 +3210,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2013-ssvm-regul-ot,
     title = "Regularized Discrete Optimal Transport",
-   	author = "S. Ferradans and N. Papadakis and G. Peyr{\'e} and J-F. Aujol",
+   	author = "Santiago Ferradans and Nicolas Papadakis and Gabriel Peyré and Jean-François Aujol",
      booktitle = "Proc. SSVM'13",
      year = "2013",
 	isbn={978-3-642-38266-6},
@@ -3070,7 +3231,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2012-icml-spectral,
     title = "Risk estimation for matrix recovery with spectral regularization",
-   	author = "C. Deledalle and S. Vaiter and G. Peyr{\'e} and J. Fadili and C. Dossal",
+   	author = "Charles-Alban Deledalle and Samuel Vaiter and Gabriel Peyré and Jalal Fadili and Charles Dossal",
      booktitle = "Proc. ICML'12 Workshops",
      year = "2012",
      url = {http://hal.archives-ouvertes.fr/hal-00695326/},
@@ -3078,7 +3239,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2012-icml-glasso,
     title = "Degrees of Freedom of the Group Lasso",
-   	author = "S. Vaiter and C. Deledalle and G. Peyr{\'e} and J. Fadili and C. Dossal",
+   	author = "Samuel Vaiter and Charles-Alban Deledalle and Gabriel Peyré and Jalal Fadili and Charles Dossal",
      booktitle = "Proc. ICML'12 Workshops",
      year = "2012",
      url = {http://hal.archives-ouvertes.fr/hal-00695292/},
@@ -3086,7 +3247,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2012-ncmip-proxiter,
     title = "Proximal Splitting Derivatives for Risk Estimation",
-   	author = "C. Deledalle and S. Vaiter and G. Peyr{\'e} and J. Fadili and C. Dossal",
+   	author = "Charles-Alban Deledalle and Samuel Vaiter and Gabriel Peyré and Jalal Fadili and Charles Dossal",
      booktitle = "Proc. NCMIP'12",
      year = "2012",
      url = {http://hal.archives-ouvertes.fr/hal-00670213},
@@ -3094,7 +3255,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2012-icip-wasserstein-rbac,
     title = "Wasserstein Active Contours",
-   	author = "G. Peyr{\'e} and J. Fadili and J. Rabin",
+   	author = "Gabriel Peyré and Jalal Fadili and Julien Rabin",
      year = "2012",
      booktitle = "Proc. ICIP'12",
      pages = "2541--2544",
@@ -3104,7 +3265,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 }
 @inproceedings{2012-icip-lassosure,
     title = "Unbiased Risk Estimation for Sparse Analysis Regularization",
-   	author = "C. Deledalle and S. Vaiter and G. Peyr{\'e} and J. Fadili and C. Dossal",
+   	author = "Charles-Alban Deledalle and Samuel Vaiter and Gabriel Peyré and Jalal Fadili and Charles Dossal",
      year = "2012",
      booktitle = "Proc. ICIP'12",
      pages = {3053--3056},
@@ -3115,7 +3276,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2012-icip-dyntex,
     title = "Compact Representations of Stationary Dynamic Textures",
-   	author = "G-S. Xia  and S. Ferradans and G. Peyr{\'e} and J-F. Aujol",
+   	author = "Gui-Song Xia and Santiago Ferradans and Gabriel Peyré and Jean-François Aujol",
      year = "2012",
      booktitle = "Proc. ICIP'12",
      pages = {2993--2996},
@@ -3130,7 +3291,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2011-spars-dof,
     title = "The degrees of freedom of the Lasso in underdetermined linear regression models",
-   author = "M. Kachour and C. Dossal and J. Fadili and G. Peyr{\'e} and C. Chesneau",
+   author = "Maher Kachour and Charles Dossal and Jalal Fadili and Gabriel Peyré and Christophe Chesneau",
      booktitle = "Proc. SPARS 2011",
      year = "2011",
      url = {http://hal.archives-ouvertes.fr/hal-00625219},
@@ -3138,7 +3299,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2011-eusipco-tree,
     title = "Adaptive Structured Block Sparsity Via Dyadic Partitioning",
-   author = "G. Peyr{\'e} and J. Fadili and C. Chesneau",
+   author = "Gabriel Peyré and Jalal Fadili and Christophe Chesneau",
      booktitle = "Proc. EUSIPCO 2011",
      pages = "1455--1459",
      year = "2011",
@@ -3147,7 +3308,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{2011-eusipco-overlap,
     title = "Group Sparsity with Overlapping Partition Functions",
-   author = "G. Peyr{\'e} and J. Fadili",
+   author = "Gabriel Peyré and Jalal Fadili",
      booktitle = "Proc. EUSIPCO 2011",
      year = "2011",
  	pages = "303--307",
@@ -3156,7 +3317,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{jung-emmcvpr-11,
     title = "Texture Segmentation via Non-local Non-parametric Active Contours",
-   author = "M. Jung and G. Peyr{\'e} and L. D. Cohen",
+   author = "Min Jung and Gabriel Peyré and Laurent D. Cohen",
      booktitle = "Proc. EMMCVPR 2011",
      volume = "6819/2011",
      pages = "74--88",
@@ -3167,7 +3328,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{schmidt-waves-11,
     title = "Dissipative Wave Model Fitting Using Localized Sources",
-   author = "N. Schmidt and G. Peyr{\'e} and Y. Fregnac",
+   author = "Nicolas Schmidt and Gabriel Peyré and Yves Frégnac",
      booktitle = "Proc. Waves 2011",
      pages = "473--476",
      year = "2011",
@@ -3176,7 +3337,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{jung-icip-11,
     title = "Non-local Segmentation and Inpainting",
-   author = "M. Jung and G. Peyr{\'e} and L. D. Cohen",
+   author = "Min Jung and Gabriel Peyré and Laurent D. Cohen",
      booktitle = "Proc. ICIP'11",
      year = "2011",
 	doi = "10.1109/ICIP.2011.6116432",
@@ -3187,7 +3348,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{rabin-icip-11,
     title = "Wasserstein Regularization of Imaging Problem",
-   author = "J. Rabin and G. Peyr{\'e}",
+   author = "Julien Rabin and Gabriel Peyré",
      booktitle = "Proc. ICIP'11",
      year = "2011",
 	pages = "1541--1544",
@@ -3199,7 +3360,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{jung-ssvm-11,
     title = "Non-local Active Contours",
-   author = "M. Jung and G. Peyr{\'e} and L. D. Cohen",
+   author = "Min Jung and Gabriel Peyré and Laurent D. Cohen",
      booktitle = "LNCS, Proc. SSVM'11",
 	publisher = "Springer",
      year = "2011",
@@ -3211,7 +3372,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{rabin-ssvm-11,
     title = "Wassertein Barycenter and its Applications to Texture Mixing",
-   author = "J. Rabin and G. Peyr{\'e} and J. Delon and M. Bernot",
+   author = "Julien Rabin and Gabriel Peyré and Julie Delon and Marc Bernot",
      booktitle = "LNCS, Proc. SSVM'11",
 	publisher = "Springer",
      year = "2011",
@@ -3224,7 +3385,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{peyre-sampta-11,
     title = "Learning Analysis Sparsity Priors",
-   author = "G. Peyr{\'e} and J. Fadili",
+   author = "Gabriel Peyré and Jalal Fadili",
      booktitle = "Proc. of Sampta'11",
      year = "2011",
      url = {http://hal.archives-ouvertes.fr/hal-00542016/},
@@ -3236,7 +3397,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{peyre-eccv10-shapes,
     title = "Geodesic Shapes and Surfaces Retrieval via Optimal Mass Transport",
-   author = "J. Rabin and G. Peyr{\'e} and L. D. Cohen",
+   author = "Julien Rabin and Gabriel Peyré and Laurent D. Cohen",
      booktitle = "Proc. of ECCV'10",
      year = "2010",
 	 pages = {771--784},
@@ -3248,7 +3409,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{oleskiw-cvpr-10,
     title = "On Growth and Formlets: Sparse Multi-Scale Coding of Planar Shape",
-   author = "T. Oleskiw and G. Peyr{\'e} and J. Elder",
+   author = "Tim Oleskiw and Gabriel Peyré and James Elder",
      booktitle = "Proc. of CVPR'10",
   	publisher = {IEEE},
      month = jun,
@@ -3259,7 +3420,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{schmidt-isbi-10,
     title = "Separation of Traveling Waves in Cortical Networks Using Optical Imaging",
-   author = "N. Schmidt and G. Peyr{\'e} and Y. Fregnac and P. E. Roland",
+   author = "Nicolas Schmidt and Gabriel Peyré and Yves Frégnac and Per E. Roland",
      booktitle = "Proc. of ISBI'10",
      month = apr,
      year = 2010,
@@ -3276,7 +3437,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{ouarti-icip-09,
     title = "Best Basis Denoising with Non-stationary Wavelet Packets",
-   author = "N. Ouarti and G. Peyr{\'e}",
+   author = "Nizar Ouarti and Gabriel Peyré",
      booktitle = "Proc. of ICIP'09",
      pages = "3825--3828",
      month = nov,
@@ -3287,7 +3448,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{peyre-fadili-icip-09,
     title = "Total Variation Projection with First Order Schemes",
-   author = "J. Fadili and G. Peyr{\'e}",
+   author = "Jalal Fadili and Gabriel Peyré",
      booktitle = "Proc. of ICIP'09",
      pages = "1325--1328",
      month = nov,
@@ -3298,7 +3459,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{peyre-itw-09,
     title = "Challenging Restricted Isometry Constants with Greedy Pursuit",
-   author = "C. Dossal and G. Peyr{\'e} and J. Fadili",
+   author = "Charles Dossal and Gabriel Peyré and Jalal Fadili",
      booktitle = "Proc. of ITW'09",
      isbn = "978-1-4244-4982-8",
      pages = "475--479",
@@ -3310,7 +3471,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{peyre-iccv-09,
     title = "Image Compression with Anisotropic Geodesic Triangulations",
-   author = "S. Bougleux and G. Peyr{\'e} and L. D. Cohen",
+   author = "Sébastien Bougleux and Gabriel Peyré and Laurent D. Cohen",
      booktitle = "Proc. of ICCV'09",
      month = oct,
      year = 2009,
@@ -3321,7 +3482,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @inproceedings{peyre-emmcvpr-09,
     title = "Locally Parallel Textures Modeling with Adapted Hilbert Spaces",
-   author = "P. Maurel and J-F. Aujol and G. Peyr{\'e}",
+   author = "Pierre Maurel and Jean-François Aujol and Gabriel Peyré",
      booktitle = "Proc. of EMMCVPR'09",
      publisher = "Springer LNCS",
      volume = "5681/2009",
@@ -3334,7 +3495,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 }
 
 @inproceedings{peyre-cvpr-09,
-        AUTHOR = "M. Pechaud and G. Peyr{\'e} and R. Keriven",
+        AUTHOR = "Michael Pechaud and Gabriel Peyré and Renaud Keriven",
         TITLE = "Extraction of Tubular Structures over an Orientation Domain",
         BOOKTITLE = "Proc. of CVPR'09",
 	  	publisher = {IEEE},
@@ -3345,7 +3506,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 }
 
 @inproceedings{peyre-spars-09,
-        AUTHOR = "C. Dossal and G. Peyr{\'e} and J. Fadili",
+        AUTHOR = "Charles Dossal and Gabriel Peyré and Jalal Fadili",
         TITLE = "A Numerical Exploration of Compressed Sampling Recovery",
         BOOKTITLE = "Proc. of SPARS'09",
         YEAR = "2009",
@@ -3353,7 +3514,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 }
 
 @InProceedings{peyre-mapmo-09,
-  author =	"G. Peyr{\'e}",
+  author =	"Gabriel Peyré",
   title =	"Dynamic Texture Synthesis with Grouplets",
   booktitle =	"Proc. of MAPMO",
   year = 	"2009",
@@ -3368,7 +3529,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 @InProceedings{peyre-eccv-aniso-08,
   title =	"Anisotropic Geodesics for Perceptual Grouping and
 		 Domain Meshing",
-  author =	"S. Bougleux and G. Peyr{\'e} and L. D. Cohen",
+  author =	"Sébastien Bougleux and Gabriel Peyré and Laurent D. Cohen",
   booktitle =	"Proc. of ECCV'08",
   publisher =	"Springer",
   year = 	"2008",
@@ -3384,8 +3545,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @InProceedings{peyre-eccv-nonlocal-08,
   title =	"Non-local Regularization of Inverse Problems",
-  author =	"G. Peyr{\'e} and S. Bougleux and
-		 L. D. Cohen",
+  author =	"Gabriel Peyré and Sébastien Bougleux and Laurent D. Cohen",
   booktitle =	"Proc. of ECCV'08",
   publisher =	"Springer",
   year = 	"2008",
@@ -3400,8 +3560,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 }
 
 @InProceedings{peyre-i3s-08,
-  author =	"A. Ion and N. M. Artner and G. Peyr{\'e} and S. B. L.
-		 Marmol and W. G. Kropatsch and L. D. Cohen",
+  author =	"Adrian Ion and Nicole M. Artner and Gabriel Peyré and Salvador B. Lopez Marmol and Walter G. Kropatsch and Laurent D. Cohen",
   title =	"3D shape matching by geodesic eccentricity",
   booktitle =	"Proc. Computer Vision and Pattern Recognition Workshops",
   year = 	"2008",
@@ -3417,7 +3576,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @InProceedings{peyre-spi-mca-07,
   title =	"Learning Adapted Dictionaries for Geometry and Texture Separation",
-  author =	"G. Peyr{\'e} and J. Fadili and J-L. Starck",
+  author =	"Gabriel Peyré and Jalal Fadili and Jean-Luc Starck",
   booktitle =	"Proc. of SPIE Wavelet XII",
   volume = 6701,
   pages = "67011T",
@@ -3429,7 +3588,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @InProceedings{peyre-spie-band-07,
   title =	"Geometric Estimation with Orthogonal Bandlet Bases",
-  author =	"G. Peyr{\'e} and E. LePennec and C. Dossal and S. Mallat",
+  author =	"Gabriel Peyré and Erwan Le Pennec and Charles Dossal and Stéphane Mallat",
   booktitle =	"Proc. of SPIE Wavelet XII",
   pages = "67010M.1--67010M.10",
     year = 	"2007",
@@ -3438,7 +3597,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @InProceedings{peyre-oagm-07,
   title =	"Shape Matching Using the Geodesic Eccentricity Transform - A Study",
-  author =	"A. Ion and G. Peyr{\'e} and Y. Haxhimusa and S. Peltier and W. G. Kropatsch and L. D. Cohen",
+  author =	"Adrian Ion and Gabriel Peyré and Yll Haxhimusa and Stéphane Peltier and Walter G. Kropatsch and Laurent D. Cohen",
   booktitle =	"Proc. of OAGM'07",
    year = 	"2007",
     url = {http://hal.archives-ouvertes.fr/hal-00365897/},
@@ -3447,7 +3606,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @InProceedings{peyre-ssvm-sparsemod-07,
   title =	"Non-negative Sparse Modeling of Textures",
-  author =	"G. Peyr{\'e}",
+  author =	"Gabriel Peyré",
   booktitle =	"Proc. of SSVM'07",
   publisher =	"Springer",
   year = 	"2007",
@@ -3461,7 +3620,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @InProceedings{peyre-ssvm-cs-07,
   title =	"Best Basis Compressed Sensing",
-  author =	"G. Peyr{\'e}",
+  author =	"Gabriel Peyré",
   booktitle =	"Proc. of SSVM'07",
   editor =	"F. Sgallari and A. Murli and N. Paragios",
   publisher =	"Springer",
@@ -3478,7 +3637,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 @InProceedings{peyre-ssvm-texsynth-07,
   title =	"Texture Synthesis and Modification with a Patch-Valued
 		 Wavelet Transform",
-  author =	"G. Peyr{\'e}",
+  author =	"Gabriel Peyré",
   booktitle =	"Proc. of SSVM'07",
   publisher =	"Springer",
   year = 	"2007",
@@ -3497,7 +3656,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @InProceedings{peyre-neurocomp-06,
   title =	"Random Sensing of Geometric Images",
-  author =	"G. Peyr{\'e}",
+  author =	"Gabriel Peyré",
   booktitle =	"Neurocomp'06",
   year = 	"2006",
   pages =	"91--94",
@@ -3507,7 +3666,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @InProceedings{peyre-cvpr-06,
   title =	"Landmark-Based Geodesic Computation for Heuristically Driven Path Planning",
-  author =	"G. Peyr{\'e} and L. D. Cohen",
+  author =	"Gabriel Peyré and Laurent D. Cohen",
   publisher =	"IEEE Computer Society",
   year = 	"2006",
   booktitle =	"Proc. of CVPR'06",
@@ -3522,7 +3681,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @InProceedings{peyre-ssvm-05,
   title =	"Heuristically Driven Front Propagation for Geodesic Paths Extraction",
-  author =	"G. Peyr{\'e} and L. D. Cohen",
+  author =	"Gabriel Peyré and Laurent D. Cohen",
   booktitle =	"Proc. of VLSM'05",
   publisher =	"Springer",
   year = 	"2005",
@@ -3536,7 +3695,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @InProceedings{peyre-cvpr-05,
   title =	"Geodesic Computation for Adaptive Remeshing",
-  author =	"G. Peyr{\'e} and L. D. Cohen",
+  author =	"Gabriel Peyré and Laurent D. Cohen",
   publisher =	"IEEE Computer Society",
   year = 	"2005",
   booktitle =	"Proc. of CVPR'05 (video)",
@@ -3552,7 +3711,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 @InProceedings{peyre-3dpvt-04,
   title =	"Surface Segmentation Using Geodesic Centroidal
 		 Tesselation",
-  author =	"G. Peyr{\'e} and L. D. Cohen",
+  author =	"Gabriel Peyré and Laurent D. Cohen",
   publisher =	"IEEE Computer Society",
   year = 	"2004",
   booktitle =	"Proc. of 3DPVT'04",
@@ -3563,7 +3722,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @InProceedings{peyre-icip-04,
   title =	"Discrete bandelets with geometric orthogonal filters",
-  author =	"G. Peyr{\'e} and S. Mallat",
+  author =	"Gabriel Peyré and Stéphane Mallat",
   year = 	"2005",
   booktitle =	"Proc. of ICIP'05",
   pages =	"65--68",
@@ -3575,7 +3734,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 @InProceedings{peyre-ssvm-03,
-  author =	"G. Peyr{\'e} and L. D. Cohen",
+  author =	"Gabriel Peyré and Laurent D. Cohen",
   title =	"Geodesic re-meshing and parameterization using front propagation",
   booktitle =	"Proc. of VLSM'03",
   year = 	"2003",
@@ -3590,7 +3749,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @InProceedings{peyre-gretsi-apriori-11,
   title =	"Apprentissage d'a priori analyse",
-  author =	"G. Peyr{\'e} and J. Fadili",
+  author =	"Gabriel Peyré and Jalal Fadili",
   booktitle =	"Gretsi'11",
   year = 	"2011",
   url = {http://hal.archives-ouvertes.fr/hal-00744810/},
@@ -3598,7 +3757,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @InProceedings{peyre-gretsi-dyadic-11,
   title =	"Parcimonie Adaptative Structuree par Blocs Dyadiques",
-  author =	"G. Peyr{\'e} and J. Fadili and C. Chesneau",
+  author =	"Gabriel Peyré and Jalal Fadili and Christophe Chesneau",
   booktitle =	"Gretsi'11",
   year = 	"2011",
   url = {http://hal.archives-ouvertes.fr/hal-00744811/},
@@ -3606,7 +3765,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @InProceedings{rabin-gretsi-wasserregul-11,
   title =	"Regularisation de Wasserstein et Application au Transfert de Couleur",
-  author =	"J. Rabin and G. Peyr{\'e}",
+  author =	"Julien Rabin and Gabriel Peyré",
   booktitle =	"Gretsi'11",
   year = 	"2011",
   url = {http://hal.archives-ouvertes.fr/hal-00744813/},
@@ -3614,7 +3773,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @InProceedings{peyre-gretsi-synthese-11,
   title =	"Synthese de textures par transport optimal",
-  author =	"G. Peyr{\'e} and J. Rabin",
+  author =	"Gabriel Peyré and Julien Rabin",
   booktitle =	"Gretsi'11",
   year = 	"2011",
   url = {http://hal.archives-ouvertes.fr/hal-00744812/},
@@ -3622,7 +3781,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @InProceedings{peyre-gretsi-tvproj-09,
   title =	"Algorithmes de premier ordre pour la projection sur une contrainte de variation totale",
-  author =	"G. Peyr{\'e} and J. Fadili",
+  author =	"Gabriel Peyré and Jalal Fadili",
   booktitle =	"Gretsi'09",
   month = oct,
   year = 	"2009",
@@ -3632,7 +3791,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @InProceedings{peyre-gretsi-tvhilbert-09,
   title =	"Extraction de textures localement paralleles par un espace de Hilbert adapte",
-  author =	"P. Maurel and J-F. Aujol and G. Peyr{\'e}",
+  author =	"Pierre Maurel and Jean-François Aujol and Gabriel Peyré",
   booktitle =	"Gretsi'09",
   month = oct,
   year = 	"2009",
@@ -3640,7 +3799,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 }
 @InProceedings{peyre-gretsi-triangulation-09,
   title =	"Compression d'images par triangulations geodesiques anisotropes",
-  author =	"S. Bougleux and G. Peyr{\'e} and L. D. Cohen",
+  author =	"Sébastien Bougleux and Gabriel Peyré and Laurent D. Cohen",
   booktitle =	"Gretsi'09",
   month = oct,
   year = 	"2009",
@@ -3648,7 +3807,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 }
 @InProceedings{peyre-gretsi-cs-09,
   title =	"Une exploration numerique des performances de l'echantillonage compresse",
-  author =	"C. Dossal and G. Peyr{\'e} and J. Fadili",
+  author =	"Charles Dossal and Gabriel Peyré and Jalal Fadili",
   booktitle =	"Gretsi'09",
   month = oct,
   year = 	"2009",
@@ -3658,7 +3817,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @InProceedings{peyre-gretsi-l1-07,
   title =	"Crit{\`e}re d'identifiabilite pour la minimisation L1",
-  author =	"C. Dossal and G. Peyr{\'e}",
+  author =	"Charles Dossal and Gabriel Peyré",
   booktitle =	"Gretsi'07",
   year = 	"2007",
   url = {http://hal.archives-ouvertes.fr/hal-00365959/},
@@ -3666,7 +3825,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @InProceedings{peyre-gretsi-learning-07,
   title =	"Apprentissage de dictionnaires parcimonieux adaptes pour la separation d'images",
-  author =	"G. Peyr{\'e} and J. Fadili and J-L. Starck",
+  author =	"Gabriel Peyré and Jalal Fadili and Jean-Luc Starck",
   booktitle =	"Gretsi'07",
   year = 	"2007",
   url = {http://hal.archives-ouvertes.fr/hal-00365967/},
@@ -3674,7 +3833,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @InProceedings{peyre-gretsi-band-07,
   title =	"Estimation geometrique d'images et bases de bandelettes orthogonales",
-  author =	"E. LePennec and C. Dossal and G. Peyr{\'e}",
+  author =	"Erwan Le Pennec and Charles Dossal and Gabriel Peyré",
   booktitle =	"Gretsi'07",
   year = 	"2007",
   url = {http://hal.archives-ouvertes.fr/hal-00365965/},
@@ -3683,7 +3842,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @InProceedings{peyre-rfia-04,
   title =	"Remaillage geodesique par propagation de fronts",
-  author =	"G. Peyr{\'e} and L. D. Cohen",
+  author =	"Gabriel Peyré and Laurent D. Cohen",
   booktitle =	"RFIA'04",
   year = 	"2004",
   url = {http://hal.archives-ouvertes.fr/hal-00365970/},
@@ -3699,7 +3858,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @TechReport{2026-Peyre-muon,
     title = "Muon Dynamics as a Spectral Wasserstein Flow", 
-    author = "G. Peyré",
+    author = "Gabriel Peyré",
      institution = "ArXiv",
      doi = "2604.04891",
      type = "Preprint",
@@ -3710,7 +3869,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @TechReport{2026-Peyre-klprojections,
     title = "Robust Sublinear Convergence Rates for Iterative Bregman Projections", 
-    author = "G. Peyré",
+    author = "Gabriel Peyré",
      institution = "ArXiv",
      doi = "2602.01372",
      type = "Preprint",
@@ -3720,7 +3879,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @TechReport{2025-Bohbot-TokenSample,
     title = "Token Sample Complexity of Attention", 
-    author = "L. Bohbot and C. Letrouit and G. Peyré and F-X Vialard",
+    author = "Léa Bohbot and Cyril Letrouit and Gabriel Peyré and François-Xavier Vialard",
      institution = "ArXiv",
      doi = "2512.10656",
      type = "Preprint",
@@ -3731,7 +3890,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @TechReport{2025-Peyre-ICM,
     title = "Optimal and Diffusion Transports in Machine Learning", 
-    author = "G. Peyré",
+    author = "Gabriel Peyré",
      institution = "ArXiv",
      doi = "2512.06797",
      type = "Preprint",
@@ -3742,7 +3901,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @TechReport{2025-Castin-Unified,
     title = "A Unified Perspective on the Dynamics of Deep Transformers", 
-    author = "V. Castin and P. Ablin and J.A. Carrillo and G. Peyré",
+    author = "Valérie Castin and Pierre Ablin and José Antonio Carrillo and Gabriel Peyré",
      institution = "ArXiv",
      doi = "2501.18322",
      type = "Preprint",
@@ -3752,7 +3911,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @TechReport{2025-Peyre-OT4ML,
     title = "Optimal Transport for Machine Learners", 
-    author = "G. Peyré",
+    author = "Gabriel Peyré",
      institution = "ArXiv",
      doi = "2505.06589",
      type = "Preprint",
@@ -3763,7 +3922,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @TechReport{2025-Andrade-Sharpened,
     title = "Learning from Samples: Inverse Problems over measures via Sharpened Fenchel-Young Losses", 
-    author = "F. Andrade and G. Peyré and C. Poon",
+    author = "Francisco Andrade and Gabriel Peyré and Clarice Poon",
      institution = "ArXiv",
      doi = "2505.07124",
      type = "Preprint",
@@ -3774,7 +3933,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @TechReport{2025-Barboni-UltraFast,
     title = "Ultra-fast feature learning for the training of two-layer neural networks in the two-timescale regime", 
-    author = "R. Barboni and G Peyr{\'e} and F-X. Vialard",
+    author = "Raphaël Barboni and Gabriel Peyré and François-Xavier Vialard",
      institution = "ArXiv",
      doi = "2504.18208",
      type = "Preprint",
@@ -3784,7 +3943,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
  
 @TechReport{2025-Hurault-denoising,
     title = "From Denoising Score Matching to Langevin Sampling: A Fine-Grained Error Analysis in the Gaussian Setting", 
-    author = "S. Hurault and M. Terris and  T. Moreau and G. Peyr{\'e}",
+    author = "Samuel Hurault and Matthieu Terris and Thomas Moreau and Gabriel Peyré",
      institution = "ArXiv",
      doi = "2503.11615",
      type = "Preprint",
@@ -3794,7 +3953,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @TechReport{2023-Ramzi-traintest,
     title = "Test like you Train in Implicit Deep Learning",
-    author = "Z. Ramzi and P. Ablin and G. Peyr{\'e} and T. Moreau",
+    author = "Zakaria Ramzi and Pierre Ablin and Gabriel Peyré and Thomas Moreau",
      institution = "Arxiv",
      number = "2305.15042",
      type = "Preprint",
@@ -3804,7 +3963,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @TechReport{2020-deBie-MetaFeatures,
     title = "Distribution-Based Invariant Deep Networks for Learning Meta-Features",
-    author = "G. De Bie and H. Rakotoarison and G. Peyr{\'e} and M. Sebag",
+    author = "Gwendoline De Bie and Herilalaina Rakotoarison and Gabriel Peyré and Michèle Sebag",
      institution = "Arxiv",
      number = "2006.13708",
      type = "Preprint",
@@ -3814,14 +3973,13 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @TechReport{2019-Sejourne-unbalanced,
     title = "Sinkhorn Divergences for Unbalanced Optimal Transport",
-    author = "T. Séjourn{\'e} and J. Feydy and F-X. Vialard and A. Trouvé and G. Peyr{\'e}",
+    author = "Thibault Séjourné and Jean Feydy and François-Xavier Vialard and Alain Trouvé and Gabriel Peyré",
      institution = "Arxiv",
      number = "1910.12958",
      type = "Preprint",
      year = "2019",
      url = {https://arxiv.org/abs/1910.12958},
 }
-
 
 </script>
 
@@ -3831,7 +3989,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @INBOOK{2023-sejourne-unbalanced-ot-review,
     title = "Unbalanced Optimal Transport, from Theory to Numerics",
-   	author = "T. S{\'e}journ{\'e} and G. Peyr{\'e} and F-X. Vialard",
+   	author = "Thibault Séjourné and Gabriel Peyré and François-Xavier Vialard",
 	chapter = "Handbook of numerical analysis",
      year = "2023",
      url = {https://arxiv.org/abs/2211.08775},
@@ -3840,7 +3998,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @INBOOK{2017-peyre-apmep,
     title = "Claude Shannon et la compression des donn{\'e}es",
-   	author = "G. Peyr{\'e}",
+   	author = "Gabriel Peyré",
 	chapter = "Bulletin de l'APMEP",
 	publisher = "APMEP",
      year = "2017",
@@ -3853,7 +4011,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @INBOOK{2016-peyre-smf,
     title = "Parcimonie, problemes inverse et {\'e}chantillonnage compress{\'e}",
-   	author = "G. Peyr{\'e}",
+   	author = "Gabriel Peyré",
    	chapter = "La Gazette des Mathematiciens",
 	publisher  = "Societe Mathematique de France",
      year = "2016",
@@ -3864,7 +4022,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @INBOOK{2015-vaiter-ps-review,
     title = "Low Complexity Regularization of Linear Inverse Problems",
-   	author = "S. Vaiter and G. Peyr{\'e} and J. Fadili",
+   	author = "Samuel Vaiter and Gabriel Peyré and Jalal Fadili",
    	chapter = "Sampling Theory, a Renaissance",
 	publisher  = "Springer-Birkh{\"a}user",
 	editor = "G{\"o}tz Pfander",
@@ -3875,7 +4033,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @INBOOK{2012-peyre-apmep,
   	title =	"Le traitement num{\'e}rique des images",
-	author =	  "G. Peyr{\'e}",
+	author =	  "Gabriel Peyré",
 	chapter = "Bulletin de l'APMEP",
 	publisher = "APMEP",
 	number = "501",
@@ -3889,7 +4047,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @INBOOK{2011-peyre-matapli,
   	title =	"Un exploration numerique du traitement des signaux, des images et des surfaces",
-	author =	  "G. Peyr{\'e}",
+	author =	  "Gabriel Peyré",
 	chapter = "MATAPLI",
 	publisher  = "SMAI",
 	year = "2011",
@@ -3901,7 +4059,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @INBOOK{2008-peyre-springer,
   	title =	"Geodesic Methods for Shape and Surface Processing",
-	author =	  "G. Peyr{\'e} and L. D. Cohen",
+	author =	  "Gabriel Peyré and Laurent D. Cohen",
 	chapter = "Advances in Computational Vision and Medical Image Processing: Methods and Applications",
 	publisher  = "Springer",
 	year = "2008",
@@ -3912,7 +4070,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @INBOOK{2006-peyre-smf,
   title =	"Traitement geometrique des images par bandelettes",
-	author =	  "S. Mallat and G. Peyr{\'e}",
+	author =	  "Stéphane Mallat and Gabriel Peyré",
 	chapter = "Journee annuelle de la SMF",
 	publisher  = "SMF",
 	month = "june",
@@ -3923,7 +4081,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
 @INBOOK{2005-peyre-springer,
   title =	"Geodesic Computations for Fast and Accurate Surface Remeshing and Parameterization",
-	author =	  "G. Peyr{\'e} and L. D. Cohen",
+	author =	  "Gabriel Peyré and Laurent D. Cohen",
 	chapter = "Progress in Nonlinear Differential Equations and Their Applications",
 	publisher  = "Springer",
 	volume = "63",
@@ -3939,7 +4097,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 %%% Livres %%%
 
 @BOOK{peyre-adtf,
-	author =	  "G. Peyr{\'e}",
+	author =	  "Gabriel Peyré",
 	title = "L'algebre discr{\`e}te de la transform{\'e}e de Fourier",
 	publisher  = "editions Ellipses Marketing",
 	isbn = "2-7298-1867-7",
@@ -3948,7 +4106,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 }
 
 @BOOK{peyre-objagr,
-	author =	  "V. Beck and J. Malick and G. Peyr{\'e}",
+	author =	  "Vincent Beck and Jérôme Malick and Gabriel Peyré",
 	title = "Objectif Agr{\'e}gation, 2e {\'e}dition",
 	publisher  = "editions H et K",
 	year = "2004",
@@ -4069,6 +4227,8 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
       filterRow: document.getElementById("filter-row"),
       statusText: document.getElementById("status-text"),
       root: document.getElementById("publications-root"),
+      coauthorsSection: document.getElementById("coauthors-section"),
+      coauthorsList: document.getElementById("coauthors-list"),
       footerNote: document.getElementById("footer-note"),
       sourceWarning: document.getElementById("source-warning"),
       styleMode: document.getElementById("style-mode"),
@@ -4133,37 +4293,9 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
       return asciiFold(name).replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
     }
 
-    function abbreviateAuthorName(name) {
-      const clean = collapseWhitespace(name);
-      if (!clean) {
-        return "";
-      }
-      const parts = clean.split(" ");
-      if (parts.length < 2) {
-        return clean;
-      }
-      const first = parts[0];
-      if (/^[A-Z]\.?$/.test(first)) {
-        const firstNorm = first.endsWith(".") ? first : `${first}.`;
-        return [firstNorm, ...parts.slice(1)].join(" ");
-      }
-      if (first.includes(".")) {
-        return clean;
-      }
-      if (/^[A-Za-zÀ-ÖØ-öø-ÿ-]+$/.test(first)) {
-        if (first.includes("-")) {
-          const initials = first.split("-").filter(Boolean).map((token) => token[0].toUpperCase());
-          return [`${initials.join("-")}.`, ...parts.slice(1)].join(" ");
-        }
-        return [`${first[0].toUpperCase()}.`, ...parts.slice(1)].join(" ");
-      }
-      return clean;
-    }
-
     function canonicalizeAuthorName(name) {
       const key = authorLookupKey(name);
-      const canonical = state.authorCanonicalByKey.get(key) || name;
-      return abbreviateAuthorName(canonical);
+      return collapseWhitespace(state.authorCanonicalByKey.get(key) || name);
     }
 
     function stripOuterBraces(text) {
@@ -4714,6 +4846,78 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
       dom.root.innerHTML = sections.join("\n");
     }
 
+    function renderCoauthors(publications) {
+      if (!dom.coauthorsSection || !dom.coauthorsList) {
+        return;
+      }
+      const counts = new Map();
+      publications.forEach((publication) => {
+        const seen = new Set();
+        publication.authors.forEach((author) => {
+          const key = authorLookupKey(author);
+          if (!key || key.includes("peyr") || seen.has(key)) {
+            return;
+          }
+          seen.add(key);
+          const record = counts.get(key) || { key, name: author, count: 0 };
+          record.count += 1;
+          counts.set(key, record);
+        });
+      });
+
+      const entries = Array.from(counts.values()).sort((a, b) => {
+        if (a.count !== b.count) {
+          return b.count - a.count;
+        }
+        return asciiFold(a.name).localeCompare(asciiFold(b.name));
+      });
+
+      if (!entries.length) {
+        dom.coauthorsSection.hidden = true;
+        dom.coauthorsList.innerHTML = "";
+        return;
+      }
+
+      dom.coauthorsSection.hidden = false;
+      dom.coauthorsList.innerHTML = entries.map((entry) => {
+        const homepage = state.authorHomepageByKey.get(entry.key) || state.authorHomepageByKey.get(authorLookupKey(entry.name)) || "";
+        const homepageLink = homepage
+          ? `<a class="coauthor-url" href="${escapeHtml(homepage)}" target="_blank" rel="noreferrer">(url)</a>`
+          : `<span class="coauthor-url missing">(url)</span>`;
+        return `<div class="coauthor-item"><button class="coauthor-button" type="button" data-author="${escapeHtml(entry.name)}">${escapeHtml(entry.name)}</button><span class="coauthor-count">(${entry.count})</span>${homepageLink}</div>`;
+      }).join("\n");
+    }
+
+    function setupCoauthorFilterShortcuts() {
+      if (!dom.coauthorsList) {
+        return;
+      }
+      dom.coauthorsList.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) {
+          return;
+        }
+        const button = target.closest(".coauthor-button");
+        if (!(button instanceof HTMLButtonElement)) {
+          return;
+        }
+        const author = button.dataset.author || "";
+        if (!author) {
+          return;
+        }
+
+        const allButton = document.querySelector('.filter-chip[data-filter="all"]');
+        if (allButton instanceof HTMLButtonElement) {
+          allButton.click();
+        }
+
+        dom.searchInput.value = author;
+        state.searchQuery = author;
+        dom.searchInput.dispatchEvent(new Event("input", { bubbles: true }));
+        dom.searchInput.focus();
+      });
+    }
+
     function setupBibtexCopy() {
       dom.root.addEventListener("click", async (event) => {
         const target = event.target;
@@ -4898,7 +5102,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
           });
         }
 
-        const canonical = abbreviateAuthorName(collapseWhitespace(item.name || aliases[0] || ""));
+        const canonical = collapseWhitespace(item.name || aliases[0] || "");
         const homepage = collapseWhitespace(item.homepage || "");
 
         aliases.forEach((alias) => {
@@ -4975,6 +5179,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
         renderFilters(publications);
         renderSections(publications);
+        renderCoauthors(publications);
         setupBibtexCopy();
 
         dom.searchInput.disabled = false;
@@ -5002,6 +5207,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
           dom.sourceWarning.classList.remove("visible");
         }
         setupFilters();
+        setupCoauthorFilterShortcuts();
       } catch (error) {
         dom.loadingState.innerHTML = `Could not build publications dynamically: ${escapeHtml(error.message)}`;
         dom.statusText.textContent = "Loading failed.";
