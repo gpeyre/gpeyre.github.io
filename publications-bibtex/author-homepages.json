@@ -1,0 +1,1394 @@
+{
+  "generated_at": "2026-04-11T11:57:42Z",
+  "source": "publications-bibtex/*.bib + user-provided homepage overrides",
+  "total_authors": 153,
+  "total_with_homepage": 145,
+  "authors": [
+    {
+      "name": "A. Butscher",
+      "aliases": [
+        "A. Butscher"
+      ],
+      "key": "a butscher",
+      "homepage": "https://dblp.org/pid/83/8697",
+      "source": "dblp-profile"
+    },
+    {
+      "name": "A. Chambolle",
+      "aliases": [
+        "A. Chambolle"
+      ],
+      "key": "a chambolle",
+      "homepage": "https://www.ceremade.dauphine.fr/~chambolle/",
+      "source": "manual-user"
+    },
+    {
+      "name": "A. Genevay",
+      "aliases": [
+        "A. Genevay"
+      ],
+      "key": "a genevay",
+      "homepage": "https://dblp.org/pid/180/1425",
+      "source": "dblp-profile"
+    },
+    {
+      "name": "A. Gramfort",
+      "aliases": [
+        "A. Gramfort"
+      ],
+      "key": "a gramfort",
+      "homepage": "https://alexandre.gramfort.net/",
+      "source": "manual-user"
+    },
+    {
+      "name": "A. I. Meso",
+      "aliases": [
+        "A. I. Meso"
+      ],
+      "key": "a i meso",
+      "homepage": "https://dblp.org/pid/40/1126",
+      "source": "dblp-profile"
+    },
+    {
+      "name": "A. Ion",
+      "aliases": [
+        "A. Ion"
+      ],
+      "key": "a ion",
+      "homepage": "",
+      "source": "none"
+    },
+    {
+      "name": "A. Mensch",
+      "aliases": [
+        "A. Mensch"
+      ],
+      "key": "a mensch",
+      "homepage": "https://dblp.org/pid/266/2622",
+      "source": "dblp-profile"
+    },
+    {
+      "name": "A. Nguyen",
+      "aliases": [
+        "A. Nguyen"
+      ],
+      "key": "a nguyen",
+      "homepage": "https://dblp.org/pid/227/2685",
+      "source": "dblp-profile"
+    },
+    {
+      "name": "A. Rolet",
+      "aliases": [
+        "A. Rolet"
+      ],
+      "key": "a rolet",
+      "homepage": "https://dblp.org/pid/183/6929",
+      "source": "dblp-profile"
+    },
+    {
+      "name": "A. Trouvé",
+      "aliases": [
+        "A. Trouvé"
+      ],
+      "key": "a trouve",
+      "homepage": "https://atrouve.perso.math.cnrs.fr/",
+      "source": "manual-user"
+    },
+    {
+      "name": "A. Yakubovich",
+      "aliases": [
+        "A. Yakubovich"
+      ],
+      "key": "a yakubovich",
+      "homepage": "https://dblp.org/pid/125/9202",
+      "source": "dblp-profile"
+    },
+    {
+      "name": "B. Charlier",
+      "aliases": [
+        "Benjamin Charlier",
+        "B. Charlier"
+      ],
+      "key": "benjamin charlier",
+      "homepage": "https://dblp.org/pid/144/7428",
+      "source": "dblp-profile"
+    },
+    {
+      "name": "B. Muzellec",
+      "aliases": [
+        "B. Muzellec"
+      ],
+      "key": "b muzellec",
+      "homepage": "https://dblp.org/pid/186/8010",
+      "source": "dblp-profile"
+    },
+    {
+      "name": "B. Schmitzer",
+      "aliases": [
+        "B. Schmitzer"
+      ],
+      "key": "b schmitzer",
+      "homepage": "https://dblp.org/pid/16/1934",
+      "source": "dblp-profile"
+    },
+    {
+      "name": "C. Chaux",
+      "aliases": [
+        "C. Chaux"
+      ],
+      "key": "c chaux",
+      "homepage": "https://www.i2m.univ-amu.fr/perso/caroline.chaux-moulin/",
+      "source": "manual-user"
+    },
+    {
+      "name": "C. Chesneau",
+      "aliases": [
+        "C. Chesneau"
+      ],
+      "key": "c chesneau",
+      "homepage": "https://chesneau.users.lmno.cnrs.fr/",
+      "source": "manual-user"
+    },
+    {
+      "name": "C. Deledalle",
+      "aliases": [
+        "C. Deledalle"
+      ],
+      "key": "c deledalle",
+      "homepage": "https://www.charles-deledalle.fr/pages/",
+      "source": "manual-user"
+    },
+    {
+      "name": "C. Dossal",
+      "aliases": [
+        "C. Dossal"
+      ],
+      "key": "c dossal",
+      "homepage": "https://perso.math.univ-toulouse.fr/cdossal/",
+      "source": "manual-user"
+    },
+    {
+      "name": "C. Letrouit",
+      "aliases": [
+        "C. Letrouit"
+      ],
+      "key": "c letrouit",
+      "homepage": "https://www.imo.universite-paris-saclay.fr/~cyril.letrouit/",
+      "source": "manual-user"
+    },
+    {
+      "name": "C. Monier",
+      "aliases": [
+        "C. Monier"
+      ],
+      "key": "c monier",
+      "homepage": "https://neuropsi.cnrs.fr/annuaire/cyril-monier/",
+      "source": "manual-user"
+    },
+    {
+      "name": "C. Poon",
+      "aliases": [
+        "C. Poon"
+      ],
+      "key": "c poon",
+      "homepage": "https://cmhsp2.github.io/",
+      "source": "manual-user"
+    },
+    {
+      "name": "D. Coeurjolly",
+      "aliases": [
+        "D. Coeurjolly"
+      ],
+      "key": "d coeurjolly",
+      "homepage": "http://liris.cnrs.fr/david.coeurjolly",
+      "source": "manual-user"
+    },
+    {
+      "name": "D. Cremers",
+      "aliases": [
+        "D. Cremers"
+      ],
+      "key": "d cremers",
+      "homepage": "https://www.professoren.tum.de/en/cremers-daniel",
+      "source": "manual-user"
+    },
+    {
+      "name": "D.E. Shulz",
+      "aliases": [
+        "D.E. Shulz"
+      ],
+      "key": "d e shulz",
+      "homepage": "https://neuropsi.cnrs.fr/annuaire/daniel-shulz/",
+      "source": "manual-user"
+    },
+    {
+      "name": "E. LePennec",
+      "aliases": [
+        "E. LePennec"
+      ],
+      "key": "e lepennec",
+      "homepage": "http://www.cmap.polytechnique.fr/~lepennec/fr/",
+      "source": "manual-user"
+    },
+    {
+      "name": "E. Oudet",
+      "aliases": [
+        "E. Oudet"
+      ],
+      "key": "e oudet",
+      "homepage": "https://membres-ljk.imag.fr/Edouard.Oudet/",
+      "source": "manual-user"
+    },
+    {
+      "name": "E. Soubies",
+      "aliases": [
+        "E. Soubies"
+      ],
+      "key": "e soubies",
+      "homepage": "https://www.irit.fr/~Emmanuel.Soubies/",
+      "source": "manual-user"
+    },
+    {
+      "name": "F-X. Vialard",
+      "aliases": [
+        "F-X. Vialard",
+        "F-X Vialard"
+      ],
+      "key": "f x vialard",
+      "homepage": "http://angkor.univ-mlv.fr/~vialard/",
+      "source": "manual-user"
+    },
+    {
+      "name": "F-X. Vialard",
+      "aliases": [
+        "Francois-Xavier Vialard",
+        "F-X. Vialard"
+      ],
+      "key": "francois xavier vialard",
+      "homepage": "https://dblp.org/pid/09/8280",
+      "source": "dblp-profile"
+    },
+    {
+      "name": "F. Andrade",
+      "aliases": [
+        "F. Andrade"
+      ],
+      "key": "f andrade",
+      "homepage": "https://franciscoandrade90.github.io/",
+      "source": "manual-user"
+    },
+    {
+      "name": "F. Bach",
+      "aliases": [
+        "F. Bach"
+      ],
+      "key": "f bach",
+      "homepage": "https://www.di.ens.fr/~fbach/",
+      "source": "manual-user"
+    },
+    {
+      "name": "F. Benmansour",
+      "aliases": [
+        "F. Benmansour"
+      ],
+      "key": "f benmansour",
+      "homepage": "https://scholar.google.com/citations?user=VBmwMgQAAAAJ&hl=fr",
+      "source": "manual-user"
+    },
+    {
+      "name": "F. de Goes",
+      "aliases": [
+        "F. de Goes"
+      ],
+      "key": "f de goes",
+      "homepage": "https://scholar.google.com/citations?user=KkEJuKgAAAAJ&hl=en",
+      "source": "manual-user"
+    },
+    {
+      "name": "F. Léger",
+      "aliases": [
+        "F. Léger"
+      ],
+      "key": "f leger",
+      "homepage": "https://flavienleger.github.io/",
+      "source": "manual-user"
+    },
+    {
+      "name": "F. M. Ngole Mboula",
+      "aliases": [
+        "F. M. Ngole Mboula"
+      ],
+      "key": "f m ngole mboula",
+      "homepage": "https://www.cosmostat.org/people/fred-ngole-mboula",
+      "source": "manual-user"
+    },
+    {
+      "name": "F. Santambrogio",
+      "aliases": [
+        "F. Santambrogio"
+      ],
+      "key": "f santambrogio",
+      "homepage": "https://math.univ-lyon1.fr/~santambrogio/",
+      "source": "manual-user"
+    },
+    {
+      "name": "G-J. Huizing",
+      "aliases": [
+        "G-J. Huizing"
+      ],
+      "key": "g j huizing",
+      "homepage": "https://gjhuizing.github.io/",
+      "source": "manual-user"
+    },
+    {
+      "name": "G-S. Xia",
+      "aliases": [
+        "G-S. Xia"
+      ],
+      "key": "g s xia",
+      "homepage": "https://scholar.google.com/citations?user=SAUCVsEAAAAJ&hl=en",
+      "source": "manual-user"
+    },
+    {
+      "name": "G. Carlier",
+      "aliases": [
+        "G. Carlier"
+      ],
+      "key": "g carlier",
+      "homepage": "https://www.ceremade.dauphine.fr/~carlier/",
+      "source": "manual-user"
+    },
+    {
+      "name": "G. Charpiat",
+      "aliases": [
+        "G. Charpiat"
+      ],
+      "key": "g charpiat",
+      "homepage": "https://www.lri.fr/~gcharpia/",
+      "source": "manual-user"
+    },
+    {
+      "name": "G. de Bie",
+      "aliases": [
+        "G. de Bie",
+        "G. De Bie"
+      ],
+      "key": "g de bie",
+      "homepage": "https://scholar.google.com/citations?user=eEdu4ZwAAAAJ&hl=en",
+      "source": "manual-user"
+    },
+    {
+      "name": "G. Garrigos",
+      "aliases": [
+        "G. Garrigos"
+      ],
+      "key": "g garrigos",
+      "homepage": "https://guillaume-garrigos.com/",
+      "source": "manual-user"
+    },
+    {
+      "name": "G. Hucher",
+      "aliases": [
+        "G. Hucher"
+      ],
+      "key": "g hucher",
+      "homepage": "https://neuropsi.cnrs.fr/annuaire/guillaume-hucher/",
+      "source": "manual-user"
+    },
+    {
+      "name": "G. Nardi",
+      "aliases": [
+        "G. Nardi"
+      ],
+      "key": "g nardi",
+      "homepage": "http://lmi.insa-rouen.fr/mam/10-membres/maitres-de-conference/171-giacomo-nardi.html",
+      "source": "manual-user"
+    },
+    {
+      "name": "G. Peyré",
+      "aliases": [
+        "G. Peyré",
+        "G Peyré"
+      ],
+      "key": "g peyre",
+      "homepage": "https://www.gpeyre.com/",
+      "source": "manual"
+    },
+    {
+      "name": "G. Peyré",
+      "aliases": [
+        "Gabriel Peyré",
+        "G. Peyré"
+      ],
+      "key": "gabriel peyre",
+      "homepage": "https://www.gpeyre.com/",
+      "source": "manual"
+    },
+    {
+      "name": "G. Tartavel",
+      "aliases": [
+        "G. Tartavel"
+      ],
+      "key": "g tartavel",
+      "homepage": "",
+      "source": "none"
+    },
+    {
+      "name": "H. Janati",
+      "aliases": [
+        "H. Janati"
+      ],
+      "key": "h janati",
+      "homepage": "https://hichamjanati.github.io/",
+      "source": "manual-user"
+    },
+    {
+      "name": "H. Pfister",
+      "aliases": [
+        "H. Pfister"
+      ],
+      "key": "h pfister",
+      "homepage": "https://seas.harvard.edu/person/hanspeter-pfister",
+      "source": "manual-user"
+    },
+    {
+      "name": "H. Raguet",
+      "aliases": [
+        "H. Raguet"
+      ],
+      "key": "h raguet",
+      "homepage": "https://1a7r0ch3.github.io/",
+      "source": "manual-user"
+    },
+    {
+      "name": "H. Rakotoarison",
+      "aliases": [
+        "H. Rakotoarison"
+      ],
+      "key": "h rakotoarison",
+      "homepage": "https://scholar.google.com/citations?user=pyws4AQAAAAJ&hl=en",
+      "source": "manual-user"
+    },
+    {
+      "name": "I. Ferezou",
+      "aliases": [
+        "I. Ferezou"
+      ],
+      "key": "i ferezou",
+      "homepage": "https://neuropsi.cnrs.fr/annuaire/isabelle-ferezou/",
+      "source": "manual-user"
+    },
+    {
+      "name": "I. Ionescu",
+      "aliases": [
+        "I. Ionescu"
+      ],
+      "key": "i ionescu",
+      "homepage": "https://www.lspm.cnrs.fr/pages-perso/ioan-ionescu/",
+      "source": "manual-user"
+    },
+    {
+      "name": "J-D. Benamou",
+      "aliases": [
+        "J-D. Benamou"
+      ],
+      "key": "j d benamou",
+      "homepage": "https://who.rocq.inria.fr/Jean-David.Benamou/",
+      "source": "manual-user"
+    },
+    {
+      "name": "J-F. Aujol",
+      "aliases": [
+        "J-F. Aujol"
+      ],
+      "key": "j f aujol",
+      "homepage": "https://www.math.u-bordeaux.fr/~jaujol/",
+      "source": "manual-user"
+    },
+    {
+      "name": "J-L. Starck",
+      "aliases": [
+        "J-L. Starck"
+      ],
+      "key": "j l starck",
+      "homepage": "https://jstarck.cosmostat.org/",
+      "source": "manual-user"
+    },
+    {
+      "name": "J-M. Mirebeau",
+      "aliases": [
+        "J-M. Mirebeau"
+      ],
+      "key": "j m mirebeau",
+      "homepage": "https://centreborelli.ens-paris-saclay.fr/fr/annuaire-des-personnes/jean-marie-mirebeau",
+      "source": "manual-user"
+    },
+    {
+      "name": "J. Bleyer",
+      "aliases": [
+        "J. Bleyer"
+      ],
+      "key": "j bleyer",
+      "homepage": "https://bleyerj.github.io/",
+      "source": "manual-user"
+    },
+    {
+      "name": "J. Delon",
+      "aliases": [
+        "J. Delon"
+      ],
+      "key": "j delon",
+      "homepage": "https://judelo.github.io/",
+      "source": "manual-user"
+    },
+    {
+      "name": "J. Djolonga",
+      "aliases": [
+        "J. Djolonga"
+      ],
+      "key": "j djolonga",
+      "homepage": "https://scholar.google.com/citations?user=4NdMn_MAAAAJ&hl=en",
+      "source": "manual-user"
+    },
+    {
+      "name": "J. Elder",
+      "aliases": [
+        "J. Elder"
+      ],
+      "key": "j elder",
+      "homepage": "https://scholar.google.com/citations?user=wSBFrb8AAAAJ&hl=en",
+      "source": "manual-user"
+    },
+    {
+      "name": "J. Fadili",
+      "aliases": [
+        "J. Fadili"
+      ],
+      "key": "j fadili",
+      "homepage": "https://fadili.users.greyc.fr/",
+      "source": "manual-user"
+    },
+    {
+      "name": "J. Feydy",
+      "aliases": [
+        "J. Feydy"
+      ],
+      "key": "j feydy",
+      "homepage": "https://www.jeanfeydy.com/",
+      "source": "manual-user"
+    },
+    {
+      "name": "J. Feydy",
+      "aliases": [
+        "Jean Feydy",
+        "J. Feydy"
+      ],
+      "key": "jean feydy",
+      "homepage": "https://www.jeanfeydy.com/",
+      "source": "manual-user"
+    },
+    {
+      "name": "J. Kalfon",
+      "aliases": [
+        "J. Kalfon"
+      ],
+      "key": "j kalfon",
+      "homepage": "https://www.jkobject.com/",
+      "source": "manual-user"
+    },
+    {
+      "name": "J. Liang",
+      "aliases": [
+        "J. Liang"
+      ],
+      "key": "j liang",
+      "homepage": "https://scholar.google.fr/citations?user=aaIkvG0AAAAJ&hl=ja",
+      "source": "manual-user"
+    },
+    {
+      "name": "J. Malick",
+      "aliases": [
+        "J. Malick"
+      ],
+      "key": "j malick",
+      "homepage": "https://membres-ljk.imag.fr/Jerome.Malick/",
+      "source": "manual-user"
+    },
+    {
+      "name": "J. Puigcerver",
+      "aliases": [
+        "J. Puigcerver"
+      ],
+      "key": "j puigcerver",
+      "homepage": "https://www.jpuigcerver.net/",
+      "source": "manual-user"
+    },
+    {
+      "name": "J. Rabin",
+      "aliases": [
+        "J. Rabin"
+      ],
+      "key": "j rabin",
+      "homepage": "https://sites.google.com/site/rabinjulien/",
+      "source": "manual-user"
+    },
+    {
+      "name": "J. Salmon",
+      "aliases": [
+        "J. Salmon"
+      ],
+      "key": "j salmon",
+      "homepage": "https://josephsalmon.eu/",
+      "source": "manual-user"
+    },
+    {
+      "name": "J. Samaran",
+      "aliases": [
+        "J. Samaran"
+      ],
+      "key": "j samaran",
+      "homepage": "https://jules-samaran.github.io/",
+      "source": "manual-user"
+    },
+    {
+      "name": "J. Solomon",
+      "aliases": [
+        "J. Solomon"
+      ],
+      "key": "j solomon",
+      "homepage": "https://people.csail.mit.edu/jsolomon/",
+      "source": "manual-user"
+    },
+    {
+      "name": "J. Vacher",
+      "aliases": [
+        "J. Vacher"
+      ],
+      "key": "j vacher",
+      "homepage": "https://jonathanvacher.github.io/",
+      "source": "manual-user"
+    },
+    {
+      "name": "J.A. Carrillo",
+      "aliases": [
+        "J.A. Carrillo"
+      ],
+      "key": "j a carrillo",
+      "homepage": "https://carrilloja.org/",
+      "source": "manual-user"
+    },
+    {
+      "name": "K. Degraux",
+      "aliases": [
+        "K. Degraux"
+      ],
+      "key": "k degraux",
+      "homepage": "https://scholar.google.com/citations?user=nWyjuREAAAAJ&hl=fr",
+      "source": "manual-user"
+    },
+    {
+      "name": "K. Lounici",
+      "aliases": [
+        "K. Lounici"
+      ],
+      "key": "k lounici",
+      "homepage": "https://klounici.github.io/",
+      "source": "manual-user"
+    },
+    {
+      "name": "K. Meziani",
+      "aliases": [
+        "K. Meziani"
+      ],
+      "key": "k meziani",
+      "homepage": "https://sites.google.com/site/katiameziani00",
+      "source": "manual-user"
+    },
+    {
+      "name": "K. S. Zhang",
+      "aliases": [
+        "K. S. Zhang"
+      ],
+      "key": "k s zhang",
+      "homepage": "https://scholar.google.fr/citations?user=fHt8tusAAAAJ&hl=fr",
+      "source": "manual-user"
+    },
+    {
+      "name": "L. Bohbot",
+      "aliases": [
+        "L. Bohbot"
+      ],
+      "key": "l bohbot",
+      "homepage": "https://scholar.google.com/citations?user=1kQNrnYAAAAJ&hl=fr",
+      "source": "manual-user"
+    },
+    {
+      "name": "L. Cantini",
+      "aliases": [
+        "L. Cantini"
+      ],
+      "key": "l cantini",
+      "homepage": "https://research.pasteur.fr/fr/member/laura-cantini/",
+      "source": "manual-user"
+    },
+    {
+      "name": "L. Chizat",
+      "aliases": [
+        "L. Chizat"
+      ],
+      "key": "l chizat",
+      "homepage": "https://lchizat.github.io/",
+      "source": "manual-user"
+    },
+    {
+      "name": "L. Demanet",
+      "aliases": [
+        "L. Demanet"
+      ],
+      "key": "l demanet",
+      "homepage": "https://math.mit.edu/icg/people/laurent.html",
+      "source": "manual-user"
+    },
+    {
+      "name": "L. Duval",
+      "aliases": [
+        "L. Duval"
+      ],
+      "key": "l duval",
+      "homepage": "http://www.laurent-duval.eu/lcd-publications.html",
+      "source": "manual-user"
+    },
+    {
+      "name": "L. Foubert",
+      "aliases": [
+        "L. Foubert"
+      ],
+      "key": "l foubert",
+      "homepage": "",
+      "source": "none"
+    },
+    {
+      "name": "L. Guibas",
+      "aliases": [
+        "L. Guibas"
+      ],
+      "key": "l guibas",
+      "homepage": "https://scholar.google.com/citations?user=5JlEyTAAAAAJ&hl=en",
+      "source": "manual-user"
+    },
+    {
+      "name": "L. Jacques",
+      "aliases": [
+        "L. Jacques"
+      ],
+      "key": "l jacques",
+      "homepage": "https://laurentjacques.gitlab.io/",
+      "source": "manual-user"
+    },
+    {
+      "name": "L. Nenna",
+      "aliases": [
+        "L. Nenna"
+      ],
+      "key": "l nenna",
+      "homepage": "https://lucanenna.github.io/",
+      "source": "manual-user"
+    },
+    {
+      "name": "L. Perrinet",
+      "aliases": [
+        "L. Perrinet"
+      ],
+      "key": "l perrinet",
+      "homepage": "https://www.int.univ-amu.fr/member/perrinet.l",
+      "source": "manual-user"
+    },
+    {
+      "name": "L. Perronnet",
+      "aliases": [
+        "L. Perronnet"
+      ],
+      "key": "l perronnet",
+      "homepage": "https://lowpe.github.io/lorraineperronnet/",
+      "source": "manual-user"
+    },
+    {
+      "name": "L.D. Cohen",
+      "aliases": [
+        "L. D. Cohen",
+        "L.D. Cohen"
+      ],
+      "key": "l d cohen",
+      "homepage": "https://www.ceremade.dauphine.fr/~cohen/",
+      "source": "manual-user"
+    },
+    {
+      "name": "M. Bernot",
+      "aliases": [
+        "M. Bernot"
+      ],
+      "key": "m bernot",
+      "homepage": "https://scholar.google.com/citations?user=Chk08q0AAAAJ&hl=en",
+      "source": "manual-user"
+    },
+    {
+      "name": "M. Blondel",
+      "aliases": [
+        "M. Blondel"
+      ],
+      "key": "m blondel",
+      "homepage": "https://mblondel.org/",
+      "source": "manual-user"
+    },
+    {
+      "name": "M. Comte",
+      "aliases": [
+        "M. Comte"
+      ],
+      "key": "m comte",
+      "homepage": "https://www.ljll.fr/~comte/",
+      "source": "manual-user"
+    },
+    {
+      "name": "M. Cuturi",
+      "aliases": [
+        "M. Cuturi"
+      ],
+      "key": "m cuturi",
+      "homepage": "https://marcocuturi.net/",
+      "source": "manual-user"
+    },
+    {
+      "name": "M. Deutschmann",
+      "aliases": [
+        "M. Deutschmann"
+      ],
+      "key": "m deutschmann",
+      "homepage": "",
+      "source": "none"
+    },
+    {
+      "name": "M. Golbabaee",
+      "aliases": [
+        "M. Golbabaee"
+      ],
+      "key": "m golbabaee",
+      "homepage": "https://mgolbabaee.wordpress.com/",
+      "source": "manual-user"
+    },
+    {
+      "name": "M. Heitz",
+      "aliases": [
+        "M. Heitz"
+      ],
+      "key": "m heitz",
+      "homepage": "https://scholar.google.com/citations?user=6Q3grswAAAAJ&hl=fr",
+      "source": "manual-user"
+    },
+    {
+      "name": "M. Jung",
+      "aliases": [
+        "M. Jung"
+      ],
+      "key": "m jung",
+      "homepage": "",
+      "source": "none"
+    },
+    {
+      "name": "M. Kachour",
+      "aliases": [
+        "M. Kachour"
+      ],
+      "key": "m kachour",
+      "homepage": "https://scholar.google.com/citations?user=AdWLBPwAAAAJ&hl=fr",
+      "source": "manual-user"
+    },
+    {
+      "name": "M. Pechaud",
+      "aliases": [
+        "M. Pechaud"
+      ],
+      "key": "m pechaud",
+      "homepage": "https://mpechaud.fr/",
+      "source": "manual-user"
+    },
+    {
+      "name": "M. Pereyra",
+      "aliases": [
+        "M. Pereyra"
+      ],
+      "key": "m pereyra",
+      "homepage": "https://scholar.google.com/citations?user=ep85sxQAAAAJ&hl=en",
+      "source": "manual-user"
+    },
+    {
+      "name": "M. Sander",
+      "aliases": [
+        "M. Sander",
+        "M. E. Sander"
+      ],
+      "key": "m sander",
+      "homepage": "https://michaelsdr.github.io/",
+      "source": "manual-user"
+    },
+    {
+      "name": "M. Scetbon",
+      "aliases": [
+        "M. Scetbon"
+      ],
+      "key": "m scetbon",
+      "homepage": "https://meyerscetbon.github.io/",
+      "source": "manual-user"
+    },
+    {
+      "name": "M. Schmitz",
+      "aliases": [
+        "M. Schmitz"
+      ],
+      "key": "m schmitz",
+      "homepage": "https://www.cosmostat.org/people/mschmitz",
+      "source": "manual-user"
+    },
+    {
+      "name": "M. Sebag",
+      "aliases": [
+        "M. Sebag"
+      ],
+      "key": "m sebag",
+      "homepage": "https://www.lri.fr/~sebag/",
+      "source": "manual-user"
+    },
+    {
+      "name": "M. Terris",
+      "aliases": [
+        "M. Terris"
+      ],
+      "key": "m terris",
+      "homepage": "https://matthieutrs.github.io/",
+      "source": "manual-user"
+    },
+    {
+      "name": "M. V. de Hoop",
+      "aliases": [
+        "M. V. de Hoop"
+      ],
+      "key": "m v de hoop",
+      "homepage": "https://maartendehoop.rice.edu/",
+      "source": "manual-user"
+    },
+    {
+      "name": "M.E. Vilarchao",
+      "aliases": [
+        "M.E. Vilarchao"
+      ],
+      "key": "m e vilarchao",
+      "homepage": "https://scholar.google.fr/citations?user=WR8zA8AAAAAJ&hl=fr",
+      "source": "manual-user"
+    },
+    {
+      "name": "M.L. Chabanol",
+      "aliases": [
+        "M.L. Chabanol"
+      ],
+      "key": "m l chabanol",
+      "homepage": "https://www.math.u-bordeaux.fr/~mchabano/",
+      "source": "manual-user"
+    },
+    {
+      "name": "N. Bonneel",
+      "aliases": [
+        "N. Bonneel"
+      ],
+      "key": "n bonneel",
+      "homepage": "https://perso.liris.cnrs.fr/nicolas.bonneel/",
+      "source": "manual-user"
+    },
+    {
+      "name": "N. Keriven",
+      "aliases": [
+        "N. Keriven"
+      ],
+      "key": "n keriven",
+      "homepage": "https://nkeriven.github.io/",
+      "source": "manual-user"
+    },
+    {
+      "name": "N. M. Artner",
+      "aliases": [
+        "N. M. Artner"
+      ],
+      "key": "n m artner",
+      "homepage": "https://scholar.google.com/citations?user=RwO8TyIAAAAJ&hl=de",
+      "source": "manual-user"
+    },
+    {
+      "name": "N. Ouarti",
+      "aliases": [
+        "N. Ouarti"
+      ],
+      "key": "n ouarti",
+      "homepage": "https://scholar.google.com/citations?user=urOxnNAAAAAJ&hl=fr",
+      "source": "manual-user"
+    },
+    {
+      "name": "N. Papadakis",
+      "aliases": [
+        "N. Papadakis"
+      ],
+      "key": "n papadakis",
+      "homepage": "https://www.math.u-bordeaux.fr/~npapadak/",
+      "source": "manual-user"
+    },
+    {
+      "name": "N. Schmidt",
+      "aliases": [
+        "N. Schmidt"
+      ],
+      "key": "n schmidt",
+      "homepage": "",
+      "source": "none"
+    },
+    {
+      "name": "O. Sebbouh",
+      "aliases": [
+        "O. Sebbouh"
+      ],
+      "key": "o sebbouh",
+      "homepage": "https://othmanesebbouh.github.io/",
+      "source": "manual-user"
+    },
+    {
+      "name": "P. Ablin",
+      "aliases": [
+        "P. Ablin"
+      ],
+      "key": "p ablin",
+      "homepage": "https://pierreablin.com/",
+      "source": "manual-user"
+    },
+    {
+      "name": "P. Alquier",
+      "aliases": [
+        "P. Alquier"
+      ],
+      "key": "p alquier",
+      "homepage": "https://faculty.essec.edu/cv/alquier-pierre/",
+      "source": "manual-user"
+    },
+    {
+      "name": "P. Catala",
+      "aliases": [
+        "P. Catala"
+      ],
+      "key": "p catala",
+      "homepage": "https://paulcat.github.io/",
+      "source": "manual-user"
+    },
+    {
+      "name": "P. E. Roland",
+      "aliases": [
+        "P. E. Roland"
+      ],
+      "key": "p e roland",
+      "homepage": "https://scholar.google.com/citations?user=1UGs7u0AAAAJ&hl=en",
+      "source": "manual-user"
+    },
+    {
+      "name": "P. Maurel",
+      "aliases": [
+        "P. Maurel"
+      ],
+      "key": "p maurel",
+      "homepage": "https://people.irisa.fr/Pierre.Maurel/",
+      "source": "manual-user"
+    },
+    {
+      "name": "P. Roussillon",
+      "aliases": [
+        "P. Roussillon"
+      ],
+      "key": "p roussillon",
+      "homepage": "https://scholar.google.com/citations?user=qneJ5-8AAAAJ&hl=fr",
+      "source": "manual-user"
+    },
+    {
+      "name": "Q. Denoyelle",
+      "aliases": [
+        "Q. Denoyelle"
+      ],
+      "key": "q denoyelle",
+      "homepage": "https://qdenoyelle.github.io/",
+      "source": "manual-user"
+    },
+    {
+      "name": "R. Barboni",
+      "aliases": [
+        "R. Barboni"
+      ],
+      "key": "r barboni",
+      "homepage": "https://scholar.google.com/citations?user=tEu2ONgAAAAJ&hl=en",
+      "source": "manual-user"
+    },
+    {
+      "name": "R. Giryes",
+      "aliases": [
+        "R. Giryes"
+      ],
+      "key": "r giryes",
+      "homepage": "https://www.giryes.sites.tau.ac.il/",
+      "source": "manual-user"
+    },
+    {
+      "name": "R. Gribonval",
+      "aliases": [
+        "R. Gribonval"
+      ],
+      "key": "r gribonval",
+      "homepage": "https://perso.ens-lyon.fr/remi.gribonval/",
+      "source": "manual-user"
+    },
+    {
+      "name": "R. Keriven",
+      "aliases": [
+        "R. Keriven"
+      ],
+      "key": "r keriven",
+      "homepage": "https://imagine.enpc.fr/~keriven/",
+      "source": "manual-user"
+    },
+    {
+      "name": "R. Luke",
+      "aliases": [
+        "R. Luke"
+      ],
+      "key": "r luke",
+      "homepage": "https://num.math.uni-goettingen.de/~r.luke/",
+      "source": "manual-user"
+    },
+    {
+      "name": "S. Amari",
+      "aliases": [
+        "S. Amari"
+      ],
+      "key": "s amari",
+      "homepage": "https://fr.wikipedia.org/wiki/Shun%27ichi_Amari",
+      "source": "manual-user"
+    },
+    {
+      "name": "S. Bougleux",
+      "aliases": [
+        "S. Bougleux"
+      ],
+      "key": "s bougleux",
+      "homepage": "https://bougleux.users.greyc.fr/",
+      "source": "manual-user"
+    },
+    {
+      "name": "S. Ferradans",
+      "aliases": [
+        "S. Ferradans"
+      ],
+      "key": "s ferradans",
+      "homepage": "https://scholar.google.com/citations?user=BM6XOmUAAAAJ&hl=en",
+      "source": "manual-user"
+    },
+    {
+      "name": "S. Hurault",
+      "aliases": [
+        "S. Hurault"
+      ],
+      "key": "s hurault",
+      "homepage": "https://samuro95.github.io/",
+      "source": "manual-user"
+    },
+    {
+      "name": "S. Mallat",
+      "aliases": [
+        "S. Mallat"
+      ],
+      "key": "s mallat",
+      "homepage": "https://fr.wikipedia.org/wiki/St%C3%A9phane_Mallat",
+      "source": "manual-user"
+    },
+    {
+      "name": "S. Marcotte",
+      "aliases": [
+        "S. Marcotte"
+      ],
+      "key": "s marcotte",
+      "homepage": "https://scholar.google.com/citations?user=3kNenv0AAAAJ&hl=fr",
+      "source": "manual-user"
+    },
+    {
+      "name": "S. Peltier",
+      "aliases": [
+        "S. Peltier"
+      ],
+      "key": "s peltier",
+      "homepage": "https://cv.hal.science/samuel-peltier",
+      "source": "manual-user"
+    },
+    {
+      "name": "S. Sra",
+      "aliases": [
+        "S. Sra"
+      ],
+      "key": "s sra",
+      "homepage": "https://optml.mit.edu/",
+      "source": "manual-user"
+    },
+    {
+      "name": "S. Vaiter",
+      "aliases": [
+        "S. Vaiter"
+      ],
+      "key": "s vaiter",
+      "homepage": "https://samuelvaiter.com/",
+      "source": "manual-user"
+    },
+    {
+      "name": "T. Du",
+      "aliases": [
+        "T. Du"
+      ],
+      "key": "t du",
+      "homepage": "",
+      "source": "none"
+    },
+    {
+      "name": "T. Furuya",
+      "aliases": [
+        "T. Furuya"
+      ],
+      "key": "t furuya",
+      "homepage": "https://scholar.google.com/citations?user=e3YJUQoAAAAJ&hl=ja",
+      "source": "manual-user"
+    },
+    {
+      "name": "T. Moreau",
+      "aliases": [
+        "T. Moreau"
+      ],
+      "key": "t moreau",
+      "homepage": "https://tommoral.github.io/about.html",
+      "source": "manual-user"
+    },
+    {
+      "name": "T. Oleskiw",
+      "aliases": [
+        "T. Oleskiw"
+      ],
+      "key": "t oleskiw",
+      "homepage": "https://oleskiw.ca/",
+      "source": "manual-user"
+    },
+    {
+      "name": "T. Suzuki",
+      "aliases": [
+        "T. Suzuki"
+      ],
+      "key": "t suzuki",
+      "homepage": "https://scholar.google.com.hk/citations?user=hRNTokcAAAAJ",
+      "source": "manual-user"
+    },
+    {
+      "name": "T. Séjourné",
+      "aliases": [
+        "T. Séjourné"
+      ],
+      "key": "t sejourne",
+      "homepage": "https://scholar.google.com/citations?user=ng54Q0wAAAAJ&hl=fr",
+      "source": "manual-user"
+    },
+    {
+      "name": "V. Beck",
+      "aliases": [
+        "V. Beck"
+      ],
+      "key": "v beck",
+      "homepage": "https://www.idpoisson.fr/beck/",
+      "source": "manual-user"
+    },
+    {
+      "name": "V. Castin",
+      "aliases": [
+        "V. Castin"
+      ],
+      "key": "v castin",
+      "homepage": "https://vcastin.github.io/",
+      "source": "manual-user"
+    },
+    {
+      "name": "V. Duval",
+      "aliases": [
+        "V. Duval"
+      ],
+      "key": "v duval",
+      "homepage": "https://who.rocq.inria.fr/Vincent.Duval/",
+      "source": "manual-user"
+    },
+    {
+      "name": "V. Kim",
+      "aliases": [
+        "V. Kim"
+      ],
+      "key": "v kim",
+      "homepage": "",
+      "source": "none"
+    },
+    {
+      "name": "W. G. Kropatsch",
+      "aliases": [
+        "W. G. Kropatsch"
+      ],
+      "key": "w g kropatsch",
+      "homepage": "https://informatics.tuwien.ac.at/people/walter-kropatsch",
+      "source": "manual-user"
+    },
+    {
+      "name": "Y. Fregnac",
+      "aliases": [
+        "Y. Fregnac"
+      ],
+      "key": "y fregnac",
+      "homepage": "https://fr.wikipedia.org/wiki/Yves_Fr%C3%A9gnac",
+      "source": "manual-user"
+    },
+    {
+      "name": "Y. Gousseau",
+      "aliases": [
+        "Y. Gousseau"
+      ],
+      "key": "y gousseau",
+      "homepage": "https://perso.telecom-paristech.fr/gousseau/",
+      "source": "manual-user"
+    },
+    {
+      "name": "Y. Haxhimusa",
+      "aliases": [
+        "Y. Haxhimusa"
+      ],
+      "key": "y haxhimusa",
+      "homepage": "https://scholar.google.com/citations?user=3SzlfM0AAAAJ&hl=en",
+      "source": "manual-user"
+    },
+    {
+      "name": "Z. Ramzi",
+      "aliases": [
+        "Z. Ramzi"
+      ],
+      "key": "z ramzi",
+      "homepage": "https://zaccharieramzi.fr/",
+      "source": "manual-user"
+    },
+    {
+      "name": "Z. Ye",
+      "aliases": [
+        "Z. Ye"
+      ],
+      "key": "z ye",
+      "homepage": "https://zhenzhang-ye.github.io/",
+      "source": "manual-user"
+    }
+  ]
+}

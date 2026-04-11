@@ -1231,7 +1231,7 @@
      journal = "Gazette SMF",
      year = "2025",
      number = 184, 
-     url = {ttps://arxiv.org/abs/2501.10465},
+     url = {https://arxiv.org/abs/2501.10465},
 }
 
 @Article{2025-Poon-SRLasso,
@@ -1258,7 +1258,7 @@
     journal = "Communications on Pure and Applied Mathematics", 
      doi = "2403.12887",
      year = "2025",
-     doi = "http://doi.org/10.1002/cpa.70004",
+     doi = "10.1002/cpa.70004",
      url = {https://arxiv.org/abs/2403.12887},
 }
 
@@ -1309,7 +1309,7 @@
      journal = "Mathematical Programming",
 	   volume={201},
 	  pages={897--952},
-	       number = "2205.01385",
+	       number = "1-2",
      year = "2023",
      doi = "10.1007/s10107-022-01923-3", 
      url = {https://arxiv.org/abs/2205.01385},
@@ -2488,7 +2488,7 @@
     title = "Transformers are Universal In-context Learners", 
     author = "T. Furuya and M. V. de Hoop and G. Peyr{\'e}",
       booktitle = {Proc. ICLR'25},
-     doi = "2410.03011",
+     doi = "2408.01367",
      year = "2025",
      url = {https://arxiv.org/abs/2408.01367},
 }
@@ -3180,7 +3180,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
      booktitle = "Proc. ICIP'11",
      year = "2011",
 	doi = "10.1109/ICIP.2011.6116432",
-	page = "3373--3377",
+	pages = "3373--3377",
 	isbn = "978-1-4577-1304-0",
      url = {http://hal.archives-ouvertes.fr/hal-0059128},
 }
@@ -3712,10 +3712,10 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
     title = "Robust Sublinear Convergence Rates for Iterative Bregman Projections", 
     author = "G. Peyré",
      institution = "ArXiv",
-     doi = "2512.10656",
+     doi = "2602.01372",
      type = "Preprint",
      year = "2026",
-     url = {http://arxiv.org/abs/2602.01372},
+     url = {https://arxiv.org/abs/2602.01372},
 }
 
 @TechReport{2025-Bohbot-TokenSample,
@@ -3916,7 +3916,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 	chapter = "Journee annuelle de la SMF",
 	publisher  = "SMF",
 	month = "june",
-	page = "39--67",
+	pages = "39--67",
 	year = "2006",
 	url = {http://hal.archives-ouvertes.fr/hal-00365901/},
 }
@@ -4008,6 +4008,7 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
       "book-chapter": 4,
       book: 5,
     };
+    const AUTHOR_HOMEPAGES_PATH = `${BASE_URL}/publications-bibtex/author-homepages.json`;
 
     const LATEX_SPECIALS = {
       "\\&": "&",
@@ -4055,6 +4056,9 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
       publications: [],
       activeFilter: "all",
       searchQuery: "",
+      authorHomepageByKey: new Map(),
+      authorCanonicalByKey: new Map(),
+      authorCoverage: { total: 0, linked: 0 },
     };
 
     const dom = {
@@ -4123,6 +4127,43 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
 
     function asciiFold(text) {
       return (text || "").normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    }
+
+    function authorLookupKey(name) {
+      return asciiFold(name).replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
+    }
+
+    function abbreviateAuthorName(name) {
+      const clean = collapseWhitespace(name);
+      if (!clean) {
+        return "";
+      }
+      const parts = clean.split(" ");
+      if (parts.length < 2) {
+        return clean;
+      }
+      const first = parts[0];
+      if (/^[A-Z]\.?$/.test(first)) {
+        const firstNorm = first.endsWith(".") ? first : `${first}.`;
+        return [firstNorm, ...parts.slice(1)].join(" ");
+      }
+      if (first.includes(".")) {
+        return clean;
+      }
+      if (/^[A-Za-zÀ-ÖØ-öø-ÿ-]+$/.test(first)) {
+        if (first.includes("-")) {
+          const initials = first.split("-").filter(Boolean).map((token) => token[0].toUpperCase());
+          return [`${initials.join("-")}.`, ...parts.slice(1)].join(" ");
+        }
+        return [`${first[0].toUpperCase()}.`, ...parts.slice(1)].join(" ");
+      }
+      return clean;
+    }
+
+    function canonicalizeAuthorName(name) {
+      const key = authorLookupKey(name);
+      const canonical = state.authorCanonicalByKey.get(key) || name;
+      return abbreviateAuthorName(canonical);
     }
 
     function stripOuterBraces(text) {
@@ -4393,10 +4434,23 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
     }
 
     function parseAuthors(raw) {
-      return (raw || "")
+      const seen = new Set();
+      const output = [];
+      (raw || "")
         .split(/\s+and\s+/i)
-        .map((name) => latexToUnicode(name))
-        .filter((name) => name.trim().length > 0);
+        .map((name) => canonicalizeAuthorName(latexToUnicode(name)))
+        .forEach((name) => {
+          if (!name.trim()) {
+            return;
+          }
+          const key = authorLookupKey(name);
+          if (seen.has(key)) {
+            return;
+          }
+          seen.add(key);
+          output.push(name);
+        });
+      return output;
     }
 
     function formatAuthors(authors) {
@@ -4415,7 +4469,11 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
     function renderAuthors(authors) {
       const escaped = authors.map((name) => {
         const text = escapeHtml(name);
-        return asciiFold(name).includes("peyr") ? `<span class="me">${text}</span>` : text;
+        const homepage = state.authorHomepageByKey.get(authorLookupKey(name)) || "";
+        const label = homepage
+          ? `<a href="${escapeHtml(homepage)}" target="_blank" rel="noreferrer">${text}</a>`
+          : text;
+        return asciiFold(name).includes("peyr") ? `<span class="me">${label}</span>` : label;
       });
       if (!escaped.length) {
         return "";
@@ -4814,11 +4872,97 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
       return Promise.all(fetches);
     }
 
+    function buildAuthorDirectory(payload) {
+      const homepageByKey = new Map();
+      const canonicalByKey = new Map();
+      if (!payload || !Array.isArray(payload.authors)) {
+        return { homepageByKey, canonicalByKey, total: 0, linked: 0 };
+      }
+
+      payload.authors.forEach((item) => {
+        if (!item || typeof item !== "object") {
+          return;
+        }
+        const aliases = [];
+        if (typeof item.name === "string" && item.name.trim()) {
+          aliases.push(item.name);
+        }
+        if (typeof item.key === "string" && item.key.trim()) {
+          aliases.push(item.key);
+        }
+        if (Array.isArray(item.aliases)) {
+          item.aliases.forEach((alias) => {
+            if (typeof alias === "string" && alias.trim()) {
+              aliases.push(alias);
+            }
+          });
+        }
+
+        const canonical = abbreviateAuthorName(collapseWhitespace(item.name || aliases[0] || ""));
+        const homepage = collapseWhitespace(item.homepage || "");
+
+        aliases.forEach((alias) => {
+          const key = authorLookupKey(alias);
+          if (!key) {
+            return;
+          }
+          if (canonical && !canonicalByKey.has(key)) {
+            canonicalByKey.set(key, canonical);
+          }
+          if (homepage && !homepageByKey.has(key)) {
+            homepageByKey.set(key, homepage);
+          }
+        });
+      });
+
+      return {
+        homepageByKey,
+        canonicalByKey,
+        total: Number(payload.total_authors) || payload.authors.length,
+        linked: Number(payload.total_with_homepage) || 0,
+      };
+    }
+
+    async function loadAuthorHomepages() {
+      const raw = await tryFetch(AUTHOR_HOMEPAGES_PATH);
+      if (!raw) {
+        return {
+          homepageByKey: new Map(),
+          canonicalByKey: new Map(),
+          mode: "missing",
+          total: 0,
+          linked: 0,
+        };
+      }
+      try {
+        const payload = JSON.parse(raw);
+        const directory = buildAuthorDirectory(payload);
+        return {
+          homepageByKey: directory.homepageByKey,
+          canonicalByKey: directory.canonicalByKey,
+          mode: "fetched",
+          total: directory.total,
+          linked: directory.linked,
+        };
+      } catch (_) {
+        return {
+          homepageByKey: new Map(),
+          canonicalByKey: new Map(),
+          mode: "invalid",
+          total: 0,
+          linked: 0,
+        };
+      }
+    }
+
     setupStyleMode();
 
     async function main() {
       try {
-        const loaded = await loadBibtex();
+        const [loaded, authorLinks] = await Promise.all([loadBibtex(), loadAuthorHomepages()]);
+        state.authorHomepageByKey = authorLinks.homepageByKey;
+        state.authorCanonicalByKey = authorLinks.canonicalByKey;
+        state.authorCoverage = { total: authorLinks.total, linked: authorLinks.linked };
         const publications = [];
         loaded.forEach(({ source, text }) => {
           const entries = parseBibtexEntries(text);
@@ -4838,9 +4982,20 @@ Model Consistency for Learning with Mirror-Stratifiable Regularizers",
         dom.loadingState.style.display = "none";
         const fetchedCount = loaded.filter((x) => x.mode === "fetched").length;
         const embeddedCount = loaded.length - fetchedCount;
-        dom.footerNote.textContent = `Generated dynamically from ${BIB_FILES.length} BibTeX files (${fetchedCount} fetched, ${embeddedCount} embedded fallback).`;
+        const linkedAuthors = state.authorHomepageByKey.size;
+        dom.footerNote.textContent = `Generated dynamically from ${BIB_FILES.length} BibTeX files (${fetchedCount} fetched, ${embeddedCount} embedded fallback). Author links loaded: ${linkedAuthors}.`;
+
+        const warningMessages = [];
         if (embeddedCount > 0) {
-          dom.sourceWarning.textContent = `Warning: not fully rendered from publications-bibtex/ (${embeddedCount} fallback source${embeddedCount === 1 ? "" : "s"} used).`;
+          warningMessages.push(`not fully rendered from publications-bibtex/ (${embeddedCount} fallback source${embeddedCount === 1 ? "" : "s"} used)`);
+        }
+
+        if (authorLinks.mode !== "fetched") {
+          warningMessages.push("unable to load author homepage database");
+        }
+
+        if (warningMessages.length > 0) {
+          dom.sourceWarning.textContent = `Warning: ${warningMessages.join("; ")}.`;
           dom.sourceWarning.classList.add("visible");
         } else {
           dom.sourceWarning.textContent = "";
