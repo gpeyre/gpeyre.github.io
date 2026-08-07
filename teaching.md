@@ -1,62 +1,30 @@
 ---
 layout: page
 title: "Teaching"
-description: "Master 2 MVA"
+description: "Data science and optimal transport"
 header-img: "img/louis-arbres.jpg"
 ---
 
-This is the homepage for my course in Master 2 [Mathématiques, Vision, Apprentissage - MVA](http://www.math.ens-cachan.fr/version-francaise/formations/master-mva/).
+I teach two courses combining mathematical foundations with computational practice.
 
-Description
------------------
+Introduction to Data Sciences
+-----------------------------
 
-Evolution of the course:
-- Since 2019: _Computational Optimal Transport_
-- 2017-2019: _Mathematical Foundation of Data Sciences_
-- 2008-2016: _Sparsity and compressed sensing_
+This second-year ENS course is taught by Samuel Boïté, Julie Delon, Gabriel Peyré and Irène Waldspurger. It introduces the mathematical and numerical tools used throughout modern data science and machine learning.
 
-The course presents an overview of the mathematics of data sciences. This includes in particular tools from convex optimization, compressed sensing and optimal transport. It showcases application in machine learning and imaging sciences.
+The course moves from information theory, Fourier analysis and filtering to inverse problems, optimization, machine learning, sampling and generative models. Lectures are complemented by mathematical exercises and numerical experiments in Python.
 
+Computational Optimal Transport
+-------------------------------
 
-Pre-requisite
------------------
-Basics of linear algebra, calculus and Fourier transform.
+This Master 2 MVA course is taught by Julie Delon and Gabriel Peyré. It develops optimal transport as a mathematical framework for comparing and evolving probability distributions, with an emphasis on its computational tools and applications to machine learning.
 
-
-Validation of the course
------------------
-Attending all the numerical tours, a mini-project with a report and an oral presentation. Note that there is a special session dedicated to the preparation of the projects.
-
+Topics include the Monge and Kantorovich formulations, Wasserstein distances, dual and dynamic formulations, sliced optimal transport, entropic regularization and the Sinkhorn algorithm, as well as gradient flows and generative models. The course combines mathematical lectures, exercises and numerical work in Python.
 
 Resources
 -----------------
 
-* [Numerical Tours](http://www.numerical-tours.com): a repository to Matlab/Scilab/Python explorations of mathematical data processing.
-* [Mathematical Tours](https://mathematical-tours.github.io/): course notes on data sciences and general audience articles.
-* [Computational Optimal Transport](https://optimaltransport.github.io/): site web for a book on computational OT.
-
-
-Other MVA courses on the web
------------------
-
-* [Yann Gousseau, Julie Delon  (#1)](http://perso.telecom-paristech.fr/~gousseau/MVA/)
-* [Yann Gousseau, Julie Delon (#2)](http://delon.wp.mines-telecom.fr/enseignement/mva-analyse-dimages-et-geometrie-stochastique/)
-* [Lionel Moisan](http://www.math-info.univ-paris5.fr/~moisan/mva/index.php)
-* [Pascal Monasse, Renaud Marlet](http://imagine.enpc.fr/~monasse/Stereo/)
-* [Jean-Michel Morel](http://dev.ipol.im/~morel/Dossier_MVA_2011_Cours_Transparents_Documents/Programme_Cours_MVA_et_Module_IPOL_Jean-Michel_Morel.pdf)
-* [Iasonas Kokkinos ](http://vision.mas.ecp.fr/Personnel/iasonas/teaching.html)
-* [Gabriel Peyr&eacute;](https://www.ceremade.dauphine.fr/~peyre/teaching/)
-* [Emmanuel Bacry](http://www.cmap.polytechnique.fr/~bacry/MVA/)
-* [Laurent Cohen, Gabriel Peyr&eacute;](https://www.ceremade.dauphine.fr/~cohen/MVA/)
-* [Andr&eacute;s Almansa, Florence Tupin, Jean-Marie Nicolas](http://perso.telecom-paristech.fr/~almansa/MVA-ISat/)
-* [Herv&eacute; Delingette, Xavier Pennec (#1)](http://www-sop.inria.fr/asclepios/cours/MVA-2012-2013/Module1/)
-* [Herv&eacute; Delingette, Xavier Pennec (#2)](http://www-sop.inria.fr/asclepios/cours/MVA-2012-2013/Module2/)
-* [Francis Bach, Guillaume Obozinski](http://www.di.ens.fr/~fbach/courses/fall2012/)
-* [Olivier Faugeras, Jonathan Touboul, Romain Veltz](http://www-sop.inria.fr/members/Olivier.Faugeras/MVA/MMN.html)
-* [Remi Munos](http://researchers.lille.inria.fr/~munos/master-mva/)
-* [Nicolas Vayatis ](http://nvayatis.perso.math.cnrs.fr/mva_course_2012.xht)
-* [Arnak Dalalyan ](http://certis.enpc.fr/~dalalyan/MVA.html)
-* [Alexandre d'Aspremont](http://www.cmap.polytechnique.fr/~aspremon/OptConvexeM2.html)
-* [Jean-Pierre Nadal](http://www.lps.ens.fr/~nadal/Cours/MVA/)
-* [Alain Trouv&eacute;, Joan Glaunes](http://atrouve.perso.math.cnrs.fr/GEF/index.html)
-* [Jean-Philippe Vert](http://cbio.ensmp.fr/~jvert/svn/kernelcourse/course/2013mva/index.htm)
+* [Numerical Tours](http://www.numerical-tours.com): Python, Matlab, Julia and R experiments in mathematical data science.
+* [Mathematical Tours](https://mathematical-tours.github.io/): notes on the mathematical foundations of data science.
+* [Computational Optimal Transport](https://optimaltransport.github.io/): the reference book by Gabriel Peyré and Marco Cuturi.
+* [Optimal Transport for Machine Learners](https://www.gpeyre.com/ot4ml/): concise teaching notes and computational resources.
