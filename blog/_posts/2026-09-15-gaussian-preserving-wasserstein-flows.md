@@ -5,7 +5,9 @@ description: "Gelbrich's Gaussian contraction and a criterion explained by Hugo 
 topic: Optimal transport
 ---
 
-I love Gaussians. I especially love PDEs that preserve Gaussians—and, more specifically, Wasserstein gradient flows that do so. An infinite-dimensional evolution of a probability density then reduces exactly to the evolution of a mean vector and a covariance matrix.
+I share many things with my colleague, friend, and office mate (well, not this year!) Olivier Cappé, including a love of Gaussians.
+
+I especially love PDEs that preserve Gaussians—and, more specifically, Wasserstein gradient flows that do so. An infinite-dimensional evolution of a probability density then reduces exactly to the evolution of a mean vector and a covariance matrix.
 
 This is the topic of the very last section of my new book [*Optimal Transport for Machine Learners*](https://www.gpeyre.com/ot4ml/): **16.5, “Flows over the Gaussian Manifold.”**
 
