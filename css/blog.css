@@ -74,6 +74,8 @@
 .figure-controls button { background: #fff; color: #006b7d; border: 1px solid #90b6ba; border-radius: 4px; padding: 9px 14px; font-weight: 600; min-height: 40px; }
 .figure-controls button:hover { background: #e7f0ee; }
 .figure-controls button[data-play] { background: #00778b; color: white; border-color: #00778b; min-width: 86px; }
+.figure-actions { display: flex; flex: 1 1 100%; flex-wrap: wrap; gap: 10px; }
+.figure-controls button:disabled { opacity: .45; cursor: default; }
 .figure-status { font: 12px/1.8 'Open Sans', sans-serif; color: #47625d; margin: 12px 0 0 !important; min-height: 22px; font-variant-numeric: tabular-nums; }
 .figure-legend { font: 12px/1.8 'Open Sans', sans-serif; color: #53635b; margin: 12px 0 0 !important; }
 @media (max-width: 600px) {

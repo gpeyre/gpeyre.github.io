@@ -15,10 +15,22 @@ When does this construction give a norm? The key condition is monotonicity in th
 
 <!--more-->
 
-<figure>
-  <img src="{{ '/blog/imgs/matrixnorm.webp' | prepend: site.baseurl }}" alt="The equivalence between the norm property for the square-root Gram lift and monotonicity of the covariance gauge." loading="lazy">
-  <figcaption>The basic equivalence, with the nondegeneracy assumption made explicit below.</figcaption>
-</figure>
+Under the assumptions made precise below, the equivalence is
+
+$$
+\boxed{
+\begin{gathered}
+X\longmapsto\sqrt{\gamma(X^\top X)}
+\quad\text{is a norm}
+\\[4pt]
+\Updownarrow
+\\[4pt]
+0\preceq A\preceq B
+\quad\Longrightarrow\quad
+\gamma(A)\leq\gamma(B).
+\end{gathered}
+}
+$$
 
 ## A precise statement
 

@@ -41,10 +41,27 @@
             mix * qi + (1 - mix) * (i === j ? 0.72 : i === (j + 1) % 3 ? 0.28 : 0)));
     }
     function sinkhornSystem(epsilon) {
-        const a = [0.25, 0.45, 0.3], b = [0.45, 0.2, 0.35];
-        const cost = [[0, 0.9, 0.5], [0.7, 0.05, 0.8], [0.9, 0.4, 0]];
+        // A near-diagonal kernel with balanced marginals keeps several curved
+        // simplex images visible before convergence. These are ordinary,
+        // undamped Sinkhorn updates for this explicitly stated OT problem.
+        const a = [1 / 3, 1 / 3, 1 / 3], b = a.slice();
+        const cost = [[0, 1, 1], [1, 0, 1], [1, 1, 0]];
         const kernel = cost.map(row => row.map(c => Math.exp(-c / epsilon)));
         return { a, b, kernel };
+    }
+    function simplexBoundary(segments = 96) {
+        const vertices = [[1, 0, 0], [0, 1, 0], [0, 0, 1]], boundary = [];
+        for (let edge = 0; edge < 3; edge++) {
+            for (let j = 0; j < segments; j++) {
+                // Resolve the high curvature near corners without undersampling
+                // the middle of an edge. All points, not just vertices, are mapped.
+                const t = (1 - Math.cos(Math.PI * j / segments)) / 2;
+                boundary.push(vertices[edge].map((x, i) =>
+                    (1 - t) * x + t * vertices[(edge + 1) % 3][i]));
+            }
+        }
+        boundary.push(boundary[0].slice());
+        return boundary;
     }
     function sinkhornStep(v, system) {
         const u = matvec(system.kernel, v).map((x, i) => system.a[i] / x);
@@ -96,7 +113,7 @@
         return { points, errors, bound: bend * Math.PI ** 2 / (2 * n), maxError: Math.max(...errors) };
     }
     const api = { sum, normalize, matvec, transpose, l1, iterate, banana, rk4, bananaPaths,
-        markovMatrix, sinkhornSystem, sinkhornStep, sinkhornResidual, covariance, inverse2,
+        markovMatrix, sinkhornSystem, simplexBoundary, sinkhornStep, sinkhornResidual, covariance, inverse2,
         gaussianBarycenter, ellipsePoints, eulerExample };
     if (typeof module !== "undefined" && module.exports) module.exports = api;
     else root.BlogMath = api;

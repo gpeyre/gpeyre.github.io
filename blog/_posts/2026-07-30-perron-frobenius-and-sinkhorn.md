@@ -63,6 +63,20 @@ The factors are only defined up to $$u\mapsto c^{-1}u$$, $$v\mapsto cv$$. To dra
 
 The lower panel displays **scaling vectors**, not transport plans or transported probability distributions. At each step, the displayed marginal residual is computed from the corresponding matrix $$\Gamma$$; it measures how far the current scaling is from satisfying both constraints.
 
+To make the curved triangle images visible over many iterations, the example uses equal marginals $$a=b=(1/3,1/3,1/3)$$ and a cost of zero on the diagonal and one off the diagonal. Thus
+
+$$
+K=
+\begin{pmatrix}
+1&\rho&\rho\\
+\rho&1&\rho\\
+\rho&\rho&1
+\end{pmatrix},
+\qquad \rho=e^{-1/\varepsilon}.
+$$
+
+At the default $$\varepsilon=0.22$$, this kernel is close to the identity, so the contraction is gradual. Each boundary is obtained by applying the full nonlinear update to densely sampled points along all three edges. The map extends to the closed simplex because $$K$$ is strictly positive. **Step** advances exactly one iteration; the playback-speed control changes only how long each iterate is shown.
+
 ## Why “nonlinear Perron–Frobenius”?
 
 For positive vectors, Hilbert’s projective distance is

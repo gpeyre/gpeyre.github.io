@@ -16,6 +16,7 @@
         const play = figure.querySelector("[data-play]"), status = figure.querySelector("[data-status]");
         let running = false, frame = null, last = null, accumulator = 0;
         let paths = null, pathsBend = null;
+        let simplexScene = null;
         const params = () => Object.fromEntries(inputs.map(input => [input.dataset.param, Number(input.value)]));
         const put = (name, value) => { figure.querySelector('[data-param="' + name + '"]').value = value; };
         const fontSize = size => Math.max(size, 11 * W / Math.max(280, canvas.getBoundingClientRect().width));
@@ -81,21 +82,25 @@
                 "   ·   Fraction of initial energy: " + (energy / initial).toExponential(2);
         }
         function drawSinkhorn(p) {
-            const P = M.markovMatrix(), system = M.sinkhornSystem(p.epsilon);
-            const maps = [x => M.matvec(P, x), x => M.sinkhornStep(x, system)];
-            const vertices = [[0.97, 0.015, 0.015], [0.015, 0.97, 0.015], [0.015, 0.015, 0.97]];
-            const boundary = [];
-            for (let edge = 0; edge < 3; edge++) {
-                for (const t of linspace(0, 1, 28)) {
-                    boundary.push(vertices[edge].map((x, i) => (1 - t) * x + t * vertices[(edge + 1) % 3][i]));
-                }
+            const maxIteration = Number(figure.querySelector('[data-param="iteration"]').max);
+            if (!simplexScene || simplexScene.epsilon !== p.epsilon) {
+                const P = M.markovMatrix(), system = M.sinkhornSystem(p.epsilon);
+                const maps = [x => M.matvec(P, x), x => M.sinkhornStep(x, system)];
+                const seeds = [];
+                for (let i = 0; i <= 7; i++) for (let j = 0; j <= 7 - i; j++)
+                    seeds.push([i / 7, j / 7, (7 - i - j) / 7]);
+                const panels = maps.map(f => {
+                    const rings = [M.simplexBoundary()], points = [seeds];
+                    for (let k = 0; k < maxIteration; k++) {
+                        rings.push(rings[k].map(f));
+                        points.push(points[k].map(f));
+                    }
+                    return { rings, points, fixed: M.iterate(f, [1 / 3, 1 / 3, 1 / 3], 2000) };
+                });
+                simplexScene = { epsilon: p.epsilon, system, panels };
             }
-            boundary.push(boundary[0]);
-            const seeds = [];
-            for (let i = 0; i <= 7; i++) for (let j = 0; j <= 7 - i; j++)
-                seeds.push(M.normalize([i + 0.15, j + 0.15, 7 - i - j + 0.15]));
-            const stationary = [];
-            maps.forEach((f, panel) => {
+            const { system, panels } = simplexScene;
+            panels.forEach((scene, panel) => {
                 const offset = panel * 400;
                 const tri = [[420, 70 + offset], [220, 340 + offset], [620, 340 + offset]];
                 const map = q => [M.sum(q.map((x, i) => x * tri[i][0])), M.sum(q.map((x, i) => x * tri[i][1]))];
@@ -104,22 +109,24 @@
                 label("1", 420, 56 + offset, 14, "#788780", "center");
                 label("2", 199, 350 + offset, 14, "#788780", "center");
                 label("3", 641, 350 + offset, 14, "#788780", "center");
-                let ring = boundary.map(x => x.slice());
                 for (let k = 0; k <= p.iteration; k++) {
-                    const t = k / Math.max(1, p.iteration);
-                    line(ring.map(map), "rgb(" + Math.round(200 * (1 - t)) + "," + Math.round(94 + 27 * t) + "," + Math.round(85 + 77 * t) + ")", k === p.iteration ? 3 : 1.3);
-                    ring = ring.map(f);
+                    const t = p.iteration ? k / p.iteration : 1;
+                    const current = k === p.iteration, shape = scene.rings[k].map(map);
+                    if (current) {
+                        ctx.beginPath(); ctx.moveTo(...shape[0]); shape.slice(1).forEach(q => ctx.lineTo(...q));
+                        ctx.fillStyle = "rgba(0,119,162,0.06)"; ctx.fill();
+                    }
+                    line(shape, "rgba(" + Math.round(200 * (1 - t)) + "," + Math.round(94 + 27 * t) + "," +
+                        Math.round(85 + 77 * t) + "," + (current ? 1 : 0.65) + ")", current ? 3.5 : 1.5);
                 }
-                seeds.forEach(seed => dot(map(M.iterate(f, seed, p.iteration)), colors.teal, 3));
-                const fixed = M.iterate(f, [1 / 3, 1 / 3, 1 / 3], 2000);
-                stationary.push(fixed);
-                dot(map(fixed), "#fff", 7, colors.ink);
+                scene.points[p.iteration].forEach(point => dot(map(point), colors.teal, 2.5));
+                dot(map(scene.fixed), "#fff", 7, colors.ink);
                 label(panel ? "v / Σv" : "p", 733, 349 + offset, 17, colors.ink, "right");
             });
             line([[30, 393], [W - 30, 393]], "#e3ebe7", 1);
-            const maxDistance = Math.max(...seeds.map(x => M.l1(M.iterate(maps[0], x, p.iteration), stationary[0])));
-            const residual = Math.max(...seeds.map(x => M.sinkhornResidual(M.iterate(maps[1], x, p.iteration), system)));
-            status.textContent = "Max. Markov distance ‖p − π‖₁: " + maxDistance.toExponential(2) +
+            const maxDistance = Math.max(...panels[0].points[p.iteration].map(x => M.l1(x, panels[0].fixed)));
+            const residual = Math.max(...panels[1].points[p.iteration].map(x => M.sinkhornResidual(x, system)));
+            status.textContent = "Iteration " + p.iteration + "   ·   Max. Markov distance ‖p − π‖₁: " + maxDistance.toExponential(2) +
                 "   ·   Max. Sinkhorn marginal residual: " + residual.toExponential(2);
         }
         function drawGaussian(p) {
@@ -168,6 +175,10 @@
                 figure.querySelector('[data-value="' + name + '"]').textContent =
                     name === "angle" ? value + "°" : ["steps", "iteration"].includes(name) ? value : value.toFixed(2);
             });
+            figure.querySelectorAll("[data-step]").forEach(button => {
+                const slider = figure.querySelector('[data-param="iteration"]');
+                button.disabled = Number(button.dataset.step) < 0 ? p.iteration <= 0 : p.iteration >= Number(slider.max);
+            });
             ctx.clearRect(0, 0, W, H);
             renderers[kind](p);
         }
@@ -184,9 +195,10 @@
             const p = params();
             if (kind === "sinkhorn") {
                 accumulator += dt;
-                if (accumulator >= 0.45) {
-                    put("iteration", Math.min(24, p.iteration + 1)); accumulator = 0; render();
-                    if (p.iteration + 1 >= 24) { stop(); return; }
+                if (accumulator >= p.duration) {
+                    const max = Number(figure.querySelector('[data-param="iteration"]').max);
+                    put("iteration", Math.min(max, p.iteration + 1)); accumulator -= p.duration; render();
+                    if (p.iteration + 1 >= max) { stop(); return; }
                 }
             } else {
                 const key = kind === "gaussian" ? "weight" : "time";
@@ -200,13 +212,19 @@
         play.addEventListener("click", () => {
             if (running) { stop(); return; }
             const key = kind === "sinkhorn" ? "iteration" : kind === "gaussian" ? "weight" : "time";
-            const max = kind === "sinkhorn" ? 24 : kind === "pl" ? 6 : 1;
+            const max = Number(figure.querySelector('[data-param="' + key + '"]').max);
             if (params()[key] >= max) put(key, 0);
             animationValue = params()[key]; running = true; last = null;
             play.textContent = "Pause"; play.setAttribute("aria-pressed", "true");
             render(); frame = requestAnimationFrame(tick);
         });
         inputs.forEach(input => input.addEventListener("input", () => { stop(); render(); }));
+        figure.querySelectorAll("[data-step]").forEach(button => button.addEventListener("click", () => {
+            stop();
+            const slider = figure.querySelector('[data-param="iteration"]');
+            put("iteration", Math.max(0, Math.min(Number(slider.max), params().iteration + Number(button.dataset.step))));
+            render();
+        }));
         figure.querySelector("[data-reset]").addEventListener("click", () => {
             stop(); inputs.forEach(input => { input.value = input.defaultValue; }); render();
         });

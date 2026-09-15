@@ -30,16 +30,44 @@ const P = M.markovMatrix();
 M.transpose(P).forEach(column => { close(M.sum(column), 1); column.forEach(x => assert.ok(x > 0)); });
 const fixed = M.iterate(x => M.matvec(P, x), [0.2, 0.3, 0.5], 300);
 close(M.l1(M.matvec(P, fixed), fixed), 0);
-for (const epsilon of [0.15, 0.5, 1.5]) {
+for (const epsilon of [0.18, 0.22, 0.5]) {
     const system = M.sinkhornSystem(epsilon);
-    for (const seed of [[0.97, 0.015, 0.015], [0.015, 0.97, 0.015], [0.015, 0.015, 0.97]]) {
+    for (const seed of [[1, 0, 0], [0, 1, 0], [0, 0, 1], [0.2, 0.3, 0.5]]) {
         const step = x => M.sinkhornStep(x, system);
         close(M.l1(step(seed), step(seed.map(x => 4 * x))), 0);
-        const result = M.iterate(step, seed, 1000);
+        const result = M.iterate(step, seed, 2000);
         finite(result); close(M.sum(result), 1);
         assert.ok(M.sinkhornResidual(result, system) < 1e-10);
     }
 }
+
+// Guard the actual pedagogical requirement: a large, visibly curved image
+// persists for multiple true Sinkhorn iterations at the default setting.
+const boundary = M.simplexBoundary();
+assert.equal(boundary.length, 289);
+assert.deepEqual(boundary[0], boundary.at(-1));
+boundary.forEach(p => { close(M.sum(p), 1); p.forEach(x => assert.ok(x >= 0)); });
+const area = points => Math.abs(points.slice(1).reduce((s, q, i) =>
+    s + points[i][1] * q[2] - q[1] * points[i][2], 0)) / 2;
+const initialArea = area(boundary);
+const example = M.sinkhornSystem(0.22);
+let ring = boundary, previousArea = initialArea;
+for (let k = 1; k <= 80; k++) {
+    ring = ring.map(v => M.sinkhornStep(v, example));
+    finite(ring);
+    const currentArea = area(ring);
+    assert.ok(currentArea <= previousArea + 1e-12, "Successive simplex images must contract");
+    if (k === 1) assert.ok(currentArea / initialArea > 0.8, "The triangle collapses on its first step");
+    if (k === 8) {
+        assert.ok(currentArea / initialArea > 0.3, "The curved triangle should still be clearly visible");
+        const bow = Math.abs(ring[48][2] - (ring[0][2] + ring[96][2]) / 2);
+        assert.ok(bow > 0.04, "Sinkhorn must visibly bend the edge, not just map its corners");
+    }
+    previousArea = currentArea;
+}
+assert.ok(previousArea / initialArea < 0.001, "The default example must eventually converge");
+const linearRing = boundary.map(v => M.iterate(x => M.matvec(P, x), v, 8));
+close(linearRing[48][2], (linearRing[0][2] + linearRing[96][2]) / 2);
 
 const means = [[-1.35, 0.25], [1.25, -0.1]];
 for (const angle of [0, 45, 110, 180]) {

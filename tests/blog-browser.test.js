@@ -37,6 +37,16 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
             if (!/clarifications|mathematical-nexus|machine-learners/.test(path)) {
                 assert.ok(await page.evaluate(() => MathJax.Hub.getAllJax().length > 0), "No mathematics rendered: " + path);
             }
+            if (path.includes("covariance-gauges")) {
+                assert.equal(await page.locator('article img[src*="matrixnorm"]').count(), 0);
+                assert.ok(await page.evaluate(() => MathJax.Hub.getAllJax().some(jax =>
+                    jax.originalText.includes("\\Updownarrow") && jax.originalText.includes("\\gamma(A)"))),
+                    "The covariance equivalence must be rendered from LaTeX, not an image");
+                await page.locator(".blog-prose .MathJax_SVG_Display").nth(1).screenshot({
+                    path: screenshotDir + "/blog-covariance-equivalence-desktop.png",
+                    style: ".navbar { visibility: hidden; }"
+                });
+            }
             const brokenImages = await page.locator("article img").evaluateAll(nodes => nodes.filter(n => n.complete && !n.naturalWidth).map(n => n.src));
             assert.deepEqual(brokenImages, []);
             assert.equal(await page.locator("h1").count(), 1);
@@ -56,14 +66,43 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
                 }
                 await page.locator("[data-reset]").click();
                 const scrub = page.locator('[data-param="' + (kind === "sinkhorn" ? "iteration" : kind === "gaussian" ? "weight" : "time") + '"]');
+                if (kind === "sinkhorn") {
+                    assert.equal(await figure.locator('[data-param="epsilon"]').inputValue(), "0.22");
+                    assert.equal(await figure.locator('[data-param="duration"]').inputValue(), "1.5");
+                    assert.ok(await figure.locator('[data-step="-1"]').isDisabled());
+                    await figure.locator('[data-step="1"]').click();
+                    assert.equal(await scrub.inputValue(), "1");
+                    await figure.locator('[data-step="-1"]').click();
+                    assert.equal(await scrub.inputValue(), "0");
+                }
                 await page.locator("[data-play]").click();
                 await page.waitForTimeout(1100);
+                if (kind === "sinkhorn") {
+                    assert.equal(await scrub.inputValue(), "0", "The first iterate must be held for 1.5 seconds");
+                    await page.waitForTimeout(700);
+                }
                 assert.ok(Number(await scrub.inputValue()) > 0, "Animation did not advance: " + kind);
                 await page.locator("[data-play]").click();
                 assert.equal(await page.locator("[data-play]").getAttribute("aria-pressed"), "false");
+                if (kind === "sinkhorn") {
+                    assert.equal(await scrub.inputValue(), "1", "Slow playback should advance exactly once");
+                    await figure.locator('[data-param="duration"]').fill("0.5");
+                    await page.locator("[data-play]").click();
+                    await page.waitForTimeout(700);
+                    assert.equal(await scrub.inputValue(), "2", "The playback-speed control should change the delay");
+                    await figure.locator('[data-step="-1"]').click();
+                    assert.equal(await scrub.inputValue(), "1");
+                    assert.equal(await page.locator("[data-play]").getAttribute("aria-pressed"), "false");
+                }
                 await page.locator("[data-reset]").click();
                 if (kind === "pl") await scrub.fill("2");
-                if (kind === "sinkhorn") await scrub.fill("4");
+                if (kind === "sinkhorn") {
+                    for (const k of [0, 1, 4, 8, 24]) {
+                        await scrub.fill(String(k));
+                        await figure.screenshot({ path: screenshotDir + "/blog-sinkhorn-step-" + k + ".png", style: ".navbar { visibility: hidden; }" });
+                    }
+                    await scrub.fill("8");
+                }
                 await figure.screenshot({ path: screenshotDir + "/blog-figure-" + kind + ".png", style: ".navbar { visibility: hidden; }" });
             }
             const overflows = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1);
@@ -72,7 +111,12 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
             await page.evaluate(() => new Promise(resolve => MathJax.Hub.Queue(["Rerender", MathJax.Hub], resolve)));
             assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false, "Mobile overflow: " + path);
             if (hasFigure) await page.locator("[data-figure]").screenshot({ path: screenshotDir + "/blog-figure-" + await page.locator("[data-figure]").getAttribute("data-figure") + "-mobile.png" });
-            if (path.includes("covariance-gauges")) await page.screenshot({ path: screenshotDir + "/blog-proof-mobile.png" });
+            if (path.includes("covariance-gauges")) {
+                await page.locator(".blog-prose .MathJax_SVG_Display").nth(1).screenshot({
+                    path: screenshotDir + "/blog-covariance-equivalence-mobile.png",
+                    style: ".navbar { visibility: hidden; }"
+                });
+            }
             await page.setViewportSize({ width: 1280, height: 900 });
             console.log("Verified " + path);
         }
