@@ -17,6 +17,7 @@
         let running = false, frame = null, last = null, accumulator = 0;
         let paths = null, pathsBend = null;
         let simplexScene = null;
+        let gaussianFlowScene = null;
         const params = () => Object.fromEntries(inputs.map(input => [input.dataset.param, Number(input.value)]));
         const put = (name, value) => { figure.querySelector('[data-param="' + name + '"]').value = value; };
         const fontSize = size => Math.max(size, 11 * W / Math.max(280, canvas.getBoundingClientRect().width));
@@ -167,7 +168,50 @@
             status.textContent = "Max. grid-point error: " + model.maxError.toFixed(5) +
                 "   ·   Bound bπ²/(2n): " + model.bound.toFixed(5) + "   ·   L = 0";
         }
-        const renderers = { pl: drawPL, sinkhorn: drawSinkhorn, gaussian: drawGaussian, ode: drawODE };
+        function drawGaussianFlow(p) {
+            if (!gaussianFlowScene || gaussianFlowScene.angle !== p.angle || gaussianFlowScene.anisotropy !== p.anisotropy) {
+                const model = M.gaussianKLExample(p.angle * Math.PI / 180, p.anisotropy);
+                const flow = t => M.gaussianKLFlow(model.initial, model.target, t);
+                const times = linspace(0, Math.log(21), 90).map(Math.expm1);
+                const states = times.map(flow);
+                const all = [...states, model.target].flatMap(s => M.ellipsePoints(s.mean, s.covariance));
+                const xs = all.map(x => x[0]), ys = all.map(x => x[1]);
+                const xmin = Math.min(...xs) - 0.4, xmax = Math.max(...xs) + 0.4;
+                const ymin = Math.min(...ys) - 0.4, ymax = Math.max(...ys) + 0.4;
+                // Equal spatial units on both axes, fixed throughout playback.
+                const scale = Math.max((xmax - xmin) / (W - 90), (ymax - ymin) / (H - 88));
+                const cx = (xmin + xmax) / 2, cy = (ymin + ymax) / 2;
+                gaussianFlowScene = { ...model, angle: p.angle, anisotropy: p.anisotropy, flow, states,
+                    bounds: [cx - scale * (W - 90) / 2, cx + scale * (W - 90) / 2,
+                        cy - scale * (H - 88) / 2, cy + scale * (H - 88) / 2] };
+            }
+            const scene = gaussianFlowScene, result = scene.flow(p.time), chart = plot(...scene.bounds), map = chart.map;
+            const outline = state => M.ellipsePoints(state.mean, state.covariance).map(map);
+            const initialShape = outline(scene.initial);
+            line(initialShape, "#a2aaa6", 2, [3, 5]);
+            for (const fraction of [0.12, 0.3, 0.55, 0.8]) {
+                if (p.time > 0.02) line(outline(scene.flow(p.time * fraction)), "rgba(0,124,131,0.16)", 1.6);
+            }
+            line(scene.states.map(s => map(s.mean)), "#78aead", 2.2, [3, 5]);
+            const shape = outline(result);
+            ctx.beginPath(); ctx.moveTo(...shape[0]); shape.slice(1).forEach(q => ctx.lineTo(...q));
+            ctx.fillStyle = "rgba(0,124,131,0.12)"; ctx.fill();
+            line(shape, colors.teal, 4);
+            line(outline(scene.target), colors.blue, 3, [9, 6]);
+            dot(map(scene.initial.mean), "#a2aaa6", 4);
+            dot(map(result.mean), colors.teal, 6, "#fff");
+            dot(map(scene.target.mean), colors.blue, 5);
+            chart.done();
+            figure.dataset.kl = result.kl;
+            figure.dataset.mean = JSON.stringify(result.mean);
+            figure.dataset.covariance = JSON.stringify(result.covariance);
+            figure.dataset.initialKl = M.gaussianKL(scene.initial, scene.target);
+            figure.dataset.targetCovariance = JSON.stringify(scene.target.covariance);
+            status.textContent = "KL(αₜ | β) = " + result.kl.toExponential(3) +
+                " · Initial KL = " + Number(figure.dataset.initialKl).toFixed(3) +
+                " · Mean = (" + result.mean.map(x => x.toFixed(3)).join(", ") + ")";
+        }
+        const renderers = { pl: drawPL, sinkhorn: drawSinkhorn, gaussian: drawGaussian, ode: drawODE, "gaussian-flow": drawGaussianFlow };
         function render() {
             const p = params();
             inputs.forEach(input => {
@@ -202,8 +246,9 @@
                 }
             } else {
                 const key = kind === "gaussian" ? "weight" : "time";
-                const max = kind === "pl" ? 6 : 1, speed = kind === "pl" ? 1 : 0.16;
-                animationValue = Math.min(max, animationValue + dt * speed);
+                const max = Number(figure.querySelector('[data-param="' + key + '"]').max), speed = kind === "pl" ? 1 : 0.16;
+                animationValue = Math.min(max, kind === "gaussian-flow" ?
+                    Math.expm1(Math.log1p(animationValue) + dt * Math.log1p(max) / 12) : animationValue + dt * speed);
                 put(key, animationValue); render();
                 if (animationValue >= max) { stop(); return; }
             }

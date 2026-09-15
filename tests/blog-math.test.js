@@ -100,6 +100,66 @@ for (const bend of [0, 0.05, 0.7, 1.2]) {
     }
 }
 
+// Closed-form W2 gradient flow of KL to a Gaussian: exercise noncommuting
+// covariances, not merely scalar variances or a common eigenbasis.
+for (const angle of [0, 0.3, Math.PI / 2, 110 * Math.PI / 180, Math.PI]) {
+    for (const anisotropy of [1, 1.3, 3, 6]) {
+        const { initial, target } = M.gaussianKLExample(angle, anisotropy);
+        const precision = M.inverse2(target.covariance);
+        close(M.determinant2(target.covariance), 1, 1e-12);
+        let previousKL = Infinity;
+        for (const t of [0, 1e-9, 0.01, 0.1, 0.5, 1, 4, 10, 20, 1000]) {
+            const result = M.gaussianKLFlow(initial, target, t);
+            finite([result.mean, result.covariance, result.transition, result.kl]);
+            assert.ok(result.covariance[0][0] > 0 && M.determinant2(result.covariance) > 0);
+            close(result.covariance[0][1], result.covariance[1][0]);
+            assert.ok(result.kl <= previousKL + 1e-10, "Gaussian KL must decrease along the exact W2 flow");
+            previousKL = result.kl;
+            const stationary = M.gaussianKLFlow(target, target, t);
+            close(stationary.kl, 0, 1e-12);
+            stationary.covariance.forEach((row, i) => row.forEach((v, j) => close(v, target.covariance[i][j], 1e-12)));
+            if (t === 0 || t === 1000) {
+                const expected = t === 0 ? initial : target;
+                result.mean.forEach((v, i) => close(v, expected.mean[i], 1e-12));
+                result.covariance.forEach((row, i) => row.forEach((v, j) => close(v, expected.covariance[i][j], 1e-12)));
+            }
+            if (t >= 0.01 && t <= 20) {
+                const h = 1e-5, before = M.gaussianKLFlow(initial, target, t - h), after = M.gaussianKLFlow(initial, target, t + h);
+                const drift = M.matvec(precision, result.mean.map((x, i) => x - target.mean[i]));
+                result.mean.forEach((_, i) => close((after.mean[i] - before.mean[i]) / (2 * h), -drift[i], 1e-7));
+                const left = M.multiply2(precision, result.covariance), right = M.multiply2(result.covariance, precision);
+                result.covariance.forEach((row, i) => row.forEach((_, j) => {
+                    const derivative = (after.covariance[i][j] - before.covariance[i][j]) / (2 * h);
+                    close(derivative, (i === j ? 2 : 0) - left[i][j] - right[i][j], 1e-7);
+                }));
+            }
+        }
+        const direct = M.gaussianKLFlow(initial, target, 2.3);
+        const composed = M.gaussianKLFlow(M.gaussianKLFlow(initial, target, 0.7), target, 1.6);
+        direct.mean.forEach((v, i) => close(v, composed.mean[i], 1e-12));
+        direct.covariance.forEach((row, i) => row.forEach((v, j) => close(v, composed.covariance[i][j], 1e-12)));
+        // Every displayed ellipse really has Mahalanobis radius 2.
+        const inv = M.inverse2(direct.covariance);
+        for (const p of M.ellipsePoints(direct.mean, direct.covariance)) {
+            const d = p.map((x, i) => x - direct.mean[i]);
+            close(M.sum(d.map((x, i) => x * M.matvec(inv, d)[i])), 4, 1e-11);
+        }
+    }
+}
+const circular = M.gaussianKLExample(0, 1);
+for (const angle of [0.5, 1, 2.2]) {
+    const rotated = M.gaussianKLExample(angle, 1);
+    const a = M.gaussianKLFlow(circular.initial, circular.target, 0.7);
+    const b = M.gaussianKLFlow(rotated.initial, rotated.target, 0.7);
+    a.mean.forEach((x, i) => close(x, b.mean[i], 1e-12));
+    a.covariance.forEach((row, i) => row.forEach((x, j) => close(x, b.covariance[i][j], 1e-12)));
+}
+const noncommuting = M.gaussianKLExample(110 * Math.PI / 180, 3);
+const ab = M.multiply2(noncommuting.initial.covariance, noncommuting.target.covariance);
+const ba = M.multiply2(noncommuting.target.covariance, noncommuting.initial.covariance);
+assert.ok(Math.abs(ab[0][1] - ba[0][1]) > 0.1, "The default covariances must not share an eigenbasis");
+assert.throws(() => M.gaussianKLFlow(circular.initial, circular.target, -1), RangeError);
+
 // Verify the explicit five-cycle spectrum and the trace obstruction.
 const a = (Math.sqrt(5) - 1) / 2;
 for (let k = 0; k < 5; k++) assert.ok(1 + 2 * a * Math.cos(2 * Math.PI * k / 5) >= -1e-12);
@@ -216,4 +276,4 @@ for (const sigma of [0, 0.02, 0.16, 0.6]) {
         assert.ok(bow > 0.2, "The integrated diffusion trajectories should be visibly curved");
     }
 }
-console.log("Blog mathematics: existing figures, analytic diffusion flow, and certified optimal assignments passed.");
+console.log("Blog mathematics: existing figures, exact Gaussian KL flow, analytic diffusion flow, and certified optimal assignments passed.");

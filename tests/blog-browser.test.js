@@ -112,9 +112,11 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
                 const mathematics = await page.evaluate(() => MathJax.Hub.getAllJax().map(jax => jax.originalText));
                 for (const formula of ["\\mathsf G\\alpha=\\mathcal N(m_\\alpha,\\Sigma_\\alpha)",
                     "W_2(\\mathsf G\\alpha,\\mathsf G\\beta)", "\\mathrm{KL}(\\alpha\\mid\\mathsf G\\alpha)",
-                    "\\partial_t\\rho", "\\mathcal N(m_0,\\Sigma_0)*\\mathcal N(0,2tI)"]) {
+                    "\\partial_t\\rho", "\\mathcal N(m_0,\\Sigma_0)*\\mathcal N(0,2tI)",
+                    "E_t=\\exp(-tB^{-1})", "\\Sigma_t&=B+E_t(\\Sigma_0-B)E_t"]) {
                     assert.ok(mathematics.some(tex => tex.includes(formula)), "Missing formula: " + formula);
                 }
+                assert.equal(await page.locator('[data-figure="gaussian-flow"]').count(), 1);
                 await page.screenshot({ path: screenshotDir + "/blog-gaussian-flows-desktop.png" });
             }
             const isDiffusion = path.includes("diffusion-versus-optimal-transport");
@@ -153,6 +155,32 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
                     }
                 }
                 await page.locator("[data-reset]").click();
+                if (kind === "gaussian-flow") {
+                    const read = () => figure.evaluate(n => ({ kl: +n.dataset.kl, initialKL: +n.dataset.initialKl,
+                        mean: JSON.parse(n.dataset.mean), covariance: JSON.parse(n.dataset.covariance) }));
+                    const zero = await read();
+                    assert.ok(Math.abs(zero.kl - zero.initialKL) < 1e-12);
+                    assert.equal(await figure.locator('[data-param="angle"]').inputValue(), "110");
+                    assert.equal(await figure.locator('[data-param="anisotropy"]').inputValue(), "3");
+                    await figure.locator('[data-param="time"]').fill("1");
+                    const evolved = await read();
+                    assert.ok(evolved.kl < zero.kl);
+                    assert.notDeepEqual(evolved.mean, zero.mean);
+                    const beforeAngle = await figure.locator("canvas").evaluate(n => n.toDataURL());
+                    await figure.locator('[data-param="angle"]').fill("40");
+                    assert.notEqual(await figure.locator("canvas").evaluate(n => n.toDataURL()), beforeAngle);
+                    const beforeAnisotropy = (await read()).covariance;
+                    await figure.locator('[data-param="anisotropy"]').fill("6");
+                    assert.notDeepEqual((await read()).covariance, beforeAnisotropy);
+                    await figure.screenshot({ path: screenshotDir + "/blog-gaussian-kl-anisotropic.png", style: ".navbar { visibility: hidden; }" });
+                    await figure.locator('[data-param="anisotropy"]').fill("1");
+                    const round = await read();
+                    await figure.locator('[data-param="angle"]').fill("130");
+                    const rotated = await read();
+                    assert.ok(Math.abs(round.kl - rotated.kl) < 1e-10, "A circular target must be rotation invariant");
+                    await figure.screenshot({ path: screenshotDir + "/blog-gaussian-kl-isotropic.png", style: ".navbar { visibility: hidden; }" });
+                    await figure.locator("[data-reset]").click();
+                }
                 if (kind === "diffusion") {
                     const verifyCosts = async () => {
                         const values = await figure.evaluate(n => ({ d: +n.dataset.diffusionCost, ot: +n.dataset.otCost,
@@ -190,6 +218,9 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
                     await page.waitForTimeout(700);
                 }
                 assert.ok(Number(await scrub.inputValue()) > 0, "Animation did not advance: " + kind);
+                if (kind === "gaussian-flow") {
+                    assert.ok(Number(await scrub.inputValue()) < 1, "The early Gaussian transient should remain visible");
+                }
                 if (kind === "diffusion") {
                     assert.ok(Number(await scrub.inputValue()) < 0.2, "Diffusion playback should take ten seconds");
                 }
@@ -207,6 +238,21 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
                 }
                 await page.locator("[data-reset]").click();
                 if (kind === "pl") await scrub.fill("2");
+                if (kind === "gaussian-flow") {
+                    for (const t of ["0", "0.5", "2", "20"]) {
+                        await scrub.fill(t);
+                        await figure.screenshot({ path: screenshotDir + "/blog-gaussian-kl-time-" + t + ".png",
+                            style: ".navbar { visibility: hidden; }" });
+                    }
+                    assert.ok(Number(await figure.getAttribute("data-kl")) < 1e-4, "The default flow should approach its target");
+                    await scrub.fill("19.9");
+                    await figure.locator("[data-play]").click();
+                    await page.waitForTimeout(350);
+                    assert.equal(await scrub.inputValue(), "20");
+                    assert.equal(await figure.locator("[data-play]").getAttribute("aria-pressed"), "false");
+                    await figure.locator("[data-reset]").click();
+                    await scrub.fill("0.5");
+                }
                 if (kind === "sinkhorn") {
                     for (const k of [0, 1, 4, 8, 24]) {
                         await scrub.fill(String(k));
@@ -286,12 +332,21 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
                 await page.evaluate(() => scrollTo(0, 0));
                 await page.screenshot({ path: screenshotDir + "/blog-gaussian-flows-mobile.png" });
                 const displays = page.locator(".blog-prose .MathJax_SVG_Display");
-                for (const index of [1, 2, 6, 9, 12, 18, 21, await displays.count() - 1]) {
+                for (const index of [1, 2, 6, 9, 12, 18, 20, 21, 22, await displays.count() - 1]) {
                     await displays.nth(index).screenshot({
                         path: screenshotDir + "/blog-gaussian-flows-equation-" + index + "-mobile.png",
                         style: ".navbar { visibility: hidden; }"
                     });
                 }
+                await page.setViewportSize({ width: 360, height: 844 });
+                await page.evaluate(() => new Promise(resolve => MathJax.Hub.Queue(["Rerender", MathJax.Hub], resolve)));
+                for (const index of [20, 21, 22]) {
+                    assert.ok(await displays.nth(index).evaluate(n => n.scrollWidth <= n.clientWidth + 2),
+                        "The Gaussian closed form must fit a narrow mobile screen");
+                }
+                await page.locator('[data-figure="gaussian-flow"]').screenshot({ path: screenshotDir + "/blog-gaussian-kl-360.png",
+                    style: ".navbar { visibility: hidden; }" });
+                await page.setViewportSize({ width: 390, height: 844 });
             }
             await page.setViewportSize({ width: 1280, height: 900 });
             console.log("Verified " + path);

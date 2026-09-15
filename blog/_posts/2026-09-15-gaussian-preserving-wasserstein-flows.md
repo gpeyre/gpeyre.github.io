@@ -3,6 +3,7 @@ title: "Why I love Gaussian-preserving flows"
 subtitle: "A contraction, a variational principle, and a beautifully excessive proof about Gaussian convolution."
 description: "Gelbrich's Gaussian contraction and a criterion explained by Hugo Lavenant, with proofs for Gaussian relative entropy and heat flow."
 topic: Optimal transport
+figure: gaussian-flow
 ---
 
 I share many things with my colleague, friend, and office mate (well, not this year!) Olivier Cappé, including a love of Gaussians.
@@ -231,6 +232,42 @@ $$
 $$
 
 This is exactly the kind of reduction that makes Gaussian-preserving PDEs so appealing.
+
+### The closed form, and an interactive picture
+
+There is no need to discretize these differential equations. Set
+
+$$
+E_t=\exp(-tB^{-1}).
+$$
+
+Starting from $$\alpha_0=\mathcal N(m_0,\Sigma_0)$$, the solution is
+
+$$
+\boxed{
+\begin{aligned}
+m_t&=m_\beta+E_t(m_0-m_\beta),\\
+\Sigma_t&=B+E_t(\Sigma_0-B)E_t.
+\end{aligned}
+}
+$$
+
+This formula does **not** require $$\Sigma_0$$ and $$B$$ to commute. To verify it, use $$\dot E_t=-B^{-1}E_t$$ and $$E_tB=BE_t$$, differentiate, and recover the two parameter equations above. At $$t=0$$ it gives the prescribed initial Gaussian; as $$t\to\infty$$, $$E_t\to0$$ and $$\alpha_t\to\beta$$.
+
+{% include blog-figure.html kind="gaussian-flow" %}
+
+In this two-dimensional example, the adjustable target covariance is
+
+$$
+B=R_\theta
+\begin{pmatrix}a&0\\0&a^{-1}\end{pmatrix}
+R_\theta^\top,
+\qquad a\geq1,
+$$
+
+where $$R_\theta$$ is a rotation. Thus $$a$$ is the **ellipse's axis ratio**, while $$\det B=1$$ keeps its area fixed. At $$a=1$$ the target is circular and its orientation has no effect. The initial Gaussian stays fixed as the target changes.
+
+The picture displays covariance ellipsoids—ellipses in the plane—and evaluates the mean and covariance directly from the matrix exponential. Rotating the target changes both the covariance evolution and the path of the mean. Directions with larger target variance relax more slowly: along a target eigenvector of variance $$\lambda$$, the mean error decays as $$e^{-t/\lambda}$$. The displayed $$\mathrm{KL}(\alpha_t\mid\beta)$$ decreases toward zero.
 
 ## Removing confinement gives the heat equation
 

@@ -31,7 +31,7 @@ images. The Duhamel portrait is public domain; its source is credited in the pos
 
 ## Interactive figures
 
-Add figure: pl, sinkhorn, gaussian, ode, or diffusion to the front matter, then use:
+Add figure: pl, sinkhorn, gaussian, gaussian-flow, ode, or diffusion to the front matter, then use:
 
 ~~~liquid
 {% include blog-figure.html kind="gaussian" %}
@@ -39,6 +39,8 @@ Add figure: pl, sinkhorn, gaussian, ode, or diffusion to the front matter, then 
 
 The numerical functions live in js/blog-math.js, the canvas renderers in
 js/blog-figures.js, and the accessible controls in _includes/blog-figure.html.
+The gaussian-flow figure evaluates the Gaussian KL gradient flow in closed
+form, with target orientation and ellipse-axis ratio controls.
 The two-panel diffusion/OT comparison has a dedicated renderer in
 js/blog-diffusion.js. Its analytic mixture score and exact empirical assignment
 solver are also in js/blog-math.js. The reference image is its no-JavaScript fallback.

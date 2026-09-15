@@ -38,6 +38,20 @@
   </div>
   <p class="figure-legend">Blue: Gaussian 1. Orange: Gaussian 2. Solid teal: KL barycenter. Dotted teal: path of its mean. Gray dashed: straight segment between input means.</p>
   <figcaption>Ellipses are contours at Mahalanobis radius 2, not density-height contours. The weights are (1 − λ, λ).</figcaption>
+{% when 'gaussian-flow' %}
+  <h3 id="figure-gaussian-flow-title">A Gaussian relaxing toward a Gaussian target</h3>
+  <canvas width="840" height="560" role="img" aria-label="A solid teal ellipse evolves from the dotted gray initial Gaussian toward the dashed blue target Gaussian. Change the target orientation and axis ratio, then play the exact Wasserstein KL flow."></canvas>
+  <div class="figure-controls">
+    <label for="gaussian-flow-angle">Target orientation θ <output for="gaussian-flow-angle" data-value="angle">110°</output><input id="gaussian-flow-angle" data-param="angle" type="range" min="0" max="180" step="1" value="110"></label>
+    <label for="gaussian-flow-anisotropy">Target axis ratio a <output for="gaussian-flow-anisotropy" data-value="anisotropy">3.00</output><input id="gaussian-flow-anisotropy" data-param="anisotropy" type="range" min="1" max="6" step="0.1" value="3"></label>
+    <label for="gaussian-flow-time">Flow time t <output for="gaussian-flow-time" data-value="time">0.00</output><input id="gaussian-flow-time" data-param="time" type="range" min="0" max="20" step="0.01" value="0"></label>
+    <div class="figure-actions" role="group" aria-label="Gaussian KL flow playback">
+      <button type="button" data-play aria-pressed="false">Play</button>
+      <button type="button" data-reset>Reset</button>
+    </div>
+  </div>
+  <p class="figure-legend">Gray dotted: initial α₀. Teal solid: evolving αₜ. Blue dashed: target β. Faint teal ellipses: earlier states. Dotted teal curve: path of the mean.</p>
+  <figcaption>Ellipsoids are shown here as two-dimensional ellipses at Mahalanobis radius 2, with equal scales on both axes. The target axis ratio changes at fixed determinant. Playback takes 12 seconds and slows the early transient; t is the actual flow time. Every state is evaluated from the closed form, without numerical time stepping.</figcaption>
 {% when 'ode' %}
   <h3 id="figure-ode-title">Bending a flow, measuring its error</h3>
   <canvas width="840" height="470" role="img" aria-label="Compare the exact sinusoidal flow with its Euler polygon. Reducing the bending or increasing the step count reduces the discretization error."></canvas>

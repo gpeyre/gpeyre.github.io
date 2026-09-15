@@ -104,6 +104,41 @@
                     mean[1] + radius * (b * Math.cos(t) + c * Math.sin(t))];
         });
     }
+    const multiply2 = (a, b) => a.map(row => [0, 1].map(j => row[0] * b[0][j] + row[1] * b[1][j]));
+    const determinant2 = a => a[0][0] * a[1][1] - a[0][1] * a[1][0];
+    function gaussianKL(alpha, beta) {
+        const precision = inverse2(beta.covariance);
+        const delta = alpha.mean.map((x, i) => x - beta.mean[i]);
+        const product = multiply2(precision, alpha.covariance), h = matvec(precision, delta);
+        const value = (product[0][0] + product[1][1] - 2 + sum(delta.map((x, i) => x * h[i])) +
+            Math.log(determinant2(beta.covariance)) - Math.log(determinant2(alpha.covariance))) / 2;
+        return Math.max(0, value); // Only removes roundoff at the zero-energy equilibrium.
+    }
+    function gaussianKLFlow(initial, target, time) {
+        if (!(time >= 0) || !Number.isFinite(time)) throw new RangeError("Flow time must be finite and nonnegative");
+        const b = target.covariance, mid = (b[0][0] + b[1][1]) / 2;
+        const radius = Math.hypot((b[0][0] - b[1][1]) / 2, b[0][1]);
+        const major = mid + radius, minor = determinant2(b) / major;
+        if (!(major > 0 && minor > 0)) throw new RangeError("The target covariance must be positive definite");
+        const angle = Math.atan2(2 * b[0][1], b[0][0] - b[1][1]) / 2;
+        const transition = covariance(angle, Math.exp(-time / major), Math.exp(-time / minor));
+        // E Sigma_0 E + B(I-E^2) is a positive-sum evaluation of
+        // B + E(Sigma_0-B)E. The sandwich is essential when B and Sigma_0 do not commute.
+        const noise = covariance(angle, -major * Math.expm1(-2 * time / major),
+            -minor * Math.expm1(-2 * time / minor));
+        const evolved = multiply2(multiply2(transition, initial.covariance), transition);
+        const sigma = evolved.map((row, i) => row.map((x, j) => x + noise[i][j]));
+        sigma[0][1] = sigma[1][0] = (sigma[0][1] + sigma[1][0]) / 2;
+        const delta = matvec(transition, initial.mean.map((x, i) => x - target.mean[i]));
+        const result = { mean: target.mean.map((x, i) => x + delta[i]), covariance: sigma };
+        return { ...result, transition, kl: gaussianKL(result, target) };
+    }
+    function gaussianKLExample(angle, anisotropy) {
+        return {
+            initial: { mean: [-2, 0.7], covariance: covariance(0.25, 1.3, 0.25) },
+            target: { mean: [1.5, -0.3], covariance: covariance(angle, anisotropy, 1 / anisotropy) }
+        };
+    }
     function eulerExample(bend, n) {
         const h = 1 / n, points = [[0, 0]], errors = [0];
         for (let k = 0; k < n; k++) {
@@ -222,7 +257,8 @@
     }
     const api = { sum, normalize, matvec, transpose, l1, iterate, banana, rk4, bananaPaths,
         markovMatrix, sinkhornSystem, simplexBoundary, sinkhornStep, sinkhornResidual, covariance, inverse2,
-        gaussianBarycenter, ellipsePoints, eulerExample, diffusionMixture, gaussianCloud,
+        gaussianBarycenter, ellipsePoints, gaussianKL, gaussianKLFlow, gaussianKLExample,
+        multiply2, determinant2, eulerExample, diffusionMixture, gaussianCloud,
         mixturePosterior, mixtureScore, diffusionVelocity, diffusionPaths, optimalAssignment, diffusionComparison };
     if (typeof module !== "undefined" && module.exports) module.exports = api;
     else root.BlogMath = api;
