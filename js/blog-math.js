@@ -112,9 +112,118 @@
         }
         return { points, errors, bound: bend * Math.PI ** 2 / (2 * n), maxError: Math.max(...errors) };
     }
+    function diffusionMixture() {
+        return { means: [[-3, -2.3], [0, 2], [5, -0.3]], weights: [0.3, 0.4, 0.3] };
+    }
+    function gaussianCloud(count = 240) {
+        // Equal-weight, deterministic polar quadrature for N(0, I_2).
+        // The radial quantiles sample the Gaussian, not a uniform disk.
+        const angle = Math.PI * (3 - Math.sqrt(5));
+        return Array.from({ length: count }, (_, i) => {
+            const radius = Math.sqrt(-2 * Math.log(1 - (i + 0.5) / count));
+            return [radius * Math.cos(i * angle), radius * Math.sin(i * angle)];
+        });
+    }
+    function mixturePosterior(point, r, sigma, model = diffusionMixture()) {
+        const variance = 1 - r * r + sigma * sigma * r * r;
+        if (!(variance > 0)) throw new RangeError("A score requires a positive mixture variance");
+        const logits = model.means.map((m, j) => Math.log(model.weights[j]) -
+            ((point[0] - r * m[0]) ** 2 + (point[1] - r * m[1]) ** 2) / (2 * variance));
+        const maximum = Math.max(...logits), exp = logits.map(x => Math.exp(x - maximum));
+        const total = sum(exp), weights = exp.map(x => x / total);
+        const mean = [0, 1].map(k => sum(model.means.map((m, j) => weights[j] * m[k])));
+        return { mean, weights, variance, logDensity: maximum + Math.log(total) - Math.log(2 * Math.PI * variance) };
+    }
+    function mixtureScore(point, r, sigma, model = diffusionMixture()) {
+        const p = mixturePosterior(point, r, sigma, model);
+        return point.map((x, k) => (r * p.mean[k] - x) / p.variance);
+    }
+    function diffusionVelocity(point, r, sigma, model = diffusionMixture()) {
+        const p = mixturePosterior(point, r, sigma, model);
+        // (x + score_r(x)) / r, analytically cancelled to remain regular at r=0.
+        return point.map((x, k) => (r * (sigma * sigma - 1) * x + p.mean[k]) / p.variance);
+    }
+    function diffusionPaths(sigma, options = {}) {
+        const model = options.model || diffusionMixture(), steps = options.steps || 320;
+        const source = options.source || gaussianCloud(options.count || 240);
+        if (sigma < 0) throw new RangeError("Gaussian width must be nonnegative");
+        // r=sin(theta) resolves the sharp final denoising stage. At sigma=0,
+        // stop short of the singular endpoint and take its nearest-center limit.
+        const end = Math.PI / 2 - (sigma === 0 ? 1e-4 : 0), h = end / steps;
+        const velocity = state => {
+            const theta = state[0], scale = Math.cos(theta);
+            const v = diffusionVelocity(state.slice(1), Math.sin(theta), sigma, model);
+            return [1, scale * v[0], scale * v[1]];
+        };
+        return source.map(point => {
+            let state = [0, ...point];
+            const path = [point.slice()];
+            for (let k = 0; k < steps; k++) {
+                state = rk4(state, h, velocity);
+                state[0] = (k + 1) * h;
+                path.push(state.slice(1));
+            }
+            if (sigma === 0) {
+                const last = path[path.length - 1];
+                const distances = model.means.map(m => (m[0] - last[0]) ** 2 + (m[1] - last[1]) ** 2);
+                path[path.length - 1] = model.means[distances.indexOf(Math.min(...distances))].slice();
+            }
+            return path;
+        });
+    }
+    function optimalAssignment(source, target) {
+        const n = source.length;
+        if (!n || target.length !== n) throw new RangeError("Matching needs equal, nonempty point clouds");
+        const costs = source.map(x => Float64Array.from(target, y => (x[0] - y[0]) ** 2 + (x[1] - y[1]) ** 2));
+        // Hungarian primal-dual algorithm: unregularized one-to-one matching.
+        const u = new Float64Array(n + 1), v = new Float64Array(n + 1);
+        const p = new Int32Array(n + 1), way = new Int32Array(n + 1);
+        for (let i = 1; i <= n; i++) {
+            p[0] = i;
+            let j0 = 0;
+            const minv = new Float64Array(n + 1).fill(Infinity), used = new Uint8Array(n + 1);
+            do {
+                used[j0] = 1;
+                const i0 = p[j0];
+                let delta = Infinity, j1 = 0;
+                for (let j = 1; j <= n; j++) if (!used[j]) {
+                    const cur = costs[i0 - 1][j - 1] - u[i0] - v[j];
+                    if (cur < minv[j]) { minv[j] = cur; way[j] = j0; }
+                    if (minv[j] < delta) { delta = minv[j]; j1 = j; }
+                }
+                for (let j = 0; j <= n; j++) {
+                    if (used[j]) { u[p[j]] += delta; v[j] -= delta; }
+                    else minv[j] -= delta;
+                }
+                j0 = j1;
+            } while (p[j0] !== 0);
+            do {
+                const j1 = way[j0]; p[j0] = p[j1]; j0 = j1;
+            } while (j0 !== 0);
+        }
+        const permutation = new Array(n);
+        for (let j = 1; j <= n; j++) permutation[p[j] - 1] = j - 1;
+        return { permutation, cost: sum(permutation.map((j, i) => costs[i][j])) / n,
+            dualSource: Array.from(u.slice(1)), dualTarget: Array.from(v.slice(1)) };
+    }
+    function diffusionComparison(sigma, options = {}) {
+        const model = options.model || diffusionMixture();
+        const paths = diffusionPaths(sigma, { ...options, model });
+        const source = paths.map(p => p[0]), target = paths.map(p => p[p.length - 1]);
+        const labels = target.map(y => {
+            const scores = model.means.map((m, j) => (y[0] - m[0]) ** 2 + (y[1] - m[1]) ** 2 -
+                2 * sigma * sigma * Math.log(model.weights[j]));
+            return scores.indexOf(Math.min(...scores));
+        });
+        const matching = optimalAssignment(source, target);
+        const diffusionCost = sum(source.map((x, i) => (x[0] - target[i][0]) ** 2 + (x[1] - target[i][1]) ** 2)) / source.length;
+        const changed = sum(matching.permutation.map((j, i) => Number(labels[j] !== labels[i])));
+        return { sigma, model, paths, source, target, labels, matching, diffusionCost, changed };
+    }
     const api = { sum, normalize, matvec, transpose, l1, iterate, banana, rk4, bananaPaths,
         markovMatrix, sinkhornSystem, simplexBoundary, sinkhornStep, sinkhornResidual, covariance, inverse2,
-        gaussianBarycenter, ellipsePoints, eulerExample };
+        gaussianBarycenter, ellipsePoints, eulerExample, diffusionMixture, gaussianCloud,
+        mixturePosterior, mixtureScore, diffusionVelocity, diffusionPaths, optimalAssignment, diffusionComparison };
     if (typeof module !== "undefined" && module.exports) module.exports = api;
     else root.BlogMath = api;
 }(typeof globalThis !== "undefined" ? globalThis : this));

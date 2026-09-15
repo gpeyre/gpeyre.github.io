@@ -37,7 +37,11 @@
     <link rel="stylesheet" href="{{ '/css/blog.css' | prepend: site.baseurl }}">
     {% if page.figure %}
     <script defer src="{{ '/js/blog-math.js' | prepend: site.baseurl }}"></script>
+    {% if page.figure == 'diffusion' %}
+    <script defer src="{{ '/js/blog-diffusion.js' | prepend: site.baseurl }}"></script>
+    {% else %}
     <script defer src="{{ '/js/blog-figures.js' | prepend: site.baseurl }}"></script>
+    {% endif %}
     {% endif %}
     {% endif %}
 

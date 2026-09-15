@@ -50,7 +50,34 @@
   </div>
   <p class="figure-legend">Teal curve: exact solution. Orange polygon and dots: explicit Euler. The error and bound below are evaluated at the grid points over the full interval.</p>
   <figcaption>The velocity is v(t, x) = (1, bπ cos(πt)). Try b = 0: the path has constant velocity and Euler becomes exact.</figcaption>
+{% when 'diffusion' %}
+  <h3 id="figure-diffusion-title">One Gaussian, three destinations, two maps</h3>
+  <div class="diffusion-panels">
+    <div>
+      <h4>Diffusion <span>Deterministic score ODE</span></h4>
+      <canvas data-panel="diffusion" width="600" height="470" role="img" aria-label="Curved probability-flow trajectories from a centered Gaussian to three Gaussian clusters, colored by their destination mode A, B, or C."></canvas>
+    </div>
+    <div>
+      <h4>Optimal transport <span>Optimal matching of the same endpoints</span></h4>
+      <canvas data-panel="ot" width="600" height="470" role="img" aria-label="Straight optimal-transport trajectories from the same Gaussian particles to the same endpoints, with colors recomputed for their optimal assignments."></canvas>
+    </div>
+  </div>
+  <div class="figure-controls">
+    <label for="diffusion-time">Progress s <output for="diffusion-time" data-value="time">0.00</output><input id="diffusion-time" data-param="time" type="range" min="0" max="1" step="0.005" value="0"></label>
+    <label for="diffusion-sigma">Gaussian width σ (0 = Diracs) <output for="diffusion-sigma" data-value="sigma">0.16</output><input id="diffusion-sigma" data-param="sigma" type="range" min="0" max="0.6" step="0.02" value="0.16"></label>
+    <div class="figure-actions" role="group" aria-label="Transport comparison controls">
+      <button type="button" data-play aria-pressed="false">Play</button>
+      <button type="button" data-reset>Reset</button>
+      <button type="button" data-highlight aria-pressed="false">Highlight mode changes</button>
+    </div>
+  </div>
+  <p class="figure-legend diffusion-legend"><span><i class="mode-a" aria-hidden="true"></i>A · blue</span><span><i class="mode-b" aria-hidden="true"></i>B · cyan</span><span><i class="mode-c" aria-hidden="true"></i>C · brown</span></p>
+  <figcaption>Colors follow the destination, not the starting particle. Pale lines show the complete routes; dots show the current positions. Black dots mark the three means. Set σ = 0 for the three-Dirac limit, or highlight particles whose destination mode changes between the maps. Playback takes 10 seconds.</figcaption>
 {% endcase %}
   <p class="figure-status" data-status aria-live="off"></p>
+{% if include.kind == 'diffusion' %}
+  <div class="figure-fallback"><img src="{{ '/blog/imgs/diffusion-map.webp' | prepend: site.baseurl }}" width="936" height="697" alt="Reference sketch: blue, cyan, and brown curved diffusion trajectories connect a central cloud to three black target points."><p>Reference sketch. Enable JavaScript for the interactive diffusion and optimal-transport comparison.</p></div>
+{% else %}
   <p class="figure-fallback">Enable JavaScript to use this figure’s animation and sliders. The equations and explanation remain available in the article.</p>
+{% endif %}
 </figure>

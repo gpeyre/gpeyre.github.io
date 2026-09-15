@@ -13,11 +13,12 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
         const errors = [];
         page.on("pageerror", error => errors.push(error.message));
         await page.goto(base + "/blog/", { waitUntil: "networkidle" });
-        assert.equal(await page.locator(".blog-preview").count(), 16);
+        assert.equal(await page.locator(".blog-preview").count(), 17);
         const dates = await page.locator(".blog-preview time").evaluateAll(nodes => nodes.map(n => n.dateTime));
         assert.deepEqual(dates, dates.slice().sort().reverse());
         const paths = await page.locator(".blog-preview h2 a").evaluateAll(nodes => nodes.map(n => new URL(n.href).pathname));
-        assert.equal(new Set(paths).size, 16);
+        assert.equal(new Set(paths).size, 17);
+        assert.ok(paths.includes("/blog/2026/06/15/diffusion-versus-optimal-transport/"));
         assert.ok(paths.includes("/blog/2026/09/15/gaussian-preserving-wasserstein-flows/"));
         assert.ok(paths.includes("/blog/2026/04/06/muon-spectral-wasserstein/"));
         assert.ok(paths.includes("/blog/2025/08/09/positive-definite-congruence/"));
@@ -116,6 +117,24 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
                 }
                 await page.screenshot({ path: screenshotDir + "/blog-gaussian-flows-desktop.png" });
             }
+            const isDiffusion = path.includes("diffusion-versus-optimal-transport");
+            if (isDiffusion) {
+                assert.equal(await page.locator(".blog-eyebrow time").getAttribute("datetime"), "2026-06-15");
+                for (const source of ["https://arxiv.org/abs/2011.13456", "https://doi.org/10.1002/cpa.3160440402"]) {
+                    assert.equal(await page.locator("article a[href='" + source + "']").count(), 1);
+                }
+                const prose = await page.locator("article").textContent();
+                for (const phrase of ["factor-of-two", "empirical measures", "Curved", "Laguerre"]) assert.ok(prose.includes(phrase));
+                const tex = await page.evaluate(() => MathJax.Hub.getAllJax().map(jax => jax.originalText));
+                assert.ok(tex.some(t => t.includes("T_{\\mathrm{diff}}=\\Phi_1")));
+                assert.ok(tex.some(t => t.includes("T_{\\mathrm{OT}}\\in")));
+                assert.equal(await page.locator(".diffusion-panels canvas").count(), 2);
+                const positions = await page.locator(".diffusion-panels canvas").evaluateAll(nodes => nodes.map(n => {
+                    const box = n.getBoundingClientRect(); return { x: box.x, y: box.y };
+                }));
+                assert.ok(positions[1].x > positions[0].x && Math.abs(positions[1].y - positions[0].y) < 1);
+                await page.screenshot({ path: screenshotDir + "/blog-diffusion-post-desktop.png" });
+            }
             const brokenImages = await page.locator("article img").evaluateAll(nodes => nodes.filter(n => n.complete && !n.naturalWidth).map(n => n.src));
             assert.deepEqual(brokenImages, []);
             assert.equal(await page.locator("h1").count(), 1);
@@ -134,6 +153,26 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
                     }
                 }
                 await page.locator("[data-reset]").click();
+                if (kind === "diffusion") {
+                    const verifyCosts = async () => {
+                        const values = await figure.evaluate(n => ({ d: +n.dataset.diffusionCost, ot: +n.dataset.otCost,
+                            changed: +n.dataset.changed, n: +n.dataset.particles }));
+                        assert.ok(values.ot <= values.d + 1e-10);
+                        assert.equal(values.n, 240);
+                        return values;
+                    };
+                    assert.ok((await verifyCosts()).changed >= 5);
+                    const first = await figure.locator("canvas").first().evaluate(n => n.toDataURL());
+                    await figure.locator("[data-highlight]").click();
+                    assert.equal(await figure.locator("[data-highlight]").getAttribute("aria-pressed"), "true");
+                    assert.notEqual(await figure.locator("canvas").first().evaluate(n => n.toDataURL()), first);
+                    await figure.screenshot({ path: screenshotDir + "/blog-diffusion-highlight.png", style: ".navbar { visibility: hidden; }" });
+                    await figure.locator('[data-param="sigma"]').fill("0");
+                    await verifyCosts();
+                    await figure.screenshot({ path: screenshotDir + "/blog-diffusion-dirac.png", style: ".navbar { visibility: hidden; }" });
+                    await figure.locator("[data-reset]").click();
+                    assert.equal(await figure.locator("[data-highlight]").getAttribute("aria-pressed"), "false");
+                }
                 const scrub = page.locator('[data-param="' + (kind === "sinkhorn" ? "iteration" : kind === "gaussian" ? "weight" : "time") + '"]');
                 if (kind === "sinkhorn") {
                     assert.equal(await figure.locator('[data-param="epsilon"]').inputValue(), "0.22");
@@ -151,6 +190,9 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
                     await page.waitForTimeout(700);
                 }
                 assert.ok(Number(await scrub.inputValue()) > 0, "Animation did not advance: " + kind);
+                if (kind === "diffusion") {
+                    assert.ok(Number(await scrub.inputValue()) < 0.2, "Diffusion playback should take ten seconds");
+                }
                 await page.locator("[data-play]").click();
                 assert.equal(await page.locator("[data-play]").getAttribute("aria-pressed"), "false");
                 if (kind === "sinkhorn") {
@@ -172,6 +214,19 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
                     }
                     await scrub.fill("8");
                 }
+                if (kind === "diffusion") {
+                    for (const t of ["0.5", "1"]) {
+                        await scrub.fill(t);
+                        await figure.screenshot({ path: screenshotDir + "/blog-diffusion-progress-" + t + ".png",
+                            style: ".navbar { visibility: hidden; }" });
+                    }
+                    await scrub.fill("0.98");
+                    await figure.locator("[data-play]").click();
+                    await page.waitForTimeout(550);
+                    assert.equal(await scrub.inputValue(), "1");
+                    assert.equal(await figure.locator("[data-play]").getAttribute("aria-pressed"), "false");
+                    await figure.locator("[data-reset]").click();
+                }
                 await figure.screenshot({ path: screenshotDir + "/blog-figure-" + kind + ".png", style: ".navbar { visibility: hidden; }" });
             }
             const overflows = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1);
@@ -180,6 +235,29 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
             await page.evaluate(() => new Promise(resolve => MathJax.Hub.Queue(["Rerender", MathJax.Hub], resolve)));
             assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false, "Mobile overflow: " + path);
             if (hasFigure) await page.locator("[data-figure]").screenshot({ path: screenshotDir + "/blog-figure-" + await page.locator("[data-figure]").getAttribute("data-figure") + "-mobile.png" });
+            if (isDiffusion) {
+                const positions = await page.locator(".diffusion-panels canvas").evaluateAll(nodes => nodes.map(n => {
+                    const box = n.getBoundingClientRect(); return { x: box.x, y: box.y, width: box.width };
+                }));
+                assert.ok(Math.abs(positions[1].x - positions[0].x) < 1 && positions[1].y > positions[0].y);
+                assert.ok(positions.every(p => p.width >= 300));
+                const displays = page.locator(".blog-prose .MathJax_SVG_Display");
+                await page.setViewportSize({ width: 360, height: 844 });
+                await page.evaluate(() => new Promise(resolve => MathJax.Hub.Queue(["Rerender", MathJax.Hub], resolve)));
+                const clipped = await displays.evaluateAll(nodes => nodes.flatMap((node, index) =>
+                    node.scrollWidth > node.clientWidth + 2 ? [index] : []));
+                assert.deepEqual(clipped, [], "The diffusion equations must fit the mobile column");
+                await page.locator("[data-figure]").screenshot({ path: screenshotDir + "/blog-diffusion-360.png",
+                    style: ".navbar { visibility: hidden; }" });
+                await page.setViewportSize({ width: 390, height: 844 });
+                await page.evaluate(() => new Promise(resolve => MathJax.Hub.Queue(["Rerender", MathJax.Hub], resolve)));
+                for (const index of [4, 5, 6, 8, 9, 11]) await displays.nth(index).screenshot({
+                    path: screenshotDir + "/blog-diffusion-equation-" + index + "-mobile.png",
+                    style: ".navbar { visibility: hidden; }"
+                });
+                await page.evaluate(() => scrollTo(0, 0));
+                await page.screenshot({ path: screenshotDir + "/blog-diffusion-post-mobile.png" });
+            }
             if (path.includes("covariance-gauges")) {
                 await page.locator(".blog-prose .MathJax_SVG_Display").nth(1).screenshot({
                     path: screenshotDir + "/blog-covariance-equivalence-mobile.png",
@@ -231,7 +309,13 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
             assert.equal((await context.request.get(base + path)).status(), 404, "Authoring file leaked: " + path);
         }
         assert.deepEqual(errors, []);
-        console.log("Blog browser QA passed: all 16 posts, maths, images, figures, navigation, and mobile widths.");
+        const noJS = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
+        const fallback = await noJS.newPage();
+        await fallback.goto(base + "/blog/2026/06/15/diffusion-versus-optimal-transport/");
+        assert.ok(await fallback.locator(".figure-fallback img").isVisible());
+        assert.ok(await fallback.locator(".figure-controls").isHidden());
+        await noJS.close();
+        console.log("Blog browser QA passed: all 17 posts, maths, images, figures, navigation, mobile widths, and diffusion fallback.");
     } finally {
         await browser.close();
     }
