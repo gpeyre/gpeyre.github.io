@@ -1,0 +1,228 @@
+(function () {
+    "use strict";
+    const M = window.BlogMath;
+    if (!M) return;
+    const colors = { teal: "#007c83", blue: "#397cc2", orange: "#c56732", grid: "#e3ebe7", ink: "#354c4b" };
+    const linspace = (a, b, n) => Array.from({ length: n }, (_, i) => a + (b - a) * i / (n - 1));
+
+    document.querySelectorAll("[data-figure]").forEach(initFigure);
+
+    function initFigure(figure) {
+        const kind = figure.dataset.figure, canvas = figure.querySelector("canvas");
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+        const W = canvas.width, H = canvas.height;
+        const inputs = Array.from(figure.querySelectorAll("[data-param]"));
+        const play = figure.querySelector("[data-play]"), status = figure.querySelector("[data-status]");
+        let running = false, frame = null, last = null, accumulator = 0;
+        let paths = null, pathsBend = null;
+        const params = () => Object.fromEntries(inputs.map(input => [input.dataset.param, Number(input.value)]));
+        const put = (name, value) => { figure.querySelector('[data-param="' + name + '"]').value = value; };
+        const fontSize = size => Math.max(size, 11 * W / Math.max(280, canvas.getBoundingClientRect().width));
+
+        function label(text, x, y, size = 17, color = colors.ink, align = "left") {
+            ctx.font = fontSize(size) + 'px "Open Sans", sans-serif';
+            ctx.fillStyle = color; ctx.textAlign = align; ctx.fillText(text, x, y);
+        }
+        function line(points, color, width = 2, dash = []) {
+            if (!points.length) return;
+            ctx.beginPath(); ctx.moveTo(...points[0]);
+            points.slice(1).forEach(p => ctx.lineTo(...p));
+            ctx.strokeStyle = color; ctx.lineWidth = width; ctx.setLineDash(dash); ctx.stroke(); ctx.setLineDash([]);
+        }
+        function dot(p, color, radius = 5, outline = null) {
+            ctx.beginPath(); ctx.arc(p[0], p[1], radius, 0, 2 * Math.PI);
+            ctx.fillStyle = color; ctx.fill();
+            if (outline) { ctx.strokeStyle = outline; ctx.lineWidth = 2; ctx.stroke(); }
+        }
+        function plot(xmin, xmax, ymin, ymax) {
+            const box = { x: 60, y: 34, w: W - 90, h: H - 88 };
+            const map = p => [box.x + (p[0] - xmin) * box.w / (xmax - xmin),
+                box.y + (ymax - p[1]) * box.h / (ymax - ymin)];
+            for (const x of linspace(xmin, xmax, 6)) {
+                line([map([x, ymin]), map([x, ymax])], colors.grid, 1);
+                label(x.toFixed(1), map([x, ymin])[0], H - 22, 13, "#788780", "center");
+            }
+            for (const y of linspace(ymin, ymax, 5)) {
+                line([map([xmin, y]), map([xmax, y])], colors.grid, 1);
+                label(y.toFixed(1), box.x - 10, map([xmin, y])[1] + 5, 13, "#788780", "right");
+            }
+            ctx.save(); ctx.beginPath(); ctx.rect(box.x, box.y, box.w, box.h); ctx.clip();
+            return { map, done: () => ctx.restore() };
+        }
+        function drawPL(p) {
+            if (!paths || pathsBend !== p.bend) {
+                paths = M.bananaPaths(p.bend); pathsBend = p.bend;
+            }
+            const chart = plot(-0.85, 1.85, -2, 1.4), map = chart.map;
+            [0.05, 0.2, 0.45, 0.85, 1.5, 2.5, 4].forEach(energy => {
+                [-1, 1].forEach(sign => {
+                    let segment = [];
+                    linspace(-0.85, 1.85, 280).forEach(x => {
+                        const r = x - Math.min(1, Math.max(0, x)), z2 = energy - r * r;
+                        if (z2 >= 0) segment.push(map([x, sign * Math.sqrt(z2) - p.bend * (x - 0.5) ** 2]));
+                        else { line(segment, "#d0e2ed", 1.5); segment = []; }
+                    });
+                    line(segment, "#d0e2ed", 1.5);
+                });
+            });
+            line(linspace(0, 1, 100).map(x => map([x, -p.bend * (x - 0.5) ** 2])), colors.teal, 5);
+            const k = Math.min(600, Math.round(p.time / 0.01));
+            let energy = 0, initial = 0;
+            paths.forEach(path => {
+                line(path.slice(0, k + 1).map(map), "rgba(197,103,50,0.45)", 2);
+                dot(map(path[0]), "#fff", 3.5, "#b3bcb4");
+                dot(map(path[k]), colors.orange, 5);
+                energy += M.banana(...path[k], p.bend).value;
+                initial += M.banana(...path[0], p.bend).value;
+            });
+            chart.done();
+            status.textContent = "Mean energy: " + (energy / paths.length).toExponential(3) +
+                "   ·   Fraction of initial energy: " + (energy / initial).toExponential(2);
+        }
+        function drawSinkhorn(p) {
+            const P = M.markovMatrix(), system = M.sinkhornSystem(p.epsilon);
+            const maps = [x => M.matvec(P, x), x => M.sinkhornStep(x, system)];
+            const vertices = [[0.97, 0.015, 0.015], [0.015, 0.97, 0.015], [0.015, 0.015, 0.97]];
+            const boundary = [];
+            for (let edge = 0; edge < 3; edge++) {
+                for (const t of linspace(0, 1, 28)) {
+                    boundary.push(vertices[edge].map((x, i) => (1 - t) * x + t * vertices[(edge + 1) % 3][i]));
+                }
+            }
+            boundary.push(boundary[0]);
+            const seeds = [];
+            for (let i = 0; i <= 7; i++) for (let j = 0; j <= 7 - i; j++)
+                seeds.push(M.normalize([i + 0.15, j + 0.15, 7 - i - j + 0.15]));
+            const stationary = [];
+            maps.forEach((f, panel) => {
+                const offset = panel * 400;
+                const tri = [[420, 70 + offset], [220, 340 + offset], [620, 340 + offset]];
+                const map = q => [M.sum(q.map((x, i) => x * tri[i][0])), M.sum(q.map((x, i) => x * tri[i][1]))];
+                label(panel ? "SINKHORN · normalized scaling vectors" : "MARKOV · probability vectors", 30, 31 + offset, 18);
+                line([...tri, tri[0]], "#b9c8c0", 2);
+                label("1", 420, 56 + offset, 14, "#788780", "center");
+                label("2", 199, 350 + offset, 14, "#788780", "center");
+                label("3", 641, 350 + offset, 14, "#788780", "center");
+                let ring = boundary.map(x => x.slice());
+                for (let k = 0; k <= p.iteration; k++) {
+                    const t = k / Math.max(1, p.iteration);
+                    line(ring.map(map), "rgb(" + Math.round(200 * (1 - t)) + "," + Math.round(94 + 27 * t) + "," + Math.round(85 + 77 * t) + ")", k === p.iteration ? 3 : 1.3);
+                    ring = ring.map(f);
+                }
+                seeds.forEach(seed => dot(map(M.iterate(f, seed, p.iteration)), colors.teal, 3));
+                const fixed = M.iterate(f, [1 / 3, 1 / 3, 1 / 3], 2000);
+                stationary.push(fixed);
+                dot(map(fixed), "#fff", 7, colors.ink);
+                label(panel ? "v / Σv" : "p", 733, 349 + offset, 17, colors.ink, "right");
+            });
+            line([[30, 393], [W - 30, 393]], "#e3ebe7", 1);
+            const maxDistance = Math.max(...seeds.map(x => M.l1(M.iterate(maps[0], x, p.iteration), stationary[0])));
+            const residual = Math.max(...seeds.map(x => M.sinkhornResidual(M.iterate(maps[1], x, p.iteration), system)));
+            status.textContent = "Max. Markov distance ‖p − π‖₁: " + maxDistance.toExponential(2) +
+                "   ·   Max. Sinkhorn marginal residual: " + residual.toExponential(2);
+        }
+        function drawGaussian(p) {
+            const means = [[-1.35, 0.25], [1.25, -0.1]];
+            const sigmas = [M.covariance(0.35, 0.95, 0.16), M.covariance(p.angle * Math.PI / 180, 0.85, 0.12)];
+            const bary = w => M.gaussianBarycenter(means, sigmas, [1 - w, w]);
+            const result = bary(p.weight);
+            const chart = plot(-3.6, 3.6, -2.7, 2.7), map = chart.map;
+            line(means.map(map), "#a2afa8", 2, [7, 7]);
+            line(linspace(0, 1, 120).map(w => map(bary(w).mean)), "#78aead", 2.5, [3, 5]);
+            sigmas.forEach((sigma, i) => {
+                line(M.ellipsePoints(means[i], sigma).map(map), i ? colors.orange : colors.blue, 2.5, [8, 5]);
+                dot(map(means[i]), i ? colors.orange : colors.blue, 5);
+            });
+            const shape = M.ellipsePoints(result.mean, result.covariance).map(map);
+            ctx.beginPath(); ctx.moveTo(...shape[0]); shape.slice(1).forEach(point => ctx.lineTo(...point));
+            ctx.fillStyle = "rgba(0,124,131,0.12)"; ctx.fill();
+            line(shape, colors.teal, 4);
+            dot(map(result.mean), colors.teal, 7, "#fff");
+            chart.done();
+            status.textContent = "Mean = (" + result.mean.map(x => x.toFixed(3)).join(", ") +
+                ")   ·   Covariance = [" + result.covariance.map(row => row.map(x => x.toFixed(3)).join(", ")).join("; ") + "]";
+        }
+        function drawODE(p) {
+            const model = M.eulerExample(p.bend, p.steps), chart = plot(0, 1, -0.12, 2.1), map = chart.map;
+            const exact = t => [t, p.bend * Math.sin(Math.PI * t)];
+            line(linspace(0, p.time, 160).map(t => map(exact(t))), colors.teal, 4);
+            const k = Math.min(p.steps, Math.floor(p.time * p.steps));
+            const points = model.points.slice(0, k + 1);
+            if (k < p.steps) {
+                const u = p.time * p.steps - k;
+                points.push(model.points[k].map((x, i) => (1 - u) * x + u * model.points[k + 1][i]));
+            }
+            line(points.map(map), colors.orange, 3);
+            model.points.slice(0, k + 1).forEach(point => dot(map(point), colors.orange, 4));
+            dot(map(exact(p.time)), colors.teal, 6);
+            chart.done();
+            status.textContent = "Max. grid-point error: " + model.maxError.toFixed(5) +
+                "   ·   Bound bπ²/(2n): " + model.bound.toFixed(5) + "   ·   L = 0";
+        }
+        const renderers = { pl: drawPL, sinkhorn: drawSinkhorn, gaussian: drawGaussian, ode: drawODE };
+        function render() {
+            const p = params();
+            inputs.forEach(input => {
+                const name = input.dataset.param, value = Number(input.value);
+                figure.querySelector('[data-value="' + name + '"]').textContent =
+                    name === "angle" ? value + "°" : ["steps", "iteration"].includes(name) ? value : value.toFixed(2);
+            });
+            ctx.clearRect(0, 0, W, H);
+            renderers[kind](p);
+        }
+        function stop() {
+            running = false; cancelAnimationFrame(frame); frame = null; last = null; accumulator = 0;
+            play.textContent = "Play"; play.setAttribute("aria-pressed", "false");
+        }
+        // Keep continuous animation time separate from the quantized range values.
+        let animationValue = 0;
+        function tick(now) {
+            if (!running) return;
+            const dt = last === null ? 0 : Math.min(0.08, (now - last) / 1000);
+            last = now;
+            const p = params();
+            if (kind === "sinkhorn") {
+                accumulator += dt;
+                if (accumulator >= 0.45) {
+                    put("iteration", Math.min(24, p.iteration + 1)); accumulator = 0; render();
+                    if (p.iteration + 1 >= 24) { stop(); return; }
+                }
+            } else {
+                const key = kind === "gaussian" ? "weight" : "time";
+                const max = kind === "pl" ? 6 : 1, speed = kind === "pl" ? 1 : 0.16;
+                animationValue = Math.min(max, animationValue + dt * speed);
+                put(key, animationValue); render();
+                if (animationValue >= max) { stop(); return; }
+            }
+            frame = requestAnimationFrame(tick);
+        }
+        play.addEventListener("click", () => {
+            if (running) { stop(); return; }
+            const key = kind === "sinkhorn" ? "iteration" : kind === "gaussian" ? "weight" : "time";
+            const max = kind === "sinkhorn" ? 24 : kind === "pl" ? 6 : 1;
+            if (params()[key] >= max) put(key, 0);
+            animationValue = params()[key]; running = true; last = null;
+            play.textContent = "Pause"; play.setAttribute("aria-pressed", "true");
+            render(); frame = requestAnimationFrame(tick);
+        });
+        inputs.forEach(input => input.addEventListener("input", () => { stop(); render(); }));
+        figure.querySelector("[data-reset]").addEventListener("click", () => {
+            stop(); inputs.forEach(input => { input.value = input.defaultValue; }); render();
+        });
+        document.addEventListener("visibilitychange", () => { if (document.hidden) stop(); });
+        if ("IntersectionObserver" in window) {
+            new IntersectionObserver(entries => { if (!entries[0].isIntersecting) stop(); }).observe(figure);
+        }
+        function resize() {
+            const width = canvas.getBoundingClientRect().width, ratio = window.devicePixelRatio || 1;
+            canvas.width = Math.round(width * ratio); canvas.height = Math.round(width * H / W * ratio);
+            ctx.setTransform(canvas.width / W, 0, 0, canvas.height / H, 0, 0); render();
+        }
+        figure.classList.add("js-ready");
+        if ("ResizeObserver" in window) new ResizeObserver(resize).observe(canvas);
+        else window.addEventListener("resize", resize);
+        resize();
+        // No autoplay, including for readers who prefer reduced motion.
+    }
+}());

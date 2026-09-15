@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ page.lang | default: 'en' }}">
 
 {% include head.html %}
 
-<body>
+<body{% if page.blog %} class="blog-page"{% endif %}>
 
     {% include nav.html %}
 

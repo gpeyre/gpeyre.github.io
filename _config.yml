@@ -13,7 +13,19 @@ twitter_username: gabrielpeyre
 markdown: kramdown
 permalink: pretty
 paginate: 5
-exclude: ["node_modules"]
+exclude: ["node_modules", "blog/blog-todo.md", "blog/README.md", "tests"]
+
+defaults:
+  - scope:
+      path: "blog"
+      type: "posts"
+    values:
+      layout: blog-post
+      blog: true
+      author: Gabriel Peyré
+      category: blog
+      permalink: /blog/:year/:month/:day/:title/
+      excerpt_separator: "<!--more-->"
 
 name: Gabriel Peyré, recent works
 gems:

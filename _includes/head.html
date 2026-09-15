@@ -3,10 +3,22 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="{{ site.description }}">
+    <meta name="description" content="{{ page.description | default: site.description | escape }}">
 
     <!-- Loading mathjax -->
+    {% if page.blog %}
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            messageStyle: "none",
+            showMathMenu: true,
+            SVG: { linebreaks: { automatic: true, width: "container" } },
+            tex2jax: { processEscapes: true }
+        });
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+    {% else %}
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS_HTML"></script>
+    {% endif %}
 
 
     <title>{% if page.title %}{{ page.title }} - {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
@@ -21,6 +33,13 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ "/css/clean-blog.css" | prepend: site.baseurl }}">
+    {% if page.blog %}
+    <link rel="stylesheet" href="{{ '/css/blog.css' | prepend: site.baseurl }}">
+    {% if page.figure %}
+    <script defer src="{{ '/js/blog-math.js' | prepend: site.baseurl }}"></script>
+    <script defer src="{{ '/js/blog-figures.js' | prepend: site.baseurl }}"></script>
+    {% endif %}
+    {% endif %}
 
     <script type="text/javascript" src="{{ "/js/jquery.min.js" | prepend: site.baseurl }}"></script>
 

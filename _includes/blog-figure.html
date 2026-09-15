@@ -1,0 +1,51 @@
+<figure class="interactive-figure" data-figure="{{ include.kind }}" aria-labelledby="figure-{{ include.kind }}-title">
+{% case include.kind %}
+{% when 'pl' %}
+  <h3 id="figure-pl-title">Explore the banana valley</h3>
+  <canvas width="840" height="500" role="img" aria-label="Gradient-flow trajectories descend toward a parabolic arc of minimizers. Increasing the bend curves the valley."></canvas>
+  <div class="figure-controls">
+    <label for="pl-bend">Bend b <output for="pl-bend" data-value="bend">1.00</output><input id="pl-bend" data-param="bend" type="range" min="0" max="2" step="0.05" value="1"></label>
+    <label for="pl-time">Flow time <output for="pl-time" data-value="time">0.00</output><input id="pl-time" data-param="time" type="range" min="0" max="6" step="0.01" value="0"></label>
+    <button type="button" data-play aria-pressed="false">Play</button>
+    <button type="button" data-reset>Reset</button>
+  </div>
+  <p class="figure-legend">Teal curve: minimizers. Orange dots: evolving particles. Pale blue curves: positive energy levels.</p>
+  <figcaption>Change the bend, then play or scrub time to follow the gradient flow. The trajectories use fourth-order Runge–Kutta integration.</figcaption>
+{% when 'sinkhorn' %}
+  <h3 id="figure-sinkhorn-title">Two ways to contract a simplex</h3>
+  <canvas width="840" height="800" role="img" aria-label="Top: linear Markov mixing contracts probability vectors to a stationary point. Bottom: normalized Sinkhorn updates bend and contract positive scaling vectors toward a fixed ray."></canvas>
+  <div class="figure-controls">
+    <label for="sinkhorn-epsilon">OT regularization ε <output for="sinkhorn-epsilon" data-value="epsilon">0.50</output><input id="sinkhorn-epsilon" data-param="epsilon" type="range" min="0.15" max="1.5" step="0.05" value="0.5"></label>
+    <label for="sinkhorn-iteration">Iterations k <output for="sinkhorn-iteration" data-value="iteration">0</output><input id="sinkhorn-iteration" data-param="iteration" type="range" min="0" max="24" step="1" value="0"></label>
+    <button type="button" data-play aria-pressed="false">Play</button>
+    <button type="button" data-reset>Reset</button>
+  </div>
+  <p class="figure-legend">Red to blue: successive images of an interior triangle. Dark outlined dot: the limiting fixed point. The Markov matrix stays fixed as ε changes.</p>
+  <figcaption>Scrub the iteration count to compare linear and nonlinear updates. The lower triangle parametrizes scaling vectors, not transport plans.</figcaption>
+{% when 'gaussian' %}
+  <h3 id="figure-gaussian-title">Interpolate two Gaussian distributions</h3>
+  <canvas width="840" height="530" role="img" aria-label="Two input Gaussian ellipses and their reverse-KL barycenter. Changing the weight moves and reshapes the barycenter by averaging precision matrices."></canvas>
+  <div class="figure-controls">
+    <label for="gaussian-weight">Weight λ of Gaussian 2 <output for="gaussian-weight" data-value="weight">0.50</output><input id="gaussian-weight" data-param="weight" type="range" min="0" max="1" step="0.01" value="0.5"></label>
+    <label for="gaussian-angle">Orientation of Gaussian 2 <output for="gaussian-angle" data-value="angle">110°</output><input id="gaussian-angle" data-param="angle" type="range" min="0" max="180" step="1" value="110"></label>
+    <button type="button" data-play aria-pressed="false">Play</button>
+    <button type="button" data-reset>Reset</button>
+  </div>
+  <p class="figure-legend">Blue: Gaussian 1. Orange: Gaussian 2. Solid teal: KL barycenter. Dotted teal: path of its mean. Gray dashed: straight segment between input means.</p>
+  <figcaption>Ellipses are contours at Mahalanobis radius 2, not density-height contours. The weights are (1 − λ, λ).</figcaption>
+{% when 'ode' %}
+  <h3 id="figure-ode-title">Bending a flow, measuring its error</h3>
+  <canvas width="840" height="470" role="img" aria-label="Compare the exact sinusoidal flow with its Euler polygon. Reducing the bending or increasing the step count reduces the discretization error."></canvas>
+  <div class="figure-controls">
+    <label for="ode-bend">Bend b <output for="ode-bend" data-value="bend">0.70</output><input id="ode-bend" data-param="bend" type="range" min="0" max="1.2" step="0.05" value="0.7"></label>
+    <label for="ode-steps">Euler steps n <output for="ode-steps" data-value="steps">8</output><input id="ode-steps" data-param="steps" type="range" min="2" max="80" step="1" value="8"></label>
+    <label for="ode-time">Time t <output for="ode-time" data-value="time">1.00</output><input id="ode-time" data-param="time" type="range" min="0" max="1" step="0.01" value="1"></label>
+    <button type="button" data-play aria-pressed="false">Play</button>
+    <button type="button" data-reset>Reset</button>
+  </div>
+  <p class="figure-legend">Teal curve: exact solution. Orange polygon and dots: explicit Euler. The error and bound below are evaluated at the grid points over the full interval.</p>
+  <figcaption>The velocity is v(t, x) = (1, bπ cos(πt)). Try b = 0: the path has constant velocity and Euler becomes exact.</figcaption>
+{% endcase %}
+  <p class="figure-status" data-status aria-live="off"></p>
+  <p class="figure-fallback">Enable JavaScript to use this figure’s animation and sliders. The equations and explanation remain available in the article.</p>
+</figure>

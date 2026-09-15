@@ -1,0 +1,35 @@
+---
+layout: default
+title: Blog
+description: Notes on mathematics, optimal transport, machine learning, and scientific life, by Gabriel Peyré.
+blog: true
+permalink: /blog/
+---
+<a class="blog-skip" href="#posts">Skip to posts</a>
+<header class="blog-header blog-home-header">
+    <div class="blog-archive-wrap">
+        <p class="blog-eyebrow">Gabriel Peyré <span aria-hidden="true">/</span> Notes &amp; ideas</p>
+        <h1>Blog</h1>
+        <p class="blog-subtitle">Mathematics in motion.<br>Notes, proofs, and interactive explorations.</p>
+    </div>
+</header>
+<main id="posts" class="blog-archive-wrap">
+    {% assign blog_posts = site.categories.blog | sort: 'date' | reverse %}
+    <div class="blog-archive-heading"><h2>Recent posts</h2><span>{{ blog_posts.size }} posts &middot; Newest first</span></div>
+    {% for post in blog_posts %}
+    <article class="blog-preview"{% if post.lang %} lang="{{ post.lang }}"{% endif %}>
+        <div class="blog-preview-meta">
+            <time datetime="{{ post.date | date: '%Y-%m-%d' }}">{{ post.date | date: '%-d %b %Y' }}</time>
+            <span>{{ post.topic | escape }}</span>
+            {% if post.figure %}<span class="blog-interactive-label">Interactive</span>{% endif %}
+        </div>
+        <div class="blog-preview-body">
+            <h2><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title | escape }}</a></h2>
+            <p class="sr-only">{{ post.description | escape }}</p>
+            <div class="blog-preview-excerpt blog-prose" aria-hidden="true" inert>{{ post.excerpt }}</div>
+            <a class="blog-read-link" href="{{ post.url | prepend: site.baseurl }}" aria-label="Read {{ post.title | escape }}">{% if post.lang == 'fr' %}Lire l’article{% else %}Read the post{% endif %} <span aria-hidden="true">&rarr;</span></a>
+        </div>
+    </article>
+    {% endfor %}
+    <p class="blog-colophon">Gabriel Peyré &middot; Mathematics, machine learning, and scientific life.</p>
+</main>

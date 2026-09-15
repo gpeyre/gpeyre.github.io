@@ -1,0 +1,32 @@
+---
+layout: default
+---
+<a class="blog-skip" href="#article">Skip to article</a>
+<header class="blog-header">
+    <div class="blog-wrap">
+        <a class="blog-back" href="{{ '/blog/' | prepend: site.baseurl }}">&larr; All posts</a>
+        <p class="blog-eyebrow">{{ page.topic | escape }} <span aria-hidden="true">/</span> <time datetime="{{ page.date | date: '%Y-%m-%d' }}">{{ page.date | date: '%-d %B %Y' }}</time></p>
+        <h1>{{ page.title | escape }}</h1>
+        {% if page.subtitle %}<p class="blog-subtitle">{{ page.subtitle | escape }}</p>{% endif %}
+        <p class="blog-byline">{{ page.author }}</p>
+    </div>
+</header>
+<main id="article" class="blog-wrap">
+    <article class="blog-prose">
+        {{ content }}
+    </article>
+    {% assign blog_posts = site.categories.blog | sort: 'date' | reverse %}
+    {% for post in blog_posts %}
+        {% if post.id == page.id %}
+            {% assign older_index = forloop.index0 | plus: 1 %}
+            {% assign newer_index = forloop.index0 | minus: 1 %}
+            {% assign older_post = blog_posts[older_index] %}
+            {% if newer_index >= 0 %}{% assign newer_post = blog_posts[newer_index] %}{% endif %}
+        {% endif %}
+    {% endfor %}
+    <nav class="blog-pagination" aria-label="More blog posts">
+        <div>{% if older_post %}<a href="{{ older_post.url | prepend: site.baseurl }}"><small>&larr; Older post</small>{{ older_post.title | escape }}</a>{% endif %}</div>
+        <div>{% if newer_post %}<a href="{{ newer_post.url | prepend: site.baseurl }}"><small>Newer post &rarr;</small>{{ newer_post.title | escape }}</a>{% endif %}</div>
+    </nav>
+    <p class="blog-colophon"><a href="{{ '/blog/' | prepend: site.baseurl }}">Back to the blog</a> &middot; Gabriel Peyré</p>
+</main>
