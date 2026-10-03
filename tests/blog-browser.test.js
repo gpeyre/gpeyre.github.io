@@ -13,11 +13,12 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
         const errors = [];
         page.on("pageerror", error => errors.push(error.message));
         await page.goto(base + "/blog/", { waitUntil: "networkidle" });
-        assert.equal(await page.locator(".blog-preview").count(), 17);
+        assert.equal(await page.locator(".blog-preview").count(), 18);
         const dates = await page.locator(".blog-preview time").evaluateAll(nodes => nodes.map(n => n.dateTime));
         assert.deepEqual(dates, dates.slice().sort().reverse());
         const paths = await page.locator(".blog-preview h2 a").evaluateAll(nodes => nodes.map(n => new URL(n.href).pathname));
-        assert.equal(new Set(paths).size, 17);
+        assert.equal(new Set(paths).size, 18);
+        assert.ok(paths.includes("/blog/2026/10/03/inverse-optimisation-gap-loss/"));
         assert.ok(paths.includes("/blog/2026/06/15/diffusion-versus-optimal-transport/"));
         assert.ok(paths.includes("/blog/2026/09/15/gaussian-preserving-wasserstein-flows/"));
         assert.ok(paths.includes("/blog/2026/04/06/muon-spectral-wasserstein/"));
@@ -120,6 +121,16 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
                 await page.screenshot({ path: screenshotDir + "/blog-gaussian-flows-desktop.png" });
             }
             const isDiffusion = path.includes("diffusion-versus-optimal-transport");
+            const isInverse = path.includes("inverse-optimisation-gap-loss");
+            if (isInverse) {
+                assert.equal(await page.locator(".blog-eyebrow time").getAttribute("datetime"), "2026-10-03");
+                for (const source of ["https://doi.org/10.1287/opre.2022.0382", "https://arxiv.org/abs/2505.07124",
+                    "https://arxiv.org/abs/2310.05461", "https://arxiv.org/abs/2604.22670"]) {
+                    assert.equal(await page.locator("article a[href='" + source + "']").count(), 1);
+                }
+                assert.ok(await page.locator("article").textContent().then(text => text.includes("piecewise linear")));
+                assert.equal(await page.locator("article img").count(), 0);
+            }
             if (isDiffusion) {
                 assert.equal(await page.locator(".blog-eyebrow time").getAttribute("datetime"), "2026-06-15");
                 for (const source of ["https://arxiv.org/abs/2011.13456", "https://doi.org/10.1002/cpa.3160440402"]) {
@@ -201,77 +212,123 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
                     await figure.locator("[data-reset]").click();
                     assert.equal(await figure.locator("[data-highlight]").getAttribute("aria-pressed"), "false");
                 }
-                const scrub = page.locator('[data-param="' + (kind === "sinkhorn" ? "iteration" : kind === "gaussian" ? "weight" : "time") + '"]');
-                if (kind === "sinkhorn") {
-                    assert.equal(await figure.locator('[data-param="epsilon"]').inputValue(), "0.22");
-                    assert.equal(await figure.locator('[data-param="duration"]').inputValue(), "1.5");
-                    assert.ok(await figure.locator('[data-step="-1"]').isDisabled());
-                    await figure.locator('[data-step="1"]').click();
-                    assert.equal(await scrub.inputValue(), "1");
-                    await figure.locator('[data-step="-1"]').click();
-                    assert.equal(await scrub.inputValue(), "0");
-                }
-                await page.locator("[data-play]").click();
-                await page.waitForTimeout(1100);
-                if (kind === "sinkhorn") {
-                    assert.equal(await scrub.inputValue(), "0", "The first iterate must be held for 1.5 seconds");
-                    await page.waitForTimeout(700);
-                }
-                assert.ok(Number(await scrub.inputValue()) > 0, "Animation did not advance: " + kind);
-                if (kind === "gaussian-flow") {
-                    assert.ok(Number(await scrub.inputValue()) < 1, "The early Gaussian transient should remain visible");
-                }
-                if (kind === "diffusion") {
-                    assert.ok(Number(await scrub.inputValue()) < 0.2, "Diffusion playback should take ten seconds");
-                }
-                await page.locator("[data-play]").click();
-                assert.equal(await page.locator("[data-play]").getAttribute("aria-pressed"), "false");
-                if (kind === "sinkhorn") {
-                    assert.equal(await scrub.inputValue(), "1", "Slow playback should advance exactly once");
-                    await figure.locator('[data-param="duration"]').fill("0.5");
+                if (kind === "inverse") {
+                    const pointSlider = figure.locator('[data-param="points"]'), costSlider = figure.locator('[data-param="theta"]');
+                    const ready = async (n, t, seed = 17) => page.waitForFunction(({ n, t, seed }) => {
+                        const f = document.querySelector('[data-figure="inverse"]');
+                        return +f.dataset.points === n && +f.dataset.theta === t && +f.dataset.seed === seed && f.dataset.curveReady === "true";
+                    }, { n, t, seed });
+                    const values = () => figure.evaluate(n => ({ n: +n.dataset.points, gap: +n.dataset.gap,
+                        observed: +n.dataset.observedCost, optimal: +n.dataset.optimalCost, shown: +n.dataset.pairingsShown }));
+                    await ready(100, 0.4);
+                    await page.waitForFunction(() => +document.querySelector('[data-figure="inverse"]').dataset.curvesReady === 4);
+                    const initial = await values();
+                    assert.ok(initial.gap > 0 && initial.optimal < initial.observed);
+                    assert.ok(Math.abs(initial.observed - initial.optimal - initial.gap) < 1e-9);
+                    assert.equal(initial.shown, 24);
+                    await figure.screenshot({ path: screenshotDir + "/blog-inverse-default.png", style: ".navbar { visibility: hidden; }" });
+                    const initialPairs = await figure.locator("canvas").first().evaluate(n => n.toDataURL());
+                    await costSlider.fill("1"); await ready(100, 1);
+                    assert.ok((await values()).gap < 1e-9, "The generating cost must give zero gap");
+                    assert.notEqual(await figure.locator("canvas").first().evaluate(n => n.toDataURL()), initialPairs);
+                    await costSlider.fill("2.6"); await ready(100, 2.6);
+                    assert.ok((await values()).gap > 0);
+                    const pairing = await figure.locator("canvas").first().evaluate(n => n.toDataURL());
+                    await figure.locator("[data-observed]").click();
+                    assert.equal(await figure.locator("[data-observed]").getAttribute("aria-pressed"), "true");
+                    await page.waitForFunction(image => document.querySelector('[data-panel="marginals"]').toDataURL() !== image, pairing);
+                    const loss = await figure.locator("canvas").last().evaluate(n => n.toDataURL());
+                    await figure.locator("[data-compare]").click();
+                    assert.equal(await figure.locator("[data-compare]").getAttribute("aria-pressed"), "false");
+                    await page.waitForFunction(image => document.querySelector('[data-panel="loss"]').toDataURL() !== image, loss);
+                    await pointSlider.fill("10"); await ready(10, 2.6);
+                    assert.equal((await values()).shown, 10);
+                    assert.ok((await values()).gap < 1e-9, "The small default sample has a flat loss throughout the slice");
+                    await pointSlider.fill("200"); await ready(200, 2.6);
+                    assert.equal((await values()).shown, 24);
+                    assert.ok((await values()).gap > 0);
+                    await figure.screenshot({ path: screenshotDir + "/blog-inverse-200.png", style: ".navbar { visibility: hidden; }" });
+                    // A newer slider request must not be overwritten by an older worker response.
+                    await pointSlider.fill("40"); await pointSlider.fill("170"); await pointSlider.fill("30");
+                    await ready(30, 2.6);
+                    await figure.locator("[data-resample]").click(); await ready(30, 2.6, 18);
+                    await figure.locator("[data-reset]").click(); await ready(100, 0.4);
+                    assert.equal(await figure.locator("[data-compare]").getAttribute("aria-pressed"), "true");
+                    assert.equal(await figure.locator("[data-observed]").getAttribute("aria-pressed"), "false");
+                    await page.waitForFunction(() => +document.querySelector('[data-figure="inverse"]').dataset.curvesReady === 4);
+                } else {
+                    const scrub = page.locator('[data-param="' + (kind === "sinkhorn" ? "iteration" : kind === "gaussian" ? "weight" : "time") + '"]');
+                    if (kind === "sinkhorn") {
+                        assert.equal(await figure.locator('[data-param="epsilon"]').inputValue(), "0.22");
+                        assert.equal(await figure.locator('[data-param="duration"]').inputValue(), "1.5");
+                        assert.ok(await figure.locator('[data-step="-1"]').isDisabled());
+                        await figure.locator('[data-step="1"]').click();
+                        assert.equal(await scrub.inputValue(), "1");
+                        await figure.locator('[data-step="-1"]').click();
+                        assert.equal(await scrub.inputValue(), "0");
+                    }
                     await page.locator("[data-play]").click();
-                    await page.waitForTimeout(700);
-                    assert.equal(await scrub.inputValue(), "2", "The playback-speed control should change the delay");
-                    await figure.locator('[data-step="-1"]').click();
-                    assert.equal(await scrub.inputValue(), "1");
+                    await page.waitForTimeout(1100);
+                    if (kind === "sinkhorn") {
+                        assert.equal(await scrub.inputValue(), "0", "The first iterate must be held for 1.5 seconds");
+                        await page.waitForTimeout(700);
+                    }
+                    assert.ok(Number(await scrub.inputValue()) > 0, "Animation did not advance: " + kind);
+                    if (kind === "gaussian-flow") {
+                        assert.ok(Number(await scrub.inputValue()) < 1, "The early Gaussian transient should remain visible");
+                    }
+                    if (kind === "diffusion") {
+                        assert.ok(Number(await scrub.inputValue()) < 0.2, "Diffusion playback should take ten seconds");
+                    }
+                    await page.locator("[data-play]").click();
                     assert.equal(await page.locator("[data-play]").getAttribute("aria-pressed"), "false");
-                }
-                await page.locator("[data-reset]").click();
-                if (kind === "pl") await scrub.fill("2");
-                if (kind === "gaussian-flow") {
-                    for (const t of ["0", "0.5", "2", "20"]) {
-                        await scrub.fill(t);
-                        await figure.screenshot({ path: screenshotDir + "/blog-gaussian-kl-time-" + t + ".png",
-                            style: ".navbar { visibility: hidden; }" });
+                    if (kind === "sinkhorn") {
+                        assert.equal(await scrub.inputValue(), "1", "Slow playback should advance exactly once");
+                        await figure.locator('[data-param="duration"]').fill("0.5");
+                        await page.locator("[data-play]").click();
+                        await page.waitForTimeout(700);
+                        assert.equal(await scrub.inputValue(), "2", "The playback-speed control should change the delay");
+                        await figure.locator('[data-step="-1"]').click();
+                        assert.equal(await scrub.inputValue(), "1");
+                        assert.equal(await page.locator("[data-play]").getAttribute("aria-pressed"), "false");
                     }
-                    assert.ok(Number(await figure.getAttribute("data-kl")) < 1e-4, "The default flow should approach its target");
-                    await scrub.fill("19.9");
-                    await figure.locator("[data-play]").click();
-                    await page.waitForTimeout(350);
-                    assert.equal(await scrub.inputValue(), "20");
-                    assert.equal(await figure.locator("[data-play]").getAttribute("aria-pressed"), "false");
-                    await figure.locator("[data-reset]").click();
-                    await scrub.fill("0.5");
-                }
-                if (kind === "sinkhorn") {
-                    for (const k of [0, 1, 4, 8, 24]) {
-                        await scrub.fill(String(k));
-                        await figure.screenshot({ path: screenshotDir + "/blog-sinkhorn-step-" + k + ".png", style: ".navbar { visibility: hidden; }" });
+                    await page.locator("[data-reset]").click();
+                    if (kind === "pl") await scrub.fill("2");
+                    if (kind === "gaussian-flow") {
+                        for (const t of ["0", "0.5", "2", "20"]) {
+                            await scrub.fill(t);
+                            await figure.screenshot({ path: screenshotDir + "/blog-gaussian-kl-time-" + t + ".png",
+                                style: ".navbar { visibility: hidden; }" });
+                        }
+                        assert.ok(Number(await figure.getAttribute("data-kl")) < 1e-4, "The default flow should approach its target");
+                        await scrub.fill("19.9");
+                        await figure.locator("[data-play]").click();
+                        await page.waitForTimeout(350);
+                        assert.equal(await scrub.inputValue(), "20");
+                        assert.equal(await figure.locator("[data-play]").getAttribute("aria-pressed"), "false");
+                        await figure.locator("[data-reset]").click();
+                        await scrub.fill("0.5");
                     }
-                    await scrub.fill("8");
-                }
-                if (kind === "diffusion") {
-                    for (const t of ["0.5", "1"]) {
-                        await scrub.fill(t);
-                        await figure.screenshot({ path: screenshotDir + "/blog-diffusion-progress-" + t + ".png",
-                            style: ".navbar { visibility: hidden; }" });
+                    if (kind === "sinkhorn") {
+                        for (const k of [0, 1, 4, 8, 24]) {
+                            await scrub.fill(String(k));
+                            await figure.screenshot({ path: screenshotDir + "/blog-sinkhorn-step-" + k + ".png", style: ".navbar { visibility: hidden; }" });
+                        }
+                        await scrub.fill("8");
                     }
-                    await scrub.fill("0.98");
-                    await figure.locator("[data-play]").click();
-                    await page.waitForTimeout(550);
-                    assert.equal(await scrub.inputValue(), "1");
-                    assert.equal(await figure.locator("[data-play]").getAttribute("aria-pressed"), "false");
-                    await figure.locator("[data-reset]").click();
+                    if (kind === "diffusion") {
+                        for (const t of ["0.5", "1"]) {
+                            await scrub.fill(t);
+                            await figure.screenshot({ path: screenshotDir + "/blog-diffusion-progress-" + t + ".png",
+                                style: ".navbar { visibility: hidden; }" });
+                        }
+                        await scrub.fill("0.98");
+                        await figure.locator("[data-play]").click();
+                        await page.waitForTimeout(550);
+                        assert.equal(await scrub.inputValue(), "1");
+                        assert.equal(await figure.locator("[data-play]").getAttribute("aria-pressed"), "false");
+                        await figure.locator("[data-reset]").click();
+                    }
                 }
                 await figure.screenshot({ path: screenshotDir + "/blog-figure-" + kind + ".png", style: ".navbar { visibility: hidden; }" });
             }
@@ -280,7 +337,30 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
             await page.setViewportSize({ width: 390, height: 844 });
             await page.evaluate(() => new Promise(resolve => MathJax.Hub.Queue(["Rerender", MathJax.Hub], resolve)));
             assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false, "Mobile overflow: " + path);
+            if (isInverse) {
+                await page.evaluate(() => document.activeElement.blur());
+                const clipped = await page.locator(".blog-prose .MathJax_SVG_Display").evaluateAll(nodes =>
+                    nodes.flatMap((n, i) => n.scrollWidth > n.clientWidth + 2 ? [i] : []));
+                assert.deepEqual(clipped, [], "The inverse optimisation equations must fit the mobile column");
+            }
             if (hasFigure) await page.locator("[data-figure]").screenshot({ path: screenshotDir + "/blog-figure-" + await page.locator("[data-figure]").getAttribute("data-figure") + "-mobile.png" });
+            if (isInverse) {
+                const positions = await page.locator(".inverse-panels canvas").evaluateAll(nodes => nodes.map(n => {
+                    const box = n.getBoundingClientRect(); return { x: box.x, y: box.y, width: box.width, height: box.height };
+                }));
+                assert.ok(Math.abs(positions[1].x - positions[0].x) < 1 && positions[1].y > positions[0].y);
+                assert.ok(positions.every(p => p.width >= 300 && p.height >= 290), "The mobile figure must stay readable");
+                await page.setViewportSize({ width: 320, height: 844 });
+                await page.evaluate(() => new Promise(resolve => MathJax.Hub.Queue(["Rerender", MathJax.Hub], resolve)));
+                assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false);
+                await page.locator('[data-param="points"]').fill("40");
+                await page.waitForFunction(() => {
+                    const f = document.querySelector('[data-figure="inverse"]');
+                    return +f.dataset.points === 40 && f.dataset.curveReady === "true";
+                });
+                await page.locator('[data-figure="inverse"]').screenshot({ path: screenshotDir + "/blog-inverse-320.png", style: ".navbar { visibility: hidden; }" });
+                await page.setViewportSize({ width: 390, height: 844 });
+            }
             if (isDiffusion) {
                 const positions = await page.locator(".diffusion-panels canvas").evaluateAll(nodes => nodes.map(n => {
                     const box = n.getBoundingClientRect(); return { x: box.x, y: box.y, width: box.width };
@@ -369,8 +449,12 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
         await fallback.goto(base + "/blog/2026/06/15/diffusion-versus-optimal-transport/");
         assert.ok(await fallback.locator(".figure-fallback img").isVisible());
         assert.ok(await fallback.locator(".figure-controls").isHidden());
+        await fallback.goto(base + "/blog/2026/10/03/inverse-optimisation-gap-loss/");
+        assert.ok(await fallback.locator(".figure-fallback").isVisible());
+        assert.ok(await fallback.locator(".figure-controls").isHidden());
+        assert.ok((await fallback.locator("article").textContent()).includes("A supremum of affine functions is convex"));
         await noJS.close();
-        console.log("Blog browser QA passed: all 17 posts, maths, images, figures, navigation, mobile widths, and diffusion fallback.");
+        console.log("Blog browser QA passed: all 18 posts, maths, images, figures, navigation, mobile widths, and no-JavaScript fallbacks.");
     } finally {
         await browser.close();
     }

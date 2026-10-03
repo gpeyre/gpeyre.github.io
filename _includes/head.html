@@ -39,6 +39,8 @@
     <script defer src="{{ '/js/blog-math.js' | prepend: site.baseurl }}"></script>
     {% if page.figure == 'diffusion' %}
     <script defer src="{{ '/js/blog-diffusion.js' | prepend: site.baseurl }}"></script>
+    {% elsif page.figure == 'inverse' %}
+    <script defer src="{{ '/js/blog-inverse.js' | prepend: site.baseurl }}"></script>
     {% else %}
     <script defer src="{{ '/js/blog-figures.js' | prepend: site.baseurl }}"></script>
     {% endif %}

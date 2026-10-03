@@ -31,7 +31,7 @@ images. The Duhamel portrait is public domain; its source is credited in the pos
 
 ## Interactive figures
 
-Add figure: pl, sinkhorn, gaussian, gaussian-flow, ode, or diffusion to the front matter, then use:
+Add figure: pl, sinkhorn, gaussian, gaussian-flow, ode, diffusion, or inverse to the front matter, then use:
 
 ~~~liquid
 {% include blog-figure.html kind="gaussian" %}
@@ -44,8 +44,15 @@ form, with target orientation and ellipse-axis ratio controls.
 The two-panel diffusion/OT comparison has a dedicated renderer in
 js/blog-diffusion.js. Its analytic mixture score and exact empirical assignment
 solver are also in js/blog-math.js. The reference image is its no-JavaScript fallback.
+The inverse figure uses js/blog-inverse.js and js/blog-inverse-worker.js to show
+paired empirical marginals and the unregularized OT gap along an affine cost
+slice. A point-count slider uses nested seeded IID samples; a cost slider changes
+the exact assignment. The worker traces the piecewise-linear assignment envelope
+without entropy or spline smoothing, and the renderer subsamples only the drawn
+pairing segments, never the numerical loss.
 Figures run locally in the browser without Python, a backend, or a third-party
-charting library. They start paused and stop when the tab or figure is hidden.
+charting library. Animated figures start paused and stop when the tab or figure
+is hidden; the inverse figure is controlled directly by its sliders.
 
 ## Verify
 

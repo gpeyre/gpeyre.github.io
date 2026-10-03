@@ -226,13 +226,14 @@ for (let k = 0; k < 2; k++) {
     close(M.sum(cloud.map(x => x[k] ** 2)) / cloud.length, 1, 0.025);
 }
 // Brute force small assignments, including coincident target atoms.
-function exhaustiveCost(source, target) {
+function exhaustiveCost(source, target, weights = [1, 1]) {
     let minimum = Infinity;
     function visit(i, used, cost) {
         if (i === source.length) { minimum = Math.min(minimum, cost); return; }
         for (let j = 0; j < target.length; j++) if (!used.has(j)) {
             used.add(j);
-            visit(i + 1, used, cost + (source[i][0] - target[j][0]) ** 2 + (source[i][1] - target[j][1]) ** 2);
+            visit(i + 1, used, cost + weights[0] * (source[i][0] - target[j][0]) ** 2 +
+                weights[1] * (source[i][1] - target[j][1]) ** 2);
             used.delete(j);
         }
     }
@@ -244,6 +245,17 @@ for (const n of [1, 3, 6]) {
     close(M.optimalAssignment(x, y).cost, exhaustiveCost(x, y));
     const atoms = x.map((_, i) => mixture.means[i % 3]);
     close(M.optimalAssignment(x, atoms).cost, exhaustiveCost(x, atoms));
+    for (const theta of [0.2, 1, 2.6]) {
+        const weighted = M.optimalAssignment(x, y, [theta, 1]);
+        close(weighted.cost, exhaustiveCost(x, y, [theta, 1]));
+        close((M.sum(weighted.dualSource) + M.sum(weighted.dualTarget)) / n, weighted.cost);
+        x.forEach((a, i) => y.forEach((b, j) => {
+            const c = theta * (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2;
+            const dual = weighted.dualSource[i] + weighted.dualTarget[j];
+            assert.ok(dual <= c + 1e-9);
+            if (weighted.permutation[i] === j) close(c, dual);
+        }));
+    }
 }
 // The same endpoint set is used in both panels. Certify assignment optimality
 // by dual feasibility and complementary slackness, not just a lower cost.
@@ -276,4 +288,44 @@ for (const sigma of [0, 0.02, 0.16, 0.6]) {
         assert.ok(bow > 0.2, "The integrated diffusion trajectories should be visibly curved");
     }
 }
-console.log("Blog mathematics: existing figures, exact Gaussian KL flow, analytic diffusion flow, and certified optimal assignments passed.");
+// The inverse experiment uses paired IID samples with stable prefixes, and
+// its entire parametric assignment envelope must agree with direct OT solves.
+const inverseSample = M.inverseOTSample(200);
+assert.deepEqual(M.inverseOTSample(30).source, inverseSample.source.slice(0, 30));
+assert.deepEqual(M.inverseOTSample(30).target, inverseSample.target.slice(0, 30));
+assert.notDeepEqual(M.inverseOTSample(30, 18).source, inverseSample.source.slice(0, 30));
+assert.throws(() => M.optimalAssignment([[0, 0]], [[1, 1]], [0, 1]), RangeError);
+assert.throws(() => M.inverseOTGap(inverseSample, NaN), RangeError);
+function valueOnCurve(curve, theta) {
+    const index = curve.points.findIndex(p => p.theta >= theta);
+    const a = curve.points[Math.max(0, index - 1)], b = curve.points[index];
+    return a.theta === b.theta ? a.gap : a.gap + (b.gap - a.gap) * (theta - a.theta) / (b.theta - a.theta);
+}
+for (const seed of [17, 18]) for (const n of [10, 30, 100, 200]) {
+    const sample = M.inverseOTSample(n, seed), curve = M.inverseOTCurve(sample);
+    close(M.inverseOTGap(sample, 1).gap, 0, 1e-10);
+    close(valueOnCurve(curve, 1), 0, 1e-10);
+    assert.ok(curve.zeroInterval[0] <= 1 && curve.zeroInterval[1] >= 1);
+    let previousSlope = -Infinity;
+    curve.points.forEach((p, i) => {
+        assert.ok(Number.isFinite(p.theta) && Number.isFinite(p.gap) && p.gap >= 0);
+        if (!i) return;
+        const a = curve.points[i - 1], slope = (p.gap - a.gap) / (p.theta - a.theta);
+        assert.ok(p.theta > a.theta);
+        assert.ok(slope >= previousSlope - 1e-7, "The empirical gap must be convex");
+        previousSlope = slope;
+        // Probe every affine segment, independently of the envelope tracer.
+        const middle = (a.theta + p.theta) / 2, gap = M.inverseOTGap(sample, middle);
+        close(valueOnCurve(curve, middle), gap.gap, 1e-9);
+        close(gap.observedCost - gap.optimalCost, gap.gap, 1e-9);
+        close(gap.slope * middle + gap.intercept, gap.gap, 1e-9);
+    });
+    for (const theta of [0.2, 0.37, 0.88, 1.21, 2.04, 2.6]) {
+        close(valueOnCurve(curve, theta), M.inverseOTGap(sample, theta).gap, 1e-9);
+    }
+    if (seed === 17 && n === 200) {
+        assert.ok(curve.points.length > 40, "The default example should show many genuine assignment changes");
+        assert.ok(curve.zeroInterval[1] - curve.zeroInterval[0] < 1);
+    }
+}
+console.log("Blog mathematics: existing figures, Gaussian and diffusion flows, certified assignments, and convex inverse OT envelopes passed.");

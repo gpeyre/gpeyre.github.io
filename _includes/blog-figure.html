@@ -87,10 +87,36 @@
   </div>
   <p class="figure-legend diffusion-legend"><span><i class="mode-a" aria-hidden="true"></i>A · blue</span><span><i class="mode-b" aria-hidden="true"></i>B · cyan</span><span><i class="mode-c" aria-hidden="true"></i>C · brown</span></p>
   <figcaption>Colors follow the destination, not the starting particle. Pale lines show the complete routes; dots show the current positions. Black dots mark the three means. Set σ = 0 for the three-Dirac limit, or highlight particles whose destination mode changes between the maps. Playback takes 10 seconds.</figcaption>
+{% when 'inverse' %}
+  <h3 id="figure-inverse-title">Learn a transport cost from paired observations</h3>
+  <div class="inverse-panels">
+    <div>
+      <h4>Marginals and optimal pairing <span>Same points, changing cost</span></h4>
+      <canvas data-panel="marginals" width="600" height="510" role="img" aria-label="Blue source circles and orange target squares, with a subsample of the optimal transport pairing in teal. The point-count slider changes both marginal clouds."></canvas>
+    </div>
+    <div>
+      <h4>Gap loss on a cost slice <span>Cθ = θ C₁ + C₀ · true θ = 1</span></h4>
+      <canvas data-panel="loss" width="600" height="510" role="img" aria-label="Convex piecewise-linear inverse optimal transport loss as the horizontal cost weight varies. The active sample size is teal; a marker follows the cost slider. A dashed line marks the true parameter one."></canvas>
+    </div>
+  </div>
+  <div class="figure-controls">
+    <label for="inverse-points">Points in each marginal n <output for="inverse-points" data-value="points">100</output><input id="inverse-points" data-param="points" type="range" min="10" max="200" step="10" value="100"></label>
+    <label for="inverse-theta">Horizontal cost weight θ <output for="inverse-theta" data-value="theta">0.40</output><input id="inverse-theta" data-param="theta" type="range" min="0.2" max="2.6" step="0.01" value="0.4"></label>
+    <div class="figure-actions" role="group" aria-label="Inverse optimal transport controls">
+      <button type="button" data-compare aria-pressed="true">Compare sample sizes</button>
+      <button type="button" data-observed aria-pressed="false">Observed pairs</button>
+      <button type="button" data-resample>New sample</button>
+      <button type="button" data-reset>Reset</button>
+    </div>
+  </div>
+  <p class="figure-legend">Blue circles: source αₙ. Orange squares: target βₙ. Teal lines: optimal pairing for the current θ. Gray dashed lines, when enabled: observed pairs. The loss panel compares n = 10, 30, 100, 200 using nested samples; teal is the active n.</p>
+  <figcaption>All n pairs are used in the exact, unregularized assignment and mean gap loss; at most 24 segments are displayed. The loss is piecewise linear, with a zero-loss interval marked along the bottom. Neither entropy nor spline smoothing is used.</figcaption>
 {% endcase %}
   <p class="figure-status" data-status aria-live="off"></p>
 {% if include.kind == 'diffusion' %}
   <div class="figure-fallback"><img src="{{ '/blog/imgs/diffusion-map.webp' | prepend: site.baseurl }}" width="936" height="697" alt="Reference sketch: blue, cyan, and brown curved diffusion trajectories connect a central cloud to three black target points."><p>Reference sketch. Enable JavaScript for the interactive diffusion and optimal-transport comparison.</p></div>
+{% elsif include.kind == 'inverse' %}
+  <p class="figure-fallback">Enable JavaScript to explore the marginal points, OT pairings, and gap loss with the sliders. The definitions and convexity proof remain available below.</p>
 {% else %}
   <p class="figure-fallback">Enable JavaScript to use this figure’s animation and sliders. The equations and explanation remain available in the article.</p>
 {% endif %}

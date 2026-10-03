@@ -206,10 +206,14 @@
             return path;
         });
     }
-    function optimalAssignment(source, target) {
+    function optimalAssignment(source, target, weights = [1, 1]) {
         const n = source.length;
         if (!n || target.length !== n) throw new RangeError("Matching needs equal, nonempty point clouds");
-        const costs = source.map(x => Float64Array.from(target, y => (x[0] - y[0]) ** 2 + (x[1] - y[1]) ** 2));
+        if (weights.length !== 2 || weights.some(w => !Number.isFinite(w) || w <= 0)) {
+            throw new RangeError("Matching weights must be two positive, finite numbers");
+        }
+        const costs = source.map(x => Float64Array.from(target, y =>
+            weights[0] * (x[0] - y[0]) ** 2 + weights[1] * (x[1] - y[1]) ** 2));
         // Hungarian primal-dual algorithm: unregularized one-to-one matching.
         const u = new Float64Array(n + 1), v = new Float64Array(n + 1);
         const p = new Int32Array(n + 1), way = new Int32Array(n + 1);
@@ -241,6 +245,77 @@
         return { permutation, cost: sum(permutation.map((j, i) => costs[i][j])) / n,
             dualSource: Array.from(u.slice(1)), dualTarget: Array.from(v.slice(1)) };
     }
+    function inverseOTSample(count = 200, seed = 17) {
+        if (!Number.isInteger(count) || count < 1 || !Number.isInteger(seed)) {
+            throw new RangeError("Sampling needs a positive integer count and an integer seed");
+        }
+        let state = seed >>> 0;
+        // Seeded IID Gaussian draws, not a quadrature grid. Counts share prefixes.
+        function random() {
+            let t = state = (state + 0x6D2B79F5) >>> 0;
+            t = Math.imul(t ^ t >>> 15, t | 1);
+            t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+            return (((t ^ t >>> 14) >>> 0) + 0.5) / 4294967296;
+        }
+        const source = Array.from({ length: count }, () => {
+            const radius = Math.sqrt(-2 * Math.log(random())), angle = 2 * Math.PI * random();
+            return [radius * Math.cos(angle), radius * Math.sin(angle)];
+        });
+        const target = source.map(x => {
+            // Gradient of .06|x|² + log cosh(x1+x2) + .25 log cosh(2x1-x2).
+            const s = Math.tanh(x[0] + x[1]), t = Math.tanh(2 * x[0] - x[1]);
+            return [0.12 * x[0] + s + 0.5 * t, 0.12 * x[1] + s - 0.25 * t];
+        });
+        return { source, target, seed: seed >>> 0 };
+    }
+    function inverseOTGap(sample, theta) {
+        if (!Number.isFinite(theta) || theta <= 0) throw new RangeError("The cost parameter must be positive and finite");
+        const { source, target } = sample, n = source.length;
+        const matching = optimalAssignment(source, target, [theta, 1]);
+        let slope = 0, intercept = 0, observedCost = 0;
+        source.forEach((x, i) => {
+            const y = target[i], z = target[matching.permutation[i]];
+            const a = (x[0] - y[0]) ** 2 / (2 * n), b = (x[1] - y[1]) ** 2 / (2 * n);
+            observedCost += theta * a + b;
+            slope += a - (x[0] - z[0]) ** 2 / (2 * n);
+            intercept += b - (x[1] - z[1]) ** 2 / (2 * n);
+        });
+        const optimalCost = matching.cost / 2;
+        return { theta, gap: Math.max(0, observedCost - optimalCost), observedCost, optimalCost,
+            slope, intercept, matching };
+    }
+    function inverseOTCurve(sample, left = 0.2, right = 2.6) {
+        if (!(left > 0 && right > left && Number.isFinite(right))) throw new RangeError("Invalid cost slice");
+        const cache = new Map(), tolerance = 1e-10;
+        function oracle(theta) {
+            if (!cache.has(theta)) {
+                const { gap, slope, intercept } = inverseOTGap(sample, theta);
+                cache.set(theta, { theta, gap, slope, intercept });
+            }
+            return cache.get(theta);
+        }
+        // The gap is a maximum of assignment lines. At the intersection of
+        // two active lines, one OT solve either certifies the envelope between
+        // them or finds another active line. No entropy or spline smoothing.
+        function trace(a, b, depth = 0) {
+            if (Math.abs(b.slope - a.slope) < tolerance || b.theta - a.theta < tolerance) return [a, b];
+            if (depth > 52) throw new Error("Could not resolve the assignment envelope");
+            let theta = (a.intercept - b.intercept) / (b.slope - a.slope);
+            if (!(theta > a.theta + 1e-12 && theta < b.theta - 1e-12)) theta = (a.theta + b.theta) / 2;
+            const middle = oracle(theta);
+            const lower = Math.max(a.slope * theta + a.intercept, b.slope * theta + b.intercept, 0);
+            if (middle.gap <= lower + tolerance) return [a, middle, b];
+            const first = trace(a, middle, depth + 1), second = trace(middle, b, depth + 1);
+            return first.concat(second.slice(1));
+        }
+        const a = oracle(left), b = oracle(right);
+        const nodes = left < 1 && right > 1 ?
+            trace(a, oracle(1)).concat(trace(oracle(1), b).slice(1)) : trace(a, b);
+        const points = nodes.map(({ theta, gap }) => ({ theta, gap }));
+        const zeros = points.filter(p => p.gap < tolerance);
+        return { points, zeroInterval: zeros.length ? [zeros[0].theta, zeros[zeros.length - 1].theta] : null,
+            solves: cache.size };
+    }
     function diffusionComparison(sigma, options = {}) {
         const model = options.model || diffusionMixture();
         const paths = diffusionPaths(sigma, { ...options, model });
@@ -259,7 +334,8 @@
         markovMatrix, sinkhornSystem, simplexBoundary, sinkhornStep, sinkhornResidual, covariance, inverse2,
         gaussianBarycenter, ellipsePoints, gaussianKL, gaussianKLFlow, gaussianKLExample,
         multiply2, determinant2, eulerExample, diffusionMixture, gaussianCloud,
-        mixturePosterior, mixtureScore, diffusionVelocity, diffusionPaths, optimalAssignment, diffusionComparison };
+        mixturePosterior, mixtureScore, diffusionVelocity, diffusionPaths, optimalAssignment, diffusionComparison,
+        inverseOTSample, inverseOTGap, inverseOTCurve };
     if (typeof module !== "undefined" && module.exports) module.exports = api;
     else root.BlogMath = api;
 }(typeof globalThis !== "undefined" ? globalThis : this));
