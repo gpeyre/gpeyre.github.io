@@ -125,10 +125,23 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
             if (isInverse) {
                 assert.equal(await page.locator(".blog-eyebrow time").getAttribute("datetime"), "2026-10-03");
                 for (const source of ["https://doi.org/10.1287/opre.2022.0382", "https://arxiv.org/abs/2505.07124",
-                    "https://arxiv.org/abs/2310.05461", "https://arxiv.org/abs/2604.22670"]) {
+                    "https://arxiv.org/abs/2310.05461", "https://arxiv.org/abs/2604.22670",
+                    "https://proceedings.mlr.press/v89/blondel19a.html", "https://www.jmlr.org/papers/v21/19-021.html",
+                    "https://papers.nips.cc/paper_files/paper/2022/hash/510cfd9945f8bde6f0cf9b27ff1f8a76-Abstract-Conference.html"]) {
                     assert.equal(await page.locator("article a[href='" + source + "']").count(), 1);
                 }
-                assert.ok(await page.locator("article").textContent().then(text => text.includes("piecewise linear")));
+                const prose = await page.locator("article").textContent();
+                for (const phrase of ["piecewise linear", "Fenchel–Young", "mixture of two", "recomputed"]) assert.ok(prose.includes(phrase));
+                for (const removed of ["To construct paired data without guessing", "More samples and the emergence of curvature",
+                    "The link with cost-space curvature", "log cosh"]) assert.ok(!prose.includes(removed));
+                const bibliography = page.locator("article #bibliography + ol");
+                assert.equal(await bibliography.locator("li").count(), 7);
+                const citations = await page.locator('article a[href^="#ref-"]').evaluateAll(nodes => nodes.map(n => n.hash.slice(1)));
+                assert.equal(new Set(citations).size, 7);
+                for (const id of citations) assert.equal(await bibliography.locator('[id="' + id + '"]').count(), 1);
+                const tex = await page.evaluate(() => MathJax.Hub.getAllJax().map(jax => jax.originalText));
+                assert.ok(tex.some(t => t.includes("L_\\Omega(-\\theta,\\hat z)")));
+                assert.ok(tex.some(t => t.includes("L_\\Omega(-c_\\theta,\\hat\\pi)")));
                 assert.equal(await page.locator("article img").count(), 0);
             }
             if (isDiffusion) {
@@ -243,7 +256,9 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
                     await page.waitForFunction(image => document.querySelector('[data-panel="loss"]').toDataURL() !== image, loss);
                     await pointSlider.fill("10"); await ready(10, 2.6);
                     assert.equal((await values()).shown, 10);
-                    assert.ok((await values()).gap < 1e-9, "The small default sample has a flat loss throughout the slice");
+                    await costSlider.fill("1"); await ready(10, 1);
+                    assert.ok((await values()).gap < 1e-9, "The reference pairing must be recomputed for the smaller marginal samples");
+                    await costSlider.fill("2.6"); await ready(10, 2.6);
                     await pointSlider.fill("200"); await ready(200, 2.6);
                     assert.equal((await values()).shown, 24);
                     assert.ok((await values()).gap > 0);

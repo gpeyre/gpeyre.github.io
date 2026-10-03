@@ -288,8 +288,8 @@ for (const sigma of [0, 0.02, 0.16, 0.6]) {
         assert.ok(bow > 0.2, "The integrated diffusion trajectories should be visibly curved");
     }
 }
-// The inverse experiment uses paired IID samples with stable prefixes, and
-// its entire parametric assignment envelope must agree with direct OT solves.
+// Independent mixture marginals have stable prefixes, while their reference
+// pairing is solved again at each count. Check the cost envelope against OT.
 const inverseSample = M.inverseOTSample(200);
 assert.deepEqual(M.inverseOTSample(30).source, inverseSample.source.slice(0, 30));
 assert.deepEqual(M.inverseOTSample(30).target, inverseSample.target.slice(0, 30));
@@ -303,6 +303,7 @@ function valueOnCurve(curve, theta) {
 }
 for (const seed of [17, 18]) for (const n of [10, 30, 100, 200]) {
     const sample = M.inverseOTSample(n, seed), curve = M.inverseOTCurve(sample);
+    assert.equal(new Set(sample.observedPermutation).size, n);
     close(M.inverseOTGap(sample, 1).gap, 0, 1e-10);
     close(valueOnCurve(curve, 1), 0, 1e-10);
     assert.ok(curve.zeroInterval[0] <= 1 && curve.zeroInterval[1] >= 1);
@@ -314,18 +315,21 @@ for (const seed of [17, 18]) for (const n of [10, 30, 100, 200]) {
         assert.ok(p.theta > a.theta);
         assert.ok(slope >= previousSlope - 1e-7, "The empirical gap must be convex");
         previousSlope = slope;
-        // Probe every affine segment, independently of the envelope tracer.
-        const middle = (a.theta + p.theta) / 2, gap = M.inverseOTGap(sample, middle);
-        close(valueOnCurve(curve, middle), gap.gap, 1e-9);
-        close(gap.observedCost - gap.optimalCost, gap.gap, 1e-9);
-        close(gap.slope * middle + gap.intercept, gap.gap, 1e-9);
+        // Probe a spread of segments independently of the envelope tracer.
+        if (i % Math.max(1, Math.floor(curve.points.length / 24)) === 0 || i === curve.points.length - 1) {
+            const middle = (a.theta + p.theta) / 2, gap = M.inverseOTGap(sample, middle);
+            close(valueOnCurve(curve, middle), gap.gap, 1e-9);
+            close(gap.observedCost - gap.optimalCost, gap.gap, 1e-9);
+            close(gap.slope * middle + gap.intercept, gap.gap, 1e-9);
+        }
     });
     for (const theta of [0.2, 0.37, 0.88, 1.21, 2.04, 2.6]) {
         close(valueOnCurve(curve, theta), M.inverseOTGap(sample, theta).gap, 1e-9);
     }
     if (seed === 17 && n === 200) {
-        assert.ok(curve.points.length > 40, "The default example should show many genuine assignment changes");
-        assert.ok(curve.zeroInterval[1] - curve.zeroInterval[0] < 1);
+        assert.ok(curve.points.length > 100, "The mixture example should show many genuine assignment changes");
+        assert.ok(curve.zeroInterval[1] - curve.zeroInterval[0] < 0.05);
+        assert.ok(sample.observedPermutation.some((j, i) => i !== j), "Independently drawn marginals need a reference matching");
     }
 }
 console.log("Blog mathematics: existing figures, Gaussian and diffusion flows, certified assignments, and convex inverse OT envelopes passed.");

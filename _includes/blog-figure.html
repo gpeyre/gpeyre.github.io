@@ -88,15 +88,15 @@
   <p class="figure-legend diffusion-legend"><span><i class="mode-a" aria-hidden="true"></i>A · blue</span><span><i class="mode-b" aria-hidden="true"></i>B · cyan</span><span><i class="mode-c" aria-hidden="true"></i>C · brown</span></p>
   <figcaption>Colors follow the destination, not the starting particle. Pale lines show the complete routes; dots show the current positions. Black dots mark the three means. Set σ = 0 for the three-Dirac limit, or highlight particles whose destination mode changes between the maps. Playback takes 10 seconds.</figcaption>
 {% when 'inverse' %}
-  <h3 id="figure-inverse-title">Learn a transport cost from paired observations</h3>
+  <h3 id="figure-inverse-title">Learn a transport cost between two Gaussian mixtures</h3>
   <div class="inverse-panels">
     <div>
       <h4>Marginals and optimal pairing <span>Same points, changing cost</span></h4>
       <canvas data-panel="marginals" width="600" height="510" role="img" aria-label="Blue source circles and orange target squares, with a subsample of the optimal transport pairing in teal. The point-count slider changes both marginal clouds."></canvas>
     </div>
     <div>
-      <h4>Gap loss on a cost slice <span>Cθ = θ C₁ + C₀ · true θ = 1</span></h4>
-      <canvas data-panel="loss" width="600" height="510" role="img" aria-label="Convex piecewise-linear inverse optimal transport loss as the horizontal cost weight varies. The active sample size is teal; a marker follows the cost slider. A dashed line marks the true parameter one."></canvas>
+      <h4>Gap loss on a cost slice <span>Cθ = θ C₁ + C₀ · reference θ = 1</span></h4>
+      <canvas data-panel="loss" width="600" height="510" role="img" aria-label="Convex piecewise-linear inverse optimal transport loss as the horizontal cost weight varies. The active sample size is teal; a marker follows the cost slider. A dashed line marks the reference parameter one."></canvas>
     </div>
   </div>
   <div class="figure-controls">
@@ -104,13 +104,13 @@
     <label for="inverse-theta">Horizontal cost weight θ <output for="inverse-theta" data-value="theta">0.40</output><input id="inverse-theta" data-param="theta" type="range" min="0.2" max="2.6" step="0.01" value="0.4"></label>
     <div class="figure-actions" role="group" aria-label="Inverse optimal transport controls">
       <button type="button" data-compare aria-pressed="true">Compare sample sizes</button>
-      <button type="button" data-observed aria-pressed="false">Observed pairs</button>
+      <button type="button" data-observed aria-pressed="false">Reference pairs</button>
       <button type="button" data-resample>New sample</button>
       <button type="button" data-reset>Reset</button>
     </div>
   </div>
-  <p class="figure-legend">Blue circles: source αₙ. Orange squares: target βₙ. Teal lines: optimal pairing for the current θ. Gray dashed lines, when enabled: observed pairs. The loss panel compares n = 10, 30, 100, 200 using nested samples; teal is the active n.</p>
-  <figcaption>All n pairs are used in the exact, unregularized assignment and mean gap loss; at most 24 segments are displayed. The loss is piecewise linear, with a zero-loss interval marked along the bottom. Neither entropy nor spline smoothing is used.</figcaption>
+  <p class="figure-legend">Blue circles: source αₙ. Orange squares: target βₙ. Each marginal is sampled from a mixture of two Gaussians. Teal lines: optimal pairing for the current θ. Gray dashed lines, when enabled: reference pairing at θ = 1.</p>
+  <figcaption>The loss panel compares n = 10, 30, 100, 200 using nested marginal samples; teal is the active n. Each reference pairing is recomputed at θ = 1 for that n, then held fixed as θ varies. All n points per marginal enter the exact, unregularized OT problem and mean gap loss; at most 24 segments are drawn. No entropy or spline smoothing is used.</figcaption>
 {% endcase %}
   <p class="figure-status" data-status aria-live="off"></p>
 {% if include.kind == 'diffusion' %}

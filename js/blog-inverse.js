@@ -23,7 +23,7 @@
         }
         function setCount() {
             const n = Number(points.value);
-            sample = { source: fullSample.source.slice(0, n), target: fullSample.target.slice(0, n) };
+            sample = n === fullSample.source.length ? fullSample : M.inverseOTSample(n, seed);
             scene = null;
             figure.dataset.curveReady = "false";
         }
@@ -102,7 +102,7 @@
                 indices.forEach(i => { ctx.moveTo(...map(sample.source[i])); ctx.lineTo(...map(sample.target[permutation[i]])); });
                 ctx.stroke(); ctx.globalAlpha = 1; ctx.setLineDash([]);
             }
-            if (observed.getAttribute("aria-pressed") === "true") pairing(sample.source.map((_, i) => i), "#747b7b", true);
+            if (observed.getAttribute("aria-pressed") === "true") pairing(sample.observedPermutation, "#747b7b", true);
             pairing(scene.matching.permutation, teal, false);
             sample.source.forEach(p => {
                 ctx.beginPath(); ctx.arc(...map(p), 2.7, 0, 2 * Math.PI); ctx.fillStyle = blue; ctx.fill();
@@ -172,7 +172,7 @@
                 ctx.fillText(failure ? "Curve unavailable" : "Computing exact curve…", (left + right) / 2, top + 27);
             }
             panel.canvas.setAttribute("aria-label", "Mean gap loss at n = " + n + " and θ = " + theta.value + ": " + scene.gap.toFixed(6) +
-                ". The true parameter is one." + (active && active.zeroInterval ?
+                ". The reference parameter is one." + (active && active.zeroInterval ?
                 " Zero-loss interval: " + active.zeroInterval.map(x => x.toFixed(3)).join(" to ") + "." : ""));
         }
         function render() {
@@ -185,11 +185,13 @@
             figure.dataset.gap = scene.gap; figure.dataset.observedCost = scene.observedCost; figure.dataset.optimalCost = scene.optimalCost;
             figure.dataset.curveReady = String(Boolean(curve));
             figure.dataset.curvesReady = String(curves.size);
+            const missing = compare.getAttribute("aria-pressed") === "true" ? sizes.filter(n => !curves.has(n)) : [];
             status.textContent = "n = " + points.value + " · observed mean cost " + scene.observedCost.toFixed(4) +
                 " · optimal mean cost " + scene.optimalCost.toFixed(4) + " · gap " + scene.gap.toFixed(5) +
                 ". " + Math.min(24, sample.source.length) + "/" + points.value + " pairings shown. " +
                 (curve ? "Zero-loss interval in this slice: [" + curve.zeroInterval.map(x => x.toFixed(3)).join(", ") + "]. " :
                     "Computing the exact loss curve… ") + "Seed " + seed + "." +
+                (curve && missing.length ? " Computing comparison curves for n = " + missing.join(", ") + "." : "") +
                 (failure ? " Could not compute the curve: " + failure + "." : "");
         }
 

@@ -46,8 +46,10 @@ js/blog-diffusion.js. Its analytic mixture score and exact empirical assignment
 solver are also in js/blog-math.js. The reference image is its no-JavaScript fallback.
 The inverse figure uses js/blog-inverse.js and js/blog-inverse-worker.js to show
 paired empirical marginals and the unregularized OT gap along an affine cost
-slice. A point-count slider uses nested seeded IID samples; a cost slider changes
-the exact assignment. The worker traces the piecewise-linear assignment envelope
+slice. A point-count slider uses independent draws from two two-Gaussian
+mixtures, with nested marginal samples. The reference pairing is recomputed at
+θ = 1 for each count, then fixed along the cost slice. A cost slider changes the
+exact assignment. The worker traces the piecewise-linear assignment envelope
 without entropy or spline smoothing, and the renderer subsamples only the drawn
 pairing segments, never the numerical loss.
 Figures run locally in the browser without Python, a backend, or a third-party

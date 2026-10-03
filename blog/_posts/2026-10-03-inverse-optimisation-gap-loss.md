@@ -1,14 +1,14 @@
 ---
 title: "Inverse optimisation and the convexity of the gap loss"
-subtitle: "Learning a cost from decisions, and seeing curvature emerge from samples."
-description: "Why the optimality gap is convex for a linearly parameterized objective, with an interactive inverse optimal transport experiment showing marginals, exact pairings, and finite-sample loss curves."
+subtitle: "Learning a cost from decisions through the Fenchel–Young viewpoint"
+description: "The convex optimality gap as a Fenchel–Young loss, with an interactive inverse optimal transport experiment between two Gaussian mixtures and a linked bibliography."
 topic: Optimal transport
 figure: inverse
 ---
 
 In an optimisation problem, we know the objective and look for the best decision. In **inverse optimisation**, we observe decisions and try to recover an objective that explains them. Inverse optimal transport (iOT) is one example: rather than computing a coupling from a cost, we learn a cost from an observed coupling.
 
-A useful measure of disagreement is the **gap loss**: the cost of the observed decision minus the cost of the best decision. When the objective depends linearly on the parameter to learn, this loss is convex—even if the forward optimisation problem is not. The interactive experiment below shows how a finite-sample iOT loss, initially flat over many possible costs, develops more linear pieces as we add observations.
+A useful measure of disagreement is the **gap loss**: the cost of the observed decision minus the cost of the best decision. When the objective depends linearly on the parameter to learn, this loss is convex—even if the forward optimisation problem is not. This is closely connected to Fenchel–Young losses. The interactive experiment below explores the gap for transport between two mixtures of Gaussians.
 
 <!--more-->
 
@@ -20,7 +20,7 @@ $$
 z_\theta\in\operatorname*{argmin}_{z\in\mathcal Z}F_\theta(z).
 $$
 
-Given a feasible observation $$\hat z$$, we would like to find $$\theta$$ for which $$\hat z$$ is optimal, or at least nearly optimal. This viewpoint includes learning preferences, rewards, or transport costs. Inverse optimisation can also involve learning constraints; here we keep the feasible set fixed. [Chan, Mahmood and Zhu's survey](https://doi.org/10.1287/opre.2022.0382) gives a broader overview.
+Given a feasible observation $$\hat z$$, we would like to find $$\theta$$ for which $$\hat z$$ is optimal, or at least nearly optimal. This viewpoint includes learning preferences, rewards, or transport costs. Inverse optimisation can also involve learning constraints; here we keep the feasible set fixed. Chan, Mahmood and Zhu's survey [[1]](#ref-inverse-optimisation) gives a broader overview.
 
 Assume that the objective at the observation and the optimal value are finite, and that
 
@@ -37,7 +37,7 @@ V(\theta)&=\inf_{z\in\mathcal Z}F_\theta(z),\\
 \end{aligned}
 $$
 
-The gap is nonnegative, and vanishes exactly when the observation is a minimizer. With several observations, one can average their gaps, allowing each observation to have its own known feasible set. This remains a convex loss. This approach is also central to our work with Francisco Andrade and Clarice Poon on [*Learning from Samples: Inverse Problems over Measures*](https://arxiv.org/abs/2505.07124).
+The gap is nonnegative, and vanishes exactly when the observation is a minimizer. With several observations, one can average their gaps, allowing each observation to have its own known feasible set. This remains a convex loss.
 
 ## Why the gap loss is convex
 
@@ -66,6 +66,44 @@ $$
 
 Under the usual conditions ensuring differentiability of the optimal value, for instance a unique optimizer on a compact feasible set with continuous $$F_0$$ and features, this is the gradient. Learning compares the features of the observed decision with those of the currently optimal decision.
 
+## The Fenchel–Young connection
+
+Blondel, Martins and Niculae developed the **Fenchel–Young loss** framework in their AISTATS paper [[2]](#ref-fy-aistats) and its broader JMLR treatment [[3]](#ref-fy-jmlr). Given a regularizer $$\Omega$$, its conjugate and loss are
+
+$$
+\begin{aligned}
+\Omega^*(s)&=\sup_z\bigl\{\langle s,z\rangle-\Omega(z)\bigr\},\\
+L_\Omega(s,\hat z)&=\Omega^*(s)+\Omega(\hat z)-\langle s,\hat z\rangle.
+\end{aligned}
+$$
+
+Here $$s$$ is a score vector: prediction maximizes $$\langle s,z\rangle-\Omega(z)$$. The loss measures how far the observation is from attaining that maximum.
+
+In the linear-in-decision case $$\Phi(z)=z$$, set $$\Omega=F_0+\iota_{\mathcal Z}$$, where the indicator $$\iota_{\mathcal Z}$$ is zero on the feasible set and $$+\infty$$ elsewhere. Then
+
+$$
+\begin{aligned}
+V(\theta)&=-\Omega^*(-\theta),\\
+\mathcal L(\theta;\hat z)
+&=\Omega(\hat z)+\langle\theta,\hat z\rangle+\Omega^*(-\theta)\\
+&=L_\Omega(-\theta,\hat z).
+\end{aligned}
+$$
+
+Thus the gap is **exactly a Fenchel–Young loss**, with the sign reversal turning minimization of a cost into maximization of a score. Its nonnegativity is the Fenchel–Young inequality, and its convexity comes from the conjugate.
+
+The nonlinear feature model above fits the **generalized** Fenchel–Young construction of Blondel et al. [[4]](#ref-fy-generalized). Use $$E(\theta,z)=-\langle\theta,\Phi(z)\rangle$$ and the same $$\Omega=F_0+\iota_{\mathcal Z}$$. The generalized conjugate is
+
+$$
+\begin{aligned}
+\Omega^E(\theta)
+&=\sup_z\bigl\{E(\theta,z)-\Omega(z)\bigr\}\\
+&=-V(\theta),
+\end{aligned}
+$$
+
+so its loss $$\Omega^E(\theta)+\Omega(\hat z)-E(\theta,\hat z)$$ is again the gap. Affinity in $$\theta$$ is essential to the convexity argument; a general nonlinear energy need not give a convex parameter-learning problem. Our work with Francisco Andrade and Clarice Poon [[5]](#ref-learning-measures) studies related gap losses for inverse problems over measures.
+
 ## Inverse optimal transport
 
 For two probability measures $$\alpha,\beta$$, let $$\Pi(\alpha,\beta)$$ denote their couplings. The forward problem is
@@ -91,11 +129,20 @@ $$
 \quad}
 $$
 
-It is convex in $$\theta$$, since the coupling set stays fixed while the cost varies. Its subgradient compares the feature integrals under $$\hat\pi$$ and under an optimal coupling for $$c_\theta$$. Importantly, the observations include **pairing information**, not just the two marginal distributions: marginals alone do not tell us which cost generated a coupling.
+It is convex in $$\theta$$, since the coupling set stays fixed while the cost varies. It is also a direct Fenchel–Young example: take $$\Omega=\iota_{\Pi(\alpha,\beta)}$$ and pair costs with couplings through integration. Then
+
+$$
+\begin{aligned}
+\Omega^*(-c_\theta)&=-\operatorname{OT}_{\alpha,\beta}(c_\theta),\\
+\mathcal L(\theta;\hat\pi)&=L_\Omega(-c_\theta,\hat\pi).
+\end{aligned}
+$$
+
+Its subgradient compares the feature integrals under $$\hat\pi$$ and under an optimal coupling for $$c_\theta$$. Importantly, the observations include **pairing information**, not just the two marginal distributions: marginals alone do not tell us which cost generated a coupling.
 
 There are unavoidable ambiguities. Adding $$u(x)+v(y)$$ to a cost changes every feasible coupling's objective by the same amount, so leaves the gap unchanged. Positive rescaling leaves optimal couplings unchanged, and the zero cost makes every coupling optimal. Thus recovering a meaningful cost requires a normalization or other prior information. Convexity does not, by itself, imply identifiability.
 
-A fixed entropy regularizer can be included in $$F_0$$ without losing convexity in the cost parameter. Our paper [*Sparsistency for Inverse Optimal Transport*](https://arxiv.org/abs/2310.05461), with Francisco Andrade and Clarice Poon, studies sparse recovery for that regularized model. The figure below instead uses **unregularized OT**: there is no entropy or artificial smoothing of the loss.
+A fixed entropy regularizer can be included in $$F_0$$ without losing convexity in the cost parameter. Our paper with Francisco Andrade and Clarice Poon [[6]](#ref-sparsistency) studies sparse recovery for that regularized model. The figure below instead uses **unregularized OT**: there is no entropy or artificial smoothing of the loss.
 
 ## An interactive cost slice
 
@@ -113,28 +160,30 @@ For fixed point clouds, $$C_\theta=(c_\theta(x_i,y_j))_{i,j}$$ is a one-dimensio
 
 {% include blog-figure.html kind="inverse" %}
 
-The point-count slider changes both empirical marginals. The cost slider changes the optimal pairing and marks the corresponding position on the loss curve. All points contribute to the loss; only up to 24 pairing segments are drawn to keep the picture readable. “Observed pairs” overlays the data-generating coupling, and “Compare sample sizes” shows nested subsets of the same sample. “New sample” changes the random seed.
-
-To construct paired data without guessing the ground truth, draw $$x_i\sim\mathcal N(0,I_2)$$ and set $$y_i=T(x_i)$$, where
+The source and target are each a mixture of two moderately separated Gaussians, with differently oriented component centers:
 
 $$
 \begin{aligned}
-T&=\nabla\varphi,\\
-\varphi(x)&=\frac{0.12}{2}\|x\|^2
-+\log\cosh(x_1+x_2)\\
-&\qquad+\frac14\log\cosh(2x_1-x_2).
+\alpha&=\tfrac12\mathcal N(-m,\sigma^2I_2)
++\tfrac12\mathcal N(m,\sigma^2I_2),\\
+\beta&=\tfrac12\mathcal N(-r,\sigma^2I_2)
++\tfrac12\mathcal N(r,\sigma^2I_2),\\
+m&=(1.4,0.8),\qquad r=(0.8,-1.4),\\
+\sigma&=0.7.
 \end{aligned}
 $$
 
-The Hessian of $$\varphi$$ is $$0.12I$$ plus two positive semidefinite matrices, so $$\varphi$$ is strictly convex. Its gradient is a nonlinear quadratic-cost OT map from the Gaussian to $$T_\#\mathcal N(0,I_2)$$. The target is not Gaussian. In particular, the observed pairs $$x_i\mapsto y_i$$ are optimal at the true parameter $$\theta_*=1$$ for every sample size: gradients of convex functions are cyclically monotone.
+We draw the two marginal clouds independently. For each $$n$$, we compute a reference pairing $$\tau_*$$ by exact OT at $$\theta_*=1$$, and keep that pairing fixed while varying $$\theta$$. The reference is recomputed when $$n$$ changes; the point clouds themselves are nested subsets of the same draws.
 
-With equal weights, the empirical measures and observed coupling are
+The point-count slider changes both empirical marginals. The cost slider changes the optimal pairing and marks the corresponding position on the loss curve. All points contribute to the loss; only up to 24 pairing segments are drawn to keep the picture readable. “Reference pairs” overlays the coupling at $$\theta=1$$, “Compare sample sizes” displays several $$n$$ values, and “New sample” changes the random seed.
+
+With equal weights, the empirical measures and reference coupling are
 
 $$
 \begin{aligned}
 \alpha_n&=\frac1n\sum_i\delta_{x_i},\qquad
 \beta_n=\frac1n\sum_i\delta_{y_i},\\
-\hat\pi_n&=\frac1n\sum_i\delta_{(x_i,y_i)}.
+\hat\pi_n&=\frac1n\sum_i\delta_{(x_i,y_{\tau_*(i)})}.
 \end{aligned}
 $$
 
@@ -142,46 +191,27 @@ The plotted loss is the mean cost gap
 
 $$
 \mathcal L_n(\theta)
-=\frac1n\sum_i c_\theta(x_i,y_i)
--\min_{\sigma\in\mathfrak S_n}
-\frac1n\sum_i c_\theta(x_i,y_{\sigma(i)}).
+=\frac1n\sum_i c_\theta(x_i,y_{\tau_*(i)})
+-\min_{\tau\in\mathfrak S_n}
+\frac1n\sum_i c_\theta(x_i,y_{\tau(i)}).
 $$
 
-Each optimal pairing is computed by the Hungarian assignment algorithm. The curve is traced by finding changes of optimal assignment along the slice, rather than fitting a smooth curve through a few values.
+Each optimal pairing is computed by the Hungarian assignment algorithm. The curve is traced by finding changes of optimal assignment along the slice, rather than fitting a smooth curve through a few values. At finite $$n$$ it remains **convex and piecewise linear**: more points can reveal a finer, more rounded-looking envelope, but do not automatically guarantee greater curvature.
 
-## More samples and the emergence of curvature
+My recent work with **Oscar Tron and Clarice Poon** [[7]](#ref-curvature) studies curvature of the OT value with respect to the cost. Since the observed-coupling term is affine, this translates directly into curvature of the inverse gap loss. Under regularity and spanning assumptions, the paper gives local quadratic stability for cost recovery, modulo the unavoidable non-identifiable directions.
 
-At finite $$n$$, the loss is a maximum of finitely many affine functions of $$\theta$$. It is therefore **convex and piecewise linear**, not smoothly curved. A whole interval of costs can produce the same observed pairing and hence zero gap. Away from assignment changes, the second derivative is zero.
+## Bibliography
 
-For the default sample, increasing $$n$$ narrows this zero-loss interval and introduces many more affine pieces. At the scale of the plot, the envelope starts to look curved. This illustrates how a curved population loss can arise as a limit of polyhedral empirical losses. It is not a universal rule that adding points increases curvature, nor a claim that empirical losses are pointwise monotone in sample size.
+1. <span id="ref-inverse-optimisation"></span> Timothy C. Y. Chan, Rafid Mahmood and Ian Yihang Zhu. [*Inverse Optimization: Theory and Applications*](https://doi.org/10.1287/opre.2022.0382). *Operations Research* **73**(2), 1046–1074, 2025.
 
-The population coupling in this example identifies $$\theta=1$$ within our slice. Indeed, optimality for $$c_\theta$$ would require $$A_\theta T$$ to be a gradient. Its Jacobian $$A_\theta D^2\varphi$$ must therefore be symmetric, which imposes
+2. <span id="ref-fy-aistats"></span> Mathieu Blondel, André F. T. Martins and Vlad Niculae. [*Learning Classifiers with Fenchel-Young Losses: Generalized Entropies, Margins, and Algorithms*](https://proceedings.mlr.press/v89/blondel19a.html). AISTATS, *PMLR* **89**, 606–615, 2019.
 
-$$
-(\theta-1)\,\partial_{12}\varphi(x)=0.
-$$
+3. <span id="ref-fy-jmlr"></span> Mathieu Blondel, André F. T. Martins and Vlad Niculae. [*Learning with Fenchel-Young Losses*](https://www.jmlr.org/papers/v21/19-021.html). *Journal of Machine Learning Research* **21**(35), 1–69, 2020.
 
-Since $$\partial_{12}\varphi(0)=1/2$$, this is possible only at $$\theta=1$$. A finite cloud does not impose this differential condition everywhere, explaining why it can admit a flat range of exact fits.
+4. <span id="ref-fy-generalized"></span> Mathieu Blondel, Felipe Llinares-López, Robert Dadashi, Léonard Hussenot and Matthieu Geist. [*Learning Energy Networks with Generalized Fenchel-Young Losses*](https://papers.nips.cc/paper_files/paper/2022/hash/510cfd9945f8bde6f0cf9b27ff1f8a76-Abstract-Conference.html). NeurIPS **35**, 2022.
 
-## The link with cost-space curvature
+5. <span id="ref-learning-measures"></span> Francisco Andrade, Gabriel Peyré and Clarice Poon. [*Learning from Samples: Inverse Problems over Measures*](https://arxiv.org/abs/2505.07124). arXiv:2505.07124, 2025.
 
-This is the connection with my recent work with **Oscar Tron and Clarice Poon**, [*Curvature of optimal transport with respect to the cost and applications to inverse optimal transport*](https://arxiv.org/abs/2604.22670). The object whose curvature matters here is the **OT value as a function of its cost**, not displacement convexity of an energy over measures.
+6. <span id="ref-sparsistency"></span> Francisco Andrade, Gabriel Peyré and Clarice Poon. [*Sparsistency for Inverse Optimal Transport*](https://arxiv.org/abs/2310.05461). ICLR, 2024.
 
-Because the observed-coupling term is affine, whenever the population value is twice differentiable along a cost slice,
-
-$$
-D^2_\theta\mathcal L(\theta;\hat\pi)
-=-D^2_\theta\operatorname{OT}_{\alpha,\beta}(c_\theta).
-$$
-
-The paper characterizes this second variation and, for structured bilinear costs under its regularity and spanning assumptions, establishes local quadratic stability transverse to the unavoidable scaling direction. After an identifiable normalization, a lower bound of the form
-
-$$
-\mathcal L(\theta;\hat\pi)
-\geq\kappa\|\theta-\theta_*\|^2,
-\qquad \kappa>0,
-$$
-
-near the true parameter gives a quantitative way to turn a small gap into a small parameter error. The assumptions matter: affine transport maps, including Gaussian-to-Gaussian examples in the full bilinear family, can retain extra non-identifiable directions.
-
-The Gaussian-source experiment above illustrates the finite-sample mechanism; it is not a direct application of the paper's compact-domain stability theorem. Convexity of the gap is elementary and very general. **Strict curvature, and the recovery guarantees it enables, require additional geometry of the transport problem.**
+7. <span id="ref-curvature"></span> Gabriel Peyré, Clarice Poon and Oscar Tron. [*Curvature of Optimal Transport with Respect to the Cost and Applications to Inverse Optimal Transport*](https://arxiv.org/abs/2604.22670). arXiv:2604.22670, 2026.

@@ -42,6 +42,7 @@
 .blog-prose p { line-height: 1.8; margin: 0 0 26px; }
 .blog-prose h2 { font-size: 28px; font-weight: 700; line-height: 1.3; margin: 48px 0 22px; letter-spacing: -.4px; scroll-margin-top: 85px; }
 .blog-prose h3 { font-size: 21px; font-weight: 700; line-height: 1.4; margin: 32px 0 18px; }
+.blog-prose [id^="ref-"] { scroll-margin-top: 85px; }
 .blog-prose li { margin: 9px 0; }
 .blog-prose ul, .blog-prose ol { margin-bottom: 28px; padding-left: 27px; }
 .blog-prose blockquote { color: #3c5755; border-left: 3px solid #00778b; background: #f2f7f6; padding: 22px 26px; margin: 28px 0; font-size: inherit; font-style: normal; }

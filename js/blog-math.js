@@ -245,28 +245,35 @@
         return { permutation, cost: sum(permutation.map((j, i) => costs[i][j])) / n,
             dualSource: Array.from(u.slice(1)), dualTarget: Array.from(v.slice(1)) };
     }
+    function inverseOTMixtures() {
+        return { sourceMeans: [[-1.4, -0.8], [1.4, 0.8]],
+            targetMeans: [[-0.8, 1.4], [0.8, -1.4]], sigma: 0.7 };
+    }
     function inverseOTSample(count = 200, seed = 17) {
         if (!Number.isInteger(count) || count < 1 || !Number.isInteger(seed)) {
             throw new RangeError("Sampling needs a positive integer count and an integer seed");
         }
         let state = seed >>> 0;
-        // Seeded IID Gaussian draws, not a quadrature grid. Counts share prefixes.
+        // Independent mixture draws in each marginal. Counts share raw prefixes,
+        // but their reference OT pairing must be recomputed for each count.
         function random() {
             let t = state = (state + 0x6D2B79F5) >>> 0;
             t = Math.imul(t ^ t >>> 15, t | 1);
             t ^= t + Math.imul(t ^ t >>> 7, t | 61);
             return (((t ^ t >>> 14) >>> 0) + 0.5) / 4294967296;
         }
-        const source = Array.from({ length: count }, () => {
+        const model = inverseOTMixtures(), source = [], target = [];
+        function draw(means) {
+            const mean = means[random() < 0.5 ? 0 : 1];
             const radius = Math.sqrt(-2 * Math.log(random())), angle = 2 * Math.PI * random();
-            return [radius * Math.cos(angle), radius * Math.sin(angle)];
-        });
-        const target = source.map(x => {
-            // Gradient of .06|x|² + log cosh(x1+x2) + .25 log cosh(2x1-x2).
-            const s = Math.tanh(x[0] + x[1]), t = Math.tanh(2 * x[0] - x[1]);
-            return [0.12 * x[0] + s + 0.5 * t, 0.12 * x[1] + s - 0.25 * t];
-        });
-        return { source, target, seed: seed >>> 0 };
+            return [mean[0] + model.sigma * radius * Math.cos(angle),
+                mean[1] + model.sigma * radius * Math.sin(angle)];
+        }
+        for (let i = 0; i < count; i++) {
+            source.push(draw(model.sourceMeans)); target.push(draw(model.targetMeans));
+        }
+        const observedPermutation = optimalAssignment(source, target).permutation;
+        return { source, target, observedPermutation, model, seed: seed >>> 0 };
     }
     function inverseOTGap(sample, theta) {
         if (!Number.isFinite(theta) || theta <= 0) throw new RangeError("The cost parameter must be positive and finite");
@@ -274,7 +281,8 @@
         const matching = optimalAssignment(source, target, [theta, 1]);
         let slope = 0, intercept = 0, observedCost = 0;
         source.forEach((x, i) => {
-            const y = target[i], z = target[matching.permutation[i]];
+            const y = target[sample.observedPermutation ? sample.observedPermutation[i] : i];
+            const z = target[matching.permutation[i]];
             const a = (x[0] - y[0]) ** 2 / (2 * n), b = (x[1] - y[1]) ** 2 / (2 * n);
             observedCost += theta * a + b;
             slope += a - (x[0] - z[0]) ** 2 / (2 * n);
@@ -335,7 +343,7 @@
         gaussianBarycenter, ellipsePoints, gaussianKL, gaussianKLFlow, gaussianKLExample,
         multiply2, determinant2, eulerExample, diffusionMixture, gaussianCloud,
         mixturePosterior, mixtureScore, diffusionVelocity, diffusionPaths, optimalAssignment, diffusionComparison,
-        inverseOTSample, inverseOTGap, inverseOTCurve };
+        inverseOTMixtures, inverseOTSample, inverseOTGap, inverseOTCurve };
     if (typeof module !== "undefined" && module.exports) module.exports = api;
     else root.BlogMath = api;
 }(typeof globalThis !== "undefined" ? globalThis : this));
