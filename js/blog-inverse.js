@@ -12,7 +12,9 @@
         const points = figure.querySelector('[data-param="points"]'), theta = figure.querySelector('[data-param="theta"]');
         const compare = figure.querySelector("[data-compare]"), observed = figure.querySelector("[data-observed]");
         const status = figure.querySelector("[data-status]");
-        const sizes = [30, 100, 300, 1000], palette = ["#7b8587", "#b67837", "#3982b6", "#8467ae"], pairLimit = 120;
+        const sizes = [30, 100, 300, 400], palette = ["#7b8587", "#b67837", "#3982b6", "#8467ae"], pairLimit = 120;
+        const minimumPoints = Number(points.dataset.minPoints), maximumPoints = Number(points.dataset.maxPoints);
+        const pointCount = () => M.inverseOTPointCount(Number(points.value), minimumPoints, maximumPoints);
         const teal = "#00778b", blue = "#2885b1", orange = "#c67c3a", ink = "#47625d";
         const curves = new Map();
         let seed = 17, fullSample, sample, scene, worker = null, sceneWorker = null;
@@ -20,11 +22,11 @@
 
         function makeSample() {
             // Bounds need only raw points; reference assignments run in a worker.
-            fullSample = M.inverseOTSample(Number(points.max), seed, { reference: false });
+            fullSample = M.inverseOTSample(maximumPoints, seed, { reference: false });
             setCount();
         }
         function setCount() {
-            const n = Number(points.value);
+            const n = pointCount();
             sample = { source: fullSample.source.slice(0, n), target: fullSample.target.slice(0, n),
                 model: fullSample.model, seed };
             scene = null;
@@ -34,7 +36,7 @@
         function receiveScene(message) {
             if (message.job !== sceneJob) return;
             if (message.error) { failure = message.error; schedule(); return; }
-            if (message.seed !== seed || message.count !== Number(points.value) || message.scene.theta !== Number(theta.value)) return;
+            if (message.seed !== seed || message.count !== pointCount() || message.scene.theta !== Number(theta.value)) return;
             sample = message.sample; scene = message.scene; schedule();
         }
         function receive(message) {
@@ -64,7 +66,7 @@
 
         function requestScene() {
             clearTimeout(sceneTimer);
-            const request = { type: "scene", job: ++sceneJob, seed, count: Number(points.value), theta: Number(theta.value) };
+            const request = { type: "scene", job: ++sceneJob, seed, count: pointCount(), theta: Number(theta.value) };
             const previous = scene;
             scene = null;
             if (sceneWorker) sceneWorker.postMessage(request);
@@ -81,7 +83,7 @@
 
         function requestCurves() {
             clearTimeout(timer); failure = "";
-            const n = Number(points.value), counts = Array.from(new Set([n, ...sizes]));
+            const n = pointCount(), counts = Array.from(new Set([n, ...sizes]));
             const request = { type: "curve", job: ++job, seed, counts };
             if (worker) worker.postMessage(request);
             else {
@@ -221,11 +223,13 @@
                 " Zero-loss interval: " + active.zeroInterval.map(x => x.toFixed(5)).join(" to ") + "." : ""));
         }
         function render() {
-            figure.querySelector('[data-value="points"]').textContent = points.value;
+            const n = pointCount();
+            figure.querySelector('[data-value="points"]').textContent = n;
+            points.setAttribute("aria-valuetext", n + " points in each marginal");
             figure.querySelector('[data-value="theta"]').textContent = Number(theta.value).toFixed(2);
             drawMarginals(panels[0]); drawLoss(panels[1]);
             const curve = curves.get(sample.source.length);
-            figure.dataset.points = points.value; figure.dataset.theta = theta.value; figure.dataset.seed = seed;
+            figure.dataset.points = n; figure.dataset.theta = theta.value; figure.dataset.seed = seed;
             for (const key of ["gap", "observedCost", "optimalCost"]) {
                 if (scene) figure.dataset[key] = scene[key]; else delete figure.dataset[key];
             }
@@ -233,10 +237,10 @@
             figure.dataset.curveReady = String(Boolean(curve && scene));
             figure.dataset.curvesReady = String(curves.size);
             const missing = compare.getAttribute("aria-pressed") === "true" ? sizes.filter(n => !curves.has(n)) : [];
-            const summary = scene ? "n = " + points.value + " · observed mean cost " + scene.observedCost.toFixed(4) +
+            const summary = scene ? "n = " + n + " · observed mean cost " + scene.observedCost.toFixed(4) +
                 " · optimal mean cost " + scene.optimalCost.toFixed(4) + " · gap " + scene.gap.toFixed(5) +
-                ". " + Math.min(pairLimit, sample.source.length) + "/" + points.value + " pairings shown. " :
-                "n = " + points.value + " · Computing the exact OT pairing… ";
+                ". " + Math.min(pairLimit, sample.source.length) + "/" + n + " pairings shown. " :
+                "n = " + n + " · Computing the exact OT pairing… ";
             status.textContent = summary +
                 (curve ? "Zero-loss interval in this slice: [" + curve.zeroInterval.map(x => x.toFixed(5)).join(", ") + "]. " :
                     "Computing the loss curve… ") + "Seed " + seed + "." +
@@ -246,6 +250,8 @@
         }
 
         points.addEventListener("input", () => {
+            // Several adjacent log positions can round to the same integer n.
+            if (pointCount() === sample.source.length) { schedule(); return; }
             setCount(); schedule(); clearTimeout(timer);
             // Invalidate outstanding messages immediately, then debounce expensive work.
             ++job; timer = setTimeout(requestCurves, 120);

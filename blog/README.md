@@ -46,9 +46,10 @@ js/blog-diffusion.js. Its analytic mixture score and exact empirical assignment
 solver are also in js/blog-math.js. The reference image is its no-JavaScript fallback.
 The inverse figure uses js/blog-inverse.js and js/blog-inverse-worker.js to show
 paired empirical marginals and the unregularized OT gap along an affine cost
-slice. A point-count slider uses independent draws from two two-Gaussian
-well-separated mixtures, with nested marginal samples and up to 1000 points per
-marginal. The reference pairing is recomputed at
+slice. A logarithmic point-count slider runs from 10 to 400 points per marginal,
+using independent draws from two mixtures of two Gaussians with nested marginal
+samples. Its normalized position t in [0, 1] maps to round(10 × 40^t); outputs
+and accessible value text show the actual integer n. The reference pairing is recomputed at
 θ = 1 for each count, then fixed along the cost slice. A cost slider changes the
 exact assignment. Separate workers compute the current pairing and trace the
 piecewise-linear assignment envelope, so large comparison curves do not block

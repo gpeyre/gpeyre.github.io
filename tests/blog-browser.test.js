@@ -4,6 +4,7 @@ const assert = require("node:assert/strict");
 const { chromium } = require(process.env.BLOG_PLAYWRIGHT_PATH || "playwright");
 const base = process.env.BLOG_PREVIEW_URL || "http://127.0.0.1:4173";
 const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
+const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000) / 10000;
 
 (async () => {
     const browser = await chromium.launch({ headless: true, channel: "chrome" });
@@ -227,16 +228,26 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
                 }
                 if (kind === "inverse") {
                     const pointSlider = figure.locator('[data-param="points"]'), costSlider = figure.locator('[data-param="theta"]');
+                    const setPoints = n => pointSlider.fill(String(logPointPosition(n)));
                     const ready = async (n, t, seed = 17) => page.waitForFunction(({ n, t, seed }) => {
                         const f = document.querySelector('[data-figure="inverse"]');
                         return +f.dataset.points === n && +f.dataset.theta === t && +f.dataset.seed === seed && f.dataset.curveReady === "true";
                     }, { n, t, seed }, { timeout: 120000 });
                     const values = () => figure.evaluate(n => ({ n: +n.dataset.points, gap: +n.dataset.gap,
                         observed: +n.dataset.observedCost, optimal: +n.dataset.optimalCost, shown: +n.dataset.pairingsShown }));
-                    assert.equal(await pointSlider.getAttribute("max"), "1000");
+                    assert.equal(await pointSlider.getAttribute("min"), "0");
+                    assert.equal(await pointSlider.getAttribute("max"), "1");
+                    assert.equal(await pointSlider.getAttribute("data-min-points"), "10");
+                    assert.equal(await pointSlider.getAttribute("data-max-points"), "400");
                     await ready(300, 0.4);
                     await page.waitForFunction(() => +document.querySelector('[data-figure="inverse"]').dataset.curvesReady === 4,
                         null, { timeout: 120000 });
+                    assert.equal(await pointSlider.getAttribute("aria-valuetext"), "300 points in each marginal");
+                    // Halfway on a log slider is the geometric, not arithmetic, mean.
+                    await pointSlider.fill("0.5"); await ready(63, 0.4);
+                    assert.equal(await pointSlider.getAttribute("aria-valuetext"), "63 points in each marginal");
+                    assert.equal(await figure.locator('[data-value="points"]').textContent(), "63");
+                    await setPoints(300); await ready(300, 0.4);
                     const initial = await values();
                     assert.ok(initial.gap > 0 && initial.optimal < initial.observed);
                     assert.ok(Math.abs(initial.observed - initial.optimal - initial.gap) < 1e-9);
@@ -256,16 +267,16 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
                     await figure.locator("[data-compare]").click();
                     assert.equal(await figure.locator("[data-compare]").getAttribute("aria-pressed"), "false");
                     await page.waitForFunction(image => document.querySelector('[data-panel="loss"]').toDataURL() !== image, loss);
-                    await pointSlider.fill("10"); await ready(10, 2.6);
+                    await setPoints(10); await ready(10, 2.6);
                     assert.equal((await values()).shown, 10);
                     await costSlider.fill("1"); await ready(10, 1);
                     assert.ok((await values()).gap < 1e-9, "The reference pairing must be recomputed for the smaller marginal samples");
                     await costSlider.fill("2.6"); await ready(10, 2.6);
-                    await pointSlider.fill("200"); await ready(200, 2.6);
+                    await setPoints(200); await ready(200, 2.6);
                     assert.equal((await values()).shown, 120);
                     assert.ok((await values()).gap > 0);
                     await figure.screenshot({ path: screenshotDir + "/blog-inverse-200.png", style: ".navbar { visibility: hidden; }" });
-                    await pointSlider.fill("1000"); await ready(1000, 2.6);
+                    await setPoints(400); await ready(400, 2.6);
                     assert.equal((await values()).shown, 120);
                     assert.ok((await values()).gap > 0);
                     // The expensive solve is not performed on the UI thread.
@@ -275,13 +286,13 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
                     const responsiveness = await page.evaluate(() => new Promise(resolve => {
                         const start = performance.now(); requestAnimationFrame(() => resolve(performance.now() - start));
                     }));
-                    assert.ok(responsiveness < 500, "The 1000-point solve must not freeze the controls");
-                    await costSlider.fill("0.9"); await costSlider.fill("1"); await ready(1000, 1);
+                    assert.ok(responsiveness < 500, "The 400-point solve must not freeze the controls");
+                    await costSlider.fill("0.9"); await costSlider.fill("1"); await ready(400, 1);
                     assert.ok((await values()).gap < 1e-9);
-                    await costSlider.fill("2.6"); await ready(1000, 2.6);
-                    await figure.screenshot({ path: screenshotDir + "/blog-inverse-1000.png", style: ".navbar { visibility: hidden; }" });
+                    await costSlider.fill("2.6"); await ready(400, 2.6);
+                    await figure.screenshot({ path: screenshotDir + "/blog-inverse-400.png", style: ".navbar { visibility: hidden; }" });
                     // A newer slider request must not be overwritten by an older worker response.
-                    await pointSlider.fill("40"); await pointSlider.fill("170"); await pointSlider.fill("30");
+                    await setPoints(40); await setPoints(170); await setPoints(30);
                     await ready(30, 2.6);
                     await figure.locator("[data-resample]").click(); await ready(30, 2.6, 18);
                     await figure.locator("[data-reset]").click(); await ready(300, 0.4);
@@ -386,7 +397,7 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
                 await page.setViewportSize({ width: 320, height: 844 });
                 await page.evaluate(() => new Promise(resolve => MathJax.Hub.Queue(["Rerender", MathJax.Hub], resolve)));
                 assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false);
-                await page.locator('[data-param="points"]').fill("40");
+                await page.locator('[data-param="points"]').fill(String(logPointPosition(40)));
                 await page.waitForFunction(() => {
                     const f = document.querySelector('[data-figure="inverse"]');
                     return +f.dataset.points === 40 && f.dataset.curveReady === "true";

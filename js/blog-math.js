@@ -288,8 +288,17 @@
             centeredDualTarget: Array.from(v.slice(1)) };
     }
     function inverseOTMixtures() {
-        return { sourceMeans: [[-7.8, -1.6], [-2.2, 1.6]],
-            targetMeans: [[3.4, 2.8], [6.6, -2.8]], sigma: 0.7 };
+        return { sourceMeans: [[-7.1, -1.2], [-2.9, 1.2]],
+            targetMeans: [[3.8, 2.1], [6.2, -2.1]], sigma: 0.7 };
+    }
+    function inverseOTPointCount(position, minimum = 10, maximum = 400) {
+        if (!Number.isFinite(position) || position < 0 || position > 1 ||
+            !Number.isInteger(minimum) || !Number.isInteger(maximum) || minimum < 1 || maximum <= minimum) {
+            throw new RangeError("Logarithmic point counts need a position in [0, 1] and positive integer bounds");
+        }
+        // Equal slider movements multiply n by a constant factor. Round only
+        // the actual point count, never the logarithmic slider position.
+        return Math.round(minimum * Math.exp(position * Math.log(maximum / minimum)));
     }
     function inverseOTSample(count = 200, seed = 17, options = {}) {
         if (!Number.isInteger(count) || count < 1 || !Number.isInteger(seed)) {
@@ -414,7 +423,7 @@
         gaussianBarycenter, ellipsePoints, gaussianKL, gaussianKLFlow, gaussianKLExample,
         multiply2, determinant2, eulerExample, diffusionMixture, gaussianCloud,
         mixturePosterior, mixtureScore, diffusionVelocity, diffusionPaths, optimalAssignment, diffusionComparison,
-        inverseOTMixtures, inverseOTSample, inverseOTGap, inverseOTCurve, inverseOTCurveSteps };
+        inverseOTMixtures, inverseOTPointCount, inverseOTSample, inverseOTGap, inverseOTCurve, inverseOTCurveSteps };
     if (typeof module !== "undefined" && module.exports) module.exports = api;
     else root.BlogMath = api;
 }(typeof globalThis !== "undefined" ? globalThis : this));

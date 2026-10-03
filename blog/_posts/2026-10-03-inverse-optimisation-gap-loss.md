@@ -169,14 +169,14 @@ $$
 \beta&=\tfrac12\mathcal N(t-r,\sigma^2I_2)\\
 &\quad+\tfrac12\mathcal N(t+r,\sigma^2I_2),\\
 s&=(-5,0),\qquad t=(5,0),\\
-m&=(2.8,1.6),\qquad r=(1.6,-2.8),\\
+m&=(2.1,1.2),\qquad r=(1.2,-2.1),\\
 \sigma&=0.7.
 \end{aligned}
 $$
 
 We draw the two marginal clouds independently. For each $$n$$, we compute a reference pairing $$\tau_*$$ by exact OT at $$\theta_*=1$$, and keep that pairing fixed while varying $$\theta$$. The reference is recomputed when $$n$$ changes; the point clouds themselves are nested subsets of the same draws.
 
-The point-count slider goes up to **1,000 points in each marginal**. The cost slider changes the optimal pairing and marks the corresponding position on the loss curve. All points contribute to the loss; up to **120 pairing segments** are drawn. “Reference pairs” overlays the coupling at $$\theta=1$$, “Compare sample sizes” displays several $$n$$ values, and “New sample” changes the random seed.
+The point-count slider uses a **logarithmic scale from 10 to 400 points in each marginal**: equal slider movements multiply the number of points by the same factor, with rounding to an integer. The cost slider changes the optimal pairing and marks the corresponding position on the loss curve. All points contribute to the loss; up to **120 pairing segments** are drawn. “Reference pairs” overlays the coupling at $$\theta=1$$, “Compare sample sizes” displays several $$n$$ values, and “New sample” changes the random seed.
 
 With equal weights, the empirical measures and reference coupling are
 

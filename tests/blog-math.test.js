@@ -309,11 +309,22 @@ for (const sigma of [0, 0.02, 0.16, 0.6]) {
 // Independent mixture marginals have stable prefixes, while their reference
 // pairing is solved again at each count. Check the cost envelope against OT.
 const inverseSample = M.inverseOTSample(200);
+assert.deepEqual([0, 0.25, 0.5, 0.75, 1].map(t => M.inverseOTPointCount(t)), [10, 25, 63, 159, 400]);
+assert.equal(M.inverseOTPointCount(0.922), 300);
+const logSliderCounts = Array.from({ length: 10001 }, (_, k) => M.inverseOTPointCount(k / 10000));
+assert.equal(new Set(logSliderCounts).size, 391, "Every integer point count from 10 to 400 should be selectable");
+logSliderCounts.forEach((n, k) => {
+    assert.ok(Number.isInteger(n) && n >= 10 && n <= 400);
+    if (k) assert.ok(n >= logSliderCounts[k - 1]);
+});
+for (const invalid of [NaN, -0.01, 1.01]) assert.throws(() => M.inverseOTPointCount(invalid), RangeError);
+assert.throws(() => M.inverseOTPointCount(0.5, 0, 400), RangeError);
 const separatedModel = M.inverseOTMixtures();
 assert.ok(separatedModel.sourceMeans.every(m => m[0] < -2));
 assert.ok(separatedModel.targetMeans.every(m => m[0] > 3));
 for (const means of [separatedModel.sourceMeans, separatedModel.targetMeans]) {
-    assert.ok(Math.hypot(means[0][0] - means[1][0], means[0][1] - means[1][1]) > 6);
+    const distance = Math.hypot(means[0][0] - means[1][0], means[0][1] - means[1][1]);
+    assert.ok(distance > 4.5 && distance < 5, "The Gaussian centers within each mixture should be closer");
 }
 assert.deepEqual(M.inverseOTSample(30).source, inverseSample.source.slice(0, 30));
 assert.deepEqual(M.inverseOTSample(30).target, inverseSample.target.slice(0, 30));
@@ -358,14 +369,14 @@ for (const seed of [17, 18]) for (const n of [10, 30, 100, 200]) {
 }
 // Large figures use certified chords through exact OT evaluations, not a
 // smooth fit. Verify their error against independent solves across the slice.
-const largeInverseSample = M.inverseOTSample(1000);
-const rawInverseSample = M.inverseOTSample(1000, 17, { reference: false });
+const largeInverseSample = M.inverseOTSample(400);
+const rawInverseSample = M.inverseOTSample(400, 17, { reference: false });
 assert.deepEqual(rawInverseSample.source, largeInverseSample.source);
 assert.deepEqual(rawInverseSample.target, largeInverseSample.target);
 assert.equal(rawInverseSample.observedPermutation, undefined);
 assert.deepEqual(inverseSample.source, largeInverseSample.source.slice(0, 200));
 assert.deepEqual(inverseSample.target, largeInverseSample.target.slice(0, 200));
-assert.equal(new Set(largeInverseSample.observedPermutation).size, 1000);
+assert.equal(new Set(largeInverseSample.observedPermutation).size, 400);
 const largeCurve = M.inverseOTCurve(largeInverseSample, 0.2, 2.6, 1e-3);
 assert.equal(largeCurve.maxError, 1e-3);
 assert.ok(largeCurve.zeroInterval[0] <= 1 && largeCurve.zeroInterval[1] >= 1);
@@ -373,7 +384,7 @@ assert.ok(largeCurve.zeroInterval[1] - largeCurve.zeroInterval[0] < 0.01);
 for (const theta of [0.2, 0.43, 0.77, 1, 1.37, 2.09, 2.6]) {
     const exact = M.inverseOTGap(largeInverseSample, theta);
     const error = valueOnCurve(largeCurve, theta) - exact.gap;
-    assert.ok(error >= -1e-9 && error <= largeCurve.maxError + 1e-9, "Certified error at n = 1000");
+    assert.ok(error >= -1e-9 && error <= largeCurve.maxError + 1e-9, "Certified error at n = 400");
     close(exact.observedCost - exact.optimalCost, exact.gap, 1e-9);
 }
 const iteratorSample = M.inverseOTSample(30), iterator = M.inverseOTCurveSteps(iteratorSample);
@@ -382,4 +393,4 @@ do { step = iterator.next(); if (!step.done) assert.equal(step.value.solves, ++y
 assert.deepEqual(step.value, M.inverseOTCurve(iteratorSample));
 assert.equal(step.value.solves, yielded);
 assert.throws(() => M.inverseOTCurve(inverseSample, 0.2, 2.6, -1), RangeError);
-console.log("Blog mathematics: Gaussian and diffusion flows, warm-start dual certificates, and convex inverse OT curves up to 1000 points passed.");
+console.log("Blog mathematics: Gaussian and diffusion flows, logarithmic counts, warm-start dual certificates, and inverse OT curves up to 400 points passed.");
