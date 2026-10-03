@@ -206,18 +206,57 @@
             return path;
         });
     }
-    function optimalAssignment(source, target, weights = [1, 1]) {
+    function optimalAssignment(source, target, weights = [1, 1], warmStart = null) {
         const n = source.length;
         if (!n || target.length !== n) throw new RangeError("Matching needs equal, nonempty point clouds");
         if (weights.length !== 2 || weights.some(w => !Number.isFinite(w) || w <= 0)) {
             throw new RangeError("Matching weights must be two positive, finite numbers");
         }
-        const costs = source.map(x => Float64Array.from(target, y =>
+        // Center each cloud before solving: independent translations add only
+        // row/column terms to a quadratic cost and do not change its assignment.
+        const sourceCenter = [0, 1].map(d => sum(source.map(x => x[d])) / n);
+        const targetCenter = [0, 1].map(d => sum(target.map(y => y[d])) / n);
+        const shift = sourceCenter.map((x, d) => x - targetCenter[d]);
+        const centeredSource = source.map(x => x.map((z, d) => z - sourceCenter[d]));
+        const centeredTarget = target.map(y => y.map((z, d) => z - targetCenter[d]));
+        const rowTerms = centeredSource.map(x => sum(weights.map((w, d) => w * (2 * shift[d] * x[d] + shift[d] ** 2))));
+        const columnTerms = centeredTarget.map(y => -2 * sum(weights.map((w, d) => w * shift[d] * y[d])));
+        const costs = centeredSource.map(x => Float64Array.from(centeredTarget, y =>
             weights[0] * (x[0] - y[0]) ** 2 + weights[1] * (x[1] - y[1]) ** 2));
         // Hungarian primal-dual algorithm: unregularized one-to-one matching.
         const u = new Float64Array(n + 1), v = new Float64Array(n + 1);
         const p = new Int32Array(n + 1), way = new Int32Array(n + 1);
+        const matched = new Uint8Array(n);
+        if (warmStart && warmStart.permutation.length === n && warmStart.dualTarget.length === n) {
+            // Rebuild feasible row potentials for the new cost. Retain only
+            // tight edges of the previous assignment, then augment the rest.
+            v.set(warmStart.centeredDualTarget || warmStart.dualTarget.map((value, j) => value - columnTerms[j]), 1);
+            for (let i = 0; i < n; i++) {
+                let minimum = Infinity;
+                for (let j = 0; j < n; j++) minimum = Math.min(minimum, costs[i][j] - v[j + 1]);
+                u[i + 1] = minimum;
+                const j = warmStart.permutation[i];
+                if (Math.abs(costs[i][j] - minimum - v[j + 1]) < 1e-11) {
+                    p[j + 1] = i + 1; matched[i] = 1;
+                }
+            }
+        } else {
+            // Row/column reduction supplies feasible duals and an inexpensive
+            // partial matching before the augmenting-path phase.
+            for (let i = 0; i < n; i++) u[i + 1] = Math.min(...costs[i]);
+            for (let j = 0; j < n; j++) {
+                let minimum = Infinity;
+                for (let i = 0; i < n; i++) minimum = Math.min(minimum, costs[i][j] - u[i + 1]);
+                v[j + 1] = minimum;
+            }
+            for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+                if (!p[j + 1] && Math.abs(costs[i][j] - u[i + 1] - v[j + 1]) < 1e-11) {
+                    p[j + 1] = i + 1; matched[i] = 1; break;
+                }
+            }
+        }
         for (let i = 1; i <= n; i++) {
+            if (matched[i - 1]) continue;
             p[0] = i;
             let j0 = 0;
             const minv = new Float64Array(n + 1).fill(Infinity), used = new Uint8Array(n + 1);
@@ -242,14 +281,17 @@
         }
         const permutation = new Array(n);
         for (let j = 1; j <= n; j++) permutation[p[j] - 1] = j - 1;
-        return { permutation, cost: sum(permutation.map((j, i) => costs[i][j])) / n,
-            dualSource: Array.from(u.slice(1)), dualTarget: Array.from(v.slice(1)) };
+        return { permutation, cost: sum(permutation.map((j, i) =>
+            weights[0] * (source[i][0] - target[j][0]) ** 2 + weights[1] * (source[i][1] - target[j][1]) ** 2)) / n,
+            dualSource: Array.from(u.slice(1), (value, i) => value + rowTerms[i]),
+            dualTarget: Array.from(v.slice(1), (value, j) => value + columnTerms[j]),
+            centeredDualTarget: Array.from(v.slice(1)) };
     }
     function inverseOTMixtures() {
-        return { sourceMeans: [[-1.4, -0.8], [1.4, 0.8]],
-            targetMeans: [[-0.8, 1.4], [0.8, -1.4]], sigma: 0.7 };
+        return { sourceMeans: [[-7.8, -1.6], [-2.2, 1.6]],
+            targetMeans: [[3.4, 2.8], [6.6, -2.8]], sigma: 0.7 };
     }
-    function inverseOTSample(count = 200, seed = 17) {
+    function inverseOTSample(count = 200, seed = 17, options = {}) {
         if (!Number.isInteger(count) || count < 1 || !Number.isInteger(seed)) {
             throw new RangeError("Sampling needs a positive integer count and an integer seed");
         }
@@ -272,57 +314,86 @@
         for (let i = 0; i < count; i++) {
             source.push(draw(model.sourceMeans)); target.push(draw(model.targetMeans));
         }
-        const observedPermutation = optimalAssignment(source, target).permutation;
-        return { source, target, observedPermutation, model, seed: seed >>> 0 };
+        if (options.reference === false) return { source, target, model, seed: seed >>> 0 };
+        const referenceMatching = optimalAssignment(source, target);
+        return { source, target, observedPermutation: referenceMatching.permutation,
+            referenceMatching, model, seed: seed >>> 0 };
     }
-    function inverseOTGap(sample, theta) {
+    function inverseOTGap(sample, theta, warmStart = null) {
         if (!Number.isFinite(theta) || theta <= 0) throw new RangeError("The cost parameter must be positive and finite");
         const { source, target } = sample, n = source.length;
-        const matching = optimalAssignment(source, target, [theta, 1]);
+        const matching = optimalAssignment(source, target, [theta, 1], warmStart);
+        const sourceCenter = [0, 1].map(d => sum(source.map(x => x[d])) / n);
+        const targetCenter = [0, 1].map(d => sum(target.map(y => y[d])) / n);
         let slope = 0, intercept = 0, observedCost = 0;
         source.forEach((x, i) => {
             const y = target[sample.observedPermutation ? sample.observedPermutation[i] : i];
             const z = target[matching.permutation[i]];
             const a = (x[0] - y[0]) ** 2 / (2 * n), b = (x[1] - y[1]) ** 2 / (2 * n);
             observedCost += theta * a + b;
-            slope += a - (x[0] - z[0]) ** 2 / (2 * n);
-            intercept += b - (x[1] - z[1]) ** 2 / (2 * n);
+            // Translation terms cancel between permutations. Removing them
+            // before subtraction avoids losing precision for far-apart clouds.
+            const centered = [0, 1].map(d => {
+                const xi = x[d] - sourceCenter[d];
+                return ((xi - (y[d] - targetCenter[d])) ** 2 - (xi - (z[d] - targetCenter[d])) ** 2) / (2 * n);
+            });
+            slope += centered[0]; intercept += centered[1];
         });
         const optimalCost = matching.cost / 2;
-        return { theta, gap: Math.max(0, observedCost - optimalCost), observedCost, optimalCost,
+        return { theta, gap: Math.max(0, theta * slope + intercept), observedCost, optimalCost,
             slope, intercept, matching };
     }
-    function inverseOTCurve(sample, left = 0.2, right = 2.6) {
+    function* inverseOTCurveSteps(sample, left = 0.2, right = 2.6, maxError = 1e-10) {
         if (!(left > 0 && right > left && Number.isFinite(right))) throw new RangeError("Invalid cost slice");
+        if (!(maxError >= 1e-10 && Number.isFinite(maxError))) throw new RangeError("Invalid curve error bound");
         const cache = new Map(), tolerance = 1e-10;
-        function oracle(theta) {
+        function* oracle(theta) {
             if (!cache.has(theta)) {
-                const { gap, slope, intercept } = inverseOTGap(sample, theta);
-                cache.set(theta, { theta, gap, slope, intercept });
+                let nearest = { theta: 1, matching: sample.referenceMatching };
+                for (const previous of cache.values()) {
+                    if (Math.abs(previous.theta - theta) < Math.abs(nearest.theta - theta)) nearest = previous;
+                }
+                const { gap, slope, intercept, matching } = inverseOTGap(sample, theta, nearest.matching);
+                cache.set(theta, { theta, gap, slope, intercept, matching });
+                yield { solves: cache.size };
             }
             return cache.get(theta);
         }
         // The gap is a maximum of assignment lines. At the intersection of
         // two active lines, one OT solve either certifies the envelope between
         // them or finds another active line. No entropy or spline smoothing.
-        function trace(a, b, depth = 0) {
+        function* trace(a, b, depth = 0) {
             if (Math.abs(b.slope - a.slope) < tolerance || b.theta - a.theta < tolerance) return [a, b];
             if (depth > 52) throw new Error("Could not resolve the assignment envelope");
             let theta = (a.intercept - b.intercept) / (b.slope - a.slope);
             if (!(theta > a.theta + 1e-12 && theta < b.theta - 1e-12)) theta = (a.theta + b.theta) / 2;
-            const middle = oracle(theta);
+            const middle = yield* oracle(theta);
             const lower = Math.max(a.slope * theta + a.intercept, b.slope * theta + b.intercept, 0);
-            if (middle.gap <= lower + tolerance) return [a, middle, b];
-            const first = trace(a, middle, depth + 1), second = trace(middle, b, depth + 1);
+            // The two supporting lines give a lower bound, while the chords
+            // through these exact evaluations give an upper bound. Their gap
+            // is largest at this intersection, certifying the curve error.
+            // Resolve the edges of the zero-loss interval to numerical precision.
+            const allowedError = a.gap < tolerance || b.gap < tolerance ? tolerance : maxError;
+            if (middle.gap <= lower + allowedError) return [a, middle, b];
+            const first = yield* trace(a, middle, depth + 1), second = yield* trace(middle, b, depth + 1);
             return first.concat(second.slice(1));
         }
-        const a = oracle(left), b = oracle(right);
-        const nodes = left < 1 && right > 1 ?
-            trace(a, oracle(1)).concat(trace(oracle(1), b).slice(1)) : trace(a, b);
+        const a = yield* oracle(left), b = yield* oracle(right);
+        let nodes;
+        if (left < 1 && right > 1) {
+            const reference = yield* oracle(1), first = yield* trace(a, reference), second = yield* trace(reference, b);
+            nodes = first.concat(second.slice(1));
+        } else nodes = yield* trace(a, b);
         const points = nodes.map(({ theta, gap }) => ({ theta, gap }));
         const zeros = points.filter(p => p.gap < tolerance);
         return { points, zeroInterval: zeros.length ? [zeros[0].theta, zeros[zeros.length - 1].theta] : null,
-            solves: cache.size };
+            solves: cache.size, maxError };
+    }
+    function inverseOTCurve(sample, left = 0.2, right = 2.6, maxError = 1e-10) {
+        const steps = inverseOTCurveSteps(sample, left, right, maxError);
+        let step;
+        do { step = steps.next(); } while (!step.done);
+        return step.value;
     }
     function diffusionComparison(sigma, options = {}) {
         const model = options.model || diffusionMixture();
@@ -343,7 +414,7 @@
         gaussianBarycenter, ellipsePoints, gaussianKL, gaussianKLFlow, gaussianKLExample,
         multiply2, determinant2, eulerExample, diffusionMixture, gaussianCloud,
         mixturePosterior, mixtureScore, diffusionVelocity, diffusionPaths, optimalAssignment, diffusionComparison,
-        inverseOTMixtures, inverseOTSample, inverseOTGap, inverseOTCurve };
+        inverseOTMixtures, inverseOTSample, inverseOTGap, inverseOTCurve, inverseOTCurveSteps };
     if (typeof module !== "undefined" && module.exports) module.exports = api;
     else root.BlogMath = api;
 }(typeof globalThis !== "undefined" ? globalThis : this));

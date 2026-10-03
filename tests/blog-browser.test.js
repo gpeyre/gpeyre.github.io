@@ -230,21 +230,23 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
                     const ready = async (n, t, seed = 17) => page.waitForFunction(({ n, t, seed }) => {
                         const f = document.querySelector('[data-figure="inverse"]');
                         return +f.dataset.points === n && +f.dataset.theta === t && +f.dataset.seed === seed && f.dataset.curveReady === "true";
-                    }, { n, t, seed });
+                    }, { n, t, seed }, { timeout: 120000 });
                     const values = () => figure.evaluate(n => ({ n: +n.dataset.points, gap: +n.dataset.gap,
                         observed: +n.dataset.observedCost, optimal: +n.dataset.optimalCost, shown: +n.dataset.pairingsShown }));
-                    await ready(100, 0.4);
-                    await page.waitForFunction(() => +document.querySelector('[data-figure="inverse"]').dataset.curvesReady === 4);
+                    assert.equal(await pointSlider.getAttribute("max"), "1000");
+                    await ready(300, 0.4);
+                    await page.waitForFunction(() => +document.querySelector('[data-figure="inverse"]').dataset.curvesReady === 4,
+                        null, { timeout: 120000 });
                     const initial = await values();
                     assert.ok(initial.gap > 0 && initial.optimal < initial.observed);
                     assert.ok(Math.abs(initial.observed - initial.optimal - initial.gap) < 1e-9);
-                    assert.equal(initial.shown, 24);
+                    assert.equal(initial.shown, 120);
                     await figure.screenshot({ path: screenshotDir + "/blog-inverse-default.png", style: ".navbar { visibility: hidden; }" });
                     const initialPairs = await figure.locator("canvas").first().evaluate(n => n.toDataURL());
-                    await costSlider.fill("1"); await ready(100, 1);
+                    await costSlider.fill("1"); await ready(300, 1);
                     assert.ok((await values()).gap < 1e-9, "The generating cost must give zero gap");
                     assert.notEqual(await figure.locator("canvas").first().evaluate(n => n.toDataURL()), initialPairs);
-                    await costSlider.fill("2.6"); await ready(100, 2.6);
+                    await costSlider.fill("2.6"); await ready(300, 2.6);
                     assert.ok((await values()).gap > 0);
                     const pairing = await figure.locator("canvas").first().evaluate(n => n.toDataURL());
                     await figure.locator("[data-observed]").click();
@@ -260,17 +262,33 @@ const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
                     assert.ok((await values()).gap < 1e-9, "The reference pairing must be recomputed for the smaller marginal samples");
                     await costSlider.fill("2.6"); await ready(10, 2.6);
                     await pointSlider.fill("200"); await ready(200, 2.6);
-                    assert.equal((await values()).shown, 24);
+                    assert.equal((await values()).shown, 120);
                     assert.ok((await values()).gap > 0);
                     await figure.screenshot({ path: screenshotDir + "/blog-inverse-200.png", style: ".navbar { visibility: hidden; }" });
+                    await pointSlider.fill("1000"); await ready(1000, 2.6);
+                    assert.equal((await values()).shown, 120);
+                    assert.ok((await values()).gap > 0);
+                    // The expensive solve is not performed on the UI thread.
+                    // A new cost request must be accepted while it is pending.
+                    await costSlider.fill("0.3");
+                    await page.waitForFunction(() => document.querySelector('[data-figure="inverse"]').dataset.sceneReady === "false");
+                    const responsiveness = await page.evaluate(() => new Promise(resolve => {
+                        const start = performance.now(); requestAnimationFrame(() => resolve(performance.now() - start));
+                    }));
+                    assert.ok(responsiveness < 500, "The 1000-point solve must not freeze the controls");
+                    await costSlider.fill("0.9"); await costSlider.fill("1"); await ready(1000, 1);
+                    assert.ok((await values()).gap < 1e-9);
+                    await costSlider.fill("2.6"); await ready(1000, 2.6);
+                    await figure.screenshot({ path: screenshotDir + "/blog-inverse-1000.png", style: ".navbar { visibility: hidden; }" });
                     // A newer slider request must not be overwritten by an older worker response.
                     await pointSlider.fill("40"); await pointSlider.fill("170"); await pointSlider.fill("30");
                     await ready(30, 2.6);
                     await figure.locator("[data-resample]").click(); await ready(30, 2.6, 18);
-                    await figure.locator("[data-reset]").click(); await ready(100, 0.4);
+                    await figure.locator("[data-reset]").click(); await ready(300, 0.4);
                     assert.equal(await figure.locator("[data-compare]").getAttribute("aria-pressed"), "true");
                     assert.equal(await figure.locator("[data-observed]").getAttribute("aria-pressed"), "false");
-                    await page.waitForFunction(() => +document.querySelector('[data-figure="inverse"]').dataset.curvesReady === 4);
+                    await page.waitForFunction(() => +document.querySelector('[data-figure="inverse"]').dataset.curvesReady === 4,
+                        null, { timeout: 120000 });
                 } else {
                     const scrub = page.locator('[data-param="' + (kind === "sinkhorn" ? "iteration" : kind === "gaussian" ? "weight" : "time") + '"]');
                     if (kind === "sinkhorn") {

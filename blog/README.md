@@ -47,11 +47,15 @@ solver are also in js/blog-math.js. The reference image is its no-JavaScript fal
 The inverse figure uses js/blog-inverse.js and js/blog-inverse-worker.js to show
 paired empirical marginals and the unregularized OT gap along an affine cost
 slice. A point-count slider uses independent draws from two two-Gaussian
-mixtures, with nested marginal samples. The reference pairing is recomputed at
+well-separated mixtures, with nested marginal samples and up to 1000 points per
+marginal. The reference pairing is recomputed at
 θ = 1 for each count, then fixed along the cost slice. A cost slider changes the
-exact assignment. The worker traces the piecewise-linear assignment envelope
-without entropy or spline smoothing, and the renderer subsamples only the drawn
-pairing segments, never the numerical loss.
+exact assignment. Separate workers compute the current pairing and trace the
+piecewise-linear assignment envelope, so large comparison curves do not block
+the controls. Traces yield between solves, reuse feasible duals, and certify
+absolute error at most 0.001 for n > 200 (numerical precision for smaller n),
+without entropy or spline smoothing. The renderer draws up to 120 pairing
+segments, but never subsamples the numerical loss.
 Figures run locally in the browser without Python, a backend, or a third-party
 charting library. Animated figures start paused and stop when the tab or figure
 is hidden; the inverse figure is controlled directly by its sliders.

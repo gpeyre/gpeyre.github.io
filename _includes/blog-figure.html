@@ -100,7 +100,7 @@
     </div>
   </div>
   <div class="figure-controls">
-    <label for="inverse-points">Points in each marginal n <output for="inverse-points" data-value="points">100</output><input id="inverse-points" data-param="points" type="range" min="10" max="200" step="10" value="100"></label>
+    <label for="inverse-points">Points in each marginal n <output for="inverse-points" data-value="points">300</output><input id="inverse-points" data-param="points" type="range" min="10" max="1000" step="10" value="300"></label>
     <label for="inverse-theta">Horizontal cost weight θ <output for="inverse-theta" data-value="theta">0.40</output><input id="inverse-theta" data-param="theta" type="range" min="0.2" max="2.6" step="0.01" value="0.4"></label>
     <div class="figure-actions" role="group" aria-label="Inverse optimal transport controls">
       <button type="button" data-compare aria-pressed="true">Compare sample sizes</button>
@@ -110,7 +110,7 @@
     </div>
   </div>
   <p class="figure-legend">Blue circles: source αₙ. Orange squares: target βₙ. Each marginal is sampled from a mixture of two Gaussians. Teal lines: optimal pairing for the current θ. Gray dashed lines, when enabled: reference pairing at θ = 1.</p>
-  <figcaption>The loss panel compares n = 10, 30, 100, 200 using nested marginal samples; teal is the active n. Each reference pairing is recomputed at θ = 1 for that n, then held fixed as θ varies. All n points per marginal enter the exact, unregularized OT problem and mean gap loss; at most 24 segments are drawn. No entropy or spline smoothing is used.</figcaption>
+  <figcaption>The loss panel compares n = 30, 100, 300, 1000 using nested marginal samples; teal is the active n. Each reference pairing is recomputed at θ = 1 for that n, then held fixed as θ varies. All n points per marginal enter the exact, unregularized OT problem and mean gap loss; up to 120 pairing segments are drawn. For n &gt; 200, the adaptive piecewise-linear trace has certified absolute error at most 0.001 in mean gap. No entropy or spline smoothing is used.</figcaption>
 {% endcase %}
   <p class="figure-status" data-status aria-live="off"></p>
 {% if include.kind == 'diffusion' %}

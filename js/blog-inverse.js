@@ -1,4 +1,4 @@
-/* Inverse OT: paired marginals and an exact piecewise-affine cost gap. */
+/* Inverse OT: exact pairings and a certified piecewise-affine cost gap. */
 (function () {
     "use strict";
     const M = window.BlogMath;
@@ -12,20 +12,30 @@
         const points = figure.querySelector('[data-param="points"]'), theta = figure.querySelector('[data-param="theta"]');
         const compare = figure.querySelector("[data-compare]"), observed = figure.querySelector("[data-observed]");
         const status = figure.querySelector("[data-status]");
-        const sizes = [10, 30, 100, 200], palette = ["#7b8587", "#b67837", "#3982b6", "#8467ae"];
+        const sizes = [30, 100, 300, 1000], palette = ["#7b8587", "#b67837", "#3982b6", "#8467ae"], pairLimit = 120;
         const teal = "#00778b", blue = "#2885b1", orange = "#c67c3a", ink = "#47625d";
         const curves = new Map();
-        let seed = 17, fullSample, sample, scene, worker = null, job = 0, timer = null, frame = null, failure = "";
+        let seed = 17, fullSample, sample, scene, worker = null, sceneWorker = null;
+        let job = 0, sceneJob = 0, timer = null, sceneTimer = null, frame = null, failure = "";
 
         function makeSample() {
-            fullSample = M.inverseOTSample(200, seed);
+            // Bounds need only raw points; reference assignments run in a worker.
+            fullSample = M.inverseOTSample(Number(points.max), seed, { reference: false });
             setCount();
         }
         function setCount() {
             const n = Number(points.value);
-            sample = n === fullSample.source.length ? fullSample : M.inverseOTSample(n, seed);
+            sample = { source: fullSample.source.slice(0, n), target: fullSample.target.slice(0, n),
+                model: fullSample.model, seed };
             scene = null;
             figure.dataset.curveReady = "false";
+            requestScene();
+        }
+        function receiveScene(message) {
+            if (message.job !== sceneJob) return;
+            if (message.error) { failure = message.error; schedule(); return; }
+            if (message.seed !== seed || message.count !== Number(points.value) || message.scene.theta !== Number(theta.value)) return;
+            sample = message.sample; scene = message.scene; schedule();
         }
         function receive(message) {
             if (message.job !== job) return;
@@ -42,21 +52,52 @@
                 worker.terminate(); worker = null; requestCurves();
             };
         } catch (_) { /* The same numerical routine also runs without worker support. */ }
+        try {
+            // Pairings have their own worker, so scrubbing never waits for a
+            // large comparison curve to finish on the background worker.
+            sceneWorker = new Worker(workerURL);
+            sceneWorker.onmessage = event => receiveScene(event.data);
+            sceneWorker.onerror = () => {
+                sceneWorker.terminate(); sceneWorker = null; requestScene();
+            };
+        } catch (_) { /* Fall back to the same exact assignment solver. */ }
+
+        function requestScene() {
+            clearTimeout(sceneTimer);
+            const request = { type: "scene", job: ++sceneJob, seed, count: Number(points.value), theta: Number(theta.value) };
+            const previous = scene;
+            scene = null;
+            if (sceneWorker) sceneWorker.postMessage(request);
+            else sceneTimer = setTimeout(() => {
+                if (request.job !== sceneJob) return;
+                try {
+                    if (!sample.observedPermutation) sample = M.inverseOTSample(request.count, request.seed);
+                    const next = M.inverseOTGap(sample, request.theta, previous ? previous.matching : sample.referenceMatching);
+                    receiveScene({ ...request, sample, scene: next });
+                } catch (error) { receiveScene({ job: request.job, error: error.message }); }
+            }, 0);
+            schedule();
+        }
 
         function requestCurves() {
             clearTimeout(timer); failure = "";
             const n = Number(points.value), counts = Array.from(new Set([n, ...sizes]));
-            const request = { job: ++job, seed, counts };
+            const request = { type: "curve", job: ++job, seed, counts };
             if (worker) worker.postMessage(request);
             else {
-                const next = index => {
+                const next = (index, steps = null) => {
                     if (request.job !== job || index === counts.length) return;
                     timer = setTimeout(() => {
                         try {
                             const count = counts[index];
-                            const curve = curves.get(count) || M.inverseOTCurve(M.inverseOTSample(count, request.seed));
-                            receive({ ...request, count, curve });
-                            next(index + 1);
+                            if (curves.has(count)) {
+                                receive({ ...request, count, curve: curves.get(count) }); next(index + 1); return;
+                            }
+                            steps = steps || M.inverseOTCurveSteps(M.inverseOTSample(count, request.seed), 0.2, 2.6,
+                                count > 200 ? 1e-3 : 1e-10);
+                            const step = steps.next();
+                            if (step.done) { receive({ ...request, count, curve: step.value }); next(index + 1); }
+                            else next(index, steps);
                         } catch (error) { receive({ job: request.job, error: error.message }); }
                     }, 0);
                 };
@@ -93,32 +134,33 @@
             ctx.moveTo(origin[0], pad); ctx.lineTo(origin[0], height - pad); ctx.stroke();
             ctx.textAlign = "right"; ctx.fillText("x₁", width - 8, origin[1] - 6);
             ctx.textAlign = "left"; ctx.fillText("x₂", origin[0] + 6, 15);
-            const n = sample.source.length, shown = Math.min(24, n);
+            const n = sample.source.length, shown = Math.min(pairLimit, n);
             const indices = Array.from({ length: shown }, (_, k) => Math.floor(k * n / shown));
             function pairing(permutation, color, dashed) {
-                ctx.strokeStyle = color; ctx.lineWidth = dashed ? 1.15 : 1.4;
-                ctx.globalAlpha = dashed ? 0.65 : 0.55; ctx.setLineDash(dashed ? [4, 4] : []);
+                ctx.strokeStyle = color; ctx.lineWidth = dashed ? 0.9 : 1;
+                ctx.globalAlpha = n <= 30 ? 0.6 : dashed ? 0.3 : 0.38; ctx.setLineDash(dashed ? [4, 4] : []);
                 ctx.beginPath();
                 indices.forEach(i => { ctx.moveTo(...map(sample.source[i])); ctx.lineTo(...map(sample.target[permutation[i]])); });
                 ctx.stroke(); ctx.globalAlpha = 1; ctx.setLineDash([]);
             }
-            if (observed.getAttribute("aria-pressed") === "true") pairing(sample.observedPermutation, "#747b7b", true);
-            pairing(scene.matching.permutation, teal, false);
+            if (sample.observedPermutation && observed.getAttribute("aria-pressed") === "true") pairing(sample.observedPermutation, "#747b7b", true);
+            if (scene) pairing(scene.matching.permutation, teal, false);
+            const radius = n > 300 ? 1.8 : 2.4;
             sample.source.forEach(p => {
-                ctx.beginPath(); ctx.arc(...map(p), 2.7, 0, 2 * Math.PI); ctx.fillStyle = blue; ctx.fill();
+                ctx.beginPath(); ctx.arc(...map(p), radius, 0, 2 * Math.PI); ctx.fillStyle = blue; ctx.fill();
             });
             sample.target.forEach(p => {
-                const q = map(p); ctx.fillStyle = orange; ctx.fillRect(q[0] - 2.5, q[1] - 2.5, 5, 5);
+                const q = map(p); ctx.fillStyle = orange; ctx.fillRect(q[0] - radius, q[1] - radius, 2 * radius, 2 * radius);
             });
             panel.canvas.setAttribute("aria-label", n + " blue source points and " + n + " orange target points; " +
-                shown + " of " + n + " optimal pairs shown at cost weight " + theta.value + ".");
-            figure.dataset.pairingsShown = shown;
+                (scene ? shown + " of " + n + " optimal pairs shown at cost weight " + theta.value + "." : "Computing the optimal pairs."));
+            figure.dataset.pairingsShown = scene ? shown : 0;
         }
         function drawLoss(panel) {
             const { ctx, width, height } = prepare(panel);
             const n = sample.source.length, active = curves.get(n), comparisons = compare.getAttribute("aria-pressed") === "true";
             const visible = comparisons ? sizes.filter(count => count !== n && curves.has(count)) : [];
-            const maximum = Math.max(0.025, scene.gap, ...[active, ...visible.map(count => curves.get(count))]
+            const maximum = Math.max(0.025, scene ? scene.gap : 0, ...[active, ...visible.map(count => curves.get(count))]
                 .filter(Boolean).flatMap(curve => curve.points.map(p => p.gap))) * 1.18;
             const legend = comparisons ? sizes.slice() : [];
             if (!legend.includes(n)) legend.push(n);
@@ -155,11 +197,13 @@
                 }
                 line(active, teal, 2.6);
             }
-            const current = map(scene);
-            ctx.strokeStyle = teal; ctx.globalAlpha = 0.25; ctx.lineWidth = 1;
-            ctx.beginPath(); ctx.moveTo(current[0], bottom); ctx.lineTo(current[0], current[1]); ctx.stroke(); ctx.globalAlpha = 1;
-            ctx.beginPath(); ctx.arc(...current, 4.5, 0, 2 * Math.PI); ctx.fillStyle = teal; ctx.fill();
-            ctx.strokeStyle = "#fff"; ctx.lineWidth = 1.5; ctx.stroke();
+            if (scene) {
+                const current = map(scene);
+                ctx.strokeStyle = teal; ctx.globalAlpha = 0.25; ctx.lineWidth = 1;
+                ctx.beginPath(); ctx.moveTo(current[0], bottom); ctx.lineTo(current[0], current[1]); ctx.stroke(); ctx.globalAlpha = 1;
+                ctx.beginPath(); ctx.arc(...current, 4.5, 0, 2 * Math.PI); ctx.fillStyle = teal; ctx.fill();
+                ctx.strokeStyle = "#fff"; ctx.lineWidth = 1.5; ctx.stroke();
+            }
             legend.forEach((count, index) => {
                 const x = left + 53 * (index % columns), y = 29 + 15 * Math.floor(index / columns);
                 const color = count === n ? teal : palette[sizes.indexOf(count)];
@@ -169,28 +213,34 @@
             });
             if (!active) {
                 ctx.textAlign = "center"; ctx.fillStyle = ink;
-                ctx.fillText(failure ? "Curve unavailable" : "Computing exact curve…", (left + right) / 2, top + 27);
+                ctx.fillText(failure ? "Curve unavailable" : "Computing loss curve…", (left + right) / 2, top + 27);
             }
-            panel.canvas.setAttribute("aria-label", "Mean gap loss at n = " + n + " and θ = " + theta.value + ": " + scene.gap.toFixed(6) +
+            panel.canvas.setAttribute("aria-label", "Mean gap loss at n = " + n + " and θ = " + theta.value + ": " +
+                (scene ? scene.gap.toFixed(6) : "computing the exact value") +
                 ". The reference parameter is one." + (active && active.zeroInterval ?
-                " Zero-loss interval: " + active.zeroInterval.map(x => x.toFixed(3)).join(" to ") + "." : ""));
+                " Zero-loss interval: " + active.zeroInterval.map(x => x.toFixed(5)).join(" to ") + "." : ""));
         }
         function render() {
-            if (!scene || scene.theta !== Number(theta.value)) scene = M.inverseOTGap(sample, Number(theta.value));
             figure.querySelector('[data-value="points"]').textContent = points.value;
             figure.querySelector('[data-value="theta"]').textContent = Number(theta.value).toFixed(2);
             drawMarginals(panels[0]); drawLoss(panels[1]);
             const curve = curves.get(sample.source.length);
             figure.dataset.points = points.value; figure.dataset.theta = theta.value; figure.dataset.seed = seed;
-            figure.dataset.gap = scene.gap; figure.dataset.observedCost = scene.observedCost; figure.dataset.optimalCost = scene.optimalCost;
-            figure.dataset.curveReady = String(Boolean(curve));
+            for (const key of ["gap", "observedCost", "optimalCost"]) {
+                if (scene) figure.dataset[key] = scene[key]; else delete figure.dataset[key];
+            }
+            figure.dataset.sceneReady = String(Boolean(scene));
+            figure.dataset.curveReady = String(Boolean(curve && scene));
             figure.dataset.curvesReady = String(curves.size);
             const missing = compare.getAttribute("aria-pressed") === "true" ? sizes.filter(n => !curves.has(n)) : [];
-            status.textContent = "n = " + points.value + " · observed mean cost " + scene.observedCost.toFixed(4) +
+            const summary = scene ? "n = " + points.value + " · observed mean cost " + scene.observedCost.toFixed(4) +
                 " · optimal mean cost " + scene.optimalCost.toFixed(4) + " · gap " + scene.gap.toFixed(5) +
-                ". " + Math.min(24, sample.source.length) + "/" + points.value + " pairings shown. " +
-                (curve ? "Zero-loss interval in this slice: [" + curve.zeroInterval.map(x => x.toFixed(3)).join(", ") + "]. " :
-                    "Computing the exact loss curve… ") + "Seed " + seed + "." +
+                ". " + Math.min(pairLimit, sample.source.length) + "/" + points.value + " pairings shown. " :
+                "n = " + points.value + " · Computing the exact OT pairing… ";
+            status.textContent = summary +
+                (curve ? "Zero-loss interval in this slice: [" + curve.zeroInterval.map(x => x.toFixed(5)).join(", ") + "]. " :
+                    "Computing the loss curve… ") + "Seed " + seed + "." +
+                (curve && curve.maxError > 1e-10 ? " Certified curve error ≤ " + curve.maxError.toFixed(3) + "." : "") +
                 (curve && missing.length ? " Computing comparison curves for n = " + missing.join(", ") + "." : "") +
                 (failure ? " Could not compute the curve: " + failure + "." : "");
         }
@@ -200,7 +250,7 @@
             // Invalidate outstanding messages immediately, then debounce expensive work.
             ++job; timer = setTimeout(requestCurves, 120);
         });
-        theta.addEventListener("input", schedule);
+        theta.addEventListener("input", requestScene);
         [compare, observed].forEach(button => button.addEventListener("click", () => {
             button.setAttribute("aria-pressed", String(button.getAttribute("aria-pressed") !== "true")); schedule();
         }));
@@ -217,7 +267,10 @@
         if ("ResizeObserver" in window) new ResizeObserver(schedule).observe(figure.querySelector(".inverse-panels"));
         else window.addEventListener("resize", schedule);
         window.addEventListener("pagehide", event => {
-            if (!event.persisted) { clearTimeout(timer); if (worker) worker.terminate(); }
+            if (!event.persisted) {
+                clearTimeout(timer); clearTimeout(sceneTimer);
+                if (worker) worker.terminate(); if (sceneWorker) sceneWorker.terminate();
+            }
         });
     }
 }());

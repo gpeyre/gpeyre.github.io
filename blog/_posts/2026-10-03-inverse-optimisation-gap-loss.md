@@ -160,22 +160,23 @@ For fixed point clouds, $$C_\theta=(c_\theta(x_i,y_j))_{i,j}$$ is a one-dimensio
 
 {% include blog-figure.html kind="inverse" %}
 
-The source and target are each a mixture of two moderately separated Gaussians, with differently oriented component centers:
+The source and target clouds are separated horizontally, and each is a mixture of two well-separated Gaussians, with differently oriented component centers:
 
 $$
 \begin{aligned}
-\alpha&=\tfrac12\mathcal N(-m,\sigma^2I_2)
-+\tfrac12\mathcal N(m,\sigma^2I_2),\\
-\beta&=\tfrac12\mathcal N(-r,\sigma^2I_2)
-+\tfrac12\mathcal N(r,\sigma^2I_2),\\
-m&=(1.4,0.8),\qquad r=(0.8,-1.4),\\
+\alpha&=\tfrac12\mathcal N(s-m,\sigma^2I_2)\\
+&\quad+\tfrac12\mathcal N(s+m,\sigma^2I_2),\\
+\beta&=\tfrac12\mathcal N(t-r,\sigma^2I_2)\\
+&\quad+\tfrac12\mathcal N(t+r,\sigma^2I_2),\\
+s&=(-5,0),\qquad t=(5,0),\\
+m&=(2.8,1.6),\qquad r=(1.6,-2.8),\\
 \sigma&=0.7.
 \end{aligned}
 $$
 
 We draw the two marginal clouds independently. For each $$n$$, we compute a reference pairing $$\tau_*$$ by exact OT at $$\theta_*=1$$, and keep that pairing fixed while varying $$\theta$$. The reference is recomputed when $$n$$ changes; the point clouds themselves are nested subsets of the same draws.
 
-The point-count slider changes both empirical marginals. The cost slider changes the optimal pairing and marks the corresponding position on the loss curve. All points contribute to the loss; only up to 24 pairing segments are drawn to keep the picture readable. “Reference pairs” overlays the coupling at $$\theta=1$$, “Compare sample sizes” displays several $$n$$ values, and “New sample” changes the random seed.
+The point-count slider goes up to **1,000 points in each marginal**. The cost slider changes the optimal pairing and marks the corresponding position on the loss curve. All points contribute to the loss; up to **120 pairing segments** are drawn. “Reference pairs” overlays the coupling at $$\theta=1$$, “Compare sample sizes” displays several $$n$$ values, and “New sample” changes the random seed.
 
 With equal weights, the empirical measures and reference coupling are
 
@@ -196,7 +197,7 @@ $$
 \frac1n\sum_i c_\theta(x_i,y_{\tau(i)}).
 $$
 
-Each optimal pairing is computed by the Hungarian assignment algorithm. The curve is traced by finding changes of optimal assignment along the slice, rather than fitting a smooth curve through a few values. At finite $$n$$ it remains **convex and piecewise linear**: more points can reveal a finer, more rounded-looking envelope, but do not automatically guarantee greater curvature.
+Each optimal pairing is computed by the Hungarian assignment algorithm. The loss panel uses an adaptive piecewise-linear trace of the assignment envelope, with a certified absolute error of at most $$10^{-3}$$ for $$n>200$$. Each evaluated cost and displayed pairing comes from exact, unregularized OT; no entropy or spline smoothing is added. At finite $$n$$ the loss remains **convex and piecewise linear**: more points can reveal a finer, more rounded-looking envelope, but do not automatically guarantee greater curvature.
 
 My recent work with **Oscar Tron and Clarice Poon** [[7]](#ref-curvature) studies curvature of the OT value with respect to the cost. Since the observed-coupling term is affine, this translates directly into curvature of the inverse gap loss. Under regularity and spanning assumptions, the paper gives local quadratic stability for cost recovery, modulo the unavoidable non-identifiable directions.
 

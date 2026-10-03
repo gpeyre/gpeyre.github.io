@@ -245,8 +245,10 @@ for (const n of [1, 3, 6]) {
     close(M.optimalAssignment(x, y).cost, exhaustiveCost(x, y));
     const atoms = x.map((_, i) => mixture.means[i % 3]);
     close(M.optimalAssignment(x, atoms).cost, exhaustiveCost(x, atoms));
+    let previousMatching = M.optimalAssignment(x, y);
     for (const theta of [0.2, 1, 2.6]) {
-        const weighted = M.optimalAssignment(x, y, [theta, 1]);
+        const weighted = M.optimalAssignment(x, y, [theta, 1], previousMatching);
+        previousMatching = weighted;
         close(weighted.cost, exhaustiveCost(x, y, [theta, 1]));
         close((M.sum(weighted.dualSource) + M.sum(weighted.dualTarget)) / n, weighted.cost);
         x.forEach((a, i) => y.forEach((b, j) => {
@@ -256,6 +258,22 @@ for (const n of [1, 3, 6]) {
             if (weighted.permutation[i] === j) close(c, dual);
         }));
     }
+}
+// Independent translations cannot change a quadratic-cost assignment. Both
+// the cold and reused duals must still certify the original, uncentered cost.
+const shiftedSource = M.gaussianCloud(6).map(x => [x[0] - 12, x[1] + 4]);
+const shiftedTarget = M.gaussianCloud(6).map((y, i) => [y[0] + 15, y[1] - 3 + 0.1 * i]);
+let shiftedMatching = null;
+for (const theta of [0.2, 0.21, 1, 2.6, 0.7]) {
+    shiftedMatching = M.optimalAssignment(shiftedSource, shiftedTarget, [theta, 1], shiftedMatching);
+    close(shiftedMatching.cost, exhaustiveCost(shiftedSource, shiftedTarget, [theta, 1]), 1e-9);
+    close((M.sum(shiftedMatching.dualSource) + M.sum(shiftedMatching.dualTarget)) / 6, shiftedMatching.cost, 1e-9);
+    shiftedSource.forEach((x, i) => shiftedTarget.forEach((y, j) => {
+        const cost = theta * (x[0] - y[0]) ** 2 + (x[1] - y[1]) ** 2;
+        const dual = shiftedMatching.dualSource[i] + shiftedMatching.dualTarget[j];
+        assert.ok(dual <= cost + 1e-9);
+        if (shiftedMatching.permutation[i] === j) close(dual, cost, 1e-9);
+    }));
 }
 // The same endpoint set is used in both panels. Certify assignment optimality
 // by dual feasibility and complementary slackness, not just a lower cost.
@@ -291,6 +309,12 @@ for (const sigma of [0, 0.02, 0.16, 0.6]) {
 // Independent mixture marginals have stable prefixes, while their reference
 // pairing is solved again at each count. Check the cost envelope against OT.
 const inverseSample = M.inverseOTSample(200);
+const separatedModel = M.inverseOTMixtures();
+assert.ok(separatedModel.sourceMeans.every(m => m[0] < -2));
+assert.ok(separatedModel.targetMeans.every(m => m[0] > 3));
+for (const means of [separatedModel.sourceMeans, separatedModel.targetMeans]) {
+    assert.ok(Math.hypot(means[0][0] - means[1][0], means[0][1] - means[1][1]) > 6);
+}
 assert.deepEqual(M.inverseOTSample(30).source, inverseSample.source.slice(0, 30));
 assert.deepEqual(M.inverseOTSample(30).target, inverseSample.target.slice(0, 30));
 assert.notDeepEqual(M.inverseOTSample(30, 18).source, inverseSample.source.slice(0, 30));
@@ -332,4 +356,30 @@ for (const seed of [17, 18]) for (const n of [10, 30, 100, 200]) {
         assert.ok(sample.observedPermutation.some((j, i) => i !== j), "Independently drawn marginals need a reference matching");
     }
 }
-console.log("Blog mathematics: existing figures, Gaussian and diffusion flows, certified assignments, and convex inverse OT envelopes passed.");
+// Large figures use certified chords through exact OT evaluations, not a
+// smooth fit. Verify their error against independent solves across the slice.
+const largeInverseSample = M.inverseOTSample(1000);
+const rawInverseSample = M.inverseOTSample(1000, 17, { reference: false });
+assert.deepEqual(rawInverseSample.source, largeInverseSample.source);
+assert.deepEqual(rawInverseSample.target, largeInverseSample.target);
+assert.equal(rawInverseSample.observedPermutation, undefined);
+assert.deepEqual(inverseSample.source, largeInverseSample.source.slice(0, 200));
+assert.deepEqual(inverseSample.target, largeInverseSample.target.slice(0, 200));
+assert.equal(new Set(largeInverseSample.observedPermutation).size, 1000);
+const largeCurve = M.inverseOTCurve(largeInverseSample, 0.2, 2.6, 1e-3);
+assert.equal(largeCurve.maxError, 1e-3);
+assert.ok(largeCurve.zeroInterval[0] <= 1 && largeCurve.zeroInterval[1] >= 1);
+assert.ok(largeCurve.zeroInterval[1] - largeCurve.zeroInterval[0] < 0.01);
+for (const theta of [0.2, 0.43, 0.77, 1, 1.37, 2.09, 2.6]) {
+    const exact = M.inverseOTGap(largeInverseSample, theta);
+    const error = valueOnCurve(largeCurve, theta) - exact.gap;
+    assert.ok(error >= -1e-9 && error <= largeCurve.maxError + 1e-9, "Certified error at n = 1000");
+    close(exact.observedCost - exact.optimalCost, exact.gap, 1e-9);
+}
+const iteratorSample = M.inverseOTSample(30), iterator = M.inverseOTCurveSteps(iteratorSample);
+let yielded = 0, step;
+do { step = iterator.next(); if (!step.done) assert.equal(step.value.solves, ++yielded); } while (!step.done);
+assert.deepEqual(step.value, M.inverseOTCurve(iteratorSample));
+assert.equal(step.value.solves, yielded);
+assert.throws(() => M.inverseOTCurve(inverseSample, 0.2, 2.6, -1), RangeError);
+console.log("Blog mathematics: Gaussian and diffusion flows, warm-start dual certificates, and convex inverse OT curves up to 1000 points passed.");
