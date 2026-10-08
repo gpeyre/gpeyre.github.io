@@ -1,0 +1,14 @@
+{%- assign blog_posts = site.categories.blog | sort: 'date' | reverse -%}
+{%- assign blog_archive = site.pages | where: 'url', '/blog/' | first -%}
+{%- assign blog_feed_title = site.author | append: ' — Blog' -%}
+{%- assign blog_feed_description = blog_archive.description | default: site.description -%}
+{%- assign blog_updated = blog_posts.first.date | default: site.time -%}
+{%- assign blog_updated_timestamp = blog_updated | date: '%s' | plus: 0 -%}
+{%- for post in blog_posts -%}
+    {%- assign post_updated = post.last_modified_at | default: post.date -%}
+    {%- assign post_updated_timestamp = post_updated | date: '%s' | plus: 0 -%}
+    {%- if post_updated_timestamp > blog_updated_timestamp -%}
+        {%- assign blog_updated = post_updated -%}
+        {%- assign blog_updated_timestamp = post_updated_timestamp -%}
+    {%- endif -%}
+{%- endfor -%}

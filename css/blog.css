@@ -16,12 +16,15 @@
 .blog-header h1 { font-size: clamp(32px, 4.4vw, 49px); font-weight: 700; line-height: 1.18; letter-spacing: -1.3px; margin: 22px 0; text-wrap: balance; }
 .blog-home-header h1 { font-size: clamp(56px, 8vw, 80px); letter-spacing: -3px; }
 .blog-eyebrow, .blog-back, .blog-byline, .blog-preview-meta,
-.blog-read-link, .blog-archive-heading, .blog-pagination, .blog-colophon { font-family: 'Open Sans', sans-serif; }
+.blog-read-link, .blog-archive-heading, .blog-pagination, .blog-colophon,
+.blog-subscribe { font-family: 'Open Sans', sans-serif; }
 .blog-eyebrow { color: #616863; font-size: 12px; font-weight: 600; letter-spacing: 1.3px; text-transform: uppercase; margin: 25px 0 0; }
 .blog-eyebrow span { color: #b76829; margin: 0 9px; }
 .blog-back { font-size: 14px; }
 .blog-subtitle { color: #62665f; font-size: 21px; line-height: 1.55; margin: 20px 0 12px; }
 .blog-byline { color: #67726f; font-size: 13px; margin: 24px 0 0; }
+.blog-subscribe { color: #62665f; font-size: 13px; line-height: 1.7; margin: 24px 0 0; }
+.blog-subscribe span { margin: 0 6px; }
 .blog-archive-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; border-bottom: 1px solid #ddd; padding-bottom: 18px; }
 .blog-archive-heading h2 { margin: 0; font-size: 15px; letter-spacing: 1px; text-transform: uppercase; }
 .blog-archive-heading span { color: #737875; font-size: 12px; }

@@ -14,6 +14,24 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
         const errors = [];
         page.on("pageerror", error => errors.push(error.message));
         await page.goto(base + "/blog/", { waitUntil: "networkidle" });
+        for (const [format, type] of [["rss", "application/rss+xml"], ["atom", "application/atom+xml"]]) {
+            const link = page.locator('.blog-subscribe a[type="' + type + '"]');
+            assert.equal(await link.count(), 1);
+            assert.ok(await link.isVisible(), format + " subscription link must be visible");
+            assert.equal(await link.getAttribute("href"), "/blog/" + format + ".xml");
+            assert.equal(await page.locator('head link[rel="alternate"][type="' + type + '"]').getAttribute("href"),
+                "https://www.gpeyre.com/blog/" + format + ".xml");
+            const feedResponse = await page.request.get(base + "/blog/" + format + ".xml");
+            assert.equal(feedResponse.status(), 200);
+            const feedResult = await page.evaluate(({ xml, format }) => {
+                const doc = new DOMParser().parseFromString(xml, "application/xml");
+                return { errors: doc.querySelectorAll("parsererror").length,
+                    entries: format === "rss" ? doc.querySelectorAll("item").length :
+                        doc.getElementsByTagNameNS("http://www.w3.org/2005/Atom", "entry").length };
+            }, { xml: await feedResponse.text(), format });
+            assert.equal(feedResult.errors, 0, format + " must be valid XML");
+            assert.equal(feedResult.entries, await page.locator(".blog-preview").count());
+        }
         assert.equal(await page.locator(".blog-preview").count(), 18);
         const dates = await page.locator(".blog-preview time").evaluateAll(nodes => nodes.map(n => n.dateTime));
         assert.deepEqual(dates, dates.slice().sort().reverse());
@@ -39,6 +57,7 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
         for (const path of paths) {
             const response = await page.goto(base + path, { waitUntil: "networkidle" });
             assert.equal(response.status(), 200);
+            assert.equal(await page.locator(".blog-subscribe a").count(), 2, "Each article must link to both feeds");
             await page.waitForFunction(() => window.MathJax && MathJax.Hub && MathJax.isReady);
             await page.evaluate(() => new Promise(resolve => MathJax.Hub.Queue(resolve)));
             assert.equal(await page.locator(".MathJax_Error, .merror").count(), 0, path);

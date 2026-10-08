@@ -4,6 +4,19 @@ The public archive is /blog/, linked from the main navigation. Each article is a
 Jekyll Markdown post in blog/_posts/YYYY-MM-DD-title.md. These are separate from
 the older news posts in the root _posts directory.
 
+## Subscribe
+
+The blog publishes RSS 2.0 at /blog/rss.xml and Atom 1.0 at /blog/atom.xml.
+Text links appear on the archive and each article, and every page advertises
+both feeds for reader autodiscovery. They are generated at build time from the
+blog category only, newest first, with stable article URLs, dates, authors,
+topics, and plain-text summaries from each post's description (or excerpt).
+The full articles, mathematics, and interactive figures remain on the website.
+New posts appear automatically; no manual feed edits or extra plugins are needed.
+For a substantial article revision, optionally add last_modified_at to its
+front matter in ISO 8601 format to update Atom's entry timestamp and both feeds'
+modification timestamps without changing the entry's identity.
+
 ## Add a post
 
 Create a file with front matter such as:
@@ -63,7 +76,8 @@ is hidden; the inverse figure is controlled directly by its sliders.
 
 ## Verify
 
-Run node tests/blog-math.test.js, then jekyll build. Preview the generated site
+Run node tests/blog-math.test.js, then jekyll build and
+ruby tests/blog-feeds.test.rb _site. Preview the generated site
 over HTTP and check the archive, article mathematics, and figure controls at
 desktop and mobile widths. blog/blog-todo.md, this README, and tests/ are
 excluded from the published site.

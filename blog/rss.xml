@@ -1,0 +1,29 @@
+---
+layout: null
+permalink: /blog/rss.xml
+---
+<?xml version="1.0" encoding="UTF-8"?>
+{% include blog-feed-metadata.html -%}
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>{{ blog_feed_title | xml_escape }}</title>
+    <description>{{ blog_feed_description | xml_escape }}</description>
+    <link>{{ '/blog/' | absolute_url | xml_escape }}</link>
+    <atom:link href="{{ page.url | absolute_url | xml_escape }}" rel="self" type="application/rss+xml" />
+    <lastBuildDate>{{ blog_updated | date_to_rfc822 }}</lastBuildDate>
+    <language>en</language>
+    <generator>Jekyll</generator>
+    {% for post in blog_posts %}
+    <item>
+      <title>{{ post.title | xml_escape }}</title>
+      <link>{{ post.url | absolute_url | xml_escape }}</link>
+      <guid isPermaLink="true">{{ post.url | absolute_url | xml_escape }}</guid>
+      <pubDate>{{ post.date | date_to_rfc822 }}</pubDate>
+      <dc:creator>{{ post.author | default: site.author | xml_escape }}</dc:creator>
+      <dc:language>{{ post.lang | default: 'en' | xml_escape }}</dc:language>
+      <description>{{ post.description | default: post.excerpt | strip_html | normalize_whitespace | xml_escape }}</description>
+      {% if post.topic %}<category>{{ post.topic | xml_escape }}</category>{% endif %}
+    </item>
+    {% endfor %}
+  </channel>
+</rss>

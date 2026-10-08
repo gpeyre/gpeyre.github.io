@@ -1,0 +1,31 @@
+---
+layout: null
+permalink: /blog/atom.xml
+---
+<?xml version="1.0" encoding="UTF-8"?>
+{% include blog-feed-metadata.html -%}
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+  <title type="text">{{ blog_feed_title | xml_escape }}</title>
+  <subtitle type="text">{{ blog_feed_description | xml_escape }}</subtitle>
+  <id>{{ page.url | absolute_url | xml_escape }}</id>
+  <link href="{{ page.url | absolute_url | xml_escape }}" rel="self" type="application/atom+xml" />
+  <link href="{{ '/blog/' | absolute_url | xml_escape }}" rel="alternate" type="text/html" />
+  <updated>{{ blog_updated | date_to_xmlschema }}</updated>
+  <author>
+    <name>{{ site.author | xml_escape }}</name>
+    <uri>{{ '/' | absolute_url | xml_escape }}</uri>
+  </author>
+  <generator uri="https://jekyllrb.com/">Jekyll</generator>
+  {% for post in blog_posts %}
+  <entry xml:lang="{{ post.lang | default: 'en' | xml_escape }}">
+    <title type="text">{{ post.title | xml_escape }}</title>
+    <id>{{ post.url | absolute_url | xml_escape }}</id>
+    <link href="{{ post.url | absolute_url | xml_escape }}" rel="alternate" type="text/html" />
+    <published>{{ post.date | date_to_xmlschema }}</published>
+    <updated>{{ post.last_modified_at | default: post.date | date_to_xmlschema }}</updated>
+    <author><name>{{ post.author | default: site.author | xml_escape }}</name></author>
+    <summary type="text">{{ post.description | default: post.excerpt | strip_html | normalize_whitespace | xml_escape }}</summary>
+    {% if post.topic %}<category term="{{ post.topic | xml_escape }}" />{% endif %}
+  </entry>
+  {% endfor %}
+</feed>

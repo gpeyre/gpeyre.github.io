@@ -28,5 +28,6 @@ layout: default
         <div>{% if older_post %}<a href="{{ older_post.url | prepend: site.baseurl }}"><small>&larr; Older post</small>{{ older_post.title | escape }}</a>{% endif %}</div>
         <div>{% if newer_post %}<a href="{{ newer_post.url | prepend: site.baseurl }}"><small>Newer post &rarr;</small>{{ newer_post.title | escape }}</a>{% endif %}</div>
     </nav>
+    {% include blog-subscribe.html %}
     <p class="blog-colophon"><a href="{{ '/blog/' | prepend: site.baseurl }}">Back to the blog</a> &middot; Gabriel Peyré</p>
 </main>
