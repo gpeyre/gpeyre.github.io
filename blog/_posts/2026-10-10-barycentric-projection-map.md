@@ -1,7 +1,7 @@
 ---
 title: "The barycentric projection map"
 subtitle: "From a mass-splitting coupling to a deterministic transport"
-description: "Barycentric projection of quadratic and entropic optimal transport plans, with a convexity proof, the modified-target caveat, a connection to weak transport, and an interactive unequal-cardinality example."
+description: "Barycentric projection of transport couplings in fiberwise Wasserstein geometry, with quadratic and entropic optimality proofs, the modified-target caveat, weak transport, and an interactive unequal-cardinality example."
 topic: Optimal transport
 figure: barycentric
 ---
@@ -102,6 +102,72 @@ $$
 The factor $$1/a_i$$ matters: the rows of a coupling sum to source masses, not to one. This conditional mean is also the best deterministic least-squares predictor of $$Y$$ from $$X$$ under the joint law $$\pi$$. The definition applies to any coupling; it does not by itself imply that $$T_\pi$$ is an optimal transport map.
 
 The terminology already appears in Ambrosio, Gigli and Savaré's **2005** book, Definition 5.4.2 [[1]](#ref-ags). A computational presentation is Remark 4.11 of *Computational Optimal Transport* [[2]](#ref-computational-ot). A more recent use is the estimation of OT maps from entropic couplings by Pooladian and Niles-Weed [[3]](#ref-entropic-maps).
+
+## Projection onto deterministic couplings
+
+The word *projection* can be understood literally at the level of couplings, not only as least-squares prediction of the destination. The key is to choose a distance that **keeps the source point fixed**.
+
+Fix $$\alpha\in\mathcal P_2(\mathbb R^d)$$. Let $$\mathcal C_\alpha$$ be the probability measures on $$\mathbb R^d\times\mathbb R^d$$ with finite second moments and first marginal $$\alpha$$; their second marginal is free. For $$\pi,\rho\in\mathcal C_\alpha$$, write their conditional laws as $$\pi_x,\rho_x$$ and define
+
+$$
+D_\alpha^2(\pi,\rho)
+=\int W_2^2(\pi_x,\rho_x)\,\mathrm d\alpha(x).
+$$
+
+This is the **fiberwise Wasserstein distance**, also called a fibered Wasserstein distance [[6]](#ref-fiberwise-wasserstein). Each conditional distribution is compared with the other at the same source location: mass may move in the destination coordinate, but not between different source labels.
+
+The deterministic couplings form the subset
+
+$$
+\begin{aligned}
+\rho_S&=(\mathrm{Id},S)_\#\alpha,\\
+\mathcal M_\alpha
+&=\{\rho_S:S\in L^2(\alpha;\mathbb R^d)\}.
+\end{aligned}
+$$
+
+Their conditional laws are Dirac masses $$\delta_{S(x)}$$. Define the barycentric modification of the whole coupling by
+
+$$
+P(\pi)=(\mathrm{Id},T_\pi)_\#\alpha.
+$$
+
+**Proposition.** For every $$\pi\in\mathcal C_\alpha$$, its barycentric modification is the unique nearest deterministic coupling:
+
+$$
+\boxed{
+P(\pi)=\operatorname*{argmin}_{\rho\in\mathcal M_\alpha}
+D_\alpha^2(\pi,\rho).
+}
+$$
+
+**Proof.** Since transporting a measure to a Dirac mass has only one possible coupling,
+
+$$
+\begin{aligned}
+&D_\alpha^2(\pi,\rho_S)\\
+&=\int W_2^2(\pi_x,\delta_{S(x)})\,\mathrm d\alpha(x)\\
+&=\iint\|y-S(x)\|^2\,\mathrm d\pi(x,y).
+\end{aligned}
+$$
+
+The conditional mean minimizes this expression. More precisely, expanding the square gives a Pythagorean identity directly between couplings:
+
+$$
+\begin{aligned}
+&D_\alpha^2(\pi,\rho_S)\\
+&=D_\alpha^2(\pi,P(\pi))\\
+&\quad+\int\|T_\pi(x)-S(x)\|^2\,\mathrm d\alpha(x)\\
+&=D_\alpha^2(\pi,P(\pi))
++D_\alpha^2(P(\pi),\rho_S).
+\end{aligned}
+$$
+
+The cross term vanishes because $$\int(y-T_\pi(x))\,\pi_x(\mathrm dy)=0$$. Jensen's inequality ensures $$T_\pi\in L^2(\alpha;\mathbb R^d)$$, and the remaining squared norm proves uniqueness up to $$\alpha$$-almost-everywhere equality.
+
+Geometrically, each fiber $$\pi_x$$ collapses to its **nearest Dirac mass**, located at its barycenter. On graph couplings, $$D_\alpha(\rho_S,\rho_R)=\|S-R\|_{L^2(\alpha)}$$, so $$\mathcal M_\alpha$$ is an isometric copy of the space of square-integrable maps. This really is a projection: $$P(P(\pi))=P(\pi)$$.
+
+This result holds for **every coupling**, without OT optimality. There is no constraint $$S_\#\alpha=\beta$$: the projected target is $$\widetilde\beta=(T_\pi)_\#\alpha$$. It is also a statement about the fiberwise metric, **not ordinary Wasserstein distance on the product space**, which allows the source coordinate to move. The sufficient conditions below address the separate question of whether $$T_\pi$$ is an optimal transport map to its image.
 
 ## Optimal to a modified target
 
@@ -264,3 +330,5 @@ Projecting an ordinary OT plan is **not generally the same as solving weak OT**.
 4. <span id="ref-weak-duality"></span> Nathael Gozlan, Cyril Roberto, Paul-Marie Samson and Prasad Tetali. [*Kantorovich duality for general transport costs and applications*](https://doi.org/10.1016/j.jfa.2017.08.015). *Journal of Functional Analysis* **273**, 3327–3405, 2017.
 
 5. <span id="ref-brenier-strassen"></span> Nathael Gozlan and Nicolas Juillet. [*On a mixture of Brenier and Strassen theorems*](https://arxiv.org/abs/1808.02681). *Proceedings of the London Mathematical Society* **120**(3), 434–463, 2020.
+
+6. <span id="ref-fiberwise-wasserstein"></span> Clément Cancès, Daniel Matthes, Ismael Medina and Bernhard Schmitzer. [*Continuum of coupled Wasserstein gradient flows*](https://arxiv.org/abs/2411.13969). arXiv:2411.13969, 2024. Section 2, Eq. (24), defines the fiberwise Wasserstein metric; the fixed marginal is written as the second coordinate there.

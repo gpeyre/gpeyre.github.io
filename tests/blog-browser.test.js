@@ -151,7 +151,9 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
                     "weak OT", "log-sum-exp", "three quarters", "finite second moments",
                     "For an arbitrary coupling", "sufficient conditions", "optimal quadratic Kantorovich coupling",
                     "solution of the quadratic entropic OT problem", "Corollary (entropic OT)",
-                    "not merely positivity or the marginal constraints"]) {
+                    "not merely positivity or the marginal constraints", "Projection onto deterministic couplings",
+                    "fiberwise Wasserstein distance", "unique nearest deterministic coupling", "Pythagorean identity",
+                    "every coupling", "not ordinary Wasserstein distance on the product space"]) {
                     assert.ok(prose.includes(phrase), "Missing barycentric qualification: " + phrase);
                 }
                 const opening = await page.locator(".blog-prose > p").nth(1).textContent();
@@ -159,17 +161,20 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
                 assert.ok(opening.includes("For an arbitrary coupling, the resulting map need not be optimal"));
                 const tex = await page.evaluate(() => MathJax.Hub.getAllJax().map(jax => jax.originalText));
                 for (const formula of ["T_\\pi(x_i)=\\frac1{a_i}", "T_\\varepsilon(x)=x-\\nabla f_\\varepsilon(x)",
-                    "\\nabla\\Phi_\\varepsilon(x)", "\\operatorname{Cov}_{q(x)}(Y)"]) {
+                    "\\nabla\\Phi_\\varepsilon(x)", "\\operatorname{Cov}_{q(x)}(Y)",
+                    "D_\\alpha^2(\\pi,\\rho)", "W_2^2(\\pi_x,\\rho_x)",
+                    "\\operatorname*{argmin}_{\\rho\\in\\mathcal M_\\alpha}",
+                    "D_\\alpha^2(P(\\pi),\\rho_S)", "P(P(\\pi))=P(\\pi)"]) {
                     assert.ok(tex.some(t => t.includes(formula)), "Missing barycentric formula: " + formula);
                 }
                 const bibliography = page.locator("article #bibliography + ol");
-                assert.equal(await bibliography.locator("li").count(), 5);
+                assert.equal(await bibliography.locator("li").count(), 6);
                 const citations = await page.locator('article a[href^="#ref-"]').evaluateAll(nodes => nodes.map(n => n.hash.slice(1)));
-                assert.equal(new Set(citations).size, 5);
+                assert.equal(new Set(citations).size, 6);
                 for (const id of citations) assert.equal(await bibliography.locator('[id="' + id + '"]').count(), 1);
                 for (const source of ["https://link.springer.com/book/10.1007/b137080", "https://arxiv.org/abs/1803.00567",
                     "https://arxiv.org/abs/2109.12004", "https://doi.org/10.1016/j.jfa.2017.08.015",
-                    "https://arxiv.org/abs/1808.02681"]) {
+                    "https://arxiv.org/abs/1808.02681", "https://arxiv.org/abs/2411.13969"]) {
                     assert.equal(await page.locator("article a[href='" + source + "']").count(), 1);
                 }
             }
