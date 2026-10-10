@@ -148,9 +148,15 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
                 assert.equal(await page.locator(".blog-eyebrow time").getAttribute("datetime"), "2026-10-10");
                 const prose = await page.locator("article").textContent();
                 for (const phrase of ["subgradient selection", "at most", "modified target", "cyclically monotone",
-                    "weak OT", "log-sum-exp", "three quarters", "finite second moments"]) {
+                    "weak OT", "log-sum-exp", "three quarters", "finite second moments",
+                    "For an arbitrary coupling", "sufficient conditions", "optimal quadratic Kantorovich coupling",
+                    "solution of the quadratic entropic OT problem", "Corollary (entropic OT)",
+                    "not merely positivity or the marginal constraints"]) {
                     assert.ok(prose.includes(phrase), "Missing barycentric qualification: " + phrase);
                 }
+                const opening = await page.locator(".blog-prose > p").nth(1).textContent();
+                assert.ok(opening.includes("quadratic Kantorovich OT or quadratic entropic OT"));
+                assert.ok(opening.includes("For an arbitrary coupling, the resulting map need not be optimal"));
                 const tex = await page.evaluate(() => MathJax.Hub.getAllJax().map(jax => jax.originalText));
                 for (const formula of ["T_\\pi(x_i)=\\frac1{a_i}", "T_\\varepsilon(x)=x-\\nabla f_\\varepsilon(x)",
                     "\\nabla\\Phi_\\varepsilon(x)", "\\operatorname{Cov}_{q(x)}(Y)"]) {

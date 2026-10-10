@@ -8,7 +8,7 @@ figure: barycentric
 
 How do you turn a transport plan into a map? This question appears as soon as we transport a small point cloud to a much larger one: the Kantorovich solution splits each source point's mass among several destinations. Entropic regularization makes that splitting even more explicit.
 
-The **barycentric projection** replaces those destinations by their conditional mean. For quadratic optimal transport, the resulting map is itself optimal—but **to its own image measure, not generally to the original target**. In the entropic case, it is the gradient of a smooth convex log-sum-exp potential. The distinction between a coupling and its projection is the central point of this construction.
+The **barycentric projection** replaces those destinations by their conditional mean. For an arbitrary coupling, the resulting map need not be optimal. If the coupling solves **quadratic Kantorovich OT or quadratic entropic OT**, however, its barycentric projection is an unregularized quadratic Monge map—but **to its own image measure, not generally to the original target**. In the entropic case, this follows from a smooth convex log-sum-exp potential derived from the optimal dual potentials.
 
 <!--more-->
 
@@ -99,13 +99,13 @@ $$
 \boxed{T_\pi(x_i)=\frac1{a_i}\sum_j\pi_{ij}y_j.}
 $$
 
-The factor $$1/a_i$$ matters: the rows of a coupling sum to source masses, not to one. This conditional mean is also the best deterministic least-squares predictor of $$Y$$ from $$X$$ under the joint law $$\pi$$.
+The factor $$1/a_i$$ matters: the rows of a coupling sum to source masses, not to one. This conditional mean is also the best deterministic least-squares predictor of $$Y$$ from $$X$$ under the joint law $$\pi$$. The definition applies to any coupling; it does not by itself imply that $$T_\pi$$ is an optimal transport map.
 
 The terminology already appears in Ambrosio, Gigli and Savaré's **2005** book, Definition 5.4.2 [[1]](#ref-ags). A computational presentation is Remark 4.11 of *Computational Optimal Transport* [[2]](#ref-computational-ot). A more recent use is the estimation of OT maps from entropic couplings by Pooladian and Niles-Weed [[3]](#ref-entropic-maps).
 
 ## Optimal to a modified target
 
-**Theorem.** Let $$\alpha,\beta\in\mathcal P_2(\mathbb R^d)$$, the probability measures with finite second moments. If $$\pi$$ is an **optimal quadratic Kantorovich coupling**, then
+**Theorem (quadratic OT).** Let $$\alpha,\beta\in\mathcal P_2(\mathbb R^d)$$, the probability measures with finite second moments. If $$\pi$$ is an **optimal quadratic Kantorovich coupling**, then
 
 $$
 \widetilde\beta=(T_\pi)_\#\alpha,\qquad
@@ -132,7 +132,9 @@ The projected graph is therefore still cyclically monotone, which is the quadrat
 
 For discrete sources the precise statement is **subgradient selection**, not necessarily a classical gradient: $$\Phi$$ can be nondifferentiable at source atoms. Wherever $$\Phi$$ is differentiable, $$T_\pi=\nabla\Phi$$.
 
-Optimality of $$\pi$$ and the quadratic cost are essential to this argument. For an arbitrary coupling, the claim fails: take $$\alpha=\beta=(\delta_{-1}+\delta_1)/2$$ and pair each point with its opposite. Its barycentric map is $$T(x)=-x$$, while the identity transports $$\alpha$$ to itself at zero cost.
+This proof uses unregularized quadratic optimality of $$\pi$$. The entropic OT guarantee below has a different proof. For an arbitrary coupling, there is no general optimality guarantee: take $$\alpha=\beta=(\delta_{-1}+\delta_1)/2$$ and pair each point with its opposite. Its barycentric map is $$T(x)=-x$$, while the identity transports $$\alpha$$ to itself at zero cost.
+
+These are **sufficient conditions**, not an if-and-only-if characterization. For example, an independent coupling $$\alpha\otimes\beta$$ has a constant barycentric map, which is automatically optimal to its point-mass image, even when the coupling is not an OT optimizer.
 
 ## Why this does not solve the original problem
 
@@ -157,7 +159,7 @@ Consequently, with finite second moments, $$\widetilde\beta=\beta$$ **if and onl
 
 ## Entropic projection and log sum exp
 
-Entropic dual potentials $$f_i,g_j$$ can be normalized so that
+Now assume $$\pi=\pi^\varepsilon$$ is the **solution of the quadratic entropic OT problem** defined above, not an arbitrary positive coupling. Its optimal dual potentials $$f_i,g_j$$ can be normalized so that
 
 $$
 \pi^\varepsilon_{ij}
@@ -209,7 +211,9 @@ $$
 \succeq0.
 $$
 
-Here the covariance is taken over the target points with probabilities $$q_j(x)$$. Thus the entropic barycentric map also solves **unregularized quadratic Monge OT to its own pushforward**, even though $$\pi^\varepsilon$$ need not be an unregularized optimal plan to $$\beta$$. The potential formula also defines the map between and beyond the sampled source points.
+Here the covariance is taken over the target points with probabilities $$q_j(x)$$.
+
+**Corollary (entropic OT).** If $$\pi^\varepsilon$$ solves the quadratic entropic OT problem, then $$T_{\pi^\varepsilon}$$ solves **unregularized quadratic Monge OT to its own pushforward**, because it is the gradient of the convex potential $$\Phi_\varepsilon$$. The coupling $$\pi^\varepsilon$$ need not be an unregularized optimal plan to $$\beta$$. This conclusion uses its entropic optimality and dual representation, not merely positivity or the marginal constraints. The potential formula also defines the map between and beyond the sampled source points.
 
 ## Move the target cloud
 
