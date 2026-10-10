@@ -32,11 +32,12 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
             assert.equal(feedResult.errors, 0, format + " must be valid XML");
             assert.equal(feedResult.entries, await page.locator(".blog-preview").count());
         }
-        assert.equal(await page.locator(".blog-preview").count(), 18);
+        assert.equal(await page.locator(".blog-preview").count(), 19);
         const dates = await page.locator(".blog-preview time").evaluateAll(nodes => nodes.map(n => n.dateTime));
         assert.deepEqual(dates, dates.slice().sort().reverse());
         const paths = await page.locator(".blog-preview h2 a").evaluateAll(nodes => nodes.map(n => new URL(n.href).pathname));
-        assert.equal(new Set(paths).size, 18);
+        assert.equal(new Set(paths).size, 19);
+        assert.ok(paths.includes("/blog/2026/10/10/barycentric-projection-map/"));
         assert.ok(paths.includes("/blog/2026/10/03/inverse-optimisation-gap-loss/"));
         assert.ok(paths.includes("/blog/2026/06/15/diffusion-versus-optimal-transport/"));
         assert.ok(paths.includes("/blog/2026/09/15/gaussian-preserving-wasserstein-flows/"));
@@ -142,6 +143,30 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
             }
             const isDiffusion = path.includes("diffusion-versus-optimal-transport");
             const isInverse = path.includes("inverse-optimisation-gap-loss");
+            const isBarycentric = path.includes("barycentric-projection-map");
+            if (isBarycentric) {
+                assert.equal(await page.locator(".blog-eyebrow time").getAttribute("datetime"), "2026-10-10");
+                const prose = await page.locator("article").textContent();
+                for (const phrase of ["subgradient selection", "at most", "modified target", "cyclically monotone",
+                    "weak OT", "log-sum-exp", "three quarters", "finite second moments"]) {
+                    assert.ok(prose.includes(phrase), "Missing barycentric qualification: " + phrase);
+                }
+                const tex = await page.evaluate(() => MathJax.Hub.getAllJax().map(jax => jax.originalText));
+                for (const formula of ["T_\\pi(x_i)=\\frac1{a_i}", "T_\\varepsilon(x)=x-\\nabla f_\\varepsilon(x)",
+                    "\\nabla\\Phi_\\varepsilon(x)", "\\operatorname{Cov}_{q(x)}(Y)"]) {
+                    assert.ok(tex.some(t => t.includes(formula)), "Missing barycentric formula: " + formula);
+                }
+                const bibliography = page.locator("article #bibliography + ol");
+                assert.equal(await bibliography.locator("li").count(), 5);
+                const citations = await page.locator('article a[href^="#ref-"]').evaluateAll(nodes => nodes.map(n => n.hash.slice(1)));
+                assert.equal(new Set(citations).size, 5);
+                for (const id of citations) assert.equal(await bibliography.locator('[id="' + id + '"]').count(), 1);
+                for (const source of ["https://link.springer.com/book/10.1007/b137080", "https://arxiv.org/abs/1803.00567",
+                    "https://arxiv.org/abs/2109.12004", "https://doi.org/10.1016/j.jfa.2017.08.015",
+                    "https://arxiv.org/abs/1808.02681"]) {
+                    assert.equal(await page.locator("article a[href='" + source + "']").count(), 1);
+                }
+            }
             if (isInverse) {
                 assert.equal(await page.locator(".blog-eyebrow time").getAttribute("datetime"), "2026-10-03");
                 for (const source of ["https://doi.org/10.1287/opre.2022.0382", "https://arxiv.org/abs/2505.07124",
@@ -319,6 +344,53 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
                     assert.equal(await figure.locator("[data-observed]").getAttribute("aria-pressed"), "false");
                     await page.waitForFunction(() => +document.querySelector('[data-figure="inverse"]').dataset.curvesReady === 4,
                         null, { timeout: 120000 });
+                } else if (kind === "barycentric") {
+                    const source = figure.locator('[data-param="source"]'), target = figure.locator('[data-param="target"]');
+                    const motion = figure.locator('[data-param="motion"]'), epsilon = figure.locator('[data-param="epsilon"]');
+                    const ready = (n, m, mode, angle, eps = 0.2) => page.waitForFunction(({ n, m, mode, angle, eps }) => {
+                        const f = document.querySelector('[data-figure="barycentric"]');
+                        return f.dataset.ready === "true" && +f.dataset.sourcePoints === n && +f.dataset.targetPoints === m &&
+                            f.dataset.mode === mode && +f.dataset.motion === angle && +f.dataset.epsilon === (mode === "exact" ? 0 : eps);
+                    }, { n, m, mode, angle, eps }, { timeout: 120000 });
+                    const values = () => figure.evaluate(f => ({ n: +f.dataset.sourcePoints, m: +f.dataset.targetPoints,
+                        residual: +f.dataset.residual, cost: +f.dataset.cost, meanError: +f.dataset.meanError,
+                        barycenters: +f.dataset.barycenters, shown: +f.dataset.couplingsShown }));
+                    await ready(12, 240, "entropic", 0);
+                    const initial = await values();
+                    assert.equal(initial.barycenters, 12); assert.ok(initial.shown > 0);
+                    assert.ok(initial.residual < 1.1e-10 && initial.meanError < 1e-7);
+                    await figure.screenshot({ path: screenshotDir + "/blog-barycentric-default.png", style: ".navbar { visibility: hidden; }" });
+                    const first = await figure.locator("canvas").evaluate(n => n.toDataURL());
+                    await motion.fill("85"); await target.fill("310"); await source.fill("13");
+                    await ready(13, 310, "entropic", 85);
+                    assert.notEqual(await figure.locator("canvas").evaluate(n => n.toDataURL()), first);
+                    await epsilon.fill("1"); await ready(13, 310, "entropic", 85, 1);
+                    const entropicCost = (await values()).cost;
+                    await figure.locator("[data-exact]").click(); await ready(13, 310, "exact", 85);
+                    assert.ok(await epsilon.isDisabled());
+                    const unregularized = await values();
+                    assert.ok(unregularized.cost <= entropicCost + 1e-8);
+                    assert.equal(unregularized.barycenters, 13);
+                    assert.ok(unregularized.residual < 1e-12 && unregularized.meanError < 1e-10);
+                    await figure.screenshot({ path: screenshotDir + "/blog-barycentric-exact.png", style: ".navbar { visibility: hidden; }" });
+                    // A large coprime solve must yield to controls, and a newer
+                    // request must not be overwritten by that older solve.
+                    await source.fill("39"); await target.fill("590");
+                    const responsiveness = await page.evaluate(() => new Promise(resolve => {
+                        const start = performance.now(); requestAnimationFrame(() => resolve(performance.now() - start));
+                    }));
+                    assert.ok(responsiveness < 500, "The unequal-cardinality solve must not freeze controls");
+                    await motion.fill("-180"); await source.fill("3"); await target.fill("30");
+                    await ready(3, 30, "exact", -180);
+                    assert.equal((await values()).barycenters, 3);
+                    await source.fill("40"); await target.fill("600"); await motion.fill("73");
+                    await ready(40, 600, "exact", 73);
+                    await figure.locator("[data-exact]").click();
+                    await epsilon.fill("0.05"); await ready(40, 600, "entropic", 73, 0.05);
+                    assert.ok((await values()).residual < 1.1e-10);
+                    await figure.locator("[data-reset]").click(); await ready(12, 240, "entropic", 0);
+                    assert.equal(await figure.locator("[data-exact]").getAttribute("aria-pressed"), "false");
+                    assert.ok(await epsilon.isEnabled());
                 } else {
                     const scrub = page.locator('[data-param="' + (kind === "sinkhorn" ? "iteration" : kind === "gaussian" ? "weight" : "time") + '"]');
                     if (kind === "sinkhorn") {
@@ -405,6 +477,19 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
                 const clipped = await page.locator(".blog-prose .MathJax_SVG_Display").evaluateAll(nodes =>
                     nodes.flatMap((n, i) => n.scrollWidth > n.clientWidth + 2 ? [i] : []));
                 assert.deepEqual(clipped, [], "The inverse optimisation equations must fit the mobile column");
+            }
+            if (isBarycentric) {
+                await page.setViewportSize({ width: 320, height: 844 });
+                await page.evaluate(() => new Promise(resolve => MathJax.Hub.Queue(["Rerender", MathJax.Hub], resolve)));
+                assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false);
+                const clipped = await page.locator(".blog-prose .MathJax_SVG_Display").evaluateAll(nodes =>
+                    nodes.flatMap((n, i) => n.scrollWidth > n.clientWidth + 2 ? [i] : []));
+                assert.deepEqual(clipped, [], "The barycentric equations must fit the narrow mobile column");
+                const figure = page.locator('[data-figure="barycentric"]');
+                assert.ok((await figure.locator("canvas").boundingBox()).height >= 320);
+                await figure.screenshot({ path: screenshotDir + "/blog-barycentric-320.png", style: ".navbar { visibility: hidden; }" });
+                await page.setViewportSize({ width: 390, height: 844 });
+                await page.evaluate(() => new Promise(resolve => MathJax.Hub.Queue(["Rerender", MathJax.Hub], resolve)));
             }
             if (hasFigure) await page.locator("[data-figure]").screenshot({ path: screenshotDir + "/blog-figure-" + await page.locator("[data-figure]").getAttribute("data-figure") + "-mobile.png" });
             if (isInverse) {
@@ -517,7 +602,7 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
         assert.ok(await fallback.locator(".figure-controls").isHidden());
         assert.ok((await fallback.locator("article").textContent()).includes("A supremum of affine functions is convex"));
         await noJS.close();
-        console.log("Blog browser QA passed: all 18 posts, maths, images, figures, navigation, mobile widths, and no-JavaScript fallbacks.");
+        console.log("Blog browser QA passed: all 19 posts, feeds, maths, images, figures, navigation, mobile widths, and no-JavaScript fallbacks.");
     } finally {
         await browser.close();
     }

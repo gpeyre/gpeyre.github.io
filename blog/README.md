@@ -44,7 +44,8 @@ images. The Duhamel portrait is public domain; its source is credited in the pos
 
 ## Interactive figures
 
-Add figure: pl, sinkhorn, gaussian, gaussian-flow, ode, diffusion, or inverse to the front matter, then use:
+Add figure: pl, sinkhorn, gaussian, gaussian-flow, ode, diffusion, inverse, or
+barycentric to the front matter, then use:
 
 ~~~liquid
 {% include blog-figure.html kind="gaussian" %}
@@ -70,13 +71,26 @@ the controls. Traces yield between solves, reuse feasible duals, and certify
 absolute error at most 0.001 for n > 200 (numerical precision for smaller n),
 without entropy or spline smoothing. The renderer draws up to 120 pairing
 segments, but never subsamples the numerical loss.
+The barycentric figure uses js/blog-barycentric-math.js and
+js/blog-barycentric.js. Its independent sliders set 3–40 uniform source atoms,
+30–600 uniform target atoms, and target rotation/deformation. It starts with
+n = 12 and m = 240. Log-domain Sinkhorn at ε = 0.2 is the default;
+ε ranges from 0.05 to 1. A button switches to genuine unregularized quadratic OT
+via integer min-cost flow, with checked primal/dual certificates. Both modes
+handle unequal counts without nearest-neighbor or equal-cardinality shortcuts.
+Solves yield in short chunks and discard superseded control requests.
+All masses enter the projection; only coupling segments below 0.5% of the
+largest entry are omitted from drawing. Solid black arrows end at conditional
+means, not at the original target cloud. Repeated source coordinates share one
+conditional mean. Both axes use the same spatial scale.
 Figures run locally in the browser without Python, a backend, or a third-party
 charting library. Animated figures start paused and stop when the tab or figure
 is hidden; the inverse figure is controlled directly by its sliders.
 
 ## Verify
 
-Run node tests/blog-math.test.js, then jekyll build and
+Run node tests/blog-math.test.js and node tests/blog-barycentric.test.js,
+then jekyll build and
 ruby tests/blog-feeds.test.rb _site. Preview the generated site
 over HTTP and check the archive, article mathematics, and figure controls at
 desktop and mobile widths. blog/blog-todo.md, this README, and tests/ are

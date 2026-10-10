@@ -111,12 +111,29 @@
   </div>
   <p class="figure-legend">Blue circles: source αₙ. Orange squares: target βₙ. Each marginal is sampled from a mixture of two Gaussians. Teal lines: optimal pairing for the current θ. Gray dashed lines, when enabled: reference pairing at θ = 1.</p>
   <figcaption>The logarithmic point-count slider runs from 10 to 400 points per marginal. The loss panel compares n = 30, 100, 300, 400 using nested marginal samples; teal is the active n. Each reference pairing is recomputed at θ = 1 for that n, then held fixed as θ varies. All n points per marginal enter the exact, unregularized OT problem and mean gap loss; up to 120 pairing segments are drawn. For n &gt; 200, the adaptive piecewise-linear trace has certified absolute error at most 0.001 in mean gap. No entropy or spline smoothing is used.</figcaption>
+{% when 'barycentric' %}
+  <h3 id="figure-barycentric-title">From a many-to-many coupling to a map</h3>
+  <canvas width="900" height="540" role="img" aria-label="Blue source points and many orange target points, joined by faint gray transport-coupling segments. Solid black arrows send each source to its conditional barycenter."></canvas>
+  <div class="figure-controls">
+    <label for="barycentric-source">Source points n <output for="barycentric-source" data-value="source">12</output><input id="barycentric-source" data-param="source" type="range" min="3" max="40" step="1" value="12"></label>
+    <label for="barycentric-target">Target points m <output for="barycentric-target" data-value="target">240</output><input id="barycentric-target" data-param="target" type="range" min="30" max="600" step="10" value="240"></label>
+    <label for="barycentric-motion">Target rotation and deformation <output for="barycentric-motion" data-value="motion">0°</output><input id="barycentric-motion" data-param="motion" type="range" min="-180" max="180" step="1" value="0"></label>
+    <label for="barycentric-epsilon">Entropic regularization ε <output for="barycentric-epsilon" data-value="epsilon">0.20</output><input id="barycentric-epsilon" data-param="epsilon" type="range" min="0.05" max="1" step="0.01" value="0.2"></label>
+    <div class="figure-actions" role="group" aria-label="Barycentric projection controls">
+      <button type="button" data-exact aria-pressed="false">Use unregularized OT</button>
+      <button type="button" data-reset>Reset</button>
+    </div>
+  </div>
+  <p class="figure-legend">Blue circles: source α. Orange squares: target β. Faint gray segments: coupling π, with opacity weighted by mass. Solid black arrows and dots: x ↦ Tπ(x).</p>
+  <figcaption>Uniform masses are 1/n and 1/m; no equal-cardinality matching approximation is used. Change n and m independently, move the target cloud, or switch between entropic and unregularized quadratic OT. Log-domain Sinkhorn is checked against the marginal constraints; the unregularized solver uses min-cost flow with a dual optimality certificate. Gray segments below 0.5% of the largest coupling entry are omitted for readability. All entries still enter the black conditional barycenters. Spatial scales are equal on both axes.</figcaption>
 {% endcase %}
   <p class="figure-status" data-status aria-live="off"></p>
 {% if include.kind == 'diffusion' %}
   <div class="figure-fallback"><img src="{{ '/blog/imgs/diffusion-map.webp' | prepend: site.baseurl }}" width="936" height="697" alt="Reference sketch: blue, cyan, and brown curved diffusion trajectories connect a central cloud to three black target points."><p>Reference sketch. Enable JavaScript for the interactive diffusion and optimal-transport comparison.</p></div>
 {% elsif include.kind == 'inverse' %}
   <p class="figure-fallback">Enable JavaScript to explore the marginal points, OT pairings, and gap loss with the sliders. The definitions and convexity proof remain available below.</p>
+{% elsif include.kind == 'barycentric' %}
+  <p class="figure-fallback">Enable JavaScript to vary the unequal point clouds and compare a transport coupling with its barycentric projection. Each black endpoint is the mean of the target points conditionally assigned to one blue source point. The definitions, theorem, and proof remain available in the article.</p>
 {% else %}
   <p class="figure-fallback">Enable JavaScript to use this figure’s animation and sliders. The equations and explanation remain available in the article.</p>
 {% endif %}
