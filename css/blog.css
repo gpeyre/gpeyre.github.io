@@ -8,7 +8,7 @@
 .blog-page a { color: #00778b; text-underline-offset: 3px; }
 .blog-page a:hover { color: #005361; }
 .blog-page a:focus-visible, .blog-page button:focus-visible,
-.blog-page input:focus-visible { outline: 3px solid #b76829; outline-offset: 4px; }
+.blog-page input:focus-visible, .blog-page summary:focus-visible { outline: 3px solid #b76829; outline-offset: 4px; }
 .blog-wrap { width: min(100% - 48px, 820px); margin: 0 auto; }
 .blog-archive-wrap { width: min(100% - 48px, 1010px); margin: 0 auto; }
 .blog-header { background: #f5f4ef; border-bottom: 1px solid #e6e4db; margin-bottom: 56px; padding: 108px 0 42px; }
@@ -25,6 +25,20 @@
 .blog-byline { color: #67726f; font-size: 13px; margin: 24px 0 0; }
 .blog-subscribe { color: #62665f; font-size: 13px; line-height: 1.7; margin: 24px 0 0; }
 .blog-subscribe span { margin: 0 6px; }
+.blog-subscribe button { background: #fff; color: #006b7d; border: 1px solid #90b6ba; border-radius: 4px; padding: 9px 12px; min-height: 44px; margin: 8px 0 0 10px; font: 600 12px 'Open Sans', sans-serif; cursor: pointer; }
+.blog-subscribe button:hover { background: #e7f0ee; }
+.blog-subscribe button:disabled { opacity: .6; cursor: wait; }
+.blog-subscribe button[hidden] { display: none; }
+.blog-subscribe .blog-copy-status { display: block; margin: 8px 0 0; color: #47625d; font-size: 12px; }
+.blog-subscribe-help { max-width: 620px; margin-top: 12px; font: 13px/1.7 'Open Sans', sans-serif; color: #62665f; }
+.blog-subscribe-help summary { color: #00778b; cursor: pointer; width: fit-content; padding: 4px 0; }
+.blog-subscribe-guide { border-left: 2px solid #b8d8d5; padding: 12px 0 0 16px; }
+.blog-subscribe-guide p { font-size: inherit; line-height: inherit; margin: 0 0 12px; }
+.blog-subscribe-guide ol { padding-left: 20px; margin: 0 0 16px; }
+.blog-subscribe-guide li { margin-bottom: 8px; }
+.blog-subscribe-guide label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; }
+.blog-subscribe-guide input { box-sizing: border-box; width: 100%; min-width: 0; min-height: 44px; padding: 10px; border: 1px solid #b8c6c2; border-radius: 4px; background: #fff; color: #253039; font: 16px 'Open Sans', sans-serif; }
+.blog-subscribe-guide .blog-subscribe-tip { font-size: 12px; margin-top: 8px; }
 .blog-archive-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; border-bottom: 1px solid #ddd; padding-bottom: 18px; }
 .blog-archive-heading h2 { margin: 0; font-size: 15px; letter-spacing: 1px; text-transform: uppercase; }
 .blog-archive-heading span { color: #737875; font-size: 12px; }
@@ -101,6 +115,7 @@
     .blog-header { padding: 92px 0 32px; margin-bottom: 32px; }
     .blog-header h1 { letter-spacing: -.8px; }
     .blog-subtitle { font-size: 19px; }
+    .blog-subscribe button { margin-left: 0; }
     .blog-preview { grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 28px 0; }
     .blog-preview-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 5px 14px; padding: 0; }
     .blog-preview-meta span { margin: 0; }

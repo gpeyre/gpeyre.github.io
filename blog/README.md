@@ -12,6 +12,13 @@ both feeds for reader autodiscovery. They are generated at build time from the
 blog category only, newest first, with stable article URLs, dates, authors,
 topics, and plain-text summaries from each post's description (or excerpt).
 The full articles, mathematics, and interactive figures remain on the website.
+The shared subscription block explains how to add the feed to an RSS reader,
+including why Safari may display raw feed text. Its Copy feed URL button uses
+js/blog-subscribe.js to copy the canonical HTTPS RSS address, not the preview
+server address. If clipboard access is unavailable or denied, the native help
+panel opens and selects the URL for manual copying. Instructions, a readonly
+URL field, and both feed links remain usable without JavaScript; the copy button
+is then hidden. No subscription service, account, or email signup is added.
 New posts appear automatically; no manual feed edits or extra plugins are needed.
 For a substantial article revision, optionally add last_modified_at to its
 front matter in ISO 8601 format to update Atom's entry timestamp and both feeds'
@@ -95,3 +102,5 @@ ruby tests/blog-feeds.test.rb _site. Preview the generated site
 over HTTP and check the archive, article mathematics, and figure controls at
 desktop and mobile widths. blog/blog-todo.md, this README, and tests/ are
 excluded from the published site.
+For subscription UI checks, run tests/blog-subscribe.test.js with the same
+BLOG_PLAYWRIGHT_PATH and BLOG_PREVIEW_URL settings as tests/blog-browser.test.js.

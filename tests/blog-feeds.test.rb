@@ -147,6 +147,37 @@ check(Time.rfc2822(text(channel, "lastBuildDate")) == last_update, "RSS and Atom
     subscribe = html.match(/<p class="blog-subscribe">(.*?)<\/p>/m)
     check(subscribe && subscribe[1].include?("href=\"#{BASEURL}/blog/#{format}.xml\""), "#{url} needs a visible #{format} subscription link")
   end
+  next if relative_path == "/"
+
+  check(html.scan(/class="blog-subscription"/).size == 1, "#{url} needs one subscription help component")
+  subscribe = html.match(/<p class="blog-subscribe">(.*?)<\/p>/m)[1]
+  check(subscribe.scan(/<a\b/).size == 2, "#{url} must retain just the two feed links in its subscription line")
+  copy_buttons = html.scan(/<button\b[^>]*\bdata-copy-feed\b[^>]*>/)
+  check(copy_buttons.size == 1, "#{url} needs one Copy feed URL button")
+  copy_button = copy_buttons.first
+  check(attributes(copy_button)["data-feed-url"] == ROOT + "/blog/rss.xml", "#{url} must copy the canonical absolute RSS URL, not the preview URL")
+  check(copy_button.match?(/\bhidden(?:\s|=|>)/), "#{url} must hide the copy button until JavaScript is available")
+
+  help = html.match(/<details\b[^>]*class="blog-subscribe-help"[^>]*>(.*?)<\/details>/m)
+  check(help, "#{url} needs native, JavaScript-independent subscription help")
+  check(help[1].match?(/<summary\b[^>]*>\s*How to subscribe\s*<\/summary>/), "#{url} needs a keyboard-accessible How to subscribe summary")
+  check(help[1].include?("Safari") && help[1].match?(/(?:RSS|feed) reader/i), "#{url} must explain how Safari users subscribe with a feed reader")
+  help_links = help[1].scan(/<a\b[^>]+>/).map { |tag| attributes(tag) }
+  check(help_links.any? { |attrs| attrs["href"].to_s.match?(%r{\Ahttps://netnewswire\.com(?:/|\z)}) }, "#{url} should link to NetNewsWire's subscription instructions")
+  feed_inputs = help[1].scan(/<input\b[^>]*\bdata-feed-url\b[^>]*>/)
+  check(feed_inputs.size == 1, "#{url} needs one selectable feed URL field")
+  input = feed_inputs.first
+  input_attributes = attributes(input)
+  check(input_attributes["value"] == ROOT + "/blog/rss.xml", "#{url} must expose the canonical absolute RSS URL for manual copying")
+  check(input.match?(/\breadonly(?:\s|=|>)/), "#{url} feed URL must be read-only")
+  id = input_attributes["id"]
+  check(id && !id.empty? && html.scan(/\bid="#{Regexp.escape(id)}"/).size == 1, "#{url} feed URL field needs a unique ID")
+  check(help[1].include?("for=\"#{id}\""), "#{url} feed URL field needs a visible associated label")
+  statuses = html.scan(/<[^>]+\bdata-copy-status\b[^>]*>/)
+  check(statuses.size == 1, "#{url} needs one accessible copy-status message")
+  check(attributes(statuses.first).values_at("role", "aria-live") == ["status", "polite"], "#{url} must announce copy feedback without interrupting the reader")
+  scripts = head.scan(/<script\b[^>]+>/).select { |tag| attributes(tag)["src"] == BASEURL + "/js/blog-subscribe.js" }
+  check(scripts.size == 1 && scripts.first.match?(/\bdefer(?:\s|=|>)/), "#{url} needs one deferred subscription script")
 end
 
-puts "Blog feeds passed: #{items.size} matching RSS/Atom entries, XML, metadata, dates, HTTPS URLs, and visible/autodiscovery links (baseurl=#{BASEURL.inspect})."
+puts "Blog feeds passed: #{items.size} matching RSS/Atom entries, XML, metadata, dates, HTTPS URLs, visible/autodiscovery links, and accessible subscription help (baseurl=#{BASEURL.inspect})."

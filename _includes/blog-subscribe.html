@@ -1,5 +1,22 @@
-<p class="blog-subscribe">Subscribe to the blog:
+<div class="blog-subscription">
+<p class="blog-subscribe">Subscribe with an RSS reader:
     <a href="{{ '/blog/rss.xml' | relative_url | escape }}" type="application/rss+xml">RSS</a>
     <span aria-hidden="true">&middot;</span>
     <a href="{{ '/blog/atom.xml' | relative_url | escape }}" type="application/atom+xml">Atom</a>
+    <button type="button" data-copy-feed data-feed-url="{{ '/blog/rss.xml' | absolute_url | escape }}" hidden>Copy feed URL</button>
+    <span class="blog-copy-status" data-copy-status role="status" aria-live="polite" aria-atomic="true"></span>
 </p>
+<details class="blog-subscribe-help">
+    <summary>How to subscribe</summary>
+    <div class="blog-subscribe-guide">
+        <p>RSS and Atom let a reader app collect new posts for you; they are not email subscriptions. Opening these links in Safari may display plain text instead of a subscription form.</p>
+        <ol>
+            <li>Open an RSS reader, such as <a href="https://netnewswire.com/help/mac/6.1/en/getting-started.html">NetNewsWire</a> on Mac.</li>
+            <li>Choose <strong>Add feed</strong> or <strong>Subscribe</strong> in your reader (NetNewsWire calls it <strong>New Web Feed</strong>), then paste the RSS feed URL below. You can also use the Atom link above.</li>
+        </ol>
+        <label for="blog-rss-url">RSS feed URL</label>
+        <input id="blog-rss-url" data-feed-url type="text" readonly spellcheck="false" value="{{ '/blog/rss.xml' | absolute_url | escape }}">
+        <p class="blog-subscribe-tip">To copy manually, select the URL and press Command+C on Mac or Ctrl+C on Windows/Linux.</p>
+    </div>
+</details>
+</div>
