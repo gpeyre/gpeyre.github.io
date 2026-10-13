@@ -32,11 +32,12 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
             assert.equal(feedResult.errors, 0, format + " must be valid XML");
             assert.equal(feedResult.entries, await page.locator(".blog-preview").count());
         }
-        assert.equal(await page.locator(".blog-preview").count(), 19);
+        assert.equal(await page.locator(".blog-preview").count(), 20);
         const dates = await page.locator(".blog-preview time").evaluateAll(nodes => nodes.map(n => n.dateTime));
         assert.deepEqual(dates, dates.slice().sort().reverse());
         const paths = await page.locator(".blog-preview h2 a").evaluateAll(nodes => nodes.map(n => new URL(n.href).pathname));
-        assert.equal(new Set(paths).size, 19);
+        assert.equal(new Set(paths).size, 20);
+        assert.ok(paths.includes("/blog/2026/10/13/mean-field-conservation-laws/"));
         assert.ok(paths.includes("/blog/2026/10/10/barycentric-projection-map/"));
         assert.ok(paths.includes("/blog/2026/10/03/inverse-optimisation-gap-loss/"));
         assert.ok(paths.includes("/blog/2026/06/15/diffusion-versus-optimal-transport/"));
@@ -613,7 +614,7 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
         assert.ok(await fallback.locator(".figure-controls").isHidden());
         assert.ok((await fallback.locator("article").textContent()).includes("A supremum of affine functions is convex"));
         await noJS.close();
-        console.log("Blog browser QA passed: all 19 posts, feeds, maths, images, figures, navigation, mobile widths, and no-JavaScript fallbacks.");
+        console.log("Blog browser QA passed: all " + paths.length + " posts, feeds, maths, images, figures, navigation, mobile widths, and no-JavaScript fallbacks.");
     } finally {
         await browser.close();
     }
