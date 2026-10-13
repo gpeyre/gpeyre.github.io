@@ -38,13 +38,16 @@ Here the pushforward $$F_\#\mu$$ is the distribution of $$F(X)$$ when $$X\sim\mu
 
 **For which costs does the following identity hold for every $$a,\mu,\nu$$?**
 
+<div class="blog-equation-scroll" tabindex="0" role="region" aria-label="Translation equivariance equation">
+<div class="blog-equation-content" markdown="1">
+
 $$
-\boxed{
-\begin{aligned}
-&\operatorname{Opt}_c(\mu_a,\nu_a)\\
-&=\{(S_a)_\#\pi:\pi\in\operatorname{Opt}_c(\mu,\nu)\}.
-\end{aligned}}
+\boxed{\operatorname{Opt}_c(\mu_a,\nu_a)
+=\{(S_a)_\#\pi:\pi\in\operatorname{Opt}_c(\mu,\nu)\}.}
 $$
+
+</div>
+</div>
 
 This is *translation equivariance of optimal transport*. For point clouds, the entries of the coupling matrix remain the same: only the point locations move. When an optimal plan is induced by a map $$T$$, its translated map is $$T_a(x)=a+T(x-a)$$. Neither uniqueness nor the existence of an optimal map is needed for the question about plans.
 
@@ -59,14 +62,15 @@ $$
 
 is invertible at every $$(x,y)$$. Optimal transport is translation-equivariant for all compactly supported marginals **if and only if** there is a single vector $$k\in\mathbb R^d$$ such that, for every $$a$$, there are functions $$f_a,g_a$$ with
 
+<div class="blog-equation-scroll" tabindex="0" role="region" aria-label="Cost characterization equation">
+<div class="blog-equation-content" markdown="1">
+
 $$
-\boxed{
-\begin{aligned}
-&c(x+a,y+a)\\
-&=e^{k\cdot a}c(x,y)\\
-&\quad+f_a(x)+g_a(y).
-\end{aligned}}
+\boxed{c(x+a,y+a)=e^{k\cdot a}c(x,y)+f_a(x)+g_a(y).}
 $$
+
+</div>
+</div>
 
 Equivalently, the mixed Hessian satisfies
 
@@ -81,11 +85,9 @@ The functions $$f_a,g_a$$ depend on the translation but not on the marginals. No
 **Sufficiency.** Translating both coordinates gives a bijection between the two coupling sets. For any $$\pi\in\Pi(\mu,\nu)$$,
 
 $$
-\begin{aligned}
-&\int c\,\mathrm d(S_a)_\#\pi\\
-&=e^{k\cdot a}\int c\,\mathrm d\pi
+\int c\,\mathrm d(S_a)_\#\pi
+=e^{k\cdot a}\int c\,\mathrm d\pi
 +\int f_a\,\mathrm d\mu+\int g_a\,\mathrm d\nu.
-\end{aligned}
 $$
 
 The last two terms are fixed by the marginals, and the multiplicative factor is positive. Thus the entire set of minimizers is preserved.
@@ -93,11 +95,8 @@ The last two terms are fixed by the marginals, and the multiplicative factor is 
 **Necessity begins with two-point marginals.** Fix $$a$$ and put $$c_a(x,y)=c(x+a,y+a)$$. Give mass $$1/2$$ to each of $$x,x+\varepsilon u$$ and $$y,y+\varepsilon v$$. The extreme couplings are the direct and crossed matchings. Twice their cost difference is
 
 $$
-\begin{aligned}
-&\Delta_\varepsilon c\\
-&=c(x,y)+c(x+\varepsilon u,y+\varepsilon v)\\
-&\quad-c(x+\varepsilon u,y)-c(x,y+\varepsilon v).
-\end{aligned}
+\Delta_\varepsilon c=c(x,y)+c(x+\varepsilon u,y+\varepsilon v)
+-c(x+\varepsilon u,y)-c(x,y+\varepsilon v).
 $$
 
 Equivariance says that $$\Delta_\varepsilon c$$ and $$\Delta_\varepsilon c_a$$ have the same sign, including ties. Dividing by $$\varepsilon^2$$ and letting $$\varepsilon\to0$$ gives the bilinear forms $$u^\top Mv$$ and $$u^\top Nv$$, where $$N=M(x+a,y+a)$$. In particular,
@@ -124,10 +123,7 @@ If one $$x$$ derivative of $$\rho_a$$ were nonzero, every row of $$M$$ would be 
 Finally, composing translations gives $$\rho(a+b)=\rho(a)\rho(b)$$. Positivity and continuity imply $$\rho(a)=e^{k\cdot a}$$. The residual $$r_a=c_a-e^{k\cdot a}c$$ has zero mixed Hessian, so
 
 $$
-\begin{aligned}
-r_a(x,y)&=r_a(x,0)+r_a(0,y)\\
-&\quad-r_a(0,0).
-\end{aligned}
+r_a(x,y)=r_a(x,0)+r_a(0,y)-r_a(0,0).
 $$
 
 It is therefore a sum $$f_a(x)+g_a(y)$$, as required.
@@ -137,20 +133,15 @@ It is therefore a sum $$f_a(x)+g_a(y)$$, as required.
 Consider an arbitrary polynomial of total degree at most two:
 
 $$
-\begin{aligned}
-c(x,y)&=\tfrac12x^\top Ax+\tfrac12y^\top Cy\\
-&\quad+x^\top By\\
-&\quad+\ell^\top x+m^\top y+r,
-\end{aligned}
+c(x,y)=\tfrac12x^\top Ax+x^\top By+\tfrac12y^\top Cy
++\ell^\top x+m^\top y+r,
 $$
 
 with $$A,C$$ symmetric and $$B$$ arbitrary. Translation gives
 
 $$
-\begin{aligned}
-&c(x+a,y+a)-c(x,y)\\
-&=x^\top(A+B)a+y^\top(C+B^\top)a+K(a),
-\end{aligned}
+c(x+a,y+a)-c(x,y)
+=x^\top(A+B)a+y^\top(C+B^\top)a+K(a),
 $$
 
 where $$K(a)$$ is independent of $$x,y$$. The change consists only of marginal terms, so the sufficient condition applies with $$k=0$$. There is **no rank, sign, or symmetry restriction on $$B$$**. In fact, quadratic costs even preserve optimal plans under independent translations of the two marginals.
@@ -173,13 +164,15 @@ This cannot be written as $$h(x-y)+f(x)+g(y)$$: such a representation would have
 
 For polynomials of total degree at most three, there is a complete answer that needs **neither invertibility nor $$d\geq2$$**. Equivariance holds precisely for costs of the form
 
+<div class="blog-equation-scroll" tabindex="0" role="region" aria-label="Cubic cost classification equation">
+<div class="blog-equation-content" markdown="1">
+
 $$
-\boxed{
-\begin{aligned}
-c(x,y)&=Q_2(x,y)+p_3(x)\\
-&\quad+q_3(y)+h_3(x-y),
-\end{aligned}}
+\boxed{c(x,y)=Q_2(x,y)+p_3(x)+q_3(y)+h_3(x-y),}
 $$
+
+</div>
+</div>
 
 where $$Q_2$$ is any polynomial of degree at most two and $$p_3,q_3,h_3$$ are homogeneous cubic polynomials. The quadratic part is covered above, the marginal terms do not affect the optimizer, and the displacement term is unchanged by translation.
 
@@ -206,11 +199,7 @@ has exactly the required nonconstant mixed Hessian. Subtracting $$x^\top By+h_3(
 In one dimension, write
 
 $$
-\begin{aligned}
-c(x,y)&=\alpha x^3+\beta x^2y\\
-&\quad+\gamma xy^2+\delta y^3\\
-&\quad+Q_2(x,y).
-\end{aligned}
+c(x,y)=\alpha x^3+\beta x^2y+\gamma xy^2+\delta y^3+Q_2(x,y).
 $$
 
 The condition reduces to **$$\beta+\gamma=0$$**. For example, $$x^2y-xy^2$$ works because

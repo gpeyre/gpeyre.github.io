@@ -72,6 +72,11 @@
 .blog-prose figure.portrait-figure { max-width: 230px; margin-left: auto; margin-right: auto; }
 .blog-prose .MathJax_SVG_Display { overflow-x: auto; overflow-y: hidden; padding: 12px 2px; margin: 24px 0 !important; max-width: 100%; }
 .blog-prose .MathJax_SVG { max-width: 100%; }
+.blog-equation-scroll { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+.blog-equation-scroll:focus-visible { outline: 2px solid #00778b; outline-offset: 3px; }
+.blog-equation-content { min-width: 28em; }
+.blog-equation-scroll .MathJax_SVG_Display { width: max-content; min-width: 100%; max-width: none; overflow: visible; }
+.blog-equation-scroll .MathJax_SVG { max-width: none; }
 .blog-language-nav { font: 13px 'Open Sans', sans-serif; margin-bottom: 24px; }
 .blog-pagination { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; margin: 64px 0 32px; padding-top: 28px; border-top: 1px solid #ddd; font-size: 15px; line-height: 1.6; }
 .blog-pagination div:last-child { text-align: right; }
