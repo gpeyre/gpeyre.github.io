@@ -32,11 +32,12 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
             assert.equal(feedResult.errors, 0, format + " must be valid XML");
             assert.equal(feedResult.entries, await page.locator(".blog-preview").count());
         }
-        assert.equal(await page.locator(".blog-preview").count(), 20);
+        assert.equal(await page.locator(".blog-preview").count(), 21);
         const dates = await page.locator(".blog-preview time").evaluateAll(nodes => nodes.map(n => n.dateTime));
         assert.deepEqual(dates, dates.slice().sort().reverse());
         const paths = await page.locator(".blog-preview h2 a").evaluateAll(nodes => nodes.map(n => new URL(n.href).pathname));
-        assert.equal(new Set(paths).size, 20);
+        assert.equal(new Set(paths).size, 21);
+        assert.ok(paths.includes("/blog/2026/10/14/translation-equivariance-optimal-transport/"));
         assert.ok(paths.includes("/blog/2026/10/13/mean-field-conservation-laws/"));
         assert.ok(paths.includes("/blog/2026/10/10/barycentric-projection-map/"));
         assert.ok(paths.includes("/blog/2026/10/03/inverse-optimisation-gap-loss/"));

@@ -37,7 +37,10 @@ topic: Optimal transport
 ---
 ~~~
 
-The date comes from the filename. Write two or three opening paragraphs, then
+The date comes from the filename. Future-dated posts are included in builds
+(`future: true`), so the chosen date is not a publication schedule. Use
+`published: false` for a post that is not ready to publish.
+Write two or three opening paragraphs, then
 place <!--more--> on its own line. That opening becomes the archive’s fading,
 math-rendered preview. The full article follows. Avoid figures, headings, and
 interactive controls before the separator.
