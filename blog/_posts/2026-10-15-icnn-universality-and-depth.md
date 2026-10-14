@@ -1,14 +1,15 @@
 ---
 title: "Convex neural networks: when width is not enough"
-subtitle: "Two small counterexamples to fixed-depth ICNN universality"
-description: "Why input-convex ReLU networks need depth: a seven-point obstruction for one hidden layer, a planar counterexample for two hidden layers, proofs, and interactive numerical comparisons."
+subtitle: "Two small counterexamples and an obstruction at every fixed depth"
+description: "Why no fixed depth makes ReLU ICNNs universal in dimension two: explicit counterexamples, expandable proofs, triangular-grid witnesses at larger depths, and interactive numerical comparisons."
 topic: Approximation theory
 figure: icnn
+proofs: true
 ---
 
 Neural networks are flexible representations of functions. But what if the function must be **convex**? This constraint is especially natural in optimal transport. For probability measures with finite second moments and an absolutely continuous source, Brenier's theorem identifies the quadratic optimal transport map as the gradient of a convex potential [[1]](#ref-brenier), [[2]](#ref-ot). Learning such a potential is therefore a way to learn a transport map while respecting its geometry.
 
-**Input-convex neural networks**, or ICNNs, enforce convexity through their architecture [[3]](#ref-amos). A natural question follows: can they approximate every convex function? Yes, if depth is allowed to grow with the desired accuracy [[4]](#ref-chen). But increasing width at a fixed small depth is a different matter. Here are two explicit counterexamples on a square, with proofs: one for a single hidden ReLU layer, and another for two hidden layers.
+**Input-convex neural networks**, or ICNNs, enforce convexity through their architecture [[3]](#ref-amos). A natural question follows: can they approximate every convex function? Yes, if depth is allowed to grow with the desired accuracy [[4]](#ref-chen). But in dimension two, no fixed depth suffices. We start with two explicit counterexamples on a square, for one and two hidden ReLU layers, then describe how the obstruction extends to every fixed depth.
 
 Universality means reaching every prescribed uniform error by increasing the network's size. Its failure is compatible with a good fit at a fixed tolerance: the obstruction can be small enough to escape a plot of the function values. The second example below illustrates this distinction particularly well.
 
@@ -56,7 +57,8 @@ $$
 f(x,y)=\max(0,x,y).
 $$
 
-**Theorem.** Every two-layer ICNN $$h$$, regardless of its width or parameter magnitudes, satisfies
+<span id="theorem-1"></span>
+**Theorem 1.** Every two-layer ICNN $$h$$, regardless of its width or parameter magnitudes, satisfies
 
 $$
 \boxed{\|h-f\|_{\infty,K}\geq\frac1{12}.}
@@ -64,7 +66,11 @@ $$
 
 This is not a difficulty of training. No choice of parameters can overcome it.
 
-**Proof.** For three points $$p,q,r$$, denote their barycenter by $$z=(p+q+r)/3$$ and their pairwise midpoints by $$m_{uv}=(u+v)/2$$. Introduce the seven-point functional
+<details class="blog-proof">
+<summary>Proof: a seven-point inequality</summary>
+<div class="blog-proof-body" markdown="1">
+
+For three points $$p,q,r$$, denote their barycenter by $$z=(p+q+r)/3$$ and their pairwise midpoints by $$m_{uv}=(u+v)/2$$. Introduce the seven-point functional
 
 $$
 \begin{aligned}
@@ -108,6 +114,9 @@ $$
 $$
 
 which proves the claimed bound. $$\square$$
+
+</div>
+</details>
 
 Geometrically, each affine ReLU hinge creates a crease along an entire line. With nonnegative output weights, these creases cannot cancel. The graph of $$\max(0,x,y)$$ instead has three crease rays meeting at one point, without their opposite rays. The finite-point inequality makes this geometric obstruction robust under approximation.
 
@@ -168,7 +177,8 @@ $$
 
 Outside this triangle, three affine faces meet along three outward crease rays.
 
-**Theorem.** There is a number $$\delta>0$$ such that every three-layer ICNN satisfies
+<span id="theorem-2"></span>
+**Theorem 2.** There is a number $$\delta>0$$ such that every three-layer ICNN satisfies
 
 $$
 \boxed{\|h-F\|_{\infty,K}\geq\delta\qquad(h\in\mathcal C_3).}
@@ -176,7 +186,11 @@ $$
 
 Unlike the first example, the proof below does not give an explicit value of $$\delta$$. We first rule out an exact representation, then explain why approximation cannot evade the obstruction.
 
-### Step 1: the convex summands are rigid
+<details class="blog-proof">
+<summary>Proof: rigidity, ReLU geometry, and approximation</summary>
+<div class="blog-proof-body" markdown="1">
+
+*Step 1: the convex summands are rigid*
 
 Suppose that
 
@@ -201,7 +215,7 @@ $$
 
 Applying this to all summands gives $$\sum_j\alpha_j=1$$. Thus, up to affine additions, each nontrivial convex summand must carry the **entire shape** of $$F$$. This is a small example of the indecomposability geometry behind depth lower bounds [[10]](#ref-bakaev).
 
-### Step 2: the last ReLU cannot create this shape
+*Step 2: the last ReLU cannot create this shape*
 
 Assume $$F\in\mathcal C_3$$. By absorbing nonnegative output coefficients into the preceding functions, we can write
 
@@ -227,13 +241,17 @@ Near $$(\tfrac14,\tfrac14)$$, this forces a crease along $$x=y$$. For a positive
 
 This proves $$F\notin\mathcal C_3$$. Passing from exact impossibility to an approximation barrier takes one more argument.
 
-### Step 3: why exact impossibility also rules out approximation here
+*Step 3: why exact impossibility also rules out approximation here*
 
 An architecture can fail to represent a function exactly while approximating it arbitrarily well. The following elementary lemma closes that gap for our piecewise-affine targets.
 
-**Lemma.** Let $$P$$ be a compact convex polytope with nonempty interior, and let $$u$$ be a continuous convex function with finitely many affine pieces on $$P$$. At a fixed depth $$L$$, if $$u$$ is a uniform limit of functions in $$\mathcal C_L$$, then some function in $$\mathcal C_L$$ equals $$u$$ exactly on $$P$$.
+**Lemma 1.** Let $$P$$ be a compact convex polytope with nonempty interior, and let $$u$$ be a continuous convex function with finitely many affine pieces on $$P$$. At a fixed depth $$L$$, if $$u$$ is a uniform limit of functions in $$\mathcal C_L$$, then some function in $$\mathcal C_L$$ equals $$u$$ exactly on $$P$$.
 
-**Proof.** Fix finitely many sample points $$S=\{s_1,\ldots,s_M\}$$. Let $$A\subset\mathbb R^M$$ be the vectors of affine-function values at these points, and let $$E_L$$ be the vectors attainable by $$\mathcal C_L$$. The recursive definition gives
+<details class="blog-proof">
+<summary>Proof of Lemma 1: closed evaluation cones</summary>
+<div class="blog-proof-body" markdown="1">
+
+Fix finitely many sample points $$S=\{s_1,\ldots,s_M\}$$. Let $$A\subset\mathbb R^M$$ be the vectors of affine-function values at these points, and let $$E_L$$ be the vectors attainable by $$\mathcal C_L$$. The recursive definition gives
 
 $$
 E_1=A,\qquad E_L=A+\operatorname{cone}\bigl(\sigma(E_{L-1})\bigr),
@@ -251,7 +269,13 @@ $$
 
 Thus $$h(x)=\ell(x)$$. This holds on every cell, proving $$h=u$$ throughout $$P$$. $$\square$$
 
-Apply the lemma to $$F$$. Arbitrarily accurate approximation at depth three would imply exact representation at depth three, contradicting Step 2. This proves the positive gap $$\delta>0$$.
+</div>
+</details>
+
+Apply Lemma 1 to $$F$$. Arbitrarily accurate approximation at depth three would imply exact representation at depth three, contradicting Step 2. This proves the positive gap $$\delta>0$$. $$\square$$
+
+</div>
+</details>
 
 Once again, one extra layer resolves this particular obstruction. The width-one construction
 
@@ -265,7 +289,43 @@ $$
 
 satisfies $$z_3=F$$, so $$F\in\mathcal C_4$$. All hidden-to-hidden weights are $$1$$. With four layers, one neuron per hidden layer already suffices.
 
-## Try increasing the width
+## More layers: still no universal fixed depth
+
+[Theorem 1](#theorem-1) and [Theorem 2](#theorem-2) are the first two instances of a general phenomenon. Adding a layer resolves each particular counterexample above, but a more complicated target creates a new obstruction. The counterexample must change with the allowed depth.
+
+<span id="theorem-3"></span>
+**Theorem 3.** On the same square $$K=[-1,1]^2$$, for every fixed depth $$L\geq2$$ there exist a convex function $$f_L$$ that is a finite maximum of affine functions and a number $$\delta_L>0$$ such that
+
+$$
+\inf_{h\in\mathcal C_L}\|h-f_L\|_{\infty,K}
+\geq\delta_L.
+$$
+
+The widths and admissible parameters are unrestricted. Both the target and the error bound depend on $$L$$. This is compatible with growing-depth universality: every one of these finite maxima has an exact representation once sufficiently many layers are allowed.
+
+The counterexamples can be built from increasingly large patches of the triangular lattice. Let $$\Lambda_r$$ be the lattice vertices at graph distance at most $$r$$ from the origin, with unit-length lattice edges. There are $$1+3r(r+1)$$ such vertices. One normalized family on the fixed square is
+
+$$
+H_r(x)=\max_{u\in\Lambda_r}
+\left\{\frac{\langle u,x\rangle}{r}
+-\frac{\|u\|^2}{r(2r+1)}\right\}.
+$$
+
+Every affine piece is active somewhere on $$K$$, and all slopes have norm at most one. As $$r$$ grows, the graph gains more small planar faces, while the domain and Lipschitz bound stay fixed. Equivalently, before rescaling, completing the square gives
+
+$$
+\max_{u\in\Lambda_r}\bigl(\langle u,x\rangle-\|u\|^2\bigr)
+=\frac{\|x\|^2}{4}
+-\min_{u\in\Lambda_r}\left\|u-\frac{x}{2}\right\|^2.
+$$
+
+Thus the active affine pieces are arranged according to the nearest lattice point to $$x/2$$. Their planar cells form a hexagonal pattern, with three faces meeting at each interior junction. The small junction obstruction of Theorems 1 and 2 has become a connected mesh of junctions.
+
+The geometry is easier to see by lifting the lattice vertices to $$(u,-\|u\|^2)$$ in three dimensions. Neighboring triples form exposed triangular faces of their convex hull. Positive sums cannot break apart a connected chain of these triangles: the pieces retain a common scale across shared edges. A ReLU layer provides a way to remove a local part of the chain, but a larger patch needs more successive layers. Adapting the triangular-face method of [[10]](#ref-bakaev) to this lifted patch forces at least $$cr$$ hidden layers for an absolute constant $$c>0$$. Choosing $$r$$ large enough therefore defeats any prescribed $$L$$. Lemma 1 then turns the exact-representation obstruction into a positive uniform error.
+
+The full proof is technical: it adapts the triangular-face method to a planar slice and then uses the finite-sample closure argument. A state-of-the-art AI model can help work through these steps. Here the purpose is to show how the target changes with depth: more layers require a larger interconnected arrangement of affine faces, rather than repeatedly using the same small counterexample.
+
+## Numerical experimentation
 
 The figure compares three situations. In one dimension, a depth-two ICNN interpolates $$t^2$$ with $$N$$ internal knots; its exact uniform error is $$1/(N+1)^2$$. In dimension two, we fit $$\mathcal C_2$$ networks to $$f$$ and $$\mathcal C_3$$ networks to $$F$$, with $$N$$ neurons per hidden layer. The slider starts at $$N=64$$ and selects fitted networks at widths $$1,2,4,8,16,32,64$$.
 
@@ -282,12 +342,6 @@ Try **one extra hidden layer**: the planar targets are then represented exactly 
 The displayed planar errors are numerical whole-square errors for the stored networks. They are computed using convexity and linear programming: on each affine cell of the target, the largest value of approximation minus target occurs at a cell vertex. The opposite error is obtained by minimizing the network minus each affine piece, using its linear epigraph constraints. The computations use floating-point solver tolerances; they do not give an architecture-wide lower bound.
 
 The fits come from constrained numerical optimization. At width $$64$$, the selected three-layer model is the width-$$32$$ fit with zero-weight neurons added. Thus an observed plateau can reflect the fitting procedure. The proofs establish a positive gap for the architecture, but neither the plotted fits nor their errors determine the optimal value of that gap.
-
-## Depth and approximation accuracy
-
-In one dimension, width suffices for shallow convex ReLU approximation. On a square, these examples show that one or two hidden layers can leave an unavoidable uniform error, even at unlimited width. That error can be visually small. Allowing depth to grow recovers universality.
-
-For optimal transport, this distinguishes the architectural guarantee of convexity from the attainable accuracy of a potential. Recovering its gradient and the transport map accurately remains a further question.
 
 ## References
 

@@ -64,6 +64,13 @@
 .blog-prose ul, .blog-prose ol { margin-bottom: 28px; padding-left: 27px; }
 .blog-prose blockquote { color: #3c5755; border-left: 3px solid #00778b; background: #f2f7f6; padding: 22px 26px; margin: 28px 0; font-size: inherit; font-style: normal; }
 .blog-prose blockquote p:last-child { margin-bottom: 0; }
+.blog-prose .blog-proof { box-sizing: border-box; max-width: 100%; margin: 24px 0 30px 20px; border-left: 2px solid #b8d8d5; padding-left: 18px; }
+.blog-proof > summary { display: list-item; list-style-position: inside; color: #00778b; cursor: pointer; padding: 7px 0; font-size: 16px; line-height: 1.6; }
+.blog-proof > summary:hover { color: #005361; }
+.blog-proof > summary::marker { color: #00778b; }
+.blog-proof-body { min-width: 0; padding-top: 16px; }
+.blog-proof-body > :last-child { margin-bottom: 0; }
+.blog-proof-body .blog-proof { margin-left: 16px; border-left-color: #d5e2df; }
 .blog-prose hr { margin: 48px 0; }
 .blog-prose figure { margin: 36px 0; }
 .blog-prose figure img { display: block; max-width: 100%; height: auto; margin: 0 auto; border-radius: 4px; }
@@ -142,12 +149,20 @@
     .blog-prose { font-size: 17px; }
     .blog-prose h2 { font-size: 25px; }
     .blog-prose blockquote { padding: 18px; }
+    .blog-prose .blog-proof { margin-left: 10px; padding-left: 12px; }
+    .blog-proof-body .blog-proof { margin-left: 8px; padding-left: 10px; }
+    .blog-proof > summary { font-size: 15px; }
     .blog-eyebrow { font-size: 10px; letter-spacing: .6px; }
     .blog-archive-heading span { font-size: 10px; }
     .blog-pagination { gap: 20px; font-size: 13px; }
     .interactive-figure { padding: 12px; }
     .figure-controls { gap: 16px 12px; }
     .figure-controls label { flex-basis: 100%; }
+}
+@media print {
+    .blog-prose .blog-proof { margin-left: 12px; border-left-color: #bbb; }
+    .blog-proof > .blog-proof-body { display: block !important; }
+    .blog-proof::details-content { content-visibility: visible; }
 }
 @media (prefers-reduced-motion: reduce) {
     .blog-page *, .blog-page *::before, .blog-page *::after { scroll-behavior: auto !important; transition: none !important; }

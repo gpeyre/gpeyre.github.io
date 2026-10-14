@@ -52,6 +52,12 @@ an HTML section with lang="en" and markdown="1" for an English translation.
 Images live in blog/imgs/. Include meaningful alt text and credit external
 images. The Duhamel portrait is public domain; its source is credited in the post.
 
+For expandable proofs, add `proofs: true` to the front matter and use a native
+`details.blog-proof` with a `summary` label and a `div.blog-proof-body` bearing
+`markdown="1"`. Proofs start closed and can be nested for a lemma's proof.
+The indentation reflects nesting, and js/blog-proofs.js reflows equations when
+a proof opens. The disclosure controls also work without JavaScript.
+
 ## Interactive figures
 
 Add figure: pl, sinkhorn, gaussian, gaussian-flow, ode, diffusion, inverse,

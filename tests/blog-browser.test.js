@@ -167,6 +167,38 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
             const isInverse = path.includes("inverse-optimisation-gap-loss");
             const isBarycentric = path.includes("barycentric-projection-map");
             const isICNN = path.includes("icnn-universality-and-depth");
+            if (isICNN) {
+                assert.equal(await page.locator(".blog-eyebrow time").getAttribute("datetime"), "2026-10-15");
+                for (const number of [1, 2, 3]) {
+                    const statement = page.locator("#theorem-" + number).locator("..");
+                    assert.ok((await statement.textContent()).includes("Theorem " + number + "."));
+                }
+                const proofs = page.locator("article details.blog-proof");
+                assert.equal(await proofs.count(), 3);
+                assert.ok(await proofs.evaluateAll(nodes => nodes.every(n => !n.open)));
+                const second = page.locator("article > details.blog-proof").nth(1);
+                const lemma = second.locator("details.blog-proof");
+                await second.locator(":scope > summary").focus();
+                await page.keyboard.press("Enter");
+                await page.waitForFunction(() => document.querySelectorAll("article > details.blog-proof")[1].open);
+                assert.ok(await second.locator(":scope > .blog-proof-body").isVisible());
+                assert.ok(!(await lemma.evaluate(n => n.open)));
+                const steps = second.locator(".blog-proof-body > p > em");
+                assert.equal(await steps.count(), 3);
+                assert.equal(await second.locator("h2, h3").count(), 0);
+                await lemma.locator(":scope > summary").click();
+                await page.waitForFunction(() => !document.querySelector("article details.blog-proof[aria-busy]"));
+                assert.ok(await lemma.locator(".blog-proof-body").isVisible());
+                const outerX = await second.locator(":scope > .blog-proof-body").evaluate(n => n.getBoundingClientRect().x);
+                const innerX = await lemma.locator(".blog-proof-body").evaluate(n => n.getBoundingClientRect().x);
+                assert.ok(innerX > outerX + 20, "Lemma proof must be visibly indented inside the theorem proof");
+                await lemma.locator(":scope > summary").click();
+                await second.locator(":scope > summary").click();
+                assert.ok(await proofs.evaluateAll(nodes => nodes.every(n => !n.open)));
+                const headings = await page.locator("article > h2").allTextContents();
+                assert.ok(headings.indexOf("More layers: still no universal fixed depth") < headings.indexOf("Numerical experimentation"));
+                assert.ok(!headings.includes("Depth and approximation accuracy"));
+            }
             if (isBarycentric) {
                 assert.equal(await page.locator(".blog-eyebrow time").getAttribute("datetime"), "2026-10-10");
                 const prose = await page.locator("article").textContent();
@@ -589,7 +621,7 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
                 await page.evaluate(() => new Promise(resolve => MathJax.Hub.Queue(["Rerender", MathJax.Hub], resolve)));
                 assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false);
                 const clipped = await page.locator(".blog-prose .MathJax_SVG_Display").evaluateAll(nodes =>
-                    nodes.flatMap((n, i) => n.scrollWidth > n.clientWidth + 2 ? [i] : []));
+                    nodes.flatMap((n, i) => !n.closest("details:not([open])") && n.scrollWidth > n.clientWidth + 2 ? [i] : []));
                 assert.deepEqual(clipped, [], "ICNN equations must fit the narrow mobile column");
                 const positions = await page.locator(".icnn-panel canvas").evaluateAll(nodes => nodes.map(n => {
                     const b = n.getBoundingClientRect(); return { x: b.x, y: b.y, height: b.height }; }));
