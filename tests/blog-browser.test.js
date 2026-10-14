@@ -32,11 +32,12 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
             assert.equal(feedResult.errors, 0, format + " must be valid XML");
             assert.equal(feedResult.entries, await page.locator(".blog-preview").count());
         }
-        assert.equal(await page.locator(".blog-preview").count(), 22);
+        assert.equal(await page.locator(".blog-preview").count(), 23);
         const dates = await page.locator(".blog-preview time").evaluateAll(nodes => nodes.map(n => n.dateTime));
         assert.deepEqual(dates, dates.slice().sort().reverse());
         const paths = await page.locator(".blog-preview h2 a").evaluateAll(nodes => nodes.map(n => new URL(n.href).pathname));
-        assert.equal(new Set(paths).size, 22);
+        assert.equal(new Set(paths).size, 23);
+        assert.ok(paths.includes("/blog/2026/10/14/icnn-universality-and-depth/"));
         assert.ok(paths.includes("/blog/2026/10/15/stone-weierstrass-approximate-products/"));
         assert.ok(paths.includes("/blog/2026/10/14/translation-equivariance-optimal-transport/"));
         assert.ok(paths.includes("/blog/2026/10/13/mean-field-conservation-laws/"));
@@ -165,6 +166,7 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
             const isDiffusion = path.includes("diffusion-versus-optimal-transport");
             const isInverse = path.includes("inverse-optimisation-gap-loss");
             const isBarycentric = path.includes("barycentric-projection-map");
+            const isICNN = path.includes("icnn-universality-and-depth");
             if (isBarycentric) {
                 assert.equal(await page.locator(".blog-eyebrow time").getAttribute("datetime"), "2026-10-10");
                 const prose = await page.locator("article").textContent();
@@ -249,13 +251,14 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
                 await figure.scrollIntoViewIfNeeded();
                 assert.ok((await figure.getAttribute("class")).includes("js-ready"));
                 assert.ok(!nonfinite.test(await page.locator("[data-status]").textContent()));
-                for (const slider of await figure.locator("input").all()) {
+                for (const slider of await figure.locator('input[type="range"]').all()) {
                     for (const endpoint of ["min", "max"]) {
                         await slider.evaluate((input, end) => { input.value = input[end]; input.dispatchEvent(new Event("input", { bubbles: true })); }, endpoint);
                         assert.ok(!nonfinite.test(await page.locator("[data-status]").textContent()));
                     }
                 }
-                await page.locator("[data-reset]").click();
+                if (kind === "icnn") await figure.locator('[data-param="width"]').fill("3");
+                else await page.locator("[data-reset]").click();
                 if (kind === "gaussian-flow") {
                     const read = () => figure.evaluate(n => ({ kl: +n.dataset.kl, initialKL: +n.dataset.initialKl,
                         mean: JSON.parse(n.dataset.mean), covariance: JSON.parse(n.dataset.covariance) }));
@@ -376,6 +379,37 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
                     assert.equal(await figure.locator("[data-observed]").getAttribute("aria-pressed"), "false");
                     await page.waitForFunction(() => +document.querySelector('[data-figure="inverse"]').dataset.curvesReady === 4,
                         null, { timeout: 120000 });
+                } else if (kind === "icnn") {
+                    const slider = figure.locator('[data-param="width"]');
+                    const ready = (width, exact) => page.waitForFunction(({ width, exact }) => {
+                        const f = document.querySelector('[data-figure="icnn"]');
+                        return f.dataset.ready === "true" && +f.dataset.width === width && f.dataset.extraLayer === String(exact);
+                    }, { width, exact });
+                    await ready(8, false);
+                    assert.equal(await figure.locator("canvas").count(), 3);
+                    const positions = await figure.locator('canvas[data-panel="two"], canvas[data-panel="three"]').evaluateAll(nodes =>
+                        nodes.map(n => { const b = n.getBoundingClientRect(); return { x: b.x, y: b.y }; }));
+                    assert.ok(Math.abs(positions[0].y - positions[1].y) < 1 && positions[1].x > positions[0].x);
+                    await slider.fill("0"); await ready(1, false);
+                    assert.equal(await slider.getAttribute("aria-valuetext"), "1 neuron per hidden layer");
+                    const first = await figure.locator('[data-panel="two"]').evaluate(n => n.toDataURL());
+                    assert.equal(+(await figure.getAttribute("data-one-error")), 0.25);
+                    await slider.fill("6"); await ready(64, false);
+                    assert.notEqual(await figure.locator('[data-panel="two"]').evaluate(n => n.toDataURL()), first);
+                    assert.ok(Math.abs(+(await figure.getAttribute("data-one-error")) - 1 / 65 ** 2) < 1e-12);
+                    assert.ok(+(await figure.getAttribute("data-two-error")) >= 1 / 12);
+                    await figure.screenshot({ path: screenshotDir + "/blog-icnn-width64.png", style: ".navbar { visibility: hidden; }" });
+                    await figure.locator("[data-exact]").check(); await ready(64, true);
+                    assert.equal(+(await figure.getAttribute("data-two-error")), 0);
+                    assert.equal(+(await figure.getAttribute("data-three-error")), 0);
+                    assert.ok((await figure.locator('[data-architecture="three"]').textContent()).includes("L = 4"));
+                    await figure.screenshot({ path: screenshotDir + "/blog-icnn-extra-layer.png", style: ".navbar { visibility: hidden; }" });
+                    await slider.fill("0"); await ready(1, true);
+                    assert.equal(+(await figure.getAttribute("data-one-error")), 0.25);
+                    assert.equal(+(await figure.getAttribute("data-three-error")), 0);
+                    await figure.locator("[data-exact]").uncheck(); await ready(1, false);
+                    assert.ok(+(await figure.getAttribute("data-three-error")) > 0);
+                    await slider.fill("3"); await ready(8, false);
                 } else if (kind === "barycentric") {
                     const source = figure.locator('[data-param="source"]'), target = figure.locator('[data-param="target"]');
                     const motion = figure.locator('[data-param="motion"]'), epsilon = figure.locator('[data-param="epsilon"]');
@@ -523,6 +557,23 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
                 await page.setViewportSize({ width: 390, height: 844 });
                 await page.evaluate(() => new Promise(resolve => MathJax.Hub.Queue(["Rerender", MathJax.Hub], resolve)));
             }
+            if (isICNN) {
+                await page.setViewportSize({ width: 320, height: 844 });
+                await page.evaluate(() => new Promise(resolve => MathJax.Hub.Queue(["Rerender", MathJax.Hub], resolve)));
+                assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false);
+                const clipped = await page.locator(".blog-prose .MathJax_SVG_Display").evaluateAll(nodes =>
+                    nodes.flatMap((n, i) => n.scrollWidth > n.clientWidth + 2 ? [i] : []));
+                assert.deepEqual(clipped, [], "ICNN equations must fit the narrow mobile column");
+                const positions = await page.locator(".icnn-panel canvas").evaluateAll(nodes => nodes.map(n => {
+                    const b = n.getBoundingClientRect(); return { x: b.x, y: b.y, height: b.height }; }));
+                assert.ok(positions.every(p => p.height >= 200));
+                assert.ok(positions[1].y > positions[0].y && positions[2].y > positions[1].y);
+                assert.ok(Math.abs(positions[1].x - positions[2].x) < 1);
+                await page.locator('[data-figure="icnn"]').screenshot({ path: screenshotDir + "/blog-icnn-320.png",
+                    style: ".navbar { visibility: hidden; }" });
+                await page.setViewportSize({ width: 390, height: 844 });
+                await page.evaluate(() => new Promise(resolve => MathJax.Hub.Queue(["Rerender", MathJax.Hub], resolve)));
+            }
             if (hasFigure) await page.locator("[data-figure]").screenshot({ path: screenshotDir + "/blog-figure-" + await page.locator("[data-figure]").getAttribute("data-figure") + "-mobile.png" });
             if (isInverse) {
                 const positions = await page.locator(".inverse-panels canvas").evaluateAll(nodes => nodes.map(n => {
@@ -620,7 +671,7 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
         await page.locator(".navbar-toggle").click();
         await page.locator(".navbar-nav a").filter({ hasText: /^Blog$/ }).click();
         assert.equal(new URL(page.url()).pathname, "/blog/");
-        for (const path of ["/blog/blog-todo.md", "/blog/README.md", "/tests/blog-math.test.js"]) {
+        for (const path of ["/blog/blog-todo.md", "/blog/README.md", "/tests/blog-math.test.js", "/scripts/train-blog-icnn.py"]) {
             assert.equal((await context.request.get(base + path)).status(), 404, "Authoring file leaked: " + path);
         }
         assert.deepEqual(errors, []);
@@ -633,6 +684,10 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
         assert.ok(await fallback.locator(".figure-fallback").isVisible());
         assert.ok(await fallback.locator(".figure-controls").isHidden());
         assert.ok((await fallback.locator("article").textContent()).includes("A supremum of affine functions is convex"));
+        await fallback.goto(base + "/blog/2026/10/14/icnn-universality-and-depth/");
+        assert.ok(await fallback.locator(".figure-fallback").isVisible());
+        assert.ok(await fallback.locator(".figure-controls").isHidden());
+        assert.ok((await fallback.locator("article").textContent()).includes("why exact impossibility also rules out approximation"));
         await noJS.close();
         console.log("Blog browser QA passed: all " + paths.length + " posts, feeds, maths, images, figures, navigation, mobile widths, and no-JavaScript fallbacks.");
     } finally {

@@ -54,8 +54,8 @@ images. The Duhamel portrait is public domain; its source is credited in the pos
 
 ## Interactive figures
 
-Add figure: pl, sinkhorn, gaussian, gaussian-flow, ode, diffusion, inverse, or
-barycentric to the front matter, then use:
+Add figure: pl, sinkhorn, gaussian, gaussian-flow, ode, diffusion, inverse,
+barycentric, or icnn to the front matter, then use:
 
 ~~~liquid
 {% include blog-figure.html kind="gaussian" %}
@@ -97,9 +97,24 @@ Figures run locally in the browser without Python, a backend, or a third-party
 charting library. Animated figures start paused and stop when the tab or figure
 is hidden; the inverse figure is controlled directly by its sliders.
 
+The icnn figure loads js/blog-icnn-models.js, js/blog-icnn-math.js, and
+js/blog-icnn.js. A shared slider selects widths 1, 2, 4, 8, 16, 32, 64 for
+a 1D positive-hinge interpolant and genuine fitted 2D ICNNs with one and two
+hidden layers. Background colors and solid contours represent the fit, with
+the target's dashed contours overlaid at identical levels. The optional extra
+hidden layer selects exact width-one formulas, ignoring the width slider only
+in the 2D panels. The 1D error is analytic; planar errors are sampled maxima
+on a 101-by-101 grid, not certified uniform errors or globally optimal fits.
+Reproduce model weights with scripts/train-blog-icnn.py (NumPy and PyTorch).
+Training uses two deterministic starts, projected nonnegative weights, a
+41-by-41 training grid, and increasing loss powers 2, 4, 8. Checkpoints are
+selected by evaluation-grid maximum error, including the padded previous-width
+model as a feasible candidate. Models load instantly; the browser does not train.
+
 ## Verify
 
-Run node tests/blog-math.test.js and node tests/blog-barycentric.test.js,
+Run node tests/blog-math.test.js, node tests/blog-barycentric.test.js, and
+node tests/blog-icnn.test.js,
 then jekyll build and
 ruby tests/blog-feeds.test.rb _site. Preview the generated site
 over HTTP and check the archive, article mathematics, and figure controls at

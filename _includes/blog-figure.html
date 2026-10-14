@@ -126,6 +126,31 @@
   </div>
   <p class="figure-legend">Blue circles: source α. Orange squares: target β. Faint gray segments: coupling π, with opacity weighted by mass. Solid black arrows and dots: x ↦ Tπ(x).</p>
   <figcaption>Uniform masses are 1/n and 1/m; no equal-cardinality matching approximation is used. Change n and m independently, move the target cloud, or switch between entropic and unregularized quadratic OT. Log-domain Sinkhorn is checked against the marginal constraints; the unregularized solver uses min-cost flow with a dual optimality certificate. Gray segments below 0.5% of the largest coupling entry are omitted for readability. All entries still enter the black conditional barycenters. Spatial scales are equal on both axes.</figcaption>
+{% when 'icnn' %}
+  <h3 id="figure-icnn-title">Width helps—but can it replace depth?</h3>
+  <div class="figure-controls">
+    <label for="icnn-width">Neurons per hidden layer N <output for="icnn-width" data-value="width">8</output><input id="icnn-width" data-param="width" type="range" min="0" max="6" step="1" value="3" aria-valuetext="8 neurons per hidden layer"></label>
+    <label class="icnn-exact" for="icnn-exact"><input id="icnn-exact" data-exact type="checkbox"> One extra hidden layer in 2D<br><span>Exact width-one constructions; ignores N in the two planar panels.</span></label>
+  </div>
+  <div class="icnn-panels">
+    <div class="icnn-panel icnn-one">
+      <h4>1D · a successful comparison <span>Target x² · one hidden layer (L = 2)</span></h4>
+      <canvas data-panel="one" width="840" height="230" role="img" aria-label="A convex linear spline approximates the target x squared, with error decreasing as the number of ReLU neurons increases."></canvas>
+      <p class="icnn-error" data-error="one"></p>
+    </div>
+    <div class="icnn-panel">
+      <h4>2D · the three-plane maximum <span data-architecture="two">Target max(0, x, y) · one hidden layer (L = 2)</span></h4>
+      <canvas data-panel="two" width="500" height="505" role="img" aria-label="A fitted one-hidden-layer ICNN heatmap and solid contours overlaid with dashed target contours for the maximum of zero, x, and y."></canvas>
+      <p class="icnn-error" data-error="two"></p>
+    </div>
+    <div class="icnn-panel">
+      <h4>2D · the four-plane maximum <span data-architecture="three">Target max(0, x, y, −x−y−½) · two hidden layers (L = 3)</span></h4>
+      <canvas data-panel="three" width="500" height="505" role="img" aria-label="A fitted two-hidden-layer ICNN heatmap and solid contours overlaid with dashed target contours for the four-plane maximum."></canvas>
+      <p class="icnn-error" data-error="three"></p>
+    </div>
+  </div>
+  <p class="figure-legend">Solid teal: approximation. Dashed black: target. In 2D, the background colors show the approximation on a fixed scale from −0.3 to 1.55; peach reveals negative undershoots, pale colors are near zero, and teal is positive. Both sets of contours use levels 0.15, 0.35, …, 1.35, with equal spatial scales.</p>
+  <figcaption>Planar fits use projected Adam on a 41 × 41 grid, with two deterministic starts and increasing loss powers 2, 4, 8. Checkpoints and a padded previous-width candidate are compared on a 101 × 101 grid. The displayed planar errors are sampled maxima—not certified uniform errors or global optima. No training occurs in your browser.</figcaption>
 {% endcase %}
   <p class="figure-status" data-status aria-live="off"></p>
 {% if include.kind == 'diffusion' %}
@@ -134,6 +159,8 @@
   <p class="figure-fallback">Enable JavaScript to explore the marginal points, OT pairings, and gap loss with the sliders. The definitions and convexity proof remain available below.</p>
 {% elsif include.kind == 'barycentric' %}
   <p class="figure-fallback">Enable JavaScript to vary the unequal point clouds and compare a transport coupling with its barycentric projection. Each black endpoint is the mean of the target points conditionally assigned to one blue source point. The definitions, theorem, and proof remain available in the article.</p>
+{% elsif include.kind == 'icnn' %}
+  <p class="figure-fallback">Enable JavaScript to compare genuine ICNN fits at widths 1–64 and the exact deeper constructions. In one dimension, the spline error is 1/(N + 1)². The two planar approximation barriers are proved in the article and do not depend on the numerical experiment.</p>
 {% else %}
   <p class="figure-fallback">Enable JavaScript to use this figure’s animation and sliders. The equations and explanation remain available in the article.</p>
 {% endif %}
