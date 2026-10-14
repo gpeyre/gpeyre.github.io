@@ -87,6 +87,10 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
             }
             if (path.includes("stone-weierstrass-approximate-products")) {
                 assert.equal(await page.locator(".blog-eyebrow time").getAttribute("datetime"), "2026-10-16");
+                assert.equal(await page.locator("h1").textContent(), "Stone–Weierstrass and Universal Approximation");
+                const headings = await page.locator("article > h2").allTextContents();
+                assert.ok(headings.includes("Universality for ReLU networks"));
+                assert.ok(!headings.includes("The ReLU construction"));
                 const portraits = page.locator("article .portrait-pair img");
                 assert.equal(await portraits.count(), 2);
                 for (const portrait of await portraits.all()) {
@@ -97,7 +101,7 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
                 }
                 assert.equal(await page.locator("article a[href='https://arxiv.org/abs/2408.01367']").count(), 1);
                 const mathematics = await page.evaluate(() => MathJax.Hub.getAllJax().map(jax => jax.originalText));
-                for (const formula of ["fg\\in\\overline{\\mathcal F}", "m_\\delta(u,v)", "z_1\\cdots z_k"]) {
+                for (const formula of ["fg\\in\\overline{\\mathcal F}", "m_\\delta(u,v)", "q_M(t)", "S_M(x)", "\\frac{Ae^R R^2}{2M^2}"]) {
                     assert.ok(mathematics.some(text => text.includes(formula)), "Missing Stone–Weierstrass mathematics: " + formula);
                 }
                 await page.evaluate(() => scrollTo(0, 0));
