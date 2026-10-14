@@ -113,14 +113,17 @@
 .diffusion-legend .mode-a { background: #2885b1; }
 .diffusion-legend .mode-b { background: #25bfc8; }
 .diffusion-legend .mode-c { background: #98685c; }
-.icnn-panels { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 18px; }
-.icnn-one { grid-column: 1 / -1; }
+.icnn-panels { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 18px; margin-top: 20px; }
+.icnn-wide { grid-column: 1 / -1; }
 .icnn-panel h4 { font: 700 14px/1.5 'Open Sans', sans-serif; margin: 0 0 10px; }
 .icnn-panel h4 span { display: block; font-size: 11px; font-weight: 400; }
 .icnn-error { font: 12px/1.6 'Open Sans', sans-serif; color: #47625d; margin: 8px 0 0 !important; }
-.figure-controls label.icnn-exact { flex-basis: 250px; line-height: 1.5; }
-.figure-controls .icnn-exact input { width: auto; margin: 0 7px 0 0; }
-.icnn-exact span { font-size: 11px; font-weight: 400; }
+.icnn-clipping { font: 11px/1.5 'Open Sans', sans-serif; color: #90501e; margin: 5px 0 0 !important; }
+.icnn-clipping:empty { display: none; }
+.figure-controls label.icnn-check { flex-basis: 300px; line-height: 1.5; }
+.figure-controls .icnn-check input { width: auto; margin: 0 7px 0 0; }
+.icnn-check span { font-size: 11px; font-weight: 400; }
+[data-figure="icnn"] .figure-controls select { display: block; width: 100%; min-height: 40px; margin-top: 10px; padding: 6px 9px; border: 1px solid #90b6ba; border-radius: 4px; background: white; color: #244548; }
 .figure-controls [data-highlight][aria-pressed="true"],
 .figure-controls [data-compare][aria-pressed="true"],
 .figure-controls [data-observed][aria-pressed="true"] { background: #e0eeeb; border-color: #00778b; }

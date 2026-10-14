@@ -6,9 +6,11 @@ topic: Approximation theory
 figure: icnn
 ---
 
-Neural networks are flexible representations of functions. But what if the function must be **convex**? This constraint is especially natural in optimal transport: for the quadratic cost, Brenier's theorem identifies the optimal map as the gradient of a convex potential, for probability measures with finite second moments and an absolutely continuous source [[1]](#ref-brenier), [[2]](#ref-ot). Learning such a potential is therefore a way to learn a transport map while respecting its geometry.
+Neural networks are flexible representations of functions. But what if the function must be **convex**? This constraint is especially natural in optimal transport. For probability measures with finite second moments and an absolutely continuous source, Brenier's theorem identifies the quadratic optimal transport map as the gradient of a convex potential [[1]](#ref-brenier), [[2]](#ref-ot). Learning such a potential is therefore a way to learn a transport map while respecting its geometry.
 
 **Input-convex neural networks**, or ICNNs, enforce convexity through their architecture [[3]](#ref-amos). A natural question follows: can they approximate every convex function? Yes, if depth is allowed to grow with the desired accuracy [[4]](#ref-chen). But increasing width at a fixed small depth is a different matter. Here are two explicit counterexamples on a square, with proofs: one for a single hidden ReLU layer, and another for two hidden layers.
+
+Universality means reaching every prescribed uniform error by increasing the network's size. Its failure is compatible with a good fit at a fixed tolerance: the obstruction can be small enough to escape a plot of the function values. The second example below illustrates this distinction particularly well.
 
 <!--more-->
 
@@ -20,7 +22,7 @@ $$
 T(x)=\nabla\varphi(x),\qquad \varphi\text{ convex}.
 $$
 
-Convexity is more than a convenient regularizer: it encodes the structure of the transport map. ICNN-based approaches learn convex potentials in dual or minimax formulations [[5]](#ref-makkuva), [[6]](#ref-korotin). They have been used for generative modeling, continuous transport benchmarks [[7]](#ref-benchmark), and predicting changes between populations of cells [[8]](#ref-cellot). Of course, representing a potential well, optimizing its parameters, and accurately recovering its gradient are three distinct questions.
+Convexity encodes the structure of the transport map. ICNN-based approaches learn convex potentials in dual or minimax formulations [[5]](#ref-makkuva), [[6]](#ref-korotin). They have been used for generative modeling, continuous transport benchmarks [[7]](#ref-benchmark), and predicting changes between populations of cells [[8]](#ref-cellot). Representing a potential well, optimizing its parameters, and accurately recovering its gradient are three distinct questions.
 
 Recent work has examined the expressive power of convex ReLU networks compared with ICNNs [[9]](#ref-gagneux), exact depth separations [[10]](#ref-bakaev), and approximation efficiency of alternative convex architectures [[12]](#ref-hyper). These results have different scopes: a separation at a fixed width, an exact-representation obstruction, and a positive uniform-approximation gap are not interchangeable. We will keep this distinction explicit.
 
@@ -148,7 +150,7 @@ $$
 z_1=(x-y)_+,\qquad z_2=(z_1+y)_+,\qquad f=z_2.
 $$
 
-So $$f\in\mathcal C_3$$. Does that mean two hidden layers suffice for every convex function? No.
+Thus $$f\in\mathcal C_3$$. The next example shows that two hidden layers still do not suffice for universality.
 
 ## Three layers: a four-plane counterexample
 
@@ -223,11 +225,11 @@ $$
 
 Near $$(\tfrac14,\tfrac14)$$, this forces a crease along $$x=y$$. For a positive sum of affine hinges, that crease must continue along the same line. In particular it persists near $$(-\tfrac12,-\tfrac12)$$. Yet near that point $$F=-x-y-\tfrac12>0$$ is affine, so $$g=\alpha F$$ is affine too: a contradiction.
 
-We have proved $$F\notin\mathcal C_3$$. Importantly, there is still one step left.
+This proves $$F\notin\mathcal C_3$$. Passing from exact impossibility to an approximation barrier takes one more argument.
 
 ### Step 3: why exact impossibility also rules out approximation here
 
-An architecture can fail to represent a function exactly while approximating it arbitrarily well. We cannot skip this issue. The following elementary lemma closes the gap for our piecewise-affine targets.
+An architecture can fail to represent a function exactly while approximating it arbitrarily well. The following elementary lemma closes that gap for our piecewise-affine targets.
 
 **Lemma.** Let $$P$$ be a compact convex polytope with nonempty interior, and let $$u$$ be a continuous convex function with finitely many affine pieces on $$P$$. At a fixed depth $$L$$, if $$u$$ is a uniform limit of functions in $$\mathcal C_L$$, then some function in $$\mathcal C_L$$ equals $$u$$ exactly on $$P$$.
 
@@ -261,23 +263,31 @@ z_3&=(z_2-x-y-\tfrac12)_+
 \end{aligned}
 $$
 
-satisfies $$z_3=F$$, so $$F\in\mathcal C_4$$. All hidden-to-hidden weights are $$1$$. The point is not that this target needs many neurons: it needs the right depth.
+satisfies $$z_3=F$$, so $$F\in\mathcal C_4$$. All hidden-to-hidden weights are $$1$$. With four layers, one neuron per hidden layer already suffices.
 
 ## Try increasing the width
 
-The figure compares three situations. In one dimension, a depth-two ICNN interpolates $$t^2$$ with $$N$$ internal knots; its exact uniform error is $$1/(N+1)^2$$. In dimension two, we fit $$\mathcal C_2$$ networks to $$f$$ and $$\mathcal C_3$$ networks to $$F$$, with $$N$$ neurons in each hidden layer. The slider selects actual networks at widths $$1,2,4,8,16,32,64$$.
+The figure compares three situations. In one dimension, a depth-two ICNN interpolates $$t^2$$ with $$N$$ internal knots; its exact uniform error is $$1/(N+1)^2$$. In dimension two, we fit $$\mathcal C_2$$ networks to $$f$$ and $$\mathcal C_3$$ networks to $$F$$, with $$N$$ neurons per hidden layer. The slider starts at $$N=64$$ and selects fitted networks at widths $$1,2,4,8,16,32,64$$.
 
 {% include blog-figure.html kind="icnn" %}
 
-For the planar panels, the background colors show the fitted function, and solid approximation contours are superimposed on dashed target contours at the same levels. Try the **one extra hidden layer** option: the two targets are then represented exactly by the width-one formulas above, independent of the width slider. The one-dimensional panel continues to show its spline approximation.
+The planar panels initially show the **signed residual**, approximation minus target. Their color scales make the remaining error visible; switch to the function view to compare values and level sets. A closer view of the central triangle reveals how the three-layer fit replaces the target's flat face.
 
-The planar fits are precomputed by constrained numerical optimization, with nonnegative hidden and output weights and unrestricted affine input connections. They are examples of trained networks, **not certified best approximations**. Their displayed errors are maxima on a finite evaluation grid, not certified uniform errors. Optimization quality can vary with width; it is the proofs above, not a numerical plateau, that establish the approximation barriers.
+At width $$64$$, this fit has maximum error about $$0.017395$$, just $$1.16\%$$ of the target's range $$1.5$$. Its values at the triangle's three corners, in the order defining $$T$$ above, are approximately $$0.01409,0.01728,0.01740$$. At the barycenter $$(-1/6,-1/6)$$, the value is approximately $$-0.01543$$. The target is zero at all these points: the approximation lifts the corners and dips inside the triangle. These small distortions are hard to distinguish on the full function plot.
 
-## The takeaway
+The diagonal plot follows $$x=y=t$$ across the flat interval $$[-1/4,0]$$, where $$F(t,t)=0$$. It shows the same loss of flatness on a magnified vertical scale. This is a slice of the network trained in two dimensions; approximating the one-dimensional restriction alone has no such obstruction.
 
-In one dimension, width alone suffices for shallow convex ReLU approximation. On a square, the three-plane maximum already defeats one hidden layer, and the four-plane maximum above defeats two hidden layers—even with unlimited width and input connections at every layer. Allowing depth to grow recovers universality.
+Try **one extra hidden layer**: the planar targets are then represented exactly by the width-one formulas above, independently of the width slider. Both residual maps and the diagonal residual become zero. The one-dimensional spline continues to depend on $$N$$.
 
-For applications such as optimal transport, this distinction matters: enforcing convexity is valuable, but an architecture's convexity guarantee does not by itself imply universality at the depth used in practice. Nor does potential approximation alone guarantee gradient or transport-map accuracy. Those are separate approximation and numerical questions.
+The displayed planar errors are numerical whole-square errors for the stored networks. They are computed using convexity and linear programming: on each affine cell of the target, the largest value of approximation minus target occurs at a cell vertex. The opposite error is obtained by minimizing the network minus each affine piece, using its linear epigraph constraints. The computations use floating-point solver tolerances; they do not give an architecture-wide lower bound.
+
+The fits come from constrained numerical optimization. At width $$64$$, the selected three-layer model is the width-$$32$$ fit with zero-weight neurons added. Thus an observed plateau can reflect the fitting procedure. The proofs establish a positive gap for the architecture, but neither the plotted fits nor their errors determine the optimal value of that gap.
+
+## Depth and approximation accuracy
+
+In one dimension, width suffices for shallow convex ReLU approximation. On a square, these examples show that one or two hidden layers can leave an unavoidable uniform error, even at unlimited width. That error can be visually small. Allowing depth to grow recovers universality.
+
+For optimal transport, this distinguishes the architectural guarantee of convexity from the attainable accuracy of a potential. Recovering its gradient and the transport map accurately remains a further question.
 
 ## References
 

@@ -257,7 +257,7 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
                         assert.ok(!nonfinite.test(await page.locator("[data-status]").textContent()));
                     }
                 }
-                if (kind === "icnn") await figure.locator('[data-param="width"]').fill("3");
+                if (kind === "icnn") await figure.locator('[data-param="width"]').fill("6");
                 else await page.locator("[data-reset]").click();
                 if (kind === "gaussian-flow") {
                     const read = () => figure.evaluate(n => ({ kl: +n.dataset.kl, initialKL: +n.dataset.initialKl,
@@ -381,12 +381,18 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
                         null, { timeout: 120000 });
                 } else if (kind === "icnn") {
                     const slider = figure.locator('[data-param="width"]');
-                    const ready = (width, exact) => page.waitForFunction(({ width, exact }) => {
+                    const ready = (width, exact, view = "residual", zoom = true) => page.waitForFunction(({ width, exact, view, zoom }) => {
                         const f = document.querySelector('[data-figure="icnn"]');
-                        return f.dataset.ready === "true" && +f.dataset.width === width && f.dataset.extraLayer === String(exact);
-                    }, { width, exact });
-                    await ready(8, false);
-                    assert.equal(await figure.locator("canvas").count(), 3);
+                        return f.dataset.ready === "true" && +f.dataset.width === width && f.dataset.extraLayer === String(exact) &&
+                            f.dataset.view === view && f.dataset.zoom === String(zoom);
+                    }, { width, exact, view, zoom });
+                    await ready(64, false);
+                    assert.equal(await figure.locator("canvas").count(), 4);
+                    const view = figure.locator('[data-param="view"]'), zoom = figure.locator('[data-zoom]');
+                    assert.equal(await view.inputValue(), "residual"); assert.ok(await zoom.isChecked());
+                    assert.ok(+(await figure.getAttribute("data-slice-min")) < -0.015);
+                    assert.ok(+(await figure.getAttribute("data-slice-max")) > 0.014);
+                    assert.ok((await figure.locator('[data-error="three"]').textContent()).includes("0.0174"));
                     const positions = await figure.locator('canvas[data-panel="two"], canvas[data-panel="three"]').evaluateAll(nodes =>
                         nodes.map(n => { const b = n.getBoundingClientRect(); return { x: b.x, y: b.y }; }));
                     assert.ok(Math.abs(positions[0].y - positions[1].y) < 1 && positions[1].x > positions[0].x);
@@ -394,14 +400,35 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
                     assert.equal(await slider.getAttribute("aria-valuetext"), "1 neuron per hidden layer");
                     const first = await figure.locator('[data-panel="two"]').evaluate(n => n.toDataURL());
                     assert.equal(+(await figure.getAttribute("data-one-error")), 0.25);
+                    assert.ok(+(await figure.getAttribute("data-clipped-three")) > 0);
+                    assert.ok(+(await figure.getAttribute("data-slice-clipped")) > 0);
+                    assert.ok((await figure.locator('[data-clipping="three"]').textContent()).length > 0);
+                    assert.ok(+(await figure.getAttribute("data-three-error")) > 0.102, "Whole-square diagnostics must detect the narrow width-1 dip missed by the old grid");
+                    await zoom.uncheck(); await ready(1, false, "residual", false);
+                    assert.equal(+(await figure.getAttribute("data-clipped-three")), 0);
+                    assert.equal(+(await figure.getAttribute("data-slice-clipped")), 0);
+                    assert.equal(+(await figure.getAttribute("data-three-scale")), 0.12);
+                    await zoom.check(); await ready(1, false);
                     await slider.fill("6"); await ready(64, false);
                     assert.notEqual(await figure.locator('[data-panel="two"]').evaluate(n => n.toDataURL()), first);
                     assert.ok(Math.abs(+(await figure.getAttribute("data-one-error")) - 1 / 65 ** 2) < 1e-12);
                     assert.ok(+(await figure.getAttribute("data-two-error")) >= 1 / 12);
+                    assert.equal(+(await figure.getAttribute("data-clipped-three")), 0);
+                    assert.equal(+(await figure.getAttribute("data-three-scale")), 0.025);
+                    assert.equal(+(await figure.getAttribute("data-slice-scale")), 0.035);
                     await figure.screenshot({ path: screenshotDir + "/blog-icnn-width64.png", style: ".navbar { visibility: hidden; }" });
+                    const residual = await figure.locator('[data-panel="three"]').evaluate(n => n.toDataURL());
+                    await view.selectOption("values"); await ready(64, false, "values");
+                    assert.notEqual(await figure.locator('[data-panel="three"]').evaluate(n => n.toDataURL()), residual);
+                    await figure.screenshot({ path: screenshotDir + "/blog-icnn-values.png", style: ".navbar { visibility: hidden; }" });
+                    await view.selectOption("residual"); await ready(64, false);
                     await figure.locator("[data-exact]").check(); await ready(64, true);
                     assert.equal(+(await figure.getAttribute("data-two-error")), 0);
                     assert.equal(+(await figure.getAttribute("data-three-error")), 0);
+                    assert.equal(+(await figure.getAttribute("data-slice-min")), 0);
+                    assert.equal(+(await figure.getAttribute("data-slice-max")), 0);
+                    assert.equal(+(await figure.getAttribute("data-three-scale")), 0.025);
+                    assert.equal(+(await figure.getAttribute("data-slice-scale")), 0.035);
                     assert.ok((await figure.locator('[data-architecture="three"]').textContent()).includes("L = 4"));
                     await figure.screenshot({ path: screenshotDir + "/blog-icnn-extra-layer.png", style: ".navbar { visibility: hidden; }" });
                     await slider.fill("0"); await ready(1, true);
@@ -409,7 +436,7 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
                     assert.equal(+(await figure.getAttribute("data-three-error")), 0);
                     await figure.locator("[data-exact]").uncheck(); await ready(1, false);
                     assert.ok(+(await figure.getAttribute("data-three-error")) > 0);
-                    await slider.fill("3"); await ready(8, false);
+                    await slider.fill("6"); await ready(64, false);
                 } else if (kind === "barycentric") {
                     const source = figure.locator('[data-param="source"]'), target = figure.locator('[data-param="target"]');
                     const motion = figure.locator('[data-param="motion"]'), epsilon = figure.locator('[data-param="epsilon"]');
@@ -567,7 +594,8 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
                 const positions = await page.locator(".icnn-panel canvas").evaluateAll(nodes => nodes.map(n => {
                     const b = n.getBoundingClientRect(); return { x: b.x, y: b.y, height: b.height }; }));
                 assert.ok(positions.every(p => p.height >= 200));
-                assert.ok(positions[1].y > positions[0].y && positions[2].y > positions[1].y);
+                assert.equal(positions.length, 4);
+                assert.ok(positions.every((p, i) => i === 0 || p.y > positions[i - 1].y));
                 assert.ok(Math.abs(positions[1].x - positions[2].x) < 1);
                 await page.locator('[data-figure="icnn"]').screenshot({ path: screenshotDir + "/blog-icnn-320.png",
                     style: ".navbar { visibility: hidden; }" });

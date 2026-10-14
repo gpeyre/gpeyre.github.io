@@ -32,18 +32,60 @@
             return result;
         };
     }
-    function grid(evaluate, count = 81) {
+    function grid(evaluate, count = 81, bounds = [-1, 1]) {
         const values = new Float64Array(count * count);
         for (let j = 0; j < count; j++) for (let i = 0; i < count; i++) {
-            values[j * count + i] = evaluate(-1 + 2 * i / (count - 1), -1 + 2 * j / (count - 1));
+            values[j * count + i] = evaluate(bounds[0] + (bounds[1] - bounds[0]) * i / (count - 1),
+                bounds[0] + (bounds[1] - bounds[0]) * j / (count - 1));
         }
-        return { count, values };
+        return { count, values, bounds: bounds.slice() };
+    }
+    function residualGrid(evaluate, target, count = 81, bounds = [-1, 1]) {
+        return grid((x, y) => evaluate(x, y) - target(x, y), count, bounds);
+    }
+    function clipping(values, limit) {
+        let below = 0, above = 0, minimum = Infinity, maximum = -Infinity;
+        for (const value of values) {
+            if (value < -limit - 1e-12) below++;
+            if (value > limit + 1e-12) above++;
+            minimum = Math.min(minimum, value); maximum = Math.max(maximum, value);
+        }
+        return { below, above, count: below + above, minimum, maximum };
+    }
+    function diagonalSlice(model, exact = false) {
+        const lower = -0.25, upper = 0;
+        if (exact) return { lower, upper, points: [{ t: lower, value: 0 }, { t: upper, value: 0 }], minimum: 0, maximum: 0 };
+        const slopes = model.a1.map(row => row[0] + row[1]);
+        const first = [lower, upper];
+        slopes.forEach((slope, i) => {
+            const root = -model.b1[i] / slope;
+            if (Math.abs(slope) > 1e-14 && root > lower && root < upper) first.push(root);
+        });
+        first.sort((a, b) => a - b);
+        const knots = first.slice();
+        if (model.depth === 3) for (let interval = 0; interval < first.length - 1; interval++) {
+            const left = first[interval], right = first[interval + 1], middle = (left + right) / 2;
+            for (let i = 0; i < model.width; i++) {
+                let slope = model.a2[i][0] + model.a2[i][1], bias = model.b2[i];
+                for (let j = 0; j < model.width; j++) if (slopes[j] * middle + model.b1[j] > 0) {
+                    slope += model.w2[i][j] * slopes[j]; bias += model.w2[i][j] * model.b1[j];
+                }
+                const root = -bias / slope;
+                if (Math.abs(slope) > 1e-14 && root > left && root < right) knots.push(root);
+            }
+        }
+        knots.sort((a, b) => a - b);
+        const evaluate = evaluator(model), points = knots.filter((t, i) => i === 0 || t - knots[i - 1] > 1e-12)
+            .map(t => ({ t, value: evaluate(t, t) }));
+        return { lower, upper, points, minimum: Math.min(...points.map(point => point.value)),
+            maximum: Math.max(...points.map(point => point.value)) };
     }
     function certificate(evaluate) {
         return evaluate(-1, 0) + evaluate(0, -1) + evaluate(1, 1) + 3 * evaluate(0, 0) -
             2 * (evaluate(-0.5, -0.5) + evaluate(0, 0.5) + evaluate(0.5, 0));
     }
-    const api = { widths, relu, targetTwo, targetThree, exactTwo, exactThree, squareSpline, evaluator, grid, certificate };
+    const api = { widths, relu, targetTwo, targetThree, exactTwo, exactThree, squareSpline, evaluator,
+        grid, residualGrid, clipping, diagonalSlice, certificate };
     if (typeof module === "object" && module.exports) module.exports = api;
     else root.BlogICNN = api;
 }(typeof window !== "undefined" ? window : globalThis));

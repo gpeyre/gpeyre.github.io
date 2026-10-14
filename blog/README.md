@@ -97,19 +97,35 @@ Figures run locally in the browser without Python, a backend, or a third-party
 charting library. Animated figures start paused and stop when the tab or figure
 is hidden; the inverse figure is controlled directly by its sliders.
 
-The icnn figure loads js/blog-icnn-models.js, js/blog-icnn-math.js, and
-js/blog-icnn.js. A shared slider selects widths 1, 2, 4, 8, 16, 32, 64 for
-a 1D positive-hinge interpolant and genuine fitted 2D ICNNs with one and two
-hidden layers. Background colors and solid contours represent the fit, with
-the target's dashed contours overlaid at identical levels. The optional extra
-hidden layer selects exact width-one formulas, ignoring the width slider only
-in the 2D panels. The 1D error is analytic; planar errors are sampled maxima
-on a 101-by-101 grid, not certified uniform errors or globally optimal fits.
+The icnn figure loads js/blog-icnn-models.js, js/blog-icnn-diagnostics.js,
+js/blog-icnn-math.js, and js/blog-icnn.js. A shared slider selects widths
+1, 2, 4, 8, 16, 32, 64 (default 64). The default planar view shows signed
+residuals, target crease lines, and the four-plane target's zero triangle.
+The L=2 residual range is fixed at ±0.30. The L=3 close-up uses ±0.025 on
+[-0.57,0.07]²; turning off the close-up uses ±0.12 on the whole square.
+Saturation is explicitly reported. An enlarged diagonal section x=y=t over
+[-1/4,0] shows the loss of the flat face, with vertical range ±0.035 in the
+close-up and ±0.12 otherwise. It is a restriction of the fitted 2D network,
+not a one-dimensional obstruction. A separate 1D positive-hinge interpolant
+shows successful approximation of x². The view selector retains the original
+function heatmaps and target/fit contour overlays.
+The extra-hidden-layer option selects exact width-one formulas for both 2D
+targets and the diagonal section, retaining the error scales. Only the 1D
+control still uses the width slider. The 1D error is analytic. Whole-square
+planar maximum errors are computed offline to numerical precision: maximize
+h−target at the vertices of the target's affine cells, and maximize target−h
+with an ICNN epigraph linear program for each target affine piece. These
+evaluate the stored fits, not the best possible networks at those widths.
+Reproduce diagnostics with scripts/check-blog-icnn.py (NumPy and SciPy).
+The generated data includes the model-file SHA-256, checked by the unit tests.
 Reproduce model weights with scripts/train-blog-icnn.py (NumPy and PyTorch).
 Training uses two deterministic starts, projected nonnegative weights, a
 41-by-41 training grid, and increasing loss powers 2, 4, 8. Checkpoints are
-selected by evaluation-grid maximum error, including the padded previous-width
-model as a feasible candidate. Models load instantly; the browser does not train.
+selected by 101-by-101 evaluation-grid maximum error, including the padded
+previous-width model as a feasible candidate. In particular, the L=3 width-64
+network is exactly its width-32 predecessor with zero-padding; the plateau
+does not estimate the architectural lower bound. Models load instantly;
+the browser does not train or solve linear programs.
 
 ## Verify
 
