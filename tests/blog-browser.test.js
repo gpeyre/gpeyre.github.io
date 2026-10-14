@@ -32,11 +32,12 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
             assert.equal(feedResult.errors, 0, format + " must be valid XML");
             assert.equal(feedResult.entries, await page.locator(".blog-preview").count());
         }
-        assert.equal(await page.locator(".blog-preview").count(), 21);
+        assert.equal(await page.locator(".blog-preview").count(), 22);
         const dates = await page.locator(".blog-preview time").evaluateAll(nodes => nodes.map(n => n.dateTime));
         assert.deepEqual(dates, dates.slice().sort().reverse());
         const paths = await page.locator(".blog-preview h2 a").evaluateAll(nodes => nodes.map(n => new URL(n.href).pathname));
-        assert.equal(new Set(paths).size, 21);
+        assert.equal(new Set(paths).size, 22);
+        assert.ok(paths.includes("/blog/2026/10/15/stone-weierstrass-approximate-products/"));
         assert.ok(paths.includes("/blog/2026/10/14/translation-equivariance-optimal-transport/"));
         assert.ok(paths.includes("/blog/2026/10/13/mean-field-conservation-laws/"));
         assert.ok(paths.includes("/blog/2026/10/10/barycentric-projection-map/"));
@@ -66,6 +67,24 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
             assert.equal(await page.locator(".MathJax_Error, .merror").count(), 0, path);
             if (!/clarifications|mathematical-nexus|machine-learners|tout-comprendre-intelligence-artificielle/.test(path)) {
                 assert.ok(await page.evaluate(() => MathJax.Hub.getAllJax().length > 0), "No mathematics rendered: " + path);
+            }
+            if (path.includes("stone-weierstrass-approximate-products")) {
+                assert.equal(await page.locator(".blog-eyebrow time").getAttribute("datetime"), "2026-10-15");
+                const portraits = page.locator("article .portrait-pair img");
+                assert.equal(await portraits.count(), 2);
+                for (const portrait of await portraits.all()) {
+                    await portrait.scrollIntoViewIfNeeded();
+                    await portrait.evaluate(img => img.decode());
+                    assert.ok(await portrait.evaluate(img => img.naturalWidth > 500));
+                    assert.ok(await portrait.getAttribute("alt"));
+                }
+                assert.equal(await page.locator("article a[href='https://arxiv.org/abs/2408.01367']").count(), 1);
+                const mathematics = await page.evaluate(() => MathJax.Hub.getAllJax().map(jax => jax.originalText));
+                for (const formula of ["fg\\in\\overline{\\mathcal F}", "m_\\delta(u,v)", "z_1\\cdots z_k"]) {
+                    assert.ok(mathematics.some(text => text.includes(formula)), "Missing Stone–Weierstrass mathematics: " + formula);
+                }
+                await page.evaluate(() => scrollTo(0, 0));
+                await page.screenshot({ path: screenshotDir + "/blog-stone-weierstrass-desktop.png" });
             }
             if (path.includes("covariance-gauges")) {
                 assert.equal(await page.locator('article img[src*="matrixnorm"]').count(), 0);

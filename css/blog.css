@@ -70,6 +70,10 @@
 .blog-prose figcaption { font: 13px/1.7 'Open Sans', sans-serif; color: #64716d; margin-top: 15px; text-align: center; }
 .blog-prose figure.book-figure { max-width: 480px; margin-left: auto; margin-right: auto; }
 .blog-prose figure.portrait-figure { max-width: 230px; margin-left: auto; margin-right: auto; }
+.blog-prose figure.portrait-pair { max-width: 680px; margin-left: auto; margin-right: auto; }
+.portrait-pair-images { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.blog-prose .portrait-pair-images img { width: 100%; height: clamp(140px, 28vw, 260px); object-fit: contain; }
+.blog-prose .portrait-pair-images p { margin: 12px 0 0; text-align: center; font: 600 14px/1.5 'Open Sans', sans-serif; }
 .blog-prose .MathJax_SVG_Display { overflow-x: auto; overflow-y: hidden; padding: 12px 2px; margin: 24px 0 !important; max-width: 100%; }
 .blog-prose .MathJax_SVG { max-width: 100%; }
 .blog-equation-scroll { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
