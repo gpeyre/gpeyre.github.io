@@ -37,8 +37,8 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
         assert.deepEqual(dates, dates.slice().sort().reverse());
         const paths = await page.locator(".blog-preview h2 a").evaluateAll(nodes => nodes.map(n => new URL(n.href).pathname));
         assert.equal(new Set(paths).size, 23);
-        assert.ok(paths.includes("/blog/2026/10/14/icnn-universality-and-depth/"));
-        assert.ok(paths.includes("/blog/2026/10/15/stone-weierstrass-approximate-products/"));
+        assert.ok(paths.includes("/blog/2026/10/15/icnn-universality-and-depth/"));
+        assert.ok(paths.includes("/blog/2026/10/16/stone-weierstrass-approximate-products/"));
         assert.ok(paths.includes("/blog/2026/10/14/translation-equivariance-optimal-transport/"));
         assert.ok(paths.includes("/blog/2026/10/13/mean-field-conservation-laws/"));
         assert.ok(paths.includes("/blog/2026/10/10/barycentric-projection-map/"));
@@ -70,7 +70,7 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
                 assert.ok(await page.evaluate(() => MathJax.Hub.getAllJax().length > 0), "No mathematics rendered: " + path);
             }
             if (path.includes("stone-weierstrass-approximate-products")) {
-                assert.equal(await page.locator(".blog-eyebrow time").getAttribute("datetime"), "2026-10-15");
+                assert.equal(await page.locator(".blog-eyebrow time").getAttribute("datetime"), "2026-10-16");
                 const portraits = page.locator("article .portrait-pair img");
                 assert.equal(await portraits.count(), 2);
                 for (const portrait of await portraits.all()) {
@@ -712,7 +712,7 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
         assert.ok(await fallback.locator(".figure-fallback").isVisible());
         assert.ok(await fallback.locator(".figure-controls").isHidden());
         assert.ok((await fallback.locator("article").textContent()).includes("A supremum of affine functions is convex"));
-        await fallback.goto(base + "/blog/2026/10/14/icnn-universality-and-depth/");
+        await fallback.goto(base + "/blog/2026/10/15/icnn-universality-and-depth/");
         assert.ok(await fallback.locator(".figure-fallback").isVisible());
         assert.ok(await fallback.locator(".figure-controls").isHidden());
         assert.ok((await fallback.locator("article").textContent()).includes("why exact impossibility also rules out approximation"));
