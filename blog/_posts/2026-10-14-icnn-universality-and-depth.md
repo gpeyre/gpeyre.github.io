@@ -301,7 +301,7 @@ For optimal transport, this distinguishes the architectural guarantee of convexi
 **[3]** Brandon Amos, Lei Xu, and J. Zico Kolter. *Input Convex Neural Networks*. ICML, Proceedings of Machine Learning Research 70, 146–155 (2017). [Paper and proceedings](https://proceedings.mlr.press/v70/amos17b.html).
 
 <span id="ref-chen"></span>
-**[4]** Yize Chen, Yuanyuan Shi, and Baosen Zhang. *Optimal Control Via Neural Networks: A Convex Approach*. ICLR (2019). [Paper](https://arxiv.org/abs/1805.11835) · [Proceedings](https://openreview.net/forum?id=H1MW72AcK7). The finite-max construction underlies the growing-depth universality result.
+**[4]** Yize Chen, Yuanyuan Shi, and Baosen Zhang. *Optimal Control Via Neural Networks: A Convex Approach*. ICLR (2019). [Paper](https://arxiv.org/abs/1805.11835) · [Proceedings](https://openreview.net/forum?id=H1MW72AcK7).
 
 <span id="ref-makkuva"></span>
 **[5]** Ashok Makkuva, Amirhossein Taghvaei, Sewoong Oh, and Jason Lee. *Optimal transport mapping via input convex neural networks*. ICML, Proceedings of Machine Learning Research 119, 6672–6681 (2020). [Paper and proceedings](https://proceedings.mlr.press/v119/makkuva20a.html).
@@ -316,16 +316,16 @@ For optimal transport, this distinguishes the architectural guarantee of convexi
 **[8]** Charlotte Bunne, Stefan G. Stark, Gabriele Gut, Jacobo Sarabia del Castillo, Mitch Levesque, Kjong-Van Lehmann, Lucas Pelkmans, Andreas Krause, and Gunnar Rätsch. *Learning single-cell perturbation responses using neural optimal transport*. Nature Methods 20, 1759–1768 (2023). [Paper](https://www.nature.com/articles/s41592-023-01969-x).
 
 <span id="ref-gagneux"></span>
-**[9]** Anne Gagneux, Mathurin Massias, Emmanuel Soubies, and Rémi Gribonval. *Convexity in ReLU Neural Networks: Beyond ICNNs?* Journal of Mathematical Imaging and Vision 67, article 40 (2025). [Paper](https://arxiv.org/abs/2501.03017) · [Published version](https://doi.org/10.1007/s10851-025-01253-x). In particular, their two-hidden-layer counterexample compares ordinary convex networks and ICNNs at the same fixed width, rather than ruling out all widths at that depth.
+**[9]** Anne Gagneux, Mathurin Massias, Emmanuel Soubies, and Rémi Gribonval. *Convexity in ReLU Neural Networks: Beyond ICNNs?* Journal of Mathematical Imaging and Vision 67, article 40 (2025). [Paper](https://arxiv.org/abs/2501.03017) · [Published version](https://doi.org/10.1007/s10851-025-01253-x).
 
 <span id="ref-bakaev"></span>
-**[10]** Egor Bakaev, Florestan Brunck, Christoph Hertrich, Daniel Reichman, and Amir Yehudayoff. *On the Depth of Monotone ReLU Neural Networks and ICNNs* (2025). [Paper](https://arxiv.org/abs/2505.06169). Exact-representation depth lower bounds and polyhedral indecomposability arguments. Their depth convention counts ReLU stages; the convention here also counts the affine output. Their general separation theorem is not itself a uniform-approximation statement on our two-dimensional square.
+**[10]** Egor Bakaev, Florestan Brunck, Christoph Hertrich, Daniel Reichman, and Amir Yehudayoff. *On the Depth of Monotone ReLU Neural Networks and ICNNs* (2025). [Paper](https://arxiv.org/abs/2505.06169).
 
 <span id="ref-pinelis"></span>
-**[11]** Iosif Pinelis. *Does the Convex Order Between the Distributions of Linear Functionals Imply the Convex Order Between the Probability Distributions Over* $$\mathbb R^d$$*?* The American Mathematical Monthly 133(3), 281–284 (2026). [Open-access manuscript](https://arxiv.org/abs/2510.04269) · [Published version](https://doi.org/10.1080/00029890.2025.2594389) · [Earlier MathOverflow answer, 9 April 2025](https://mathoverflow.net/a/490802). Gives the convex-ridge obstruction using $$\max(0,x,y)$$ and Popoviciu's inequality, even for pointwise approximation.
+**[11]** Iosif Pinelis. *Does the Convex Order Between the Distributions of Linear Functionals Imply the Convex Order Between the Probability Distributions Over* $$\mathbb R^d$$*?* The American Mathematical Monthly 133(3), 281–284 (2026). [Open-access manuscript](https://arxiv.org/abs/2510.04269) · [Published version](https://doi.org/10.1080/00029890.2025.2594389) · [Earlier MathOverflow answer, 9 April 2025](https://mathoverflow.net/a/490802).
 
 <span id="ref-hyper"></span>
-**[12]** Shayan Hundrieser, Insung Kong, and Johannes Schmidt-Hieber. *Hyper Input Convex Neural Networks for Shape Constrained Learning and Optimal Transport* (2026). [Paper](https://arxiv.org/abs/2604.26942). A recent perspective on approximation efficiency and alternative convex architectures.
+**[12]** Shayan Hundrieser, Insung Kong, and Johannes Schmidt-Hieber. *Hyper Input Convex Neural Networks for Shape Constrained Learning and Optimal Transport* (2026). [Paper](https://arxiv.org/abs/2604.26942).
 
 <span id="ref-popoviciu"></span>
 **[13]** Tiberiu Popoviciu. *Sur certaines inégalités qui caractérisent les fonctions convexes*. Analele Științifice ale Universității “Al. I. Cuza” din Iași, Secția I a, Matematică (N.S.) 11B, 155–164 (1965). [Statement and application in Pinelis's paper](https://arxiv.org/html/2510.04269v3).
