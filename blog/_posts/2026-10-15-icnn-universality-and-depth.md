@@ -324,17 +324,9 @@ $$
 f_L=H_r,\qquad r=\left\lceil19^{(L-1)/2}\right\rceil.
 $$
 
-This choice is deliberately generous; it makes the construction explicit without optimizing its size. Every affine piece is active somewhere on $$K$$, and all slopes have norm at most one. As $$r$$ grows, the graph gains more small planar faces, while the domain and Lipschitz bound stay fixed. Before rescaling, completing the square gives
+This choice is deliberately generous; it makes the construction explicit without optimizing its size. Every affine piece is active somewhere on $$K$$, and all slopes have norm at most one. The active piece at $$x$$ corresponds to the lattice point nearest to $$(2r+1)x/2$$. The interior regions form a hexagonal pattern, with three affine pieces meeting at each junction. As $$r$$ grows, we obtain a larger connected mesh of junctions, while the domain and Lipschitz bound stay fixed.
 
-$$
-\max_{u\in\Lambda_r}\bigl(\langle u,x\rangle-\|u\|^2\bigr)
-=\frac{\|x\|^2}{4}
--\min_{u\in\Lambda_r}\left\|u-\frac{x}{2}\right\|^2.
-$$
-
-Thus the active affine pieces are arranged according to the nearest lattice point to $$x/2$$. Their planar cells form a hexagonal pattern, with three faces meeting at each interior junction. The small junction obstruction of Theorems 1 and 2 has become a connected mesh of junctions.
-
-The idea is to lift the lattice vertices to $$(u,-\|u\|^2)$$ in three dimensions. Their neighboring triples become triangular faces. Positive sums must preserve a connected chain of these triangles in at least one summand. Passing backward through a ReLU can lose at most six triangles. Counting the remaining connected pieces is enough to show that a fixed number of layers cannot create arbitrarily large patches. [Lemma 1](#lemma-1) then turns this exact-representation obstruction into a positive uniform error.
+The proof records each affine piece by a point in three dimensions: its two slope coordinates and its bias. Neighboring triples of these points form triangular faces. Positive sums must preserve a whole connected patch of triangles in at least one summand, so increasing width cannot distribute this patch among independent branches. Passing backward through a ReLU can lose at most six triangles. A simple count then bounds how large a patch a fixed depth can produce. Finally, [Lemma 1](#lemma-1) turns the failure of exact representation into a positive approximation gap.
 
 **Proof attribution.** The self-contained proof of Theorem 3 below was developed and written by **GPT-6**, using the triangular-face ideas of Bakaev et al. [[10]](#ref-bakaev). The counting bound is intentionally coarse; the point is a short argument for non-universality, not a sharp depth estimate.
 
@@ -344,21 +336,29 @@ The idea is to lift the lattice vertices to $$(u,-\|u\|^2)$$ in three dimensions
 <summary>Proof of Theorem 3: a triangular patch that outgrows the depth</summary>
 <div class="blog-proof-body" markdown="1">
 
-Write $$d=L-1$$ for the number of hidden layers. We use two elementary facts about polytopes, prove both below, and then apply the earlier closure lemma.
+Write $$k=L-1$$ for the number of hidden layers; $$r$$ remains the radius of the lattice patch. We first encode the network operations geometrically, then count triangles, and finally apply the count to $$H_r$$. The two geometric lemmas have their own expandable proofs.
 
-*Step 1: translate the network operations into geometry*
+*Step 1: record slopes and biases as points*
 
-For a polytope $$P\subset\mathbb R^3$$, its support function is $$s_P(v)=\max_{p\in P}\langle p,v\rangle$$. The Minkowski sum is $$P+Q=\{p+q:p\in P,q\in Q\}$$. Directly from these definitions,
+Encode the affine function $$x\mapsto a\cdot x+b$$ by the point $$(a,b)\in\mathbb R^3$$. More generally, associate to a polytope $$P$$ the function
+
+$$
+g_P(x)=\max_{(a,b)\in P}(a\cdot x+b).
+$$
+
+This is just a finite maximum of affine functions: it is enough to maximize over the vertices of $$P$$. The third coordinate stores the bias; the input $$x$$ is still two-dimensional.
+
+Adding two such functions adds their coefficient points. In geometric language, this is the **Minkowski sum** $$P+Q=\{p+q:p\in P,q\in Q\}$$. Applying ReLU adds the zero affine function to the maximum. Thus
 
 $$
 \begin{aligned}
-s_{P+Q}&=s_P+s_Q,\\
-s_{cP}&=c\,s_P\quad(c\geq0),\\
-s_{\operatorname{conv}(P\cup\{0\})}&=\sigma(s_P).
+g_{P+Q}&=g_P+g_Q,\\
+g_{cP}&=c\,g_P\quad(c\geq0),\\
+g_{\operatorname{conv}(P\cup\{0\})}&=\sigma(g_P).
 \end{aligned}
 $$
 
-A linear function is the support function of a point, and adding it translates the polytope. Thus a homogeneous ICNN builds polytopes from points by positive Minkowski sums and by adjoining the origin and taking the convex hull. Each hidden layer permits one more point-adjoining operation along a path.
+An affine input connection translates $$P$$ by its coefficient point. Consequently every ICNN, including its biases and affine input connections, builds a polytope from points by positive sums and by adjoining the origin and taking a convex hull. There is one such point-adjoining operation per ReLU along a network path.
 
 An **exposed face** is the set where a linear functional attains its maximum. A **chain of triangles** here means an edge-connected collection of exposed triangular faces: one can move between any two through triangles sharing a whole edge.
 
@@ -375,114 +375,99 @@ $$
 P^v=\sum_j P_j^v.
 $$
 
-Suppose this face is a triangle $$T$$. After translations, all its face summands lie in the same plane. An edge direction of a planar summand also appears on the boundary of their sum: exposing that edge gives an edge parallel to it in the sum. Hence the summands can have only the three directed edge directions of $$T$$. A nontrivial segment is impossible, since it would require two opposite directions. A nontrivial polygon therefore has three edges parallel to those of $$T$$. Closing its boundary forces the three edge vectors to have the same relative scale. Each face summand is consequently a point or a homothetic triangle:
+Suppose $$P^v=T$$ is a triangle. Fixing points in the other face summands shows that a translate of each face summand lies inside $$T$$, hence in its plane. Every edge of a summand contributes a parallel edge with the same outward normal to the sum. A nontrivial segment would force two parallel opposite edges, which a triangle does not have. A polygonal summand must therefore have precisely the triangle's three outward edge normals. Its three sides close up only when their lengths have the same proportions as those of $$T$$. It is a translated, positively scaled copy of $$T$$.
+
+Fix one summand $$Q=P_j$$. For a triangular face $$T=P^v$$, we have just proved that
 
 $$
-P_j^v=\lambda_{j,T}T+b_{j,T},\qquad \lambda_{j,T}\geq0.
+Q^v=\lambda T+z,\qquad \lambda\geq0,
 $$
 
-Now let adjacent triangles $$T=P^v$$ and $$T'=P^{v'}$$ share an edge $$E$$. Their common edge is exposed by $$v+v'$$. Because these faces intersect, $$s_P(v+v')=s_P(v)+s_P(v')$$. Each summand's support function is subadditive, so equality must hold separately in every summand. Its face in direction $$v+v'$$ is therefore the intersection of its faces in directions $$v$$ and $$v'$$, with both descriptions
+where $$z\in\mathbb R^3$$ is a translation; scale zero means a point.
+
+Now let $$T'=P^{v'}$$ share an edge $$E$$ with $$T$$, and write $$Q^{v'}=\mu T'+z'$$. A point of $$E$$ is a sum of points from the $$P_j$$. Since it maximizes both linear functionals, each point in that decomposition must maximize both on its own summand. Thus the corresponding summand faces intersect. Exposing the direction $$v'$$ inside the scaled copy of $$T$$ selects its copy of $$E$$; exchanging $$v$$ and $$v'$$ gives the same intersection. Therefore
 
 $$
-\lambda_{j,T}E+b_{j,T}
-=\lambda_{j,T'}E+b_{j,T'}.
+\lambda E+z=\mu E+z'.
 $$
 
-Equality of segment lengths forces the two scales to agree; then the translations agree as well. This also holds if the scale is zero, when both faces are the same point. Connectivity propagates one scale $$\lambda_j$$ and one translation $$b_j$$ throughout the chain. Since $$\sum_j\lambda_j=1$$, at least one scale is positive. That summand retains the entire chain. $$\square$$
+Equality of segment lengths gives $$\lambda=\mu$$, and then $$z=z'$$. The zero-scale case gives the same point on both sides. Moving across shared edges therefore propagates one scale and one translation throughout the chain in each summand. The summands' scales sum to one, so at least one is positive. That summand retains the entire chain. $$\square$$
 
 </div>
 </details>
 
 *Step 2: count how many triangles a fixed depth can retain*
 
-We will only consider chains obtained from subsets of the elementary triangles of our lifted lattice patch, by a common positive scaling and translation. Every triangle has at most three edge-neighbors, and at most six triangles meet at any vertex. These two incidence bounds survive taking subsets and homotheties.
+We will only consider subsets of the elementary triangles of our lifted lattice patch, all translated and scaled by the same factor. Every triangle has at most three edge-neighbors, and at most six triangles meet at any vertex. Taking subsets, translating, and scaling preserve these two bounds.
 
 <span id="lemma-3"></span>
-**Lemma 3 (a depth bound by counting).** A polytope computed with $$d$$ hidden layers cannot contain such a chain with more than
+**Lemma 3 (a depth bound by counting).** Set
 
 $$
-B_d=\frac{19^d-1}{3}
+B_0=0,\qquad B_k=6+19B_{k-1}.
 $$
 
-triangles, regardless of its other faces or the network's widths.
+A polytope computed with $$k$$ hidden layers contains at most $$B_k$$ triangles in any such chain, regardless of its other faces or the network's widths. Explicitly, $$B_k=(19^k-1)/3$$.
 
 <details class="blog-proof">
 <summary>Proof of Lemma 3: delete six triangles and count components</summary>
 <div class="blog-proof-body" markdown="1">
 
-At depth zero the polytope is a point, so $$B_0=0$$. Suppose the claim holds at depth $$d-1$$. The final output at depth $$d$$ corresponds to
+At hidden depth zero the polytope is a point, so $$B_0=0$$. Suppose the claim holds for $$k-1$$ hidden layers. An output with $$k$$ hidden layers corresponds to
 
 $$
 \begin{aligned}
-P&=\{a\}+\sum_j c_j R_j,\\
+P&=\{p_0\}+\sum_j c_j R_j,\\
 R_j&=\operatorname{conv}(Q_j\cup\{0\}),
 \end{aligned}
 $$
 
-where $$c_j\geq0$$ and each $$Q_j$$ has depth at most $$d-1$$. By Lemma 2, a positive homothet of the whole chain survives in one $$R_j$$ with $$c_j>0$$. Follow that summand.
+Here $$p_0$$ records the affine output term, $$c_j\geq0$$, and each $$Q_j$$ has at most $$k-1$$ hidden layers. By Lemma 2, a translated, positively scaled copy of the whole chain survives in one $$R_j$$ with $$c_j>0$$. Follow that summand.
 
-Passing from $$R_j$$ back to $$Q_j$$ can lose only triangles having the adjoined point $$0$$ as a vertex. Indeed, every other vertex of $$R_j$$ belongs to $$Q_j$$. If a retained triangle has three such vertices, then it lies in $$Q_j$$; its exposing functional still exposes exactly that triangle because $$Q_j\subset R_j$$. Even if $$0$$ lies inside a triangle or on its edge, the triangle survives unless $$0$$ is one of its vertices.
+Now undo this last ReLU: pass from $$R_j$$ back to $$Q_j$$. Only triangles with the adjoined point $$0$$ as a vertex can be lost. Indeed, every other vertex of $$R_j$$ already belongs to $$Q_j$$. A triangle with three old vertices lies entirely in $$Q_j$$, and the same linear functional still exposes it because $$Q_j\subset R_j$$. If $$0$$ is not a vertex of the retained chain, nothing is lost.
 
-At most six retained triangles have $$0$$ as a vertex. Delete them from the triangle-adjacency graph. The graph was connected and has degree at most three, so deleting at most six vertices leaves at most $$1+3\cdot6=19$$ connected components. To see this elementary bound, delete the vertices one at a time: each deletion creates at most three new components.
+At most six triangles meet at this vertex. To count what remains, draw a graph with one node per triangle and connect triangles sharing an edge. Each node has at most three neighbors. Removing the six affected nodes leaves at most $$1+3\cdot6=19$$ connected components: start with one component and allow at most three new components per deletion. This bound is intentionally loose.
 
-Each remaining component is still a chain of the same kind in $$Q_j$$, so has at most $$B_{d-1}$$ triangles by induction. Therefore the original chain has at most
+Each remaining component is a chain in $$Q_j$$, which has one fewer hidden layer. Induction bounds its size by $$B_{k-1}$$. There are at most six discarded triangles and nineteen surviving components, so the original chain has at most $$6+19B_{k-1}=B_k$$ triangles.
 
-$$
-6+19B_{d-1}=\frac{19^d-1}{3}=B_d
-$$
-
-triangles. This proves the claim. $$\square$$
+Summing this recurrence gives the claimed formula $$B_k=(19^k-1)/3$$. Width does not enter the bound: Lemma 2 let us follow just one summand at each layer. $$\square$$
 
 </div>
 </details>
 
-*Step 3: put a large triangular patch into a planar function*
+*Step 3: force too many triangles, then exclude approximation*
 
-For $$u\in\Lambda_r$$, set $$p_u=(u,-\|u\|^2)$$ and let $$P_r=\operatorname{conv}\{p_u:u\in\Lambda_r\}$$. Consider
+Apply this to the coefficient points of $$H_r$$. Write $$D=r(2r+1)$$ and set
 
 $$
 \begin{aligned}
-G_r(x)&=s_{P_r}(x,1)\\
-&=\max_{u\in\Lambda_r}\{\langle u,x\rangle-\|u\|^2\}.
+p_u&=\left(\frac{u}{r},-\frac{\|u\|^2}{D}\right),\\
+P_r&=\operatorname{conv}\{p_u:u\in\Lambda_r\}.
 \end{aligned}
 $$
 
-Every elementary lattice triangle lifts to an exposed triangular face of $$P_r$$. Indeed, if $$c$$ is its circumcenter, its circumradius is $$1/\sqrt3$$, and
+Then $$g_{P_r}=H_r$$. Every elementary lattice triangle gives an exposed triangular face of $$P_r$$. To see this, let $$c$$ be its circumcenter and choose the input $$x_c=2c/(2r+1)$$. At this input, the affine branch indexed by $$u$$ has value
 
 $$
-\langle(2c,1),p_u\rangle
-=\|c\|^2-\|u-c\|^2.
+\langle(x_c,1),p_u\rangle
+=\frac{\|c\|^2-\|u-c\|^2}{D}.
 $$
 
-The three vertices are the unique closest lattice points to $$c$$. For completeness, by lattice symmetries it suffices to check the triangle $$0,e_1,e_2$$, with $$c=(1/2,\sqrt3/6)$$. For $$u=ie_1+je_2$$,
+The triangle's three vertices are the unique closest lattice points to $$c$$, so exactly their coefficient points maximize this expression. Here is a direct check of that elementary lattice fact. By symmetry, take the triangle $$0,e_1,e_2$$, whose circumcenter is $$c=(1/2,\sqrt3/6)$$. For $$u=ie_1+je_2$$,
 
 $$
 \|u-c\|^2-\tfrac13=i^2+ij+j^2-i-j.
 $$
 
-This integer is at least $$-1/3$$, hence nonnegative, and is zero exactly at $$(i,j)=(0,0),(1,0),(0,1)$$. Thus the functional with direction $$(2c,1)$$ exposes exactly the lifted triangle. The whole patch gives an edge-connected chain of $$6r^2$$ exposed triangles.
+The right-hand side is an integer and is at least $$-1/3$$, so it is nonnegative. It vanishes only at the three vertices $$(i,j)=(0,0),(1,0),(0,1)$$. Thus the lifted patch contains $$6r^2$$ exposed triangles in a connected chain. Also $$\|c\|\leq r$$, so every $$x_c$$ lies strictly inside our fixed square $$K$$.
 
-Now suppose a depth-$$L$$ ICNN $$g$$ equals $$G_r$$ on $$Q_r=[-2r-1,2r+1]^2$$. Replace every bias $$b$$ in the network by $$bt$$, introducing a third input coordinate $$t$$. The resulting homogeneous ICNN has the same hidden depth $$d$$ and computes a support function $$s_P$$. Positive homogeneity of ReLU gives
+Suppose now that a depth-$$L$$ ICNN equals $$H_r$$ on $$K$$, and let $$P$$ be its coefficient polytope from Step 1. Local equality forces $$P$$ to contain the same triangles. Indeed, its exposed face in direction $$(x,1)$$ consists of the active affine coefficients. Their slopes form the subdifferential $$\partial g_P(x)$$: the convex hull of the slopes of the active branches. This set is determined by the function near $$x$$, and each bias is then fixed by $$b=g_P(x)-a\cdot x$$. Thus local function values determine the entire exposed face. Apply this at each interior point $$x_c$$ to recover the same triangular face as in $$P_r$$.
 
-$$
-s_P(x,t)=t\,g(x/t),\qquad t>0.
-$$
+The network's polytope consequently contains a chain of $$6r^2$$ triangles. Lemma 3 requires $$6r^2\leq B_k$$, whereas our choice $$r=\lceil19^{k/2}\rceil$$ gives $$6r^2>B_k$$. This contradiction rules out exact representation on $$K$$.
 
-Since $$\|c\|\leq r$$, each $$2c$$ lies strictly inside $$Q_r$$. Consequently $$s_P$$ and $$s_{P_r}$$ agree on an open neighborhood of every $$(2c,1)$$. They therefore have the same exposed face there. One elementary way to see this is that the subdifferential of a maximum of linear functions is the convex hull of its active coefficient vectors, exactly the exposed face; subdifferentials depend only on the function in a neighborhood.
+Finally, if depth-$$L$$ ICNNs approximated $$H_r$$ arbitrarily well, [Lemma 1](#lemma-1) would give an exact depth-$$L$$ representation on $$K$$. Since we have excluded that possibility, the uniform approximation error has a strictly positive lower bound. $$\square$$
 
-So $$P$$ contains the same chain of $$6r^2$$ triangles, even if it has additional faces elsewhere. Lemma 3 requires $$6r^2\leq B_d$$. Choosing $$r=\lceil19^{d/2}\rceil$$ violates this inequality and rules out exact representation on $$Q_r$$.
-
-*Step 4: keep the square fixed and rule out approximation*
-
-The normalized target introduced above satisfies
-
-$$
-H_r(x)=\frac{G_r((2r+1)x)}{r(2r+1)}.
-$$
-
-Rescaling the input and multiplying the output by a positive number preserve ICNN depth and sign constraints. Hence an exact depth-$$L$$ representation of $$H_r$$ on $$K$$ would give one of $$G_r$$ on $$Q_r$$, which we have just excluded. By [Lemma 1](#lemma-1), arbitrarily accurate uniform approximation of this finite maximum would imply an exact representation. Its distance from $$\mathcal C_L$$ is therefore strictly positive, as claimed. $$\square$$
-
-The normalization also verifies the promised bounds: the slopes are $$u/r$$ with norm at most one, and the branch $$u$$ is uniquely active at $$x=2u/(2r+1)\in\operatorname{int}K$$. At that point its advantage over the branch $$v\ne u$$ is $$\|u-v\|^2/[r(2r+1)]>0$$.
+The normalization also verifies the promised bounds: the slopes $$u/r$$ have norm at most one. At $$x=2u/(2r+1)\in\operatorname{int}K$$, branch $$u$$ exceeds branch $$v\ne u$$ by $$\|u-v\|^2/D>0$$, so every affine piece is active.
 
 </div>
 </details>
