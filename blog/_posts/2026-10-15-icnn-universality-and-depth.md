@@ -9,7 +9,7 @@ proofs: true
 
 Neural networks are flexible representations of functions. But what if the function must be **convex**? This constraint is especially natural in optimal transport. For probability measures with finite second moments and an absolutely continuous source, Brenier's theorem identifies the quadratic optimal transport map as the gradient of a convex potential [[1]](#ref-brenier), [[2]](#ref-ot). Learning such a potential is therefore a way to learn a transport map while respecting its geometry.
 
-**Input-convex neural networks**, or ICNNs, enforce convexity through their architecture [[3]](#ref-amos). A natural question follows: can they approximate every convex function? Yes, if depth is allowed to grow with the desired accuracy [[4]](#ref-chen). But in dimension two, no fixed depth suffices. We start with two explicit counterexamples on a square, for one and two hidden ReLU layers, then describe how the obstruction extends to every fixed depth.
+**Input-convex neural networks**, or ICNNs, enforce convexity through their architecture [[3]](#ref-amos). A natural question follows: can they approximate every convex function? Yes, if depth is allowed to grow with the desired accuracy [[4]](#ref-chen). But in dimension two, no fixed depth suffices. We start with two explicit counterexamples on a square, for one and two hidden ReLU layers, then give a self-contained proof of the obstruction at every fixed depth.
 
 Universality means reaching every prescribed uniform error by increasing the network's size. Its failure is compatible with a good fit at a fixed tolerance: the obstruction can be small enough to escape a plot of the function values. The second example below illustrates this distinction particularly well.
 
@@ -245,6 +245,7 @@ This proves $$F\notin\mathcal C_3$$. Passing from exact impossibility to an appr
 
 An architecture can fail to represent a function exactly while approximating it arbitrarily well. The following elementary lemma closes that gap for our piecewise-affine targets.
 
+<span id="lemma-1"></span>
 **Lemma 1.** Let $$P$$ be a compact convex polytope with nonempty interior, and let $$u$$ be a continuous convex function with finitely many affine pieces on $$P$$. At a fixed depth $$L$$, if $$u$$ is a uniform limit of functions in $$\mathcal C_L$$, then some function in $$\mathcal C_L$$ equals $$u$$ exactly on $$P$$.
 
 <details class="blog-proof">
@@ -303,7 +304,13 @@ $$
 
 The widths and admissible parameters are unrestricted. Both the target and the error bound depend on $$L$$. This is compatible with growing-depth universality: every one of these finite maxima has an exact representation once sufficiently many layers are allowed.
 
-The counterexamples can be built from increasingly large patches of the triangular lattice. Let $$\Lambda_r$$ be the lattice vertices at graph distance at most $$r$$ from the origin, with unit-length lattice edges. There are $$1+3r(r+1)$$ such vertices. One normalized family on the fixed square is
+Here is an explicit family. Set $$e_1=(1,0)$$ and $$e_2=(1/2,\sqrt3/2)$$. Let $$\Lambda_r$$ contain the lattice points $$ie_1+je_2$$, for integers $$i,j$$ satisfying
+
+$$
+\max(|i|,|j|,|i+j|)\leq r.
+$$
+
+This is a hexagonal patch: joining points at distance one gives $$1+3r(r+1)$$ vertices and $$6r^2$$ elementary triangles. On the fixed square, define
 
 $$
 H_r(x)=\max_{u\in\Lambda_r}
@@ -311,7 +318,13 @@ H_r(x)=\max_{u\in\Lambda_r}
 -\frac{\|u\|^2}{r(2r+1)}\right\}.
 $$
 
-Every affine piece is active somewhere on $$K$$, and all slopes have norm at most one. As $$r$$ grows, the graph gains more small planar faces, while the domain and Lipschitz bound stay fixed. Equivalently, before rescaling, completing the square gives
+For example, Theorem 3 holds with
+
+$$
+f_L=H_r,\qquad r=\left\lceil19^{(L-1)/2}\right\rceil.
+$$
+
+This choice is deliberately generous; it makes the construction explicit without optimizing its size. Every affine piece is active somewhere on $$K$$, and all slopes have norm at most one. As $$r$$ grows, the graph gains more small planar faces, while the domain and Lipschitz bound stay fixed. Before rescaling, completing the square gives
 
 $$
 \max_{u\in\Lambda_r}\bigl(\langle u,x\rangle-\|u\|^2\bigr)
@@ -321,9 +334,158 @@ $$
 
 Thus the active affine pieces are arranged according to the nearest lattice point to $$x/2$$. Their planar cells form a hexagonal pattern, with three faces meeting at each interior junction. The small junction obstruction of Theorems 1 and 2 has become a connected mesh of junctions.
 
-The geometry is easier to see by lifting the lattice vertices to $$(u,-\|u\|^2)$$ in three dimensions. Neighboring triples form exposed triangular faces of their convex hull. Positive sums cannot break apart a connected chain of these triangles: the pieces retain a common scale across shared edges. A ReLU layer provides a way to remove a local part of the chain, but a larger patch needs more successive layers. Adapting the triangular-face method of [[10]](#ref-bakaev) to this lifted patch forces at least $$cr$$ hidden layers for an absolute constant $$c>0$$. Choosing $$r$$ large enough therefore defeats any prescribed $$L$$. Lemma 1 then turns the exact-representation obstruction into a positive uniform error.
+The idea is to lift the lattice vertices to $$(u,-\|u\|^2)$$ in three dimensions. Their neighboring triples become triangular faces. Positive sums must preserve a connected chain of these triangles in at least one summand. Passing backward through a ReLU can lose at most six triangles. Counting the remaining connected pieces is enough to show that a fixed number of layers cannot create arbitrarily large patches. [Lemma 1](#lemma-1) then turns this exact-representation obstruction into a positive uniform error.
 
-The full proof is technical: it adapts the triangular-face method to a planar slice and then uses the finite-sample closure argument. A state-of-the-art AI model can help work through these steps. Here the purpose is to show how the target changes with depth: more layers require a larger interconnected arrangement of affine faces, rather than repeatedly using the same small counterexample.
+**Proof attribution.** The self-contained proof of Theorem 3 below was developed and written by **GPT-6**, using the triangular-face ideas of Bakaev et al. [[10]](#ref-bakaev). The counting bound is intentionally coarse; the point is a short argument for non-universality, not a sharp depth estimate.
+
+**Related work.** Bakaev et al. establish exact ICNN depth obstructions in dimension three [[10]](#ref-bakaev), and Valerdi obtains related exact-representation results using cyclic polytopes [[14]](#ref-valerdi). Bakaev, Brunck and Yehudayoff also prove approximation obstructions for simplices in a convex polytope/max-gate model, with dimension growing with depth [[15]](#ref-polytope-approximation). These results provide the geometric background, but do not directly prove the statement here: a positive uniform approximation gap on one fixed planar square, allowing arbitrary widths, biases, and affine input connections. The localization and the passage from exact representation to approximation are essential.
+
+<details class="blog-proof">
+<summary>Proof of Theorem 3: a triangular patch that outgrows the depth</summary>
+<div class="blog-proof-body" markdown="1">
+
+Write $$d=L-1$$ for the number of hidden layers. We use two elementary facts about polytopes, prove both below, and then apply the earlier closure lemma.
+
+*Step 1: translate the network operations into geometry*
+
+For a polytope $$P\subset\mathbb R^3$$, its support function is $$s_P(v)=\max_{p\in P}\langle p,v\rangle$$. The Minkowski sum is $$P+Q=\{p+q:p\in P,q\in Q\}$$. Directly from these definitions,
+
+$$
+\begin{aligned}
+s_{P+Q}&=s_P+s_Q,\\
+s_{cP}&=c\,s_P\quad(c\geq0),\\
+s_{\operatorname{conv}(P\cup\{0\})}&=\sigma(s_P).
+\end{aligned}
+$$
+
+A linear function is the support function of a point, and adding it translates the polytope. Thus a homogeneous ICNN builds polytopes from points by positive Minkowski sums and by adjoining the origin and taking the convex hull. Each hidden layer permits one more point-adjoining operation along a path.
+
+An **exposed face** is the set where a linear functional attains its maximum. A **chain of triangles** here means an edge-connected collection of exposed triangular faces: one can move between any two through triangles sharing a whole edge.
+
+<span id="lemma-2"></span>
+**Lemma 2 (triangular chains survive positive sums).** If a Minkowski sum contains a chain of triangular faces, at least one summand contains the whole chain, up to one common translation and positive scaling.
+
+<details class="blog-proof">
+<summary>Proof of Lemma 2: a triangle cannot split into different shapes</summary>
+<div class="blog-proof-body" markdown="1">
+
+Write $$P=\sum_j P_j$$ and denote by $$P^v$$ its exposed face in direction $$v$$. Maximizing a linear functional separately on each summand gives
+
+$$
+P^v=\sum_j P_j^v.
+$$
+
+Suppose this face is a triangle $$T$$. After translations, all its face summands lie in the same plane. An edge direction of a planar summand also appears on the boundary of their sum: exposing that edge gives an edge parallel to it in the sum. Hence the summands can have only the three directed edge directions of $$T$$. A nontrivial segment is impossible, since it would require two opposite directions. A nontrivial polygon therefore has three edges parallel to those of $$T$$. Closing its boundary forces the three edge vectors to have the same relative scale. Each face summand is consequently a point or a homothetic triangle:
+
+$$
+P_j^v=\lambda_{j,T}T+b_{j,T},\qquad \lambda_{j,T}\geq0.
+$$
+
+Now let adjacent triangles $$T=P^v$$ and $$T'=P^{v'}$$ share an edge $$E$$. Their common edge is exposed by $$v+v'$$. Because these faces intersect, $$s_P(v+v')=s_P(v)+s_P(v')$$. Each summand's support function is subadditive, so equality must hold separately in every summand. Its face in direction $$v+v'$$ is therefore the intersection of its faces in directions $$v$$ and $$v'$$, with both descriptions
+
+$$
+\lambda_{j,T}E+b_{j,T}
+=\lambda_{j,T'}E+b_{j,T'}.
+$$
+
+Equality of segment lengths forces the two scales to agree; then the translations agree as well. This also holds if the scale is zero, when both faces are the same point. Connectivity propagates one scale $$\lambda_j$$ and one translation $$b_j$$ throughout the chain. Since $$\sum_j\lambda_j=1$$, at least one scale is positive. That summand retains the entire chain. $$\square$$
+
+</div>
+</details>
+
+*Step 2: count how many triangles a fixed depth can retain*
+
+We will only consider chains obtained from subsets of the elementary triangles of our lifted lattice patch, by a common positive scaling and translation. Every triangle has at most three edge-neighbors, and at most six triangles meet at any vertex. These two incidence bounds survive taking subsets and homotheties.
+
+<span id="lemma-3"></span>
+**Lemma 3 (a depth bound by counting).** A polytope computed with $$d$$ hidden layers cannot contain such a chain with more than
+
+$$
+B_d=\frac{19^d-1}{3}
+$$
+
+triangles, regardless of its other faces or the network's widths.
+
+<details class="blog-proof">
+<summary>Proof of Lemma 3: delete six triangles and count components</summary>
+<div class="blog-proof-body" markdown="1">
+
+At depth zero the polytope is a point, so $$B_0=0$$. Suppose the claim holds at depth $$d-1$$. The final output at depth $$d$$ corresponds to
+
+$$
+\begin{aligned}
+P&=\{a\}+\sum_j c_j R_j,\\
+R_j&=\operatorname{conv}(Q_j\cup\{0\}),
+\end{aligned}
+$$
+
+where $$c_j\geq0$$ and each $$Q_j$$ has depth at most $$d-1$$. By Lemma 2, a positive homothet of the whole chain survives in one $$R_j$$ with $$c_j>0$$. Follow that summand.
+
+Passing from $$R_j$$ back to $$Q_j$$ can lose only triangles having the adjoined point $$0$$ as a vertex. Indeed, every other vertex of $$R_j$$ belongs to $$Q_j$$. If a retained triangle has three such vertices, then it lies in $$Q_j$$; its exposing functional still exposes exactly that triangle because $$Q_j\subset R_j$$. Even if $$0$$ lies inside a triangle or on its edge, the triangle survives unless $$0$$ is one of its vertices.
+
+At most six retained triangles have $$0$$ as a vertex. Delete them from the triangle-adjacency graph. The graph was connected and has degree at most three, so deleting at most six vertices leaves at most $$1+3\cdot6=19$$ connected components. To see this elementary bound, delete the vertices one at a time: each deletion creates at most three new components.
+
+Each remaining component is still a chain of the same kind in $$Q_j$$, so has at most $$B_{d-1}$$ triangles by induction. Therefore the original chain has at most
+
+$$
+6+19B_{d-1}=\frac{19^d-1}{3}=B_d
+$$
+
+triangles. This proves the claim. $$\square$$
+
+</div>
+</details>
+
+*Step 3: put a large triangular patch into a planar function*
+
+For $$u\in\Lambda_r$$, set $$p_u=(u,-\|u\|^2)$$ and let $$P_r=\operatorname{conv}\{p_u:u\in\Lambda_r\}$$. Consider
+
+$$
+\begin{aligned}
+G_r(x)&=s_{P_r}(x,1)\\
+&=\max_{u\in\Lambda_r}\{\langle u,x\rangle-\|u\|^2\}.
+\end{aligned}
+$$
+
+Every elementary lattice triangle lifts to an exposed triangular face of $$P_r$$. Indeed, if $$c$$ is its circumcenter, its circumradius is $$1/\sqrt3$$, and
+
+$$
+\langle(2c,1),p_u\rangle
+=\|c\|^2-\|u-c\|^2.
+$$
+
+The three vertices are the unique closest lattice points to $$c$$. For completeness, by lattice symmetries it suffices to check the triangle $$0,e_1,e_2$$, with $$c=(1/2,\sqrt3/6)$$. For $$u=ie_1+je_2$$,
+
+$$
+\|u-c\|^2-\tfrac13=i^2+ij+j^2-i-j.
+$$
+
+This integer is at least $$-1/3$$, hence nonnegative, and is zero exactly at $$(i,j)=(0,0),(1,0),(0,1)$$. Thus the functional with direction $$(2c,1)$$ exposes exactly the lifted triangle. The whole patch gives an edge-connected chain of $$6r^2$$ exposed triangles.
+
+Now suppose a depth-$$L$$ ICNN $$g$$ equals $$G_r$$ on $$Q_r=[-2r-1,2r+1]^2$$. Replace every bias $$b$$ in the network by $$bt$$, introducing a third input coordinate $$t$$. The resulting homogeneous ICNN has the same hidden depth $$d$$ and computes a support function $$s_P$$. Positive homogeneity of ReLU gives
+
+$$
+s_P(x,t)=t\,g(x/t),\qquad t>0.
+$$
+
+Since $$\|c\|\leq r$$, each $$2c$$ lies strictly inside $$Q_r$$. Consequently $$s_P$$ and $$s_{P_r}$$ agree on an open neighborhood of every $$(2c,1)$$. They therefore have the same exposed face there. One elementary way to see this is that the subdifferential of a maximum of linear functions is the convex hull of its active coefficient vectors, exactly the exposed face; subdifferentials depend only on the function in a neighborhood.
+
+So $$P$$ contains the same chain of $$6r^2$$ triangles, even if it has additional faces elsewhere. Lemma 3 requires $$6r^2\leq B_d$$. Choosing $$r=\lceil19^{d/2}\rceil$$ violates this inequality and rules out exact representation on $$Q_r$$.
+
+*Step 4: keep the square fixed and rule out approximation*
+
+The normalized target introduced above satisfies
+
+$$
+H_r(x)=\frac{G_r((2r+1)x)}{r(2r+1)}.
+$$
+
+Rescaling the input and multiplying the output by a positive number preserve ICNN depth and sign constraints. Hence an exact depth-$$L$$ representation of $$H_r$$ on $$K$$ would give one of $$G_r$$ on $$Q_r$$, which we have just excluded. By [Lemma 1](#lemma-1), arbitrarily accurate uniform approximation of this finite maximum would imply an exact representation. Its distance from $$\mathcal C_L$$ is therefore strictly positive, as claimed. $$\square$$
+
+The normalization also verifies the promised bounds: the slopes are $$u/r$$ with norm at most one, and the branch $$u$$ is uniquely active at $$x=2u/(2r+1)\in\operatorname{int}K$$. At that point its advantage over the branch $$v\ne u$$ is $$\|u-v\|^2/[r(2r+1)]>0$$.
+
+</div>
+</details>
 
 ## Numerical experimentation
 
@@ -383,3 +545,9 @@ The fits come from constrained numerical optimization. At width $$64$$, the sele
 
 <span id="ref-popoviciu"></span>
 **[13]** Tiberiu Popoviciu. *Sur certaines inégalités qui caractérisent les fonctions convexes*. Analele Științifice ale Universității “Al. I. Cuza” din Iași, Secția I a, Matematică (N.S.) 11B, 155–164 (1965). [Statement and application in Pinelis's paper](https://arxiv.org/html/2510.04269v3).
+
+<span id="ref-valerdi"></span>
+**[14]** Juan L. Valerdi. *On Minimal Depth in Neural Networks* (2024; revised 2026). [Paper, version 6](https://arxiv.org/abs/2402.15315v6).
+
+<span id="ref-polytope-approximation"></span>
+**[15]** Egor Bakaev, Florestan Brunck, and Amir Yehudayoff. *Approximation Depth of Convex Polytopes* (2025). [Paper](https://arxiv.org/abs/2507.07779).

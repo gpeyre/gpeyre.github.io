@@ -194,7 +194,7 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
                     assert.ok((await statement.textContent()).includes("Theorem " + number + "."));
                 }
                 const proofs = page.locator("article details.blog-proof");
-                assert.equal(await proofs.count(), 3);
+                assert.equal(await proofs.count(), 6);
                 assert.ok(await proofs.evaluateAll(nodes => nodes.every(n => !n.open)));
                 const second = page.locator("article > details.blog-proof").nth(1);
                 const lemma = second.locator("details.blog-proof");
@@ -214,6 +214,25 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
                 assert.ok(innerX > outerX + 20, "Lemma proof must be visibly indented inside the theorem proof");
                 await lemma.locator(":scope > summary").click();
                 await second.locator(":scope > summary").click();
+                const third = page.locator("article > details.blog-proof").nth(2);
+                await third.locator(":scope > summary").click();
+                await page.waitForFunction(() => !document.querySelector("article details.blog-proof[aria-busy]"));
+                const geometricLemmas = third.locator("details.blog-proof");
+                assert.equal(await geometricLemmas.count(), 2);
+                assert.ok(await geometricLemmas.evaluateAll(nodes => nodes.every(n => !n.open)));
+                assert.equal(await third.locator("h2, h3").count(), 0);
+                const thirdX = await third.locator(":scope > .blog-proof-body").evaluate(n => n.getBoundingClientRect().x);
+                for (const geometricLemma of await geometricLemmas.all()) {
+                    await geometricLemma.locator(":scope > summary").click();
+                    await page.waitForFunction(() => !document.querySelector("article details.blog-proof[aria-busy]"));
+                    assert.ok(await geometricLemma.locator(":scope > .blog-proof-body").isVisible());
+                    const lemmaX = await geometricLemma.locator(":scope > .blog-proof-body").evaluate(n => n.getBoundingClientRect().x);
+                    assert.ok(lemmaX > thirdX + 20, "Geometric lemmas must be visibly nested inside Theorem 3");
+                    assert.ok(await geometricLemma.locator(".MathJax_SVG svg").evaluateAll(nodes =>
+                        nodes.length > 0 && nodes.every(n => n.getBoundingClientRect().width > 0)));
+                    await geometricLemma.locator(":scope > summary").click();
+                }
+                await third.locator(":scope > summary").click();
                 assert.ok(await proofs.evaluateAll(nodes => nodes.every(n => !n.open)));
                 const headings = await page.locator("article > h2").allTextContents();
                 assert.ok(headings.indexOf("More layers: still no universal fixed depth") < headings.indexOf("Numerical experimentation"));
