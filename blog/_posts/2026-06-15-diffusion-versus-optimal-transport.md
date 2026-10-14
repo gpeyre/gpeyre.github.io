@@ -131,7 +131,8 @@ T_{\mathrm{OT}}\in
 }
 $$
 
-Since the source is absolutely continuous, [Brenier's theorem](https://doi.org/10.1002/cpa.3160440402) gives a unique optimal map, up to $$\mu$$-null sets, of the form $$T_{\mathrm{OT}}=\nabla\varphi$$ with $$\varphi$$ convex.
+<span id="theorem-1"></span>
+**Theorem 1 (Brenier).** Since the source is absolutely continuous, there is a unique optimal map, up to $$\mu$$-null sets, of the form $$T_{\mathrm{OT}}=\nabla\varphi$$ with $$\varphi$$ convex. See [Brenier's theorem](https://doi.org/10.1002/cpa.3160440402).
 
 Its displacement interpolation is
 

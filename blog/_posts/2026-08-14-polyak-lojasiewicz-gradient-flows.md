@@ -4,6 +4,7 @@ subtitle: "The Polyak–Łojasiewicz condition, and a favourite banana-shaped va
 description: "Why a gradient inequality can be enough for exponential convergence, illustrated by an interactive curved valley."
 topic: Optimization
 figure: pl
+proofs: true
 ---
 
 Convexity is not the only route to fast optimization. The Polyak–Łojasiewicz (P–L) condition asks for something more directly connected to gradient descent: away from the minimum value, the gradient must remain large enough.
@@ -19,15 +20,8 @@ It rules out stationary points with a nonoptimal value, without requiring a conv
 
 <!--more-->
 
-Along the gradient flow $$\dot x=-\nabla f(x)$$,
-
-$$
-\frac{\mathrm d}{\mathrm dt}(f(x(t))-f_\star)
-=-\|\nabla f(x(t))\|^2
-\leq -2\mu(f(x(t))-f_\star).
-$$
-
-Integration gives the exponential decay
+<span id="proposition-1"></span>
+**Proposition 1 (exponential energy decay).** Along the gradient flow $$\dot x=-\nabla f(x)$$, the P–L condition gives
 
 $$
 f(x(t))-f_\star
@@ -35,6 +29,23 @@ f(x(t))-f_\star
 $$
 
 This is a statement about the **objective value**, not necessarily convergence to a unique minimizer.
+
+<details class="blog-proof">
+<summary>Proof: differentiate the energy</summary>
+<div class="blog-proof-body" markdown="1">
+
+Along the flow,
+
+$$
+\frac{\mathrm d}{\mathrm dt}(f(x(t))-f_\star)
+=-\|\nabla f(x(t))\|^2
+\leq -2\mu(f(x(t))-f_\star).
+$$
+
+Integration gives the stated exponential decay.
+
+</div>
+</details>
 
 ## A curved valley
 
@@ -49,7 +60,24 @@ Its minimizers form the parabolic arc $$y=-b(x-\tfrac12)^2$$, $$x\in I$$. For $$
 
 {% include blog-figure.html kind="pl" %}
 
-There is a useful qualification here: this banana does **not** have one uniform, global P–L constant when $$b>0$$. Set
+There is a useful qualification here: this banana does **not** have one uniform, global P–L constant when $$b>0$$.
+
+<span id="proposition-2"></span>
+**Proposition 2 (P–L on a sublevel set).** On $$F_b\leq R$$,
+
+$$
+\frac12\|\nabla F_b\|^2
+\geq
+\frac{2}{\bigl[1+2b(\tfrac12+\sqrt R)\bigr]^2}\,F_b.
+$$
+
+The flow stays in its initial sublevel, so this is enough for exponential decay along every trajectory. The rate may depend on the starting sublevel.
+
+<details class="blog-proof">
+<summary>Proof: control the shear on each sublevel set</summary>
+<div class="blog-proof-body" markdown="1">
+
+Set
 
 $$
 r=x-\operatorname{proj}_I(x),\qquad
@@ -64,15 +92,10 @@ $$
 \leq (1+|c|)\sqrt{(r+cz)^2+z^2}.
 $$
 
-On $$F_b\leq R$$, one has $$|x-\tfrac12|\leq \tfrac12+\sqrt R$$, hence
+On $$F_b\leq R$$, one has $$|x-\tfrac12|\leq \tfrac12+\sqrt R$$. Combining these estimates gives the stated inequality.
 
-$$
-\frac12\|\nabla F_b\|^2
-\geq
-\frac{2}{\bigl[1+2b(\tfrac12+\sqrt R)\bigr]^2}\,F_b.
-$$
-
-The flow stays in its initial sublevel, so this is enough for exponential decay along every trajectory. The rate may depend on the starting sublevel.
+</div>
+</details>
 
 ## Ten years of a useful perspective
 

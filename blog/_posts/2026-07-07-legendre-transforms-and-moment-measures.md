@@ -3,6 +3,7 @@ title: "A convex functional hidden behind the Legendre transform"
 subtitle: "From Prékopa–Leindler to moment measures."
 description: "Why minus the log-integral of the exponential of a negative convex conjugate is convex, and how its variation produces a moment measure."
 topic: Convexity
+proofs: true
 ---
 
 For a convex function $$f:\mathbb R^d\to\mathbb R\cup\{+\infty\}$$, write
@@ -21,7 +22,12 @@ is convex, on a class of proper closed convex functions for which the integrals 
 
 <!--more-->
 
-## A short proof
+<span id="proposition-1"></span>
+**Proposition 1.** Under the assumptions above, the functional $$\Phi$$ is convex.
+
+<details class="blog-proof">
+<summary>Proof: apply Prékopa–Leindler</summary>
+<div class="blog-proof-body" markdown="1">
 
 Let $$f_t=(1-t)f_0+tf_1$$, $$0<t<1$$. For arbitrary $$y_0,y_1$$,
 
@@ -51,6 +57,9 @@ Taking minus the logarithm proves
 $$
 \Phi(f_t)\leq (1-t)\Phi(f_0)+t\Phi(f_1).
 $$
+
+</div>
+</details>
 
 ## Where moment measures enter
 

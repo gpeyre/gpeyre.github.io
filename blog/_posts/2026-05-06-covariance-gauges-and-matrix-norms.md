@@ -3,6 +3,7 @@ title: "When does a covariance gauge define a matrix norm?"
 subtitle: "A characterization by monotonicity in the positive semidefinite order."
 description: "A detailed proof that a positive convex homogeneous covariance gauge lifts to a matrix norm exactly when it is monotone."
 topic: Matrix analysis
+proofs: true
 ---
 
 Given a way to measure a positive semidefinite matrix, a natural way to measure a general matrix is to apply it to its Gram matrix:
@@ -38,7 +39,8 @@ Let $$\mathbb S_+^d$$ denote the cone of real symmetric positive semidefinite ma
 $$\gamma(tA)=t\gamma(A)$$ for $$t\geq0$$.
 Assume also that $$\gamma(A)>0$$ whenever $$A\neq0$$.
 
-Then the following are equivalent:
+<span id="theorem-1"></span>
+**Theorem 1.** The following are equivalent:
 
 1. $$N(X)=\sqrt{\gamma(X^\top X)}$$ is a norm on $$\mathbb R^{d\times d}$$.
 2. $$\gamma$$ is monotone for the Loewner order:
@@ -52,7 +54,11 @@ Moreover, condition 2 makes the same formula a norm on $$\mathbb R^{m\times d}$$
 
 The positivity assumption is necessary for the word *norm*. Without it, the corresponding statement concerns seminorms: for example, the zero gauge is monotone but its lift vanishes everywhere.
 
-## Monotonicity implies the triangle inequality
+<details class="blog-proof">
+<summary>Proof: the two directions of the characterization</summary>
+<div class="blog-proof-body" markdown="1">
+
+*Step 1: monotonicity implies the triangle inequality*
 
 Absolute homogeneity is immediate:
 
@@ -93,7 +99,7 @@ $$
 
 The cases where one matrix is zero are immediate. This proof works for every row dimension.
 
-## The norm property implies monotonicity
+*Step 2: the norm property implies monotonicity*
 
 Now suppose $$N$$ is a norm on square matrices. Its Gram form makes it invariant under left multiplication by any orthogonal matrix $$U$$:
 
@@ -103,7 +109,12 @@ $$
 
 The first step is to extend this invariance to an inequality for contractions.
 
-### Every contraction is an average of orthogonal matrices
+<span id="lemma-1"></span>
+**Lemma 1.** Every square contraction is a finite convex combination of orthogonal matrices.
+
+<details class="blog-proof">
+<summary>Proof of Lemma 1: averaging signs in a singular value decomposition</summary>
+<div class="blog-proof-body" markdown="1">
 
 Let $$C$$ satisfy $$\|C\|_{\mathrm{op}}\leq1$$. In a singular value decomposition,
 
@@ -121,7 +132,12 @@ U\operatorname{diag}(s_1,\ldots,s_d)V^\top
 \right].
 $$
 
-Each matrix inside the expectation is orthogonal. The expectation is a finite convex combination, so convexity and orthogonal invariance imply
+Each matrix inside the expectation is orthogonal. The expectation is a finite convex combination.
+
+</div>
+</details>
+
+By convexity and orthogonal invariance, Lemma 1 implies
 
 $$
 N(CX)\leq
@@ -129,7 +145,7 @@ N(CX)\leq
 =N(X).
 $$
 
-### Compare two Gram matrices
+*Step 3: compare two Gram matrices*
 
 Suppose $$0\preceq A\preceq B$$. Define a linear map on the range of $$B^{1/2}$$ by
 
@@ -154,6 +170,9 @@ $$
 $$
 
 Squaring proves the required monotonicity, including when $$A$$ or $$B$$ is singular.
+
+</div>
+</details>
 
 ## Examples and a warning
 

@@ -55,6 +55,9 @@ images. The Duhamel portrait is public domain; its source is credited in the pos
 For expandable proofs, add `proofs: true` to the front matter and use a native
 `details.blog-proof` with a `summary` label and a `div.blog-proof-body` bearing
 `markdown="1"`. Proofs start closed and can be nested for a lemma's proof.
+Number results consecutively within each post, with separate series for
+theorems, propositions, lemmas, and corollaries. Keep each statement visible
+and use italic paragraphs for steps inside a proof rather than section headings.
 The indentation reflects nesting, and js/blog-proofs.js reflows equations when
 a proof opens. The disclosure controls also work without JavaScript.
 

@@ -69,6 +69,22 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
             if (!/clarifications|mathematical-nexus|machine-learners|tout-comprendre-intelligence-artificielle/.test(path)) {
                 assert.ok(await page.evaluate(() => MathJax.Hub.getAllJax().length > 0), "No mathematics rendered: " + path);
             }
+            const proofPanels = page.locator("article details.blog-proof");
+            if (await proofPanels.count() && !path.includes("icnn-universality-and-depth")) {
+                assert.ok(await proofPanels.evaluateAll(nodes => nodes.every(n => !n.open)), "Proofs must start collapsed: " + path);
+                assert.equal(await page.locator("article details.blog-proof h2, article details.blog-proof h3").count(), 0,
+                    "Proof steps use italics rather than article headings: " + path);
+                // DOM order visits each outer proof before its nested lemma.
+                for (const proof of await proofPanels.all()) {
+                    await proof.locator(":scope > summary").click();
+                    await page.waitForFunction(() => !document.querySelector("details.blog-proof[aria-busy]"));
+                    assert.ok(await proof.evaluate(n => n.open));
+                    assert.ok(await proof.locator(":scope > .blog-proof-body").isVisible());
+                    const missing = await proof.locator(".MathJax_SVG svg").evaluateAll(nodes => nodes.filter(n =>
+                        !n.closest("details:not([open])") && n.getBoundingClientRect().width === 0).length);
+                    assert.equal(missing, 0, "Math must appear when a proof opens: " + path);
+                }
+            }
             if (path.includes("stone-weierstrass-approximate-products")) {
                 assert.equal(await page.locator(".blog-eyebrow time").getAttribute("datetime"), "2026-10-16");
                 const portraits = page.locator("article .portrait-pair img");
@@ -119,7 +135,7 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
                 assert.equal(await page.locator("article img").count(), 0, "The mathematical statements must be LaTeX, not images");
                 assert.ok(await page.evaluate(formula => MathJax.Hub.getAllJax().some(jax =>
                     jax.originalText.includes(formula)), algebraPost.formula));
-                assert.ok(await page.locator("article h2").count() >= 5, "The detailed proof sections must be present");
+                assert.ok(await page.locator("article > details.blog-proof").count() >= 1, "The detailed proof must be expandable");
                 await page.screenshot({ path: screenshotDir + "/blog-" + algebraPost.slug + "-desktop.png" });
                 await page.locator(".blog-prose .MathJax_SVG_Display").nth(algebraPost.slug === "congruence" ? 2 : 4).screenshot({
                     path: screenshotDir + "/blog-" + algebraPost.slug + "-theorem-desktop.png",
@@ -205,7 +221,7 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
                 for (const phrase of ["subgradient selection", "at most", "modified target", "cyclically monotone",
                     "weak OT", "log-sum-exp", "three quarters", "finite second moments",
                     "For an arbitrary coupling", "sufficient conditions", "optimal quadratic Kantorovich coupling",
-                    "solution of the quadratic entropic OT problem", "Corollary (entropic OT)",
+                    "solution of the quadratic entropic OT problem", "Corollary 1 (entropic OT)",
                     "not merely positivity or the marginal constraints", "Projection onto deterministic couplings",
                     "fiberwise Wasserstein distance", "unique nearest deterministic coupling", "Pythagorean identity",
                     "every coupling", "not ordinary Wasserstein distance on the product space"]) {
@@ -600,7 +616,7 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
             if (isInverse) {
                 await page.evaluate(() => document.activeElement.blur());
                 const clipped = await page.locator(".blog-prose .MathJax_SVG_Display").evaluateAll(nodes =>
-                    nodes.flatMap((n, i) => n.scrollWidth > n.clientWidth + 2 ? [i] : []));
+                    nodes.flatMap((n, i) => !n.closest(".blog-proof") && n.scrollWidth > n.clientWidth + 2 ? [i] : []));
                 assert.deepEqual(clipped, [], "The inverse optimisation equations must fit the mobile column");
             }
             if (isBarycentric) {
@@ -608,7 +624,7 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
                 await page.evaluate(() => new Promise(resolve => MathJax.Hub.Queue(["Rerender", MathJax.Hub], resolve)));
                 assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false);
                 const clipped = await page.locator(".blog-prose .MathJax_SVG_Display").evaluateAll(nodes =>
-                    nodes.flatMap((n, i) => n.scrollWidth > n.clientWidth + 2 ? [i] : []));
+                    nodes.flatMap((n, i) => !n.closest(".blog-proof") && n.scrollWidth > n.clientWidth + 2 ? [i] : []));
                 assert.deepEqual(clipped, [], "The barycentric equations must fit the narrow mobile column");
                 const figure = page.locator('[data-figure="barycentric"]');
                 assert.ok((await figure.locator("canvas").boundingBox()).height >= 320);
@@ -744,6 +760,8 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
         assert.ok(await fallback.locator(".figure-fallback").isVisible());
         assert.ok(await fallback.locator(".figure-controls").isHidden());
         assert.ok((await fallback.locator("article").textContent()).includes("A supremum of affine functions is convex"));
+        await fallback.locator("article details.blog-proof > summary").click();
+        assert.ok(await fallback.locator("article details.blog-proof > .blog-proof-body").isVisible());
         await fallback.goto(base + "/blog/2026/10/15/icnn-universality-and-depth/");
         assert.ok(await fallback.locator(".figure-fallback").isVisible());
         assert.ok(await fallback.locator(".figure-controls").isHidden());

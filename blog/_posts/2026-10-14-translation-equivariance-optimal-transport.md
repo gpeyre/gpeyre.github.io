@@ -3,6 +3,7 @@ title: "Translation equivariance of optimal transport"
 subtitle: "When moving both marginals preserves the optimal matching"
 description: "Which transport costs preserve optimal plans under a common translation? A characterization by the mixed Hessian, a short proof, and quadratic, cubic, and exponential examples."
 topic: Optimal transport
+proofs: true
 ---
 
 If we translate two point clouds by the same vector, should their optimal transport plan simply translate along with them? For a cost such as the squared Euclidean distance, the answer is immediate: every pairwise displacement stays the same. But this is only one way for the optimal matching to be preserved.
@@ -53,7 +54,8 @@ This is *translation equivariance of optimal transport*. For point clouds, the e
 
 ## A characterization by the mixed Hessian
 
-**Theorem.** Assume $$d\geq2$$, $$c\in C^3(\mathbb R^d\times\mathbb R^d)$$, and that the mixed Hessian
+<span id="theorem-1"></span>
+**Theorem 1.** Assume $$d\geq2$$, $$c\in C^3(\mathbb R^d\times\mathbb R^d)$$, and that the mixed Hessian
 
 $$
 M(x,y)=D^2_{xy}c(x,y),\qquad
@@ -80,9 +82,11 @@ $$
 
 The functions $$f_a,g_a$$ depend on the translation but not on the marginals. No symmetry or convexity of $$c$$ is assumed. The sufficient condition works in every dimension, even for degenerate costs; the hypotheses above are needed for the general converse.
 
-## A short proof
+<details class="blog-proof">
+<summary>Proof: two-point marginals and mixed-Hessian compatibility</summary>
+<div class="blog-proof-body" markdown="1">
 
-**Sufficiency.** Translating both coordinates gives a bijection between the two coupling sets. For any $$\pi\in\Pi(\mu,\nu)$$,
+*Sufficiency.* Translating both coordinates gives a bijection between the two coupling sets. For any $$\pi\in\Pi(\mu,\nu)$$,
 
 $$
 \int c\,\mathrm d(S_a)_\#\pi
@@ -92,7 +96,7 @@ $$
 
 The last two terms are fixed by the marginals, and the multiplicative factor is positive. Thus the entire set of minimizers is preserved.
 
-**Necessity begins with two-point marginals.** Fix $$a$$ and put $$c_a(x,y)=c(x+a,y+a)$$. Give mass $$1/2$$ to each of $$x,x+\varepsilon u$$ and $$y,y+\varepsilon v$$. The extreme couplings are the direct and crossed matchings. Twice their cost difference is
+*Necessity begins with two-point marginals.* Fix $$a$$ and put $$c_a(x,y)=c(x+a,y+a)$$. Give mass $$1/2$$ to each of $$x,x+\varepsilon u$$ and $$y,y+\varepsilon v$$. The extreme couplings are the direct and crossed matchings. Twice their cost difference is
 
 $$
 \Delta_\varepsilon c=c(x,y)+c(x+\varepsilon u,y+\varepsilon v)
@@ -111,7 +115,7 @@ $$
 N=\rho_a(x,y)M,\qquad \rho_a(x,y)>0.
 $$
 
-**Compatibility removes the position dependence.** The scalar $$\rho_a$$ is $$C^1$$, since it equals $$d^{-1}\operatorname{tr}(NM^{-1})$$. Differentiate this proportionality and commute the two $$x$$ derivatives of $$c$$. The derivatives of $$M$$ cancel, leaving
+*Compatibility removes the position dependence.* The scalar $$\rho_a$$ is $$C^1$$, since it equals $$d^{-1}\operatorname{tr}(NM^{-1})$$. Differentiate this proportionality and commute the two $$x$$ derivatives of $$c$$. The derivatives of $$M$$ cancel, leaving
 
 $$
 (\partial_{x_\ell}\rho_a)M_{ij}
@@ -127,6 +131,9 @@ r_a(x,y)=r_a(x,0)+r_a(0,y)-r_a(0,0).
 $$
 
 It is therefore a sum $$f_a(x)+g_a(y)$$, as required.
+
+</div>
+</details>
 
 ## Every quadratic cost works
 
@@ -162,7 +169,10 @@ This cannot be written as $$h(x-y)+f(x)+g(y)$$: such a representation would have
 
 ## Which cubic costs work
 
-For polynomials of total degree at most three, there is a complete answer that needs **neither invertibility nor $$d\geq2$$**. Equivariance holds precisely for costs of the form
+For polynomials of total degree at most three, there is a complete answer that needs **neither invertibility nor $$d\geq2$$**.
+
+<span id="theorem-2"></span>
+**Theorem 2 (cubic costs).** Equivariance holds precisely for costs of the form
 
 <div class="blog-equation-scroll" tabindex="0" role="region" aria-label="Cubic cost classification equation">
 <div class="blog-equation-content" markdown="1">
@@ -175,6 +185,10 @@ $$
 </div>
 
 where $$Q_2$$ is any polynomial of degree at most two and $$p_3,q_3,h_3$$ are homogeneous cubic polynomials. The quadratic part is covered above, the marginal terms do not affect the optimizer, and the displacement term is unchanged by translation.
+
+<details class="blog-proof">
+<summary>Proof: the affine mixed Hessian of a cubic cost</summary>
+<div class="blog-proof-body" markdown="1">
 
 Why are these the only possibilities? For a cubic cost, $$M$$ is affine. The difference between any two-point direct and crossed matching costs is therefore affine in the translation $$a$$. Equivariance requires its sign to remain constant for all $$a\in\mathbb R^d$$. A nonconstant affine function takes both signs, so all translation-dependent coefficients vanish. Varying the two point differences gives
 
@@ -195,6 +209,9 @@ h_3(z)=-\frac16\sum_{i,j,k}T_{ijk}z_i z_j z_k
 $$
 
 has exactly the required nonconstant mixed Hessian. Subtracting $$x^\top By+h_3(x-y)$$ from $$c$$ leaves zero mixed Hessian, hence only marginal polynomials. This proves the classification.
+
+</div>
+</details>
 
 In one dimension, write
 

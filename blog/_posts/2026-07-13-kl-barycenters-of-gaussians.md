@@ -4,6 +4,7 @@ subtitle: "Average precisions, not covariances."
 description: "A short derivation of the reverse-KL Gaussian barycenter, with an animated two-dimensional example."
 topic: Probability
 figure: gaussian
+proofs: true
 ---
 
 Take Gaussian distributions $$\nu_i=\mathcal N(m_i,\Sigma_i)$$ with positive definite covariances, and weights $$\lambda_i\geq0$$ summing to one. Their barycenter for the objective
@@ -16,7 +17,8 @@ is again Gaussian. The striking point is that we average the **precision matrice
 
 <!--more-->
 
-The answer is $$\mu_\star=\mathcal N(m,\Sigma)$$, with
+<span id="proposition-1"></span>
+**Proposition 1 (Gaussian reverse-KL barycenter).** The answer is $$\mu_\star=\mathcal N(m,\Sigma)$$, with
 
 $$
 \boxed{\quad
@@ -40,6 +42,10 @@ q(x)=\frac{1}{Z}\prod_i p_i(x)^{\lambda_i},
 Z=\int_{\mathbb R^d}\prod_i p_i(x)^{\lambda_i}\,\mathrm dx.
 $$
 
+<details class="blog-proof">
+<summary>Proof: the geometric mean minimizes reverse KL</summary>
+<div class="blog-proof-body" markdown="1">
+
 For any probability density $$\rho$$ with finite objective,
 
 $$
@@ -53,6 +59,9 @@ $$
 
 The first term is nonnegative and vanishes exactly at $$\rho=q$$. Thus the optimizer is the normalized geometric mean of the input densities. This argument optimizes over **all probability laws**, not just over Gaussian candidates; singular laws have infinite KL divergence against a nondegenerate Gaussian.
 
+</div>
+</details>
+
 ## Completing the square
 
 For Gaussian inputs, put
@@ -63,6 +72,10 @@ Q=\sum_i\lambda_i\Sigma_i^{-1},
 h=\sum_i\lambda_i\Sigma_i^{-1}m_i.
 $$
 
+<details class="blog-proof">
+<summary>Proof: complete the Gaussian square</summary>
+<div class="blog-proof-body" markdown="1">
+
 Ignoring constants independent of $$x$$, the logarithm of the product density is
 
 $$
@@ -71,6 +84,9 @@ $$
 $$
 
 Since $$Q\succ0$$, this is the log-density of a Gaussian with covariance $$Q^{-1}$$ and mean $$Q^{-1}h$$, proving the formula.
+
+</div>
+</details>
 
 In one dimension,
 

@@ -27,7 +27,10 @@ $$
 
 Here $$\Pi(\mu,\nu)$$ denotes all couplings. The trace choice $$\gamma(S)=\operatorname{tr}(S)$$ recovers $$\mathsf W_2$$; the operator norm $$\gamma(S)=\|S\|_{\mathrm{op}}$$ measures the largest directional mean-square displacement.
 
-**The connection** comes from the infinitesimal cost $$\gamma(\int vv^\top\,\mathrm d\mu)$$. For particles $$\mu_X=n^{-1}\sum_i\delta_{x_i}$$ stacked as rows of $$X$$, the operator choice gives $$n^{-1}\|\dot X\|_{\mathrm{op}}^2$$. For a loss $$\mathcal F$$ and $$F(X)=n\mathcal F(\mu_X)$$, steepest descent reads
+**The connection** comes from the infinitesimal cost $$\gamma(\int vv^\top\,\mathrm d\mu)$$. For particles $$\mu_X=n^{-1}\sum_i\delta_{x_i}$$ stacked as rows of $$X$$, the operator choice gives $$n^{-1}\|\dot X\|_{\mathrm{op}}^2$$.
+
+<span id="proposition-1"></span>
+**Proposition 1 (the polar descent direction).** For a loss $$\mathcal F$$ and $$F(X)=n\mathcal F(\mu_X)$$, steepest descent in this geometry reads
 
 $$
 \begin{aligned}

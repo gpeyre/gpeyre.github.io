@@ -4,6 +4,7 @@ subtitle: "From a mass-splitting coupling to a deterministic transport"
 description: "Barycentric projection of transport couplings in fiberwise Wasserstein geometry, with quadratic and entropic optimality proofs, the modified-target caveat, weak transport, and an interactive unequal-cardinality example."
 topic: Optimal transport
 figure: barycentric
+proofs: true
 ---
 
 How do you turn a transport plan into a map? This question appears as soon as we transport a small point cloud to a much larger one: the Kantorovich solution splits each source point's mass among several destinations. Entropic regularization makes that splitting even more explicit.
@@ -132,7 +133,8 @@ $$
 P(\pi)=(\mathrm{Id},T_\pi)_\#\alpha.
 $$
 
-**Proposition.** For every $$\pi\in\mathcal C_\alpha$$, its barycentric modification is the unique nearest deterministic coupling:
+<span id="proposition-1"></span>
+**Proposition 1.** For every $$\pi\in\mathcal C_\alpha$$, its barycentric modification is the unique nearest deterministic coupling:
 
 $$
 \boxed{
@@ -141,7 +143,11 @@ D_\alpha^2(\pi,\rho).
 }
 $$
 
-**Proof.** Since transporting a measure to a Dirac mass has only one possible coupling,
+<details class="blog-proof">
+<summary>Proof: conditional means and the Pythagorean identity</summary>
+<div class="blog-proof-body" markdown="1">
+
+Since transporting a measure to a Dirac mass has only one possible coupling,
 
 $$
 \begin{aligned}
@@ -165,13 +171,17 @@ $$
 
 The cross term vanishes because $$\int(y-T_\pi(x))\,\pi_x(\mathrm dy)=0$$. Jensen's inequality ensures $$T_\pi\in L^2(\alpha;\mathbb R^d)$$, and the remaining squared norm proves uniqueness up to $$\alpha$$-almost-everywhere equality.
 
+</div>
+</details>
+
 Geometrically, each fiber $$\pi_x$$ collapses to its **nearest Dirac mass**, located at its barycenter. On graph couplings, $$D_\alpha(\rho_S,\rho_R)=\|S-R\|_{L^2(\alpha)}$$, so $$\mathcal M_\alpha$$ is an isometric copy of the space of square-integrable maps. This really is a projection: $$P(P(\pi))=P(\pi)$$.
 
 This result holds for **every coupling**, without OT optimality. There is no constraint $$S_\#\alpha=\beta$$: the projected target is $$\widetilde\beta=(T_\pi)_\#\alpha$$. It is also a statement about the fiberwise metric, **not ordinary Wasserstein distance on the product space**, which allows the source coordinate to move. The sufficient conditions below address the separate question of whether $$T_\pi$$ is an optimal transport map to its image.
 
 ## Optimal to a modified target
 
-**Theorem (quadratic OT).** Let $$\alpha,\beta\in\mathcal P_2(\mathbb R^d)$$, the probability measures with finite second moments. If $$\pi$$ is an **optimal quadratic Kantorovich coupling**, then
+<span id="theorem-1"></span>
+**Theorem 1 (quadratic OT).** Let $$\alpha,\beta\in\mathcal P_2(\mathbb R^d)$$, the probability measures with finite second moments. If $$\pi$$ is an **optimal quadratic Kantorovich coupling**, then
 
 $$
 \widetilde\beta=(T_\pi)_\#\alpha,\qquad
@@ -180,7 +190,11 @@ $$
 
 is an optimal quadratic coupling between $$\alpha$$ and $$\widetilde\beta$$. Equivalently, $$T_\pi$$ solves the Monge problem for this modified target. No absolute continuity of $$\alpha$$ is needed.
 
-**Proof.** Quadratic optimality provides a lower-semicontinuous convex potential $$\Phi$$ with
+<details class="blog-proof">
+<summary>Proof: averaging within a convex subdifferential</summary>
+<div class="blog-proof-body" markdown="1">
+
+Quadratic optimality provides a lower-semicontinuous convex potential $$\Phi$$ with
 
 $$
 y\in\partial\Phi(x)
@@ -195,6 +209,9 @@ T_\pi(x)\in\partial\Phi(x)
 $$
 
 The projected graph is therefore still cyclically monotone, which is the quadratic OT optimality criterion for its marginals. This proves the theorem. The same argument appears in the proof of Theorem 12.4.4 of Ambrosio–Gigli–Savaré [[1]](#ref-ags).
+
+</div>
+</details>
 
 For discrete sources the precise statement is **subgradient selection**, not necessarily a classical gradient: $$\Phi$$ can be nondifferentiable at source atoms. Wherever $$\Phi$$ is differentiable, $$T_\pi=\nabla\Phi$$.
 
@@ -269,7 +286,16 @@ T_\varepsilon(x)&=\nabla\Phi_\varepsilon(x).
 \end{aligned}
 $$
 
-This is a log-sum-exp of affine functions, hence smooth and convex for a finite target. Differentiating once more makes the convexity particularly transparent:
+This is a log-sum-exp of affine functions, hence smooth and convex for a finite target.
+
+<span id="corollary-1"></span>
+**Corollary 1 (entropic OT).** If $$\pi^\varepsilon$$ solves the quadratic entropic OT problem, then $$T_{\pi^\varepsilon}$$ solves **unregularized quadratic Monge OT to its own pushforward**, because it is the gradient of the convex potential $$\Phi_\varepsilon$$. The coupling $$\pi^\varepsilon$$ need not be an unregularized optimal plan to $$\beta$$. This conclusion uses its entropic optimality and dual representation, not merely positivity or the marginal constraints. The potential formula also defines the map between and beyond the sampled source points.
+
+<details class="blog-proof">
+<summary>Proof: the covariance Hessian of log sum exp</summary>
+<div class="blog-proof-body" markdown="1">
+
+Differentiating once more makes the convexity particularly transparent:
 
 $$
 \nabla^2\Phi_\varepsilon(x)
@@ -279,7 +305,10 @@ $$
 
 Here the covariance is taken over the target points with probabilities $$q_j(x)$$.
 
-**Corollary (entropic OT).** If $$\pi^\varepsilon$$ solves the quadratic entropic OT problem, then $$T_{\pi^\varepsilon}$$ solves **unregularized quadratic Monge OT to its own pushforward**, because it is the gradient of the convex potential $$\Phi_\varepsilon$$. The coupling $$\pi^\varepsilon$$ need not be an unregularized optimal plan to $$\beta$$. This conclusion uses its entropic optimality and dual representation, not merely positivity or the marginal constraints. The potential formula also defines the map between and beyond the sampled source points.
+Its graph is therefore cyclically monotone, so it is optimal for its own marginals, just as in Theorem 1.
+
+</div>
+</details>
 
 ## Move the target cloud
 

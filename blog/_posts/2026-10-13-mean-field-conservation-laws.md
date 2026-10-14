@@ -3,6 +3,7 @@ title: "Mean field conservation laws"
 subtitle: "What stays constant when the number of neurons becomes infinite"
 description: "From balancedness in linear networks to conserved functionals of a neuron distribution: a covariance formulation, a short proof, and its role in convergence."
 topic: Optimization
+proofs: true
 ---
 
 While working with Stephen Zhang on the convergence of two-layer linear networks, we made use of a construction I find particularly appealing: **mean-field conservation laws**. These are functionals of the neuron distribution that remain constant during training. The same functional works for every number of neurons, and also for a continuous distribution describing an infinite-width network.
@@ -63,7 +64,20 @@ $$
 \boxed{h(U,V)=U^\top U-V^\top V.}
 $$
 
-This is an $$n\times n$$ matrix. Indeed, direct differentiation gives
+This is an $$n\times n$$ matrix.
+
+<span id="proposition-1"></span>
+**Proposition 1 (balancedness).** The difference of the neuron Gram matrices is constant along the flow:
+
+$$
+h(U(t),V(t))=h(U(0),V(0)).
+$$
+
+<details class="blog-proof">
+<summary>Proof: the Gram matrices have the same derivative</summary>
+<div class="blog-proof-body" markdown="1">
+
+Direct differentiation gives
 
 $$
 \begin{aligned}
@@ -73,11 +87,10 @@ $$
 \end{aligned}
 $$
 
-The derivatives agree, so
+The derivatives agree, which proves the conservation law.
 
-$$
-h(U(t),V(t))=h(U(0),V(0)).
-$$
+</div>
+</details>
 
 The name *balancedness* refers to the special case $$h=0$$: balanced initial factors remain balanced. But the whole matrix is conserved for arbitrary initialization. Conservation laws of this kind, and systematic ways to identify them, are studied in our work with Sibylle Marcotte and Rémi Gribonval [[2]](#ref-marcotte).
 
@@ -132,7 +145,8 @@ H_k(\Sigma)=\operatorname{tr}\bigl((J\Sigma)^k\bigr),
 \qquad H=(H_1,\ldots,H_d).
 $$
 
-**Conservation law.** Along the flow, on its interval of existence,
+<span id="theorem-1"></span>
+**Theorem 1 (conserved signed spectrum).** Along the flow, on its interval of existence,
 
 $$
 \boxed{H(\Sigma(t))=H(\Sigma(0)).}
@@ -140,7 +154,11 @@ $$
 
 Equivalently, the characteristic polynomial, and hence the eigenvalues with multiplicity, of $$J\Sigma$$ are constant. This is the *signed covariance spectrum*: $$J\Sigma$$ has the same characteristic polynomial as the symmetric matrix $$\Sigma^{1/2}J\Sigma^{1/2}$$, so these eigenvalues are real, even when $$\Sigma$$ is singular. Neither $$\Sigma$$ itself nor its ordinary eigenvalues need be constant.
 
-**Proof.** The key algebraic identity is $$JG=-GJ$$. Consequently,
+<details class="blog-proof">
+<summary>Proof: a Lax equation preserves the trace powers</summary>
+<div class="blog-proof-body" markdown="1">
+
+The key algebraic identity is $$JG=-GJ$$. Consequently,
 
 $$
 \begin{aligned}
@@ -161,6 +179,9 @@ $$
 $$
 
 The first $$d$$ trace powers determine the characteristic polynomial by Newton's identities, which proves the claim [[1]](#ref-linear-networks).
+
+</div>
+</details>
 
 For example, the first two laws are
 

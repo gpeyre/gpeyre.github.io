@@ -4,6 +4,7 @@ subtitle: "A contraction, a variational principle, and a beautifully excessive p
 description: "Gelbrich's Gaussian contraction and a criterion explained by Hugo Lavenant, with proofs for Gaussian relative entropy and heat flow."
 topic: Optimal transport
 figure: gaussian-flow
+proofs: true
 ---
 
 I share many things with my colleague, friend, and office mate (well, not this year!) Olivier Cappé, including a love of Gaussians.
@@ -42,7 +43,8 @@ This is a projection in the sense that $$\mathsf G(\mathsf G\alpha)=\mathsf G\al
 
 The crucial result is the following form of the inequality in Matthias Gelbrich's [1990 paper, *On a Formula for the L² Wasserstein Metric between Measures on Euclidean and Hilbert Spaces*](https://doi.org/10.1002/mana.19901470121).
 
-**Theorem.** For every $$\alpha,\beta\in\mathcal P_2(\mathbb R^d)$$,
+<span id="theorem-1"></span>
+**Theorem 1 (Gelbrich's contraction).** For every $$\alpha,\beta\in\mathcal P_2(\mathbb R^d)$$,
 
 $$
 \boxed{
@@ -57,7 +59,9 @@ $$
 W_2(\mathsf G\alpha,\gamma)\leq W_2(\alpha,\gamma).
 $$
 
-### A short proof by Gaussianizing a coupling
+<details class="blog-proof">
+<summary>Proof: Gaussianizing a coupling</summary>
+<div class="blog-proof-body" markdown="1">
 
 Take any coupling $$(X,Y)$$ of $$\alpha$$ and $$\beta$$. Construct a jointly Gaussian vector $$(\widetilde X,\widetilde Y)$$ with the same mean and the same full block covariance matrix as $$(X,Y)$$. Such a Gaussian exists because a covariance matrix is positive semidefinite, even when it is singular.
 
@@ -74,6 +78,9 @@ $$
 Taking the infimum over all original couplings proves the theorem.
 
 Notice that the **joint** covariance, including the cross-covariance, is preserved. Replacing the two variables by independent Gaussians would not give this argument.
+
+</div>
+</details>
 
 Equivalently, combining the theorem with the Gaussian Wasserstein formula gives Gelbrich's lower bound
 
@@ -113,9 +120,14 @@ J_{\tau,\gamma}(\eta)
 =f(\eta)+\frac{1}{2\tau}W_2^2(\eta,\gamma).
 $$
 
-**Discrete preservation theorem.** Assume this minimization has a finite minimizer. If $$\gamma$$ is Gaussian, the Gaussian projection of any minimizer is also a minimizer. In particular, a unique minimizer must be Gaussian.
+<span id="theorem-2"></span>
+**Theorem 2 (discrete Gaussian preservation).** Assume this minimization has a finite minimizer. If $$\gamma$$ is Gaussian, the Gaussian projection of any minimizer is also a minimizer. In particular, a unique minimizer must be Gaussian.
 
-**Proof.** Since $$\mathsf G\gamma=\gamma$$, the energy inequality and Gelbrich's contraction give, for every competitor $$\eta$$,
+<details class="blog-proof">
+<summary>Proof: projecting a minimizing movement</summary>
+<div class="blog-proof-body" markdown="1">
+
+Since $$\mathsf G\gamma=\gamma$$, the energy inequality and Gelbrich's contraction give, for every competitor $$\eta$$,
 
 $$
 \begin{aligned}
@@ -128,6 +140,9 @@ J_{\tau,\gamma}(\mathsf G\eta)
 $$
 
 Applying this to a minimizer proves the assertion.
+
+</div>
+</details>
 
 Starting from a Gaussian, we can consequently choose a Gaussian at every JKO step. If each step has a unique minimizer, no choice is needed. Whenever these minimizing movements converge in $$W_2$$ to the unique Wasserstein gradient flow, that flow stays Gaussian: the fixed-point set of the continuous map $$\mathsf G$$ is closed.
 
@@ -153,7 +168,8 @@ $$
 
 when $$\alpha=\rho\,\mathrm dx$$, with value $$+\infty$$ when the relative entropy is not finite.
 
-In fact, there is an exact identity:
+<span id="proposition-1"></span>
+**Proposition 1 (Gaussian relative entropy decomposition).** For finite $$\mathrm{KL}(\alpha\mid\beta)$$, there is an exact identity:
 
 $$
 \boxed{
@@ -167,7 +183,9 @@ $$
 
 Here the identity is asserted for finite $$\mathrm{KL}(\alpha\mid\beta)$$; this ensures that $$\alpha$$ has a density and a positive definite covariance. The projection inequality is automatic when the right-hand energy $$f(\alpha)$$ is infinite.
 
-### Proof of the identity
+<details class="blog-proof">
+<summary>Proof: moment matching in the logarithm</summary>
+<div class="blog-proof-body" markdown="1">
 
 Write $$g$$ for the density of $$\mathsf G\alpha$$. Both $$g$$ and $$q$$ are Gaussian, so $$\log(g/q)$$ is a polynomial of degree at most two. Since $$\alpha$$ and $$\mathsf G\alpha$$ have the same first two moments,
 
@@ -184,6 +202,9 @@ $$
 $$
 
 Integrating against $$\rho$$, the first term is $$\mathrm{KL}(\alpha\mid\mathsf G\alpha)$$. By the moment identity, the second is $$\mathrm{KL}(\mathsf G\alpha\mid\beta)$$. This proves the decomposition.
+
+</div>
+</details>
 
 Relative entropy is nonnegative, so
 
@@ -280,7 +301,8 @@ $$
 
 extended by $$+\infty$$ to measures without a density. This is entropy relative to Lebesgue measure, not relative entropy to a fixed Gaussian probability measure.
 
-For finite entropy, the same moment-matching argument gives
+<span id="proposition-2"></span>
+**Proposition 2 (entropy and Gaussian projection).** For finite entropy, the same moment-matching argument gives
 
 $$
 \begin{aligned}
@@ -291,7 +313,16 @@ $$
 \end{aligned}
 $$
 
-Indeed, $$\log g$$ is quadratic, so $$\int\rho\log g=\int g\log g$$. The resulting inequality $$\operatorname{Ent}(\mathsf G\alpha)\leq\operatorname{Ent}(\alpha)$$ also holds when the right side is infinite. Equivalently, Gaussians maximize Shannon entropy among laws with prescribed mean and covariance; our functional has the opposite sign.
+<details class="blog-proof">
+<summary>Proof: the quadratic logarithm of a Gaussian density</summary>
+<div class="blog-proof-body" markdown="1">
+
+Indeed, $$\log g$$ is quadratic, so $$\int\rho\log g=\int g\log g$$.
+
+</div>
+</details>
+
+The resulting inequality $$\operatorname{Ent}(\mathsf G\alpha)\leq\operatorname{Ent}(\alpha)$$ also holds when the right side is infinite. Equivalently, Gaussians maximize Shannon entropy among laws with prescribed mean and covariance; our functional has the opposite sign.
 
 Thus entropy satisfies Hugo's condition too. Its Wasserstein gradient flow is
 

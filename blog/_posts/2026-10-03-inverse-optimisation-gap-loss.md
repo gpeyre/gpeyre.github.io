@@ -4,6 +4,7 @@ subtitle: "Learning a cost from decisions through the Fenchel–Young viewpoint"
 description: "The convex optimality gap as a Fenchel–Young loss, with an interactive inverse optimal transport experiment between two Gaussian mixtures and a linked bibliography."
 topic: Optimal transport
 figure: inverse
+proofs: true
 ---
 
 In an optimisation problem, we know the objective and look for the best decision. In **inverse optimisation**, we observe decisions and try to recover an objective that explains them. Inverse optimal transport (iOT) is one example: rather than computing a coupling from a cost, we learn a cost from an observed coupling.
@@ -41,7 +42,12 @@ The gap is nonnegative, and vanishes exactly when the observation is a minimizer
 
 ## Why the gap loss is convex
 
-There is a short proof that is worth remembering:
+<span id="proposition-1"></span>
+**Proposition 1 (convexity of the gap).** Under the affine parameter dependence above, $$\theta\mapsto\mathcal L(\theta;\hat z)$$ is convex for a fixed feasible observation $$\hat z$$ and a parameter-independent feasible set.
+
+<details class="blog-proof">
+<summary>Proof: a supremum of affine functions</summary>
+<div class="blog-proof-body" markdown="1">
 
 $$
 \begin{aligned}
@@ -54,6 +60,9 @@ $$
 $$
 
 Every $$\ell_z$$ is affine in $$\theta$$. A supremum of affine functions is convex. Equivalently, $$V$$ is concave because it is an infimum of affine functions, so subtracting it from an affine function gives a convex loss.
+
+</div>
+</details>
 
 Notice what the proof does **not** require: convexity of $$F_\theta$$ in $$z$$. Solving the forward problem may still be difficult, but the exact gap has this convexity property. It does require a parameter-independent feasible set and a fixed observation. A nonlinear neural parameterization of the objective does not automatically preserve it.
 

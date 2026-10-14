@@ -3,6 +3,7 @@ title: "Which linear maps preserve matrix rank?"
 subtitle: "An elementary proof of the Marcus–Moyls classification."
 description: "Why every linear rank preserver is a left-right change of basis, possibly composed with transposition in the square case."
 topic: Linear algebra
+proofs: true
 ---
 
 Fun fact: a linear operator on matrices may mix all their entries, but preserving the rank of **every** matrix leaves remarkably little freedom. It must be a change of basis on the left and on the right.
@@ -28,7 +29,8 @@ $$
 \qquad\text{for every }X.
 $$
 
-**Theorem.** There are invertible matrices $$A\in\mathbb K^{m\times m}$$ and $$B\in\mathbb K^{n\times n}$$ such that either
+<span id="theorem-1"></span>
+**Theorem 1.** There are invertible matrices $$A\in\mathbb K^{m\times m}$$ and $$B\in\mathbb K^{n\times n}$$ such that either
 
 $$
 \boxed{T(X)=AXB.}
@@ -42,17 +44,28 @@ $$
 
 Conversely, each of these maps preserves every rank. Transposition gives an endomorphism of the same matrix space only in the square case.
 
+<details class="blog-proof">
+<summary>Proof: rank-one subspaces determine the two changes of basis</summary>
+<div class="blog-proof-body" markdown="1">
+
 We prove the theorem for $$m,n\geq2$$ first.
 
-## 1. A lemma about two rank-one matrices
+*Step 1: a lemma about two rank-one matrices*
 
-Every nonzero rank-one matrix is an outer product $$uv^\top$$. For nonzero vectors $$u,a\in\mathbb K^m$$ and $$v,b\in\mathbb K^n$$,
+Every nonzero rank-one matrix is an outer product $$uv^\top$$.
+
+<span id="lemma-1"></span>
+**Lemma 1.** For nonzero vectors $$u,a\in\mathbb K^m$$ and $$v,b\in\mathbb K^n$$,
 
 $$
 \operatorname{rank}(uv^\top+ab^\top)\leq1
 $$
 
 if and only if $$u,a$$ are dependent or $$v,b$$ are dependent.
+
+<details class="blog-proof">
+<summary>Proof of Lemma 1: factor the sum through a two-dimensional space</summary>
+<div class="blog-proof-body" markdown="1">
 
 One direction is immediate: a common left or right factor makes the sum another outer product, possibly zero.
 
@@ -66,7 +79,10 @@ $$
 
 The right factor maps onto $$\mathbb K^2$$, while the left factor maps $$\mathbb K^2$$ injectively into $$\mathbb K^m$$. Their product therefore has rank two.
 
-## 2. The two families of rank-one subspaces
+</div>
+</details>
+
+*Step 2: the two families of rank-one subspaces*
 
 For fixed nonzero $$u$$ and $$v$$, define
 
@@ -79,13 +95,21 @@ $$
 
 The first family fixes the column direction and has dimension $$n$$; the second fixes the row direction and has dimension $$m$$. Every matrix in either subspace has rank at most one.
 
-**Claim.** These are exactly the maximal linear subspaces with that property.
+<span id="lemma-2"></span>
+**Lemma 2.** These are exactly the maximal linear subspaces with that property.
 
-To see this, take such a nonzero subspace $$S$$ and choose $$uv^\top\in S$$, nonzero. For every nonzero $$ab^\top\in S$$, the lemma applies to their sum. Thus either $$a$$ is parallel to $$u$$ or $$b$$ is parallel to $$v$$.
+<details class="blog-proof">
+<summary>Proof of Lemma 2: one factor direction must be shared</summary>
+<div class="blog-proof-body" markdown="1">
 
-If all left factors are parallel to $$u$$, then $$S\subseteq\mathcal L_u$$. Otherwise, $$S$$ contains $$av^\top$$ with $$a$$ independent of $$u$$, after absorbing a scalar into $$a$$. Now consider any $$cd^\top\in S$$. If $$d$$ were not parallel to $$v$$, applying the lemma with both $$uv^\top$$ and $$av^\top$$ would force $$c$$ to be parallel to both independent vectors $$u$$ and $$a$$. That is impossible for nonzero $$c$$. Hence every right factor is parallel to $$v$$, and $$S\subseteq\mathcal R_v$$.
+To see this, take such a nonzero subspace $$S$$ and choose $$uv^\top\in S$$, nonzero. For every nonzero $$ab^\top\in S$$, Lemma 1 applies to their sum. Thus either $$a$$ is parallel to $$u$$ or $$b$$ is parallel to $$v$$.
+
+If all left factors are parallel to $$u$$, then $$S\subseteq\mathcal L_u$$. Otherwise, $$S$$ contains $$av^\top$$ with $$a$$ independent of $$u$$, after absorbing a scalar into $$a$$. Now consider any $$cd^\top\in S$$. If $$d$$ were not parallel to $$v$$, applying Lemma 1 with both $$uv^\top$$ and $$av^\top$$ would force $$c$$ to be parallel to both independent vectors $$u$$ and $$a$$. That is impossible for nonzero $$c$$. Hence every right factor is parallel to $$v$$, and $$S\subseteq\mathcal R_v$$.
 
 This proves containment in one of the two families. Each family member is maximal: it cannot be contained in another member of the same family unless they are equal, nor in a member of the other family because both dimensions are at least two.
+
+</div>
+</details>
 
 The intersections record the distinction between the families. Distinct members of the same family intersect only at zero, whereas
 
@@ -96,7 +120,7 @@ $$
 
 always has dimension one.
 
-## 3. A rank preserver respects the two families
+*Step 3: a rank preserver respects the two families*
 
 First, $$T$$ is automatically invertible. If $$T(X)=0$$, rank preservation forces $$X=0$$, so $$T$$ is injective; finite dimensionality makes it bijective. Its inverse also preserves rank.
 
@@ -108,7 +132,7 @@ Moreover, the two families must have opposite image types. Otherwise, the one-di
 
 There are therefore only two cases: $$T$$ preserves both families, or it exchanges them. Exchanging them requires $$m=n$$, because their dimensions must match. In that case, composing with transposition reduces us to a map that preserves both families.
 
-## 4. Recovering the left and right factors
+*Step 4: recover the left and right factors*
 
 Assume now that both families are preserved. Let $$e_1,\ldots,e_m$$ and $$f_1,\ldots,f_n$$ be the standard bases, and set $$E_{ij}=e_i f_j^\top$$.
 
@@ -187,11 +211,16 @@ Both outside factors are invertible. This is exactly $$T(X)=AXB$$.
 
 If we had composed with transposition in the preceding step, undoing it gives $$T(X)=AX^\top B$$ after renaming the two invertible factors. This completes the classification.
 
-## Converse and edge cases
+*Step 5: the converse and the one-dimensional edge cases*
 
 Multiplication by an invertible matrix does not change rank, and transposition exchanges row rank with column rank. Hence both displayed forms really do preserve every rank.
 
 If $$m=1$$ or $$n=1$$, a nonzero matrix has rank one. Rank preservation is then simply invertibility of a linear map on a vector space. Such a map is already multiplication on the appropriate side, so the same statement holds; the two forms coincide when $$m=n=1$$.
+
+</div>
+</details>
+
+## The field and the scope of the statement
 
 Over $$\mathbb C$$, linearity means **complex** linearity. The transpose in the theorem is the ordinary transpose, not the conjugate transpose. If we allowed real-linear operators on complex matrices, entrywise conjugation would be another rank-preserving operation.
 

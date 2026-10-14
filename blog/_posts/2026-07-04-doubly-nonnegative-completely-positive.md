@@ -3,6 +3,7 @@ title: "Two notions of positivity, separated by a pentagon"
 subtitle: "Doubly nonnegative is not always completely positive."
 description: "A five-by-five matrix and an elementary proof of the gap between doubly nonnegative and completely positive matrices."
 topic: Linear algebra
+proofs: true
 ---
 
 A symmetric matrix can be positive in two different senses: positive semidefinite, and nonnegative entry by entry. Requiring both gives the cone of **doubly nonnegative matrices**
@@ -46,7 +47,15 @@ $$
 
 Its nonzero off-diagonal entries trace the edges of a pentagon.
 
-### It is doubly nonnegative
+<span id="theorem-1"></span>
+**Theorem 1.** The matrix $$X$$ is doubly nonnegative but not completely positive:
+$$X\in\mathcal D_5\setminus\mathcal C_5$$.
+
+<details class="blog-proof">
+<summary>Proof: the five-cycle spectrum and a trace obstruction</summary>
+<div class="blog-proof-body" markdown="1">
+
+*Step 1: it is doubly nonnegative*
 
 Entrywise nonnegativity is immediate. To check the spectrum, write $$X=I+aH$$, where $$H$$ is the adjacency matrix of the five-cycle. Its Fourier eigenvectors give the eigenvalues
 
@@ -57,7 +66,7 @@ $$
 
 The smallest cosine is $$-(1+\sqrt5)/4$$. Our choice of $$a$$ makes the smallest eigenvalue zero, so all eigenvalues are nonnegative.
 
-### It is not completely positive
+*Step 2: it is not completely positive*
 
 Suppose, for a contradiction, that
 
@@ -85,4 +94,17 @@ $$
 
 But $$\operatorname{tr}X=5$$ and $$a>1/2$$. This contradiction proves $$X\notin\mathcal C_5$$.
 
+</div>
+</details>
+
+<span id="corollary-1"></span>
+**Corollary 1.** For every $$n\geq5$$, the inclusion $$\mathcal C_n\subseteq\mathcal D_n$$ is strict.
+
+<details class="blog-proof">
+<summary>Proof: extend the counterexample by a zero block</summary>
+<div class="blog-proof-body" markdown="1">
+
 For larger dimensions, append a zero block. Any completely positive factorization of the enlarged matrix would give one for its leading principal five-by-five block, so the gap persists.
+
+</div>
+</details>

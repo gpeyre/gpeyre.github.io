@@ -3,6 +3,7 @@ title: "Solving a positive definite congruence equation"
 subtitle: "A global diffeomorphism hidden inside a matrix square root."
 description: "An explicit solution of UYU = X, with proofs of uniqueness and smooth dependence on positive definite matrices."
 topic: Linear algebra
+proofs: true
 ---
 
 For positive numbers, solving $$uyu=x$$ is easy: $$u=\sqrt{x/y}$$. What remains true when the variables are matrices, which need not commute?
@@ -30,7 +31,8 @@ $$
 \qquad U\longmapsto UYU.
 $$
 
-**Theorem.** The map $$\Psi_Y$$ is a $$C^\infty$$ diffeomorphism: it is bijective, smooth, and its inverse is smooth. Explicitly,
+<span id="theorem-1"></span>
+**Theorem 1.** The map $$\Psi_Y$$ is a $$C^\infty$$ diffeomorphism: it is bijective, smooth, and its inverse is smooth. Explicitly,
 
 $$
 \boxed{
@@ -51,7 +53,11 @@ $$
 
 Notice which variable is fixed: $$Y\mapsto UYU^\top$$ is an ordinary linear congruence transformation when $$U$$ is fixed. Here we fix $$Y$$ and vary the symmetric matrix $$U$$, so the map is quadratic.
 
-## Proof: reduce to a square
+<details class="blog-proof">
+<summary>Proof: a matrix square root and an invertible differential</summary>
+<div class="blog-proof-body" markdown="1">
+
+*Step 1: reduce to a square*
 
 First, the map takes positive definite matrices to positive definite matrices. Indeed, $$U$$ is invertible, and for $$z\ne0$$,
 
@@ -98,7 +104,7 @@ $$
 
 We have proved both existence and uniqueness.
 
-## Why the inverse is smooth
+*Step 2: show that the inverse is smooth*
 
 The forward map is polynomial, hence smooth. To prove smoothness of the inverse, we can examine its differential instead of differentiating an eigendecomposition.
 
@@ -128,6 +134,9 @@ Z_{ij}=\frac{E_{ij}}{\lambda_i+\lambda_j}.
 $$
 
 The surrounding congruence transformations are invertible too, so $$D\Psi_Y(U)$$ is invertible at every $$U\in\mathbb S_n^{++}$$. The inverse function theorem gives a smooth local inverse everywhere. Since $$\Psi_Y$$ is already globally bijective, these local inverses agree with its unique global inverse. This proves the diffeomorphism claim.
+
+</div>
+</details>
 
 This argument also explains why repeated eigenvalues cause no problem: the relevant denominators are **sums** of positive eigenvalues, never their differences.
 

@@ -20,7 +20,10 @@ $$
 P_{ij}>0,\qquad \sum_i P_{ij}=1.
 $$
 
-It maps the simplex $$\Delta=\{p\geq0:\sum_i p_i=1\}$$ into itself. Perron–Frobenius theory gives a unique stationary probability vector $$\pi>0$$, and
+It maps the simplex $$\Delta=\{p\geq0:\sum_i p_i=1\}$$ into itself.
+
+<span id="theorem-1"></span>
+**Theorem 1 (Perron–Frobenius).** There is a unique stationary probability vector $$\pi>0$$, and
 
 $$
 p^{(k+1)}=Pp^{(k)},\qquad p^{(k)}\longrightarrow\pi.

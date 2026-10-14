@@ -4,6 +4,7 @@ subtitle: "Making the material acceleration explicit in the Cauchy–Lipschitz e
 description: "A detailed Euler error bound isolating trajectory acceleration, with a proof and an interactive example."
 topic: Differential equations
 figure: ode
+proofs: true
 ---
 
 It is intuitively clear that straighter trajectories should be easier to integrate numerically. This intuition is especially appealing in flow matching, where one would like to generate samples with as few velocity evaluations as possible.
@@ -52,7 +53,8 @@ $$
 x_{k+1}=x_k+h\,v(t_k,x_k).
 $$
 
-For $$L>0$$, it satisfies
+<span id="theorem-1"></span>
+**Theorem 1 (Euler error bound).** For $$L>0$$, the scheme satisfies
 
 $$
 \boxed{
@@ -77,9 +79,11 @@ This separates three effects: the step size $$1/n$$, the sensitivity $$e^L$$ to 
 
 {% include blog-figure.html kind="ode" %}
 
-## Proof: a local defect followed by propagation
+<details class="blog-proof">
+<summary>Proof: a local defect followed by propagation</summary>
+<div class="blog-proof-body" markdown="1">
 
-### 1. The one-step defect
+*Step 1: the one-step defect*
 
 Taylor’s formula in integral form gives
 
@@ -104,7 +108,7 @@ $$
 
 The local Euler defect is precisely an accumulated acceleration.
 
-### 2. Stability transports the defect
+*Step 2: stability transports the defect*
 
 Let $$e_k=X(t_k)-x_k$$. Subtracting the Euler update from the exact one,
 
@@ -134,7 +138,7 @@ Finally,
 $$ (e^{Lt}-1)/L=\int_0^t e^{Ls}\,\mathrm ds\leq e^L $$
 for $$0\leq t\leq1$$, with the same conclusion at $$L=0$$. This proves the uniform estimate.
 
-### 3. A more local version
+*Step 3: a more local version*
 
 The proof also retains the distribution of acceleration over time. If
 
@@ -151,6 +155,9 @@ $$
 $$
 
 Errors generated earlier have more time to be amplified. This is a discrete Duhamel principle: local defects are propagated and then summed.
+
+</div>
+</details>
 
 ## What exactly does “straight” mean?
 

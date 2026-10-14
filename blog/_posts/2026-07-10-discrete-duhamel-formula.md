@@ -3,6 +3,7 @@ title: "Duhamel’s formula for matrix products"
 subtitle: "A telescoping identity that keeps track of noncommutativity."
 description: "Derive the discrete Duhamel identity and use it to propagate local perturbations through a matrix product."
 topic: Linear algebra
+proofs: true
 ---
 
 How does a long product of matrices change when each factor is perturbed? There is an exact answer that replaces one factor at a time:
@@ -17,6 +18,9 @@ This discrete Duhamel formula is simply a telescoping sum — but one whose orde
 
 <!--more-->
 
+<span id="proposition-1"></span>
+**Proposition 1 (discrete Duhamel formula).** The identity above holds for matrix factors with compatible dimensions.
+
 Empty products in this formula mean identity matrices. Assume square matrices of the same size for simplicity; the identity also holds for compatible rectangular factors.
 
 <figure class="portrait-figure">
@@ -24,7 +28,9 @@ Empty products in this formula mean identity matrices. Assume square matrices of
   <figcaption>Jean-Marie Duhamel (1797–1872), circa 1860. Unknown photographer; public domain, via <a href="https://commons.wikimedia.org/wiki/File:JMC_Duhamel.jpg">Wikimedia Commons</a>.</figcaption>
 </figure>
 
-## Replace the factors one by one
+<details class="blog-proof">
+<summary>Proof: replace the factors one by one</summary>
+<div class="blog-proof-body" markdown="1">
 
 Introduce the mixed products
 
@@ -41,6 +47,9 @@ P_k-P_{k-1}
 $$
 
 Summing over $$k$$ cancels all intermediate terms and proves the formula. No factor was moved past another, so no commutativity assumption was used.
+
+</div>
+</details>
 
 For three factors, the identity reads
 
