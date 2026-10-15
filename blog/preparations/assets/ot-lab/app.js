@@ -466,6 +466,73 @@ function gaussian(){
   cancel=stop;rebuild();
 }
 
+function sgd(){
+  const S=window.SGDCovariance,ORANGE="#ba7b25";
+  setup("The covariance of constant-step SGD",
+    "Red: steep direction (λ₁ = 1). Blue: flat direction (λ₂ = 1/κ). Solid curves show exact moments. Dashed curves show the leading transient in the middle panel and the second-order stationary expansion on the right.",
+    "Gaussian features, observation-noise variance 1, squared loss without 1/2, and initialization at the minimizer. Covariance ellipses: current (teal), exact stationary (gray dashed), first-order stationary unit circle (orange dotted). They share an automatically fitted, equal-axis view, and are not density contours. The sufficient stability bound is R = λ₁ + λ₂ + 2 max(λ₁,λ₂); the sliders stay strictly below ηR = 1. No Monte Carlo estimation is used.");
+  const fraction=slider("Safe step fraction ηR",.01,.9,.25,.01);
+  const anisotropy=slider("Curvature ratio κ",1,20,5,1);
+  const iteration=slider("Iteration k",0,100,0,1);
+  let model,panes=[],eta=0,lambda2=0,horizon=1,extent=1,frame=0,last=0,running=false;
+  const play=button("Play iterations",()=>{
+    if(running){stop();return;}
+    if(+iteration.value>=horizon)iteration.value=0;
+    running=true;play.textContent="Pause";last=0;frame=requestAnimationFrame(animate);
+  });
+  button("Restart",()=>{stop();iteration.value=0;render();});
+  function stop(){running=false;cancelAnimationFrame(frame);play.textContent="Play iterations";}
+  function animate(now){
+    if(!running)return;
+    if(now-last>65){iteration.value=Math.min(horizon,+iteration.value+Math.max(1,Math.ceil(horizon/180)));last=now;render();}
+    if(+iteration.value>=horizon)stop();else frame=requestAnimationFrame(animate);
+  }
+  function rebuild(){
+    stop();lambda2=1/+anisotropy.value;eta=+fraction.value/(3+lambda2);
+    model=S.parameters(1,lambda2,eta);
+    horizon=Math.max(Math.ceil(2/(lambda2*eta)),Math.ceil(Math.log(.001)/model.logSpectralRadius));
+    iteration.max=horizon;iteration.value=Math.round(.08*horizon);
+    $("plots").replaceChildren();
+    const maxVariance=1.1*Math.max(...model.stationary.map(v=>v/eta),1);
+    extent=1.3*Math.sqrt(maxVariance/1.1);
+    panes=[plot("Covariance ellipses, scaled by 1/√η",[-extent,extent],[-extent,extent],false),
+      plot("Variance / η versus time t = kη",[0,horizon*eta],[0,maxVariance]),
+      plot("Stationary variance / η versus ηR",[0,.9],[0,10.5],true,{x:[[0,"0"],[.3,"0.3"],[.6,"0.6"],[.9,"0.9"]],y:[0,2,4,6,8,10].map(v=>[v,String(v)])})];
+    render();
+  }
+  function render(){
+    const k=+iteration.value,state=S.state(1,lambda2,eta,1,k),[ellipses,transient,stationary]=panes;
+    iteration.parentElement.querySelector("output").textContent=k+" / "+horizon;
+    const ellipse=(variances,color,width,dash="")=>ellipses.path(Array.from({length:161},(_,i)=>{
+      const t=2*Math.PI*i/160;
+      return [Math.sqrt(Math.max(0,variances[0]/eta))*Math.cos(t),Math.sqrt(Math.max(0,variances[1]/eta))*Math.sin(t)];
+    }),color,width,1,dash);
+    ellipses.draw(ellipses.path([[-.92*extent,0],[.92*extent,0]],GRAY,.6,.4)+ellipses.path([[0,-.92*extent],[0,.92*extent]],GRAY,.6,.4)
+      +text(ellipses.project([.92*extent,-.12*extent]),"e₁")+text(ellipses.project([.12*extent,.92*extent]),"e₂")
+      +ellipse(model.stationary,GRAY,2.4,"5 3")+ellipse(model.firstOrder,ORANGE,1.5,"2 3")
+      +ellipse(state.variances,TEAL,2)+dot(ellipses.project([0,0]),TEAL,2));
+    const ks=Array.from(new Set(Array.from({length:241},(_,i)=>Math.round(horizon*i/240))));
+    const states=ks.map(j=>S.state(1,lambda2,eta,1,j));
+    let curves="",comparison=stationary.path([[0,1],[.9,1]],GRAY,1,.7,"2 3");
+    const steps=Array.from({length:181},(_,i)=>.001+.899*i/180);
+    const models=steps.map(h=>S.parameters(1,lambda2,h/model.R));
+    [RED,BLUE].forEach((color,i)=>{
+      curves+=transient.path(states.map(t=>[t.time,t.leadingTransient[i]/eta]),color,1.4,.7,"5 3")
+        +transient.path(states.map(t=>[t.time,t.variances[i]/eta]),color,2)
+        +dot(transient.project([state.time,state.variances[i]/eta]),color,4);
+      comparison+=stationary.path(models.map((m,j)=>[steps[j],m.secondOrder[i]/(steps[j]/model.R)]),color,1.4,.7,"5 3")
+        +stationary.path(models.map((m,j)=>[steps[j],m.stationary[i]/(steps[j]/model.R)]),color,2)
+        +dot(stationary.project([+fraction.value,model.stationary[i]/eta]),color,4);
+    });
+    transient.draw(curves);stationary.draw(comparison);
+    const relativeError=v=>Math.hypot(...v.map((x,i)=>x-model.stationary[i]))/Math.hypot(...model.stationary);
+    $("status").textContent=`η ${fmt(eta,4)} | t = kη ${fmt(state.time,4)} | λ₂ ${fmt(lambda2,3)} | stationary variances / η (${model.stationary.map(v=>fmt(v/eta,4)).join(", ")}) | first-order relative error ${fmt(relativeError(model.firstOrder),3)} | second-order relative error ${fmt(relativeError(model.secondOrder),3)}`;
+  }
+  fraction.addEventListener("input",rebuild);anisotropy.addEventListener("input",rebuild);
+  iteration.addEventListener("input",()=>{stop();render();});
+  cancel=stop;rebuild();
+}
+
 const experiments=[
   ["monge","1 Inversions",monge],["moments","2 Moment closure",moments],["caps","5 Density caps",caps],
   ["clt","6 CLT rates",clt],["energy","9 Energy flows",energy],
@@ -473,7 +540,7 @@ const experiments=[
   ["matchings","21 Noncrossing",matchings],["bernstein","27 Bernstein",bernstein],
   ["quantization","34 Particles",quantization],["weak","55 Weak transport",weak],
   ["independence","Independence",independence],["envelope","Convex envelope",envelope],
-  ["gaussian","Gaussian Sinkhorn",gaussian]
+  ["gaussian","Gaussian Sinkhorn",gaussian],["sgd","SGD covariance",sgd]
 ];
 function activate(){const exp=experiments.find(e=>e[0]===requestedTopic)||experiments.find(e=>e[0]==="weak");
   if(active===exp[0])return;cancel();cancel=()=>{};active=exp[0];

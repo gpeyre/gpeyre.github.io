@@ -109,6 +109,19 @@ marginals. Run `node tests/blog-gaussian-sinkhorn.test.js` for independent
 recurrence, covariance, relative-entropy, and rate checks. This preview has
 no date or feed entry, like the other forthcoming articles.
 
+## Covariance of SGD iterates
+
+`sgd-iterate-covariance.html` develops the exact least-squares moment recursion,
+its stationary covariance and its small-step expansion, with an explicit
+distinction between covariance and the second moment about the minimizer.
+The `sgd` topic in the shared lab loads `assets/sgd-covariance-core.js`.
+It evaluates exact two-dimensional Gaussian-feature moments using a stable
+2-by-2 matrix-power formula; no Monte Carlo trajectories are used. The ellipses
+are covariance summaries, not claims of a Gaussian stationary distribution.
+The controls remain inside a stated sufficient mean-square stability bound.
+Run `node tests/blog-sgd-covariance.test.js` to check the independent recurrence,
+stationary solutions, asymptotic orders, and long-time numerical stability.
+
 ## Max and softmax experiment
 
 The max/softmax experiment retains a tangent-plane construction for its 1D
