@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <meta name="description" content="Why Euclidean optimal matchings do not cross, why Catalan many candidates remain, and how exact uniform sampling differs from local improvement.">
+  <title>Removing crossings still leaves exponentially many matchings — Alpha preview — Gabriel Peyré</title>
+  <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/noncrossing-matchings-catalan.html">
+  <link rel="stylesheet" href="assets/drafts.css">
+  <script defer src="assets/drafts.js"></script>
+  <script defer src="assets/idea-experiments.js"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+</head>
+<body>
+<header class="draft-header"><div class="wrap">
+  <a class="draft-back" href="index.html">← Forthcoming posts</a>
+  <p class="draft-status">Alpha preview · Work in progress</p>
+  <p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
+  <h1>Removing crossings still leaves exponentially many matchings</h1>
+  <p class="subtitle">A geometric optimality condition leads straight to the Catalan numbers.</p>
+  <p class="byline">Gabriel Peyré</p>
+</div></header>
+<main class="wrap"><article class="blog-prose">
+<p>Draw straight lines matching red points to blue points. If two lines cross, swapping their destinations often looks like an obvious improvement. For ordinary Euclidean length, this intuition is correct: a shortest matching has no proper crossings.</p>
+<p>It is tempting to imagine that eliminating crossings almost solves the problem. Yet even on a convex polygon, there remain exponentially many noncrossing matchings. Their exact number is a Catalan number. The connection is useful both conceptually and algorithmically: it gives a short counting proof, an exact uniform sampler, and a clean distinction between feasible, locally improved, and globally optimal matchings. The geometric starting point is <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.1.1.5">Proposition 1.5 of my book</a> <a href="#ref-book">[1]</a>.</p>
+
+<h2>Uncrossing: the cost matters</h2>
+<p>Let \(x_1,\ldots,x_n\) be red points and \(y_1,\ldots,y_n\) blue points in the plane. A perfect matching is a permutation \(\sigma\), with mean length</p>
+\[
+  E(\sigma)=\frac1n\sum_{i=1}^n|x_i-y_{\sigma(i)}|.
+\]
+<p>This is the discrete optimal-transport problem between the equally weighted clouds with cost \(c(x,y)=|x-y|\). A <em>proper crossing</em> is an intersection in the interiors of two noncollinear segments.</p>
+<p id="proposition-1"><strong>Proposition 1 (uncrossing decreases length).</strong> A minimum-length perfect matching has no proper crossings.</p>
+<details class="blog-proof">
+<summary>Proof: reconnect at the crossing point</summary>
+<div class="blog-proof-body">
+<p>Suppose \([x_i,y_j]\) and \([x_k,y_\ell]\) cross properly at \(z\). The triangle inequalities are strict after reconnecting, because the original segments are not collinear:</p>
+\[
+  \begin{aligned}
+  |x_i-y_\ell|&<|x_i-z|+|z-y_\ell|,\\
+  |x_k-y_j|&<|x_k-z|+|z-y_j|.
+  \end{aligned}
+\]
+<p>Adding the inequalities gives a strict improvement over \(|x_i-y_j|+|x_k-y_\ell|\). Swapping these two destinations preserves the perfect-matching constraints, a contradiction. \(\square\)</p>
+</div></details>
+<p>The proof uses <em>length</em>, not an arbitrary increasing function of length. For squared Euclidean cost, a proper crossing can actually be optimal.</p>
+<details class="blog-proof">
+<summary>A four-point counterexample for squared cost</summary>
+<div class="blog-proof-body">
+<p>Let \(e=(1,0)\), \(f=(1/2,\sqrt3/2)\), and choose \(x_1=-10e\), \(x_2=-f\), \(y_1=e\), \(y_2=10f\). The diagonal matching consists of two segments crossing at the origin. Its squared-cost matrix is</p>
+\[
+  \bigl(|x_i-y_j|^2\bigr)_{i,j}
+  =\begin{pmatrix}121&300\\3&121\end{pmatrix}.
+\]
+<p>The crossing assignment costs \(242\), versus \(303\) after swapping. For ordinary length, the comparison reverses: \(22&gt;\sqrt{300}+\sqrt3\). The choice of ground cost is essential.</p>
+</div></details>
+
+<h2>Counting the survivors</h2>
+<p>Place \(2n\) points on a strictly convex polygon, with red and blue colors alternating around its boundary. Every noncrossing chord separates two arcs, and points on either arc must be matched internally. This recursive geometry is exactly the Catalan recursion <a href="#ref-stanley">[2]</a>.</p>
+<p id="theorem-1"><strong>Theorem 1 (Catalan multiplicity).</strong> The number of noncrossing red–blue perfect matchings of these alternating vertices is</p>
+\[
+  C_n=\frac1{n+1}\binom{2n}{n}
+  \sim\frac{4^n}{\sqrt\pi\,n^{3/2}}.
+\]
+<details class="blog-proof">
+<summary>Proof: condition on the partner of the first vertex</summary>
+<div class="blog-proof-body">
+<p>Number the vertices \(0,\ldots,2n-1\) cyclically, starting with a red vertex. If vertex \(0\) is paired with vertex \(2k+1\), the chord leaves \(2k\) vertices on one arc and \(2(n-1-k)\) on the other. They must be matched separately. Their alternating colors are balanced, so</p>
+\[
+  C_0=1,\qquad
+  C_n=\sum_{k=0}^{n-1}C_kC_{n-1-k}.
+\]
+<p>Conversely, any two noncrossing matchings on these arcs combine with that chord to give a valid matching. If \(C(z)=\sum_{n\ge0}C_nz^n\), the recursion becomes \(C(z)=1+zC(z)^2\). The solution with constant term \(1\) is</p>
+\[
+  C(z)=\frac{1-\sqrt{1-4z}}{2z}.
+\]
+<p>Expanding the square root gives \(C_n=(n+1)^{-1}\binom{2n}{n}\); Stirling's formula gives the asymptotic. Equivalently, any ordinary noncrossing perfect matching on these alternating vertices is automatically red–blue: a chord must leave an even number of vertices on each side, so its endpoints have opposite parity. \(\square\)</p>
+</div></details>
+<p>Already \(C_{10}=16{,}796\), and \(C_{20}=6{,}564{,}120{,}420\). Removing crossings leaves a large search space. This is a counting statement, <em>not</em> a computational-hardness result: minimum-cost assignment is polynomial-time solvable, for instance by the Hungarian method <a href="#ref-kuhn">[3]</a>. On a convex polygon, the same interval recursion also yields a dynamic program for the best noncrossing matching.</p>
+
+<h2>Uniform exploration without rejection</h2>
+<p>Drawing a random permutation and rejecting all crossings quickly becomes wasteful. The counting proof gives a direct sampler instead.</p>
+<p id="proposition-2"><strong>Proposition 2 (an exact uniform sampler).</strong> Choose the partner \(2k+1\) of vertex \(0\) with probability</p>
+\[
+  p_k=\frac{C_kC_{n-1-k}}{C_n},
+\]
+<p>then sample independently and uniformly on the two remaining arcs. The resulting perfect matching is uniform over all \(C_n\) noncrossing matchings.</p>
+<details class="blog-proof">
+<summary>Proof: the number of completions cancels the sampling weight</summary>
+<div class="blog-proof-body">
+<p>Fix a particular matching whose first partner is \(2k+1\). By induction, its two submatchings are sampled with probabilities \(1/C_k\) and \(1/C_{n-1-k}\). Its total probability is therefore</p>
+\[
+  \frac{C_kC_{n-1-k}}{C_n}
+  \frac1{C_k}\frac1{C_{n-1-k}}=\frac1{C_n}.
+\]
+<p>The empty matching starts the induction. \(\square\)</p>
+</div></details>
+<p>Choosing \(k\) uniformly would be wrong: splits with more possible completions must receive more probability. This is a general recipe for exact combinatorial sampling—weight each branch of a recursive construction by its number of completions.</p>
+
+<h2>Improvement is different from exploration</h2>
+<p>A simple local move chooses two red points and swaps their blue destinations. Reject the move if it introduces a crossing. Otherwise, the change in mean length is</p>
+\[
+  \Delta E=\frac1n\left(
+  |x_i-y_{\sigma(k)}|+|x_k-y_{\sigma(i)}|
+  -|x_i-y_{\sigma(i)}|-|x_k-y_{\sigma(k)}|
+  \right).
+\]
+<p>Accepting only strict decreases gives a finite greedy descent: the cost decreases and a finite matching cannot be revisited. Its stopping point need not be globally optimal. In particular, “I could not improve it by the tested swaps” is weaker than an optimality certificate.</p>
+<p>One can also turn exploration into a Metropolis sampler. At temperature \(\tau&gt;0\), accept a symmetric proposal with probability \(\min(1,e^{-\Delta E/\tau})\). The corresponding equilibrium weights are proportional to \(e^{-E/\tau}\), as in the Markov-chain methodology of <a href="#ref-hastings">[4]</a>.</p>
+<details class="blog-proof">
+<summary>Why occasional global proposals give a valid equilibrium sampler</summary>
+<div class="blog-proof-body">
+<p>For a symmetric proposal probability \(q(\sigma,\sigma')\), detailed balance follows from</p>
+\[
+  e^{-E(\sigma)/\tau}q(\sigma,\sigma')
+  \min(1,e^{-(E(\sigma')-E(\sigma))/\tau})
+  =
+  q(\sigma,\sigma')\min(e^{-E(\sigma)/\tau},e^{-E(\sigma')/\tau}).
+\]
+<p>The expression is symmetric in the two states. Local pair swaps alone would additionally require a connectivity argument. Instead, occasionally propose a whole matching using Proposition 2. This gives positive proposal probability between every pair of states. Add a fixed probability of staying put: the resulting finite chain is irreducible and aperiodic, so it converges to its unique Boltzmann equilibrium at every fixed positive temperature.</p>
+<p>As \(\tau\downarrow0\), those equilibrium laws concentrate on minimum-cost matchings. This statement does not assert convergence to a global optimum under an arbitrary finite cooling schedule.</p>
+</div></details>
+
+<h2>Numerical experimentation</h2>
+<p>The points below alternate around an irregularly spaced convex ellipse. Draw a uniform noncrossing matching, try downhill swaps, or explore many independent matchings. The figure reports the true unrestricted assignment optimum as a reference; Proposition 1 guarantees that this optimum is attained by a noncrossing matching.</p>
+<figure>
+  <iframe class="idea-experiment" data-experiment="matchings" title="Catalan matching sampler, greedy swaps, and the exact minimum cost" src="assets/ot-lab/index.html?topic=matchings" loading="lazy"></iframe>
+  <figcaption>Change the number of pairs to see the Catalan family grow. Every displayed configuration is checked for proper crossings. Uniform exploration can increase the current cost while improving the best cost seen; the downhill button only accepts feasible improvements. The blue reference is an independently solved transport optimum, not the best matching found by random search.</figcaption>
+</figure>
+<p>The geometry gives a useful necessary condition, the recursion counts and samples its solutions, and optimization still has to choose among them. Keeping these three tasks distinct prevents a visually pleasing noncrossing drawing from being mistaken for a proof of optimality.</p>
+
+<h2>References</h2>
+<ol class="references">
+  <li id="ref-book">Gabriel Peyré. <a href="https://arxiv.org/abs/2505.06589"><em>Optimal Transport for Machine Learners</em></a>, 2025–2026. <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.1.1.5">Proposition 1.5, p. 7</a>.</li>
+  <li id="ref-stanley">Richard P. Stanley. <a href="https://math.mit.edu/~rstan/catalan/"><em>Catalan Numbers</em></a>. Cambridge University Press, 2015.</li>
+  <li id="ref-kuhn">Harold W. Kuhn. <a href="https://doi.org/10.1002/nav.3800020109"><em>The Hungarian method for the assignment problem</em></a>. <em>Naval Research Logistics Quarterly</em> 2(1–2), 83–97, 1955.</li>
+  <li id="ref-hastings">W. Keith Hastings. <a href="https://doi.org/10.1093/biomet/57.1.97"><em>Monte Carlo sampling methods using Markov chains and their applications</em></a>. <em>Biometrika</em> 57(1), 97–109, 1970.</li>
+</ol>
+</article></main>
+<footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Blog</a></div></footer>
+</body>
+</html>

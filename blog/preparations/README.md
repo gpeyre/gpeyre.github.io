@@ -13,6 +13,82 @@ are published. These files are not Jekyll posts and have no publication dates
 or RSS/Atom entries. Publishing a finished article should create a selected
 dated post in `blog/_posts`, then update its preview to link to that article.
 
+## OT4ML idea collection
+
+The fifteen selected topics in `../ideas/ot4ml-blog-post-ideas.tex` and its
+three `notes/` inputs have individual previews. The source dossiers remain
+authoring material: `_config.yml` excludes `blog/ideas` from the public build.
+The preview index groups articles by subject, with no publication dates.
+
+| Dossier | Preview |
+| --- | --- |
+| 1 | `monge-gap-inversions.html` |
+| 2 | `autonomous-wasserstein-statistics.html` |
+| 3 | `gaussian-gromov-wasserstein-counterexample.html` |
+| 5 | `wasserstein-geodesics-density-caps.html` |
+| 6 | `central-limit-wasserstein-constants.html` |
+| 7 | `divergences-and-bregman-geometry.html` |
+| 9 | `energy-distance-wasserstein-convexity.html` |
+| 13 | `composing-optimal-transport-maps.html` |
+| 19 | `wasserstein-distance-without-quantiles.html` |
+| 21 | `noncrossing-matchings-catalan.html` |
+| 23 | `when-independence-is-optimal.html` |
+| 24 | `optimal-transport-convex-extension.html` |
+| 27 | `bernstein-polynomials-on-measures.html` |
+| 34 | `optimal-particles-versus-random-sampling.html` |
+| 55 | `weak-transport-and-convex-order.html` |
+
+The Bernstein article complements the existing qualitative
+`wasserstein-polynomials.html` article with a constructive operator and rates.
+
+### Embedded experiments
+
+`assets/ot-lab/` adapts the supplied offline numerical companion. A single
+experiment is selected with `index.html?topic=weak` (or another topic ID).
+Articles embed it in an iframe whose height follows its contents through
+`assets/idea-experiments.js`, including responsive controls and stacked mobile
+plots. The diagrams work directly from local files as well as over HTTP.
+They do not upload data or need a numerical CDN. MathJax for article equations
+is loaded separately, as in the existing previews.
+
+The thirteen experiments cover the eleven supplied prototypes plus exact
+two-point illustrations of independent couplings and the convex extension.
+The Gaussian GW and divergence articles are proof-focused.
+
+`data.js` contains the supplied fixed-seed CLT profiles, energy trajectories,
+weak-transport reference, and independent SciPy fixtures. Only those three
+experiments load this data bundle; the others use the small numerical core.
+Changing the CLT
+selection or energy time replays these computed data; the captions say so.
+All other controls evaluate exact formulas or recompute the stated numerical
+optimization. Monge regression reports its smoothed objective's gradient norm;
+weak transport reports a Frank–Wolfe certificate and marginal residual.
+The distinction between exact formula, finite iterate, asymptotic result, and
+Monte Carlo realization is kept in each article and experiment.
+
+Changes from the prototype include equal spatial scales in geometric panels,
+standard-Gaussian samples consistent with the composition cost, an exact
+composition-excess curve, stable mode-centered Bernstein sums, and direct
+rescaled CLT errors. The uniform CLT distances have also been recomputed:
+the original signed-integral quadrature missed zeros exactly on its grid
+(including the symmetry zero), cancelling positive and negative error lobes.
+The corrected distances integrate the absolute CDF error without cancellation.
+The input files under `blog/ideas` are not edited.
+
+Run `node tests/blog-ideas.test.js` for the numerical checks and
+`python3 tests/blog-clt-data.test.py` (NumPy and SciPy required) to independently
+verify every stored uniform CLT distance by continuous-CDF quadrature. Run
+`tests/blog-preparations-browser.test.js` with `BLOG_PLAYWRIGHT_PATH`,
+`BLOG_PREVIEW_URL`, and optionally `BLOG_SCREENSHOT_DIR` to exercise the
+figures, sliders, dragging, proof tabs, mathematical rendering, and mobile
+layouts. `BLOG_TEST_ONLY=experiments` or `articles` selects one part. Tests
+write screenshots only to the specified temporary directory, not the site.
+
+The shared scripts deliberately do not schedule or publish any of these
+previews as dated posts, and the existing RSS/Atom entries remain unchanged.
+
+## Max and softmax experiment
+
 The max/softmax experiment retains a tangent-plane construction for its 1D
 reference. Its 2D max and LSE networks are fitted independently with Adam in
 assets/max-softmax-train.js, using nonuniform seeded initializations and free

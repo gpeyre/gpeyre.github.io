@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <meta name="description" content="Why the energy distance is Wasserstein convex on the line, how its quantiles evolve, and an explicit two-dimensional counterexample.">
+  <title>Energy distance: convexity hidden in the ordering — Alpha preview — Gabriel Peyré</title>
+  <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/energy-distance-wasserstein-convexity.html">
+  <link rel="stylesheet" href="assets/drafts.css">
+  <script defer src="assets/drafts.js"></script>
+  <script defer src="assets/idea-experiments.js"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+</head>
+<body>
+<header class="draft-header"><div class="wrap">
+  <a class="draft-back" href="index.html">← Forthcoming posts</a>
+  <p class="draft-status">Alpha preview · Work in progress</p>
+  <p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
+  <h1>Energy distance: convexity hidden in the ordering</h1>
+  <p class="subtitle">An attractive–repulsive particle energy becomes convex when the particles live on a line.</p>
+  <p class="byline">Gabriel Peyré</p>
+</div></header>
+<main class="wrap"><article class="blog-prose">
+<p>Suppose we want to move a distribution towards a target. A natural loss attracts its points towards the target while repelling them from one another: attraction finds the right location, and repulsion prevents everything from collapsing to a single point. The <em>energy distance</em> implements exactly this idea using ordinary Euclidean distances.</p>
+<p>Looking at the repulsive interaction, one might expect a difficult nonconvex problem. On the real line, however, its Wasserstein geometry is particularly simple: the repulsion is linear in quantile coordinates, and the whole objective is convex. The explanation has less to do with smoothness than with the fact that particles can be ordered. This is the mechanism behind the interaction criterion in <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.15.2.18">Proposition 15.18 of my book</a> <a href="#ref-book">[1]</a> and the quantile-flow analysis of Duong and collaborators <a href="#ref-flow">[2]</a>.</p>
+
+<h2>A discrepancy made out of distances</h2>
+<p>Let \(\alpha,\beta\in\mathcal P_2(\mathbb R^d)\), the probability measures with finite second moment. Take independent random variables \(X,X'\sim\alpha\) and \(Y,Y'\sim\beta\). We use the convention</p>
+\[
+  E_\beta(\alpha)
+  =2\,\mathbb E|X-Y|-\mathbb E|X-X'|-\mathbb E|Y-Y'|.
+\]
+<p>The last term is constant during optimization. The first attracts \(\alpha\) to \(\beta\); the negative self-interaction rewards spreading the source points. The entire expression is nevertheless nonnegative and vanishes exactly when \(\alpha=\beta\). It is also a squared maximum mean discrepancy: one may write its signed-measure quadratic form with the distance kernel \(k(x,y)=-|x-y|\), or use the positive-semidefinite anchored kernel</p>
+\[
+  k_o(x,y)=|x-o|+|y-o|-|x-y|.
+\]
+<p>The anchoring terms disappear when integrated against \(\alpha-\beta\), whose total mass is zero. This link between distance statistics and kernel statistics is developed in <a href="#ref-kernel">[3]</a>. The unanchored kernel itself is not positive semidefinite on arbitrary coefficients.</p>
+<p>On the line, positivity has an especially concrete expression. With \(F_\alpha(x)=\alpha((-\infty,x])\),</p>
+\[
+  E_\beta(\alpha)
+  =2\int_{\mathbb R}|F_\alpha(x)-F_\beta(x)|^2\,dx.
+\]
+<details class="blog-proof">
+<summary>Proof: express distance through threshold crossings</summary>
+<div class="blog-proof-body">
+<p>For real \(u,v\),</p>
+\[
+  |u-v|=\int_{\mathbb R}
+  |\mathbf 1_{\{u\le x\}}-\mathbf 1_{\{v\le x\}}|\,dx.
+\]
+<p>Independence gives</p>
+\[
+  \mathbb E|X-Y|
+  =\int\bigl[F_\alpha(1-F_\beta)+F_\beta(1-F_\alpha)\bigr]\,dx.
+\]
+<p>Apply the same identity to the two self-interaction terms and cancel: the remaining integrand is \(2(F_\alpha-F_\beta)^2\). Finite first moments justify the finite expressions. \(\square\)</p>
+</div></details>
+<p>In higher dimensions one can average this one-dimensional identity over projected directions: Euclidean distance is a positive constant times the spherical average of absolute projected distance. Nonnegativity follows. Equality first gives identical projected laws for almost every direction, then for every direction by continuity of characteristic functions, and hence identical original laws.</p>
+
+<h2>Convexity in the right coordinates</h2>
+<p>For \(0&lt;r&lt;1\), let</p>
+\[
+  Q_\alpha(r)=\inf\{x:F_\alpha(x)\ge r\}
+\]
+<p>be the quantile function. The one-dimensional transport identity is</p>
+\[
+  W_2^2(\alpha_0,\alpha_1)
+  =\int_0^1|Q_{\alpha_0}(r)-Q_{\alpha_1}(r)|^2\,dr.
+\]
+<p>Thus Wasserstein space on the line is the closed convex cone of nondecreasing functions in \(L^2(0,1)\). Its geodesic from \(\alpha_0\) to \(\alpha_1\) has quantile \(Q_t=(1-t)Q_{\alpha_0}+tQ_{\alpha_1}\). These one-dimensional transport formulas are reviewed in <a href="#ref-computational">[5]</a>.</p>
+<p id="theorem-1"><strong>Theorem 1 (one-dimensional displacement convexity).</strong> For any fixed \(\beta\in\mathcal P_2(\mathbb R)\) and every Wasserstein geodesic \((\alpha_t)_{0\le t\le1}\),</p>
+\[
+  E_\beta(\alpha_t)
+  \le(1-t)E_\beta(\alpha_0)+tE_\beta(\alpha_1).
+\]
+<details class="blog-proof">
+<summary>Proof: ordered distances turn repulsion into a linear term</summary>
+<div class="blog-proof-body">
+<p>Write \(Q=Q_\alpha\). Since \(Q(r)\ge Q(s)\) when \(r\ge s\),</p>
+\[
+  \begin{aligned}
+  \mathbb E|X-X'|
+  &=2\int_0^1\int_0^r (Q(r)-Q(s))\,ds\,dr\\
+  &=2\int_0^1(2r-1)Q(r)\,dr.
+  \end{aligned}
+\]
+<p>This is linear in \(Q\). The attraction term is</p>
+\[
+  2\int_0^1 V_\beta(Q(r))\,dr,
+  \qquad V_\beta(x)=\int|x-y|\,d\beta(y),
+\]
+<p>which is convex in \(Q\), because \(V_\beta\) is convex. The target self-interaction is constant. Therefore \(E_\beta\) is convex along the affine interpolation of quantiles. \(\square\)</p>
+</div></details>
+<p>The pointwise function \(z\mapsto-|z|\) is concave. On an ordered pair, however, the relevant variable is the nonnegative distance \(Q(r)-Q(s)\), and \(a\mapsto-a\) is affine on \([0,\infty)\). This is why testing the kernel's convexity on the whole plane would miss the result.</p>
+<p id="proposition-1"><strong>Proposition 1 (the general interaction criterion).</strong> Suppose \(\varphi:[0,\infty)\to\mathbb R\) is continuous and has at most quadratic growth. Then</p>
+\[
+  I_\varphi(\alpha)=\frac12\iint\varphi(|x-y|)\,d\alpha(x)\,d\alpha(y)
+\]
+<p>is displacement convex on \(\mathcal P_2(\mathbb R)\) if and only if \(\varphi\) is convex on \([0,\infty)\).</p>
+<details class="blog-proof">
+<summary>Proof: sufficiency uses order; necessity needs only two atoms</summary>
+<div class="blog-proof-body">
+<p>For \(r&gt;s\), the distance along a quantile geodesic is \(Q_t(r)-Q_t(s)\), affine in \(t\). Convexity of \(\varphi\), integrated over this triangle, proves sufficiency. For necessity, test \(\alpha_a=\tfrac12(\delta_0+\delta_a)\), \(a\ge0\). Linear interpolation of \(a\) is a quantile geodesic, and</p>
+\[
+  I_\varphi(\alpha_a)=\tfrac14\varphi(0)+\tfrac14\varphi(a).
+\]
+<p>Convexity of this expression in \(a\) is precisely convexity of \(\varphi\). \(\square\)</p>
+</div></details>
+
+<h2>The flow becomes a family of scalar equations</h2>
+<p>Assume that the target CDF \(F_\beta\) is continuous. Then \(V_\beta'(x)=2F_\beta(x)-1\). Differentiating the quantile expression above gives the Wasserstein gradient flow</p>
+\[
+  \partial_t Q_t(r)=4\bigl(r-F_\beta(Q_t(r))\bigr).
+\]
+<p>The coefficient four comes from our convention for \(E_\beta\). A quantile moves right when too little target mass lies to its left, and left when there is too much. For a uniform target on \([0,1]\), if \(Q_0(r)\in[0,1]\), the formula is explicit:</p>
+\[
+  Q_t(r)=r+e^{-4t}(Q_0(r)-r).
+\]
+<p>For example, starting from a Dirac mass at \(1/2\) produces a uniform law on a growing interval, with endpoints \(e^{-4t}/2\) and \(1-e^{-4t}/2\). An atom can split instantly in this measure-valued flow. A fixed number of moving particles cannot represent that phenomenon exactly.</p>
+<p>The robust implicit update with time step \(h&gt;0\) solves</p>
+\[
+  Q^{k+1}(r)+4hF_\beta(Q^{k+1}(r))
+  =Q^k(r)+4hr.
+\]
+<p>The left side is continuous, strictly increasing, and onto \(\mathbb R\), so bisection finds the unique solution. Its inverse is increasing; hence the update preserves quantile ordering. It is the proximal step for the convex quantile energy and decreases that energy. If \(\beta\) has atoms, replace the CDF value by its subdifferential interval \([F_\beta(x^-),F_\beta(x)]\). The complete nonsmooth flow theory is in <a href="#ref-flow">[2]</a>; Sobolev regularizations are studied in <a href="#ref-sobolev">[4]</a>.</p>
+
+<h2>Why the plane is different</h2>
+<p>Without a total ordering, the self-interaction need not be affine along a transport geodesic. The failure is visible with just two source atoms.</p>
+<p id="proposition-2"><strong>Proposition 2 (a two-dimensional obstruction).</strong> Set \(\beta=\delta_0\) and</p>
+\[
+  \alpha_s=\tfrac12\delta_{(4,s)}+\tfrac12\delta_{(2,-s)},
+  \qquad -\delta\le s\le\delta,\quad 0&lt;\delta&lt;1.
+\]
+<p>This curve, after an affine change of time, is a Wasserstein geodesic. Yet \(s\mapsto E_\beta(\alpha_s)\) is not convex.</p>
+<details class="blog-proof">
+<summary>Proof: compare the two matchings and differentiate once more</summary>
+<div class="blog-proof-body">
+<p>Between the endpoints, matching the same labels costs \(4\delta^2\), whereas exchanging labels costs \(4\). Thus the same-label matching is optimal and its linear interpolation is the stated geodesic. Direct evaluation gives</p>
+\[
+  E_\beta(\alpha_s)
+  =\sqrt{16+s^2}+\sqrt{4+s^2}-\sqrt{1+s^2}.
+\]
+<p>Its second derivative at zero is \(1/4+1/2-1=-1/4\), contradicting convexity. \(\square\)</p>
+</div></details>
+<p>Away from collisions, the formal continuum velocity is</p>
+\[
+  v_\alpha(x)
+  =2\int\frac{x-z}{|x-z|}\,d\alpha(z)
+   -2\int\frac{x-y}{|x-y|}\,d\beta(y).
+\]
+<p>Empirical averages give a particle method, with the self-term omitted. The appropriate particle metric is \(n^{-1}\sum_i|\dot x_i|^2\); this explains why the velocity is \(n\) times the negative ordinary gradient with respect to a single particle. Energy descent is meaningful, but it is not a proof of displacement convexity or global convergence.</p>
+
+<h2>Numerical experimentation</h2>
+<p>Move the time slider to compare the quantile evolution on the line with a planar particle descent. The line uses implicit quantile steps. In the plane, the norm is replaced by \(\sqrt{|z|^2+\eta^2}\), with \(\eta=0.002\), and a backtracking step decreases that same regularized objective. Since each distance changes by at most \(\eta\), the regularized and original energies differ by at most \(4\eta\).</p>
+<figure>
+  <iframe class="idea-experiment" data-experiment="energy" title="Energy-distance quantile and particle flows" src="assets/ot-lab/index.html?topic=energy" loading="lazy"></iframe>
+  <figcaption>The slider replays saved, energy-checked numerical iterates. In one dimension, red quantiles approach the blue target quantiles. In the plane, source particles move towards the gray target cloud. The two energy curves use their own initial energy and normalized experiment time; the planar curve belongs to the mollified finite-particle problem.</figcaption>
+</figure>
+<p>The useful lesson is geometric: convexity in mixture coordinates, convexity of a pointwise kernel, and convexity along Wasserstein geodesics are different properties. Here the last one is recovered by changing coordinates to quantiles—and is genuinely lost in dimension two.</p>
+
+<h2>References</h2>
+<ol class="references">
+  <li id="ref-book">Gabriel Peyré. <a href="https://arxiv.org/abs/2505.06589"><em>Optimal Transport for Machine Learners</em></a>, 2025–2026. <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.15.2.18">Proposition 15.18, p. 360</a>.</li>
+  <li id="ref-flow">Richard Duong, Viktor Stein, Robert Beinert, Johannes Hertrich, and Gabriele Steidl. <a href="https://arxiv.org/abs/2408.07498"><em>Wasserstein Gradient Flows of MMD Functionals with Distance Kernel and Cauchy Problems on Quantile Functions</em></a>. arXiv:2408.07498, 2024.</li>
+  <li id="ref-kernel">Dino Sejdinovic, Bharath Sriperumbudur, Arthur Gretton, and Kenji Fukumizu. <a href="https://arxiv.org/abs/1207.6076"><em>Equivalence of distance-based and RKHS-based statistics in hypothesis testing</em></a>. <em>Annals of Statistics</em> 41(5), 2263–2291, 2013.</li>
+  <li id="ref-sobolev">Richard Duong, Nicolaj Rux, Viktor Stein, and Gabriele Steidl. <a href="https://arxiv.org/abs/2411.09848"><em>Wasserstein Gradient Flows of MMD Functionals with Distance Kernels under Sobolev Regularization</em></a>. arXiv:2411.09848, 2024.</li>
+  <li id="ref-computational">Gabriel Peyré and Marco Cuturi. <a href="https://arxiv.org/abs/1803.00567"><em>Computational Optimal Transport</em></a>. <em>Foundations and Trends in Machine Learning</em> 11(5–6), 355–607, 2019.</li>
+</ol>
+</article></main>
+<footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Blog</a></div></footer>
+</body>
+</html>

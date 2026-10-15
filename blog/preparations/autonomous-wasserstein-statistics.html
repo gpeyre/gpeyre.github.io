@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,follow">
+<meta name="description" content="A scalar statistic has an autonomous Wasserstein evolution precisely when its squared gradient is affine in the statistic. A short proof and curved signed-distance examples.">
+<title>Which statistics evolve on their own? — Alpha preview — Gabriel Peyré</title>
+<link rel="canonical" href="https://www.gpeyre.com/blog/preparations/autonomous-wasserstein-statistics.html">
+<link rel="stylesheet" href="assets/drafts.css">
+<script defer src="assets/drafts.js"></script>
+<script defer src="assets/idea-experiments.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+</head>
+<body>
+<header class="draft-header"><div class="wrap">
+<a class="draft-back" href="index.html">← Forthcoming posts</a>
+<p class="draft-status">Alpha preview · Work in progress</p>
+<p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
+<h1>Which statistics evolve on their own?</h1>
+<p class="subtitle">An exact moment-closure theorem for Wasserstein gradient flows, with a geometric answer.</p>
+<p class="byline">Gabriel Peyré</p>
+</div></header>
+<main class="wrap"><article class="blog-prose">
+<p>A probability distribution contains infinitely many degrees of freedom. Its mean is just a vector; its variance is just a matrix. This compression is useful only if we understand what it loses. When the distribution evolves, can a retained statistic follow a closed equation without tracking everything else?</p>
+<p>Usually a moment equation introduces a new moment, which introduces another, creating an endless hierarchy. But a particularly clean class of Wasserstein flows admits an exact answer. The criterion is geometric: the squared norm of the statistic's gradient must be affine in the statistic itself. It includes familiar first and second moments, but also nonpolynomial observables built from curved distance functions. The scalar result appears in <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.16.5.30">Proposition 16.30 of <em>Optimal Transport for Machine Learners</em></a> <a href="#ref-book">[1]</a>.</p>
+
+<h2>Let the energy depend on one statistic</h2>
+<p>Let \(\Omega\subset\mathbb R^d\) be connected and open, and let \(\varphi\in C^2(\Omega)\). For a probability law \(\alpha\), define</p>
+\[
+ m(\alpha)=\int\varphi(x)\,d\alpha(x),
+ \qquad \mathcal F_g(\alpha)=g(m(\alpha)).
+\]
+<p>Here \(g\) is a smooth scalar function. For example, \(g(m)=(m-m_\star)^2/2\) penalizes deviation from a desired moment.</p>
+<p>The formal Wasserstein gradient flow moves particles down the spatial gradient of the first variation of the energy. In this case, the first variation is \(g'(m)\varphi(x)\), so the particle velocity and continuity equation are</p>
+\[
+ \begin{aligned}
+ v_t(x)&=-g'(m_t)\nabla\varphi(x),\\
+ \partial_t\alpha_t+\operatorname{div}(\alpha_tv_t)&=0.
+ \end{aligned}
+\]
+<p>This is the standard transport description of Wasserstein gradient flows <a href="#ref-overview">[2]</a>. We use it on time intervals where the characteristic flow exists and its support remains in \(\Omega\). Compact support and smooth velocities locally justify the following calculation; more general solutions require the corresponding integrability and weak-chain-rule hypotheses.</p>
+<p>Testing the continuity equation with \(\varphi\) gives</p>
+\[
+ \dot m_t
+ =-g'(m_t)\int|\nabla\varphi(x)|^2\,d\alpha_t(x).
+\]
+<p>The difficulty is now visible. The energy depends on \(m_t\), but the derivative also depends on the average of \(|\nabla\varphi|^2\). When is that extra average already determined by \(m_t\)?</p>
+
+<h2>The exact closure criterion</h2>
+<p>By <em>autonomous closure</em>, we mean one right-hand side that works for every compactly supported initial law, not an equation reverse-engineered from a single trajectory.</p>
+<p id="theorem-1"><strong>Theorem 1 (scalar closure).</strong> The instantaneous equation for \(m\) closes for every smooth \(g\) and every compactly supported probability measure on \(\Omega\) if and only if there are constants \(a,b\in\mathbb R\) such that</p>
+\[
+ |\nabla\varphi(x)|^2=a+b\varphi(x)
+ \qquad(x\in\Omega).
+\]
+<p>In that case, the closed equation is</p>
+\[
+ \dot m_t=-(a+bm_t)g'(m_t).
+\]
+<p>The affine expression is automatically nonnegative on the range of admissible moments. In particular,</p>
+\[
+ \frac{d}{dt}g(m_t)
+ =-(a+bm_t)|g'(m_t)|^2\le0.
+\]
+<details class="blog-proof"><summary>Proof: compare a two-point mixture with a single point</summary><div class="blog-proof-body">
+<p>Sufficiency follows by integrating the affine identity. For necessity, it is enough to take \(g(s)=s\). Put \(\psi=|\nabla\varphi|^2\). Testing closure on Dirac masses shows that \(\psi(x)=q(\varphi(x))\) for some function \(q\): points with the same statistic must have the same derivative.</p>
+<p>The image \(I=\varphi(\Omega)\) is an interval because \(\Omega\) is connected. Choose \(s_0,s_1\in I\), and points \(x_0,x_1\) realizing them. For \(t\in[0,1]\), compare the two-point law \((1-t)\delta_{x_0}+t\delta_{x_1}\) with a Dirac mass at any point whose statistic is \(s_t=(1-t)s_0+ts_1\). Their moments agree, so their derivatives agree:</p>
+\[
+ q((1-t)s_0+ts_1)=(1-t)q(s_0)+tq(s_1).
+\]
+<p>This identity for every segment makes \(q\) affine on \(I\). If \(I\) is a singleton, \(\varphi\) is constant and the result is immediate. Thus \(\psi=a+b\varphi\). \(\square\)</p>
+</div></details>
+<p>The theorem concerns all laws on the region. Special families can have extra closures: a Gaussian assumption may express higher moments using a mean and covariance, but that is a different statement. If one initially tests only smooth compactly supported densities, approximating the finite atomic measures in the proof gives the same necessity criterion.</p>
+
+<h2>Why a distance coordinate appears</h2>
+<p>On a connected region where \(\nabla\varphi\ne0\), choose \(s_0\) in the range of \(\varphi\) and set</p>
+\[
+ r(x)=\int_{s_0}^{\varphi(x)}
+             \frac{ds}{\sqrt{a+bs}}.
+\]
+<p>The chain rule turns the closure condition into the eikonal equation \(|\nabla r|=1\). Locally, \(r\) behaves like a signed-distance coordinate. Integrating the scalar relation \(d\varphi/dr=\sqrt{a+b\varphi}\) yields</p>
+\[
+ \varphi=s_0+\sqrt{a+bs_0}\,r+\frac b4r^2.
+\]
+<p>Conversely, if \(|\nabla r|=1\) and</p>
+\[
+ \varphi=c+\kappa r+\frac{\lambda}{2}r^2,
+\]
+<p>then direct differentiation gives</p>
+\[
+ |\nabla\varphi|^2
+ =\kappa^2-2\lambda c+2\lambda\varphi.
+\]
+<p>So the statistic is quadratic in a distance-like coordinate, even if that coordinate is highly nonlinear in \(x\). The description is local on regular regions: critical points and nonsmooth distance loci cannot be ignored.</p>
+
+<h2>Examples, and a genuine failure</h2>
+<p>For \(\varphi(x)=u\cdot x\), closure holds with \(a=|u|^2,b=0\). Particles translate along \(u\). For \(\varphi(x)=|x|^2\), one has \(a=0,b=4\); particles undergo a common radial scaling. Neither assertion requires a Gaussian initial law.</p>
+<p>Now take a smooth hypersurface \(\mathcal S\). Its signed distance \(r_\mathcal S\) satisfies \(|\nabla r_\mathcal S|=1\) in a sufficiently small smooth tubular neighborhood. Thus \(r_\mathcal S+\lambda r_\mathcal S^2/2\) is another exactly closed statistic. Particles move along a curved normal field, while a single scalar still governs the retained moment.</p>
+<p>A counterexample is just as instructive. On the line, \(\varphi(x)=x^4\) has \(|\varphi'(x)|^2=16x^6\), which is not affine in \(x^4\). The laws</p>
+\[
+ \alpha=\delta_1,\qquad
+ \beta=\tfrac12\delta_0+\tfrac12\delta_{2^{1/4}}
+\]
+<p>both have fourth moment one. Their sixth moments are \(1\) and \(\sqrt2\), respectively. For \(g(s)=s\), their initial fourth-moment derivatives are therefore \(-16\) and \(-16\sqrt2\). No common scalar equation based on the fourth moment alone can describe both.</p>
+
+<h2>Numerical experimentation: different clouds, the same statistic</h2>
+<p>On an annulus about the unit circle, use \(\varphi(x)=|x|-1\) and \(g(m)=m^2/2\). Here \(a=1,b=0\), so \(m_t=m_0e^{-t}\). A particle with initial polar coordinates \((R_i,\theta_i)\) follows the exact trajectory</p>
+\[
+ R_i(t)=R_i-m_0(1-e^{-t}),\qquad \theta_i(t)=\theta_i.
+\]
+<p>The experiment starts with two distinct clouds whose mean radius offset is \(m_0=0.2\). Their shapes stay different, yet their displayed statistics agree. All radii remain positive, so the signed-distance field is smooth throughout the displayed evolution.</p>
+<figure><iframe class="idea-experiment" data-experiment="moments" title="Two particle clouds with the same exactly closed moment" src="assets/ot-lab/index.html?topic=moments" loading="lazy"></iframe><figcaption>These trajectories use the exact characteristic formula, not a time-stepping approximation. Closure preserves the evolution of one statistic; it does not identify the distributions.</figcaption></figure>
+
+<h2>Several statistics: a finite algebra of gradients</h2>
+<p>For \(m_i=\int\varphi_i\,d\alpha\) and energy \(g(m_1,\ldots,m_k)\), the same calculation gives</p>
+\[
+ \dot m_i
+ =-\sum_j\partial_jg(m)
+       \int\nabla\varphi_i\cdot\nabla\varphi_j\,d\alpha.
+\]
+<p>Thus an exact finite system follows if every gradient product belongs to the affine span of \(1,\varphi_1,\ldots,\varphi_k\). Linear and quadratic coordinate functions have this property: their gradients are at most linear, and products of those gradients are at most quadratic. This explains mean–second-moment closure without an assumption that the evolving law is Gaussian.</p>
+<p>Closed equations for observables and invariance of a family of distributions are related but distinct questions. The first can hold while the distribution retains complicated information which those observables never see.</p>
+
+<h2>References</h2>
+<ol class="references">
+<li id="ref-book">Gabriel Peyré. <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.16.5.30"><em>Optimal Transport for Machine Learners</em>, Proposition 16.30 and §16.5</a>. Book manuscript.</li>
+<li id="ref-overview">Filippo Santambrogio. <a href="https://arxiv.org/abs/1609.03890"><em>{Euclidean, Metric, and Wasserstein} Gradient Flows: an Overview</em></a>. Bulletin of Mathematical Sciences 7, 87–154, 2017.</li>
+<li id="ref-jko">Richard Jordan, David Kinderlehrer, and Felix Otto. <a href="https://doi.org/10.1137/S0036141096303359"><em>The Variational Formulation of the Fokker–Planck Equation</em></a>. SIAM Journal on Mathematical Analysis 29(1), 1–17, 1998.</li>
+</ol>
+<p class="caption">The general gradient-flow viewpoint underlying the calculation has its classical variational formulation in <a href="#ref-jko">[3]</a>; the elementary closure proof above is specific to energies depending on finitely many observables.</p>
+</article></main>
+<footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Blog</a></div></footer>
+</body>
+</html>

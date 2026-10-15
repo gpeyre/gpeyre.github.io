@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <meta name="description" content="Two quadratic optimal maps need not compose into an optimal map. A matrix example separates monotonicity, convex gradients, and optimality.">
+  <title>Two optimal transports need not compose optimally — Alpha preview — Gabriel Peyré</title>
+  <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/composing-optimal-transport-maps.html">
+  <link rel="stylesheet" href="assets/drafts.css">
+  <script defer src="assets/drafts.js"></script>
+  <script defer src="assets/idea-experiments.js"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+</head>
+<body>
+<header class="draft-header"><div class="wrap">
+  <a class="draft-back" href="index.html">← Forthcoming posts</a>
+  <p class="draft-status">Alpha preview · Work in progress</p>
+  <p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
+  <h1>Two optimal transports need not compose optimally</h1>
+  <p class="subtitle">The obstruction already appears when multiplying two positive-definite matrices.</p>
+  <p class="byline">Gabriel Peyré</p>
+</div></header>
+<main class="wrap"><article class="blog-prose">
+<p>Transport a distribution optimally to an intermediate distribution, then transport that one optimally to a final target. Is the resulting correspondence optimal between the original and final distributions? On the real line, yes: increasing maps compose into increasing maps. In higher dimensions, the answer is generally no.</p>
+<p>This is more subtle than saying that a journey through a waypoint can be long. Here we compare the <em>direct endpoint displacement</em> of the composed map with the direct optimal cost. The composition itself may assign the wrong endpoints. A two-dimensional Gaussian example explains why, and also clarifies a common confusion between monotone maps and gradients of convex functions. See <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.2.6.42">Remark 2.42 of my book</a> <a href="#ref-book">[1]</a>.</p>
+
+<h2>Which structure certifies optimality?</h2>
+<p>For probability measures with finite second moment, quadratic optimal transport minimizes \(\mathbb E|X-Y|^2\) over all joint laws with the prescribed marginals. A map \(T\) induces the coupling \((X,T(X))\) and the output distribution \(T_\#\alpha\): by definition, \(T_\#\alpha(B)=\alpha(T^{-1}(B))\). For background on these two formulations, see <a href="#ref-computational">[5]</a>.</p>
+<p>Brenier's theorem says that, for an absolutely continuous source, the optimal map is a gradient of a convex function <a href="#ref-brenier">[2]</a>. The linear case is particularly transparent: \(T(x)=Ax\) is a convex gradient exactly when \(A\) is symmetric positive semidefinite.</p>
+<p id="lemma-1"><strong>Lemma 1 (a quadratic optimality certificate).</strong> If \(A\) is symmetric positive definite and \(\alpha\in\mathcal P_2(\mathbb R^d)\), then \(x\mapsto Ax\) is optimal from \(\alpha\) to \(A_\#\alpha\).</p>
+<details class="blog-proof">
+<summary>Proof: complete a square</summary>
+<div class="blog-proof-body">
+<p>For any \(x,y\),</p>
+\[
+  x^\top y
+  \le\tfrac12x^\top Ax+\tfrac12y^\top A^{-1}y,
+\]
+<p>because the difference equals \(\tfrac12|A^{1/2}x-A^{-1/2}y|^2\). Equality holds exactly when \(y=Ax\). For fixed marginals, the expectation of the right side is fixed. Thus \(Y=AX\) maximizes \(\mathbb E(X^\top Y)\), and therefore minimizes</p>
+\[
+  \mathbb E|X-Y|^2
+  =\mathbb E|X|^2+\mathbb E|Y|^2-2\mathbb E(X^\top Y).
+\]
+<p>This proves optimality without any density assumption. \(\square\)</p>
+</div></details>
+
+<h2>A counterexample with an exact cost gap</h2>
+<p id="theorem-1"><strong>Theorem 1 (optimal factors, nonoptimal product).</strong> Let \(\alpha_0=\mathcal N(0,I_2)\), and set</p>
+\[
+  A=\begin{pmatrix}2&0\\0&1\end{pmatrix},
+  \qquad B=\begin{pmatrix}2&1\\1&2\end{pmatrix}.
+\]
+<p>Define \(\alpha_1=A_\#\alpha_0\) and \(\alpha_2=B_\#\alpha_1\). Each of the two maps is optimal for its corresponding pair. Their composition \(D=BA\), however, has a strictly larger direct cost than the optimal map from \(\alpha_0\) to \(\alpha_2\): the excess is \(2\sqrt{37}-12&gt;0\).</p>
+<details class="blog-proof">
+<summary>Proof: compare two maps with exactly the same Gaussian output</summary>
+<div class="blog-proof-body">
+<p>Both \(A\) and \(B\) are symmetric positive definite, so Lemma 1 proves the first assertion. Their product and its output covariance are</p>
+\[
+  D=\begin{pmatrix}4&1\\2&2\end{pmatrix},
+  \qquad
+  DD^\top=\begin{pmatrix}17&10\\10&8\end{pmatrix}.
+\]
+<p>Let \(C=(DD^\top)^{1/2}\) be the symmetric positive-definite square root. For \(X\sim\mathcal N(0,I_2)\), the random vectors \(DX\) and \(CX\) have the same covariance, hence the same law. Lemma 1 makes \(C\) optimal. The two costs are</p>
+\[
+  \mathbb E|X-MX|^2
+  =2+\operatorname{tr}(MM^\top)-2\operatorname{tr}(M).
+\]
+<p>The covariance terms agree. If \(\lambda_1,\lambda_2\) are the eigenvalues of \(DD^\top\), then</p>
+\[
+  \operatorname{tr}C
+  =\sqrt{\lambda_1}+\sqrt{\lambda_2}
+  =\sqrt{25+2\sqrt{36}}=\sqrt{37}.
+\]
+<p>Since \(\operatorname{tr}D=6\), subtracting the costs gives \(2\sqrt{37}-12\). \(\square\)</p>
+</div></details>
+<p>The structural warning is already visible in \(D\): it is not symmetric. Thus it cannot be the gradient of a quadratic—or, indeed, agree almost everywhere on \(\mathbb R^2\) with any convex gradient. A gradient has symmetric distributional derivatives, while this linear field does not.</p>
+
+<h2>Monotone is not the same as a convex gradient</h2>
+<p>A map is <em>monotone</em> when</p>
+\[
+  \langle T(x)-T(y),x-y\rangle\ge0
+  \quad\text{for every }x,y.
+\]
+<p>For a continuously differentiable map on a convex open domain, this is equivalent to the symmetric part of its Jacobian being positive semidefinite. Necessity follows by taking \(y=x+hv\) and letting \(h\to0\); sufficiency follows by integrating the Jacobian along the segment between \(x\) and \(y\).</p>
+<p>Being a gradient imposes a different condition: the Jacobian must be symmetric. On a convex open domain this condition is also sufficient, by integrating the vector field along line segments. Combining the two conditions characterizes gradients of convex functions. For linear maps the distinction reads</p>
+\[
+  \begin{aligned}
+  Ax\text{ monotone}
+    &\iff (A+A^\top)/2\succeq0,\\
+  Ax\text{ a gradient}
+    &\iff A=A^\top,\\
+  Ax\text{ a convex gradient}
+    &\iff A=A^\top\succeq0.
+  \end{aligned}
+\]
+<p>Our nonoptimal product \(D\) is actually still monotone: its symmetric part is \(\left(\begin{smallmatrix}4&3/2\\3/2&2\end{smallmatrix}\right)\), which is positive definite. Pairwise monotonicity does not certify transport optimality. The right nonsmooth condition is <em>cyclical monotonicity</em>, involving cycles of every length; Rockafellar's theorem relates it to convex subgradients <a href="#ref-rockafellar">[3]</a>.</p>
+<p>Even monotonicity need not survive composition. For \(A=\operatorname{diag}(9,1)\) and \(B=\left(\begin{smallmatrix}1&2\\2&5\end{smallmatrix}\right)\), both factors are positive definite, but the symmetric part of \(BA\) is</p>
+\[
+  \begin{pmatrix}9&10\\10&5\end{pmatrix},
+\]
+<p>whose determinant is negative.</p>
+
+<h2>When does composition work?</h2>
+<p id="proposition-1"><strong>Proposition 1 (commuting linear factors).</strong> If \(A,B\) are symmetric positive-definite matrices and the source is a nondegenerate Gaussian, then \(BA\) is an optimal quadratic map to its own output law if and only if \(AB=BA\).</p>
+<details class="blog-proof">
+<summary>Proof: symmetry of the product is exactly commutativity</summary>
+<div class="blog-proof-body">
+<p>If \(AB=BA\), the two matrices admit a common orthonormal eigenbasis. In that basis \(BA\) has positive diagonal entries, so Lemma 1 applies. Conversely, an optimal map from a nondegenerate Gaussian is a convex gradient by Brenier's theorem. Since the Gaussian density is strictly positive, the linear map \(BA\) must have symmetric derivative. But \((BA)^\top=AB\), so \(BA=AB\). \(\square\)</p>
+</div></details>
+<p>For nonlinear smooth convex potentials, the same local obstruction appears in the chain rule:</p>
+\[
+  D(\nabla\psi\circ\nabla\phi)(x)
+  =D^2\psi(\nabla\phi(x))\,D^2\phi(x).
+\]
+<p>Even though both Hessians are symmetric positive semidefinite, their product need not be symmetric. On a convex domain, pointwise commutation of these Hessians is a sufficient condition: the derivative is then symmetric positive semidefinite, so the composition is again a convex gradient.</p>
+<p>On the line there is no matrix commutator. Compositions of nondecreasing maps remain nondecreasing and are therefore optimal to their own output distributions. For atomless source and intermediate laws, this agrees with composing their increasing quantile transport maps. With atoms, a deterministic map to a given target may not exist, so one should not cancel CDFs across jumps without checking the hypotheses.</p>
+
+<h2>Numerical experimentation</h2>
+<p>The following experiment fixes \(A=\operatorname{diag}(2,1)\) and rotates the eigenbasis of \(B\), whose eigenvalues remain \(3\) and \(1\). Compare \(BAx\) with \(Cx\), where \(C=(BA^2B)^{1/2}\). At each angle both maps produce exactly the same Gaussian law, while their pointwise assignments differ. The covariance formula and its relation to the Bures–Wasserstein geometry are discussed in <a href="#ref-bures">[4]</a>.</p>
+<figure>
+  <iframe class="idea-experiment" data-experiment="composition" title="Composition of Gaussian optimal maps and its exact cost excess" src="assets/ot-lab/index.html?topic=composition" loading="lazy"></iframe>
+  <figcaption>Rotate the eigenbasis and watch the skew defect \(\|BA-(BA)^\top\|_{\mathrm F}\), the exact expected Gaussian costs, and the cost-excess curve in the third panel. The plotted source points illustrate couplings of continuous Gaussian laws; the two finite displayed endpoint clouds need not coincide. The endpoints agree in distribution, not sample by sample.</figcaption>
+</figure>
+<p>At commuting angles the excess vanishes. Away from them, the product introduces a component that can be removed while preserving the output covariance. Optimality is a property of the whole source–target correspondence, and is not inherited automatically by stacking individually optimal layers.</p>
+
+<h2>References</h2>
+<ol class="references">
+  <li id="ref-book">Gabriel Peyré. <a href="https://arxiv.org/abs/2505.06589"><em>Optimal Transport for Machine Learners</em></a>, 2025–2026. <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.2.6.42">Remark 2.42, p. 30</a>.</li>
+  <li id="ref-brenier">Yann Brenier. <a href="https://doi.org/10.1002/cpa.3160440402"><em>Polar factorization and monotone rearrangement of vector-valued functions</em></a>. <em>Communications on Pure and Applied Mathematics</em> 44(4), 375–417, 1991.</li>
+  <li id="ref-rockafellar">R. Tyrrell Rockafellar. <a href="https://doi.org/10.2140/pjm.1966.17.497"><em>Characterization of the subdifferentials of convex functions</em></a>. <em>Pacific Journal of Mathematics</em> 17(3), 497–510, 1966.</li>
+  <li id="ref-bures">Rajendra Bhatia, Tanvi Jain, and Yongdo Lim. <a href="https://arxiv.org/abs/1712.01504"><em>On the Bures–Wasserstein distance between positive definite matrices</em></a>. <em>Expositiones Mathematicae</em> 37(2), 165–191, 2019.</li>
+  <li id="ref-computational">Gabriel Peyré and Marco Cuturi. <a href="https://arxiv.org/abs/1803.00567"><em>Computational Optimal Transport</em></a>. <em>Foundations and Trends in Machine Learning</em> 11(5–6), 355–607, 2019.</li>
+</ol>
+</article></main>
+<footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Blog</a></div></footer>
+</body>
+</html>

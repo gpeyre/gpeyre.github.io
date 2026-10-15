@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,follow">
+<meta name="description" content="A pedagogical proof that a constant upper density bound is preserved along quadratic Wasserstein geodesics, with exact one-dimensional experiments.">
+<title>Why optimal transport respects a density cap — Alpha preview — Gabriel Peyré</title>
+<link rel="canonical" href="https://www.gpeyre.com/blog/preparations/wasserstein-geodesics-density-caps.html">
+<link rel="stylesheet" href="assets/drafts.css">
+<script defer src="assets/drafts.js"></script>
+<script defer src="assets/idea-experiments.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+</head>
+<body>
+<header class="draft-header"><div class="wrap">
+<a class="draft-back" href="index.html">← Forthcoming posts</a>
+<p class="draft-status">Alpha preview · Work in progress</p>
+<p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
+<h1>Why optimal transport respects a density cap</h1>
+<p class="subtitle">Displacement convexity connects particle trajectories, entropy, and an apparently inactive congestion constraint.</p>
+<p class="byline">Gabriel Peyré</p>
+</div></header>
+<main class="wrap"><article class="blog-prose">
+<p>Suppose a population must move from one density to another, and we prohibit overcrowding anywhere along the way. One expects this constraint to change the transport. Yet in a convex Euclidean domain, if both endpoint densities already lie below the same constant cap, the ordinary quadratic optimal transport path satisfies that cap automatically.</p>
+<p>The reason is not a quirk of an algorithm. It is <em>displacement convexity</em>: convexity along the straight trajectories of optimally matched particles. The same geometry explains why potential energies, entropy, and certain density constraints behave well in Wasserstein space. Let us build up to the cap theorem, discussed in <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.15.2.22">Proposition 15.22 of <em>Optimal Transport for Machine Learners</em></a> <a href="#ref-book">[1]</a>.</p>
+
+<h2>There are two ways to draw a straight line between measures</h2>
+<p>The ordinary mixture \((1-t)\alpha_0+t\alpha_1\) removes mass from one distribution and adds it to the other. Displacement interpolation instead matches particles and moves them. If \(\pi\) is a quadratic optimal coupling, define</p>
+\[
+ \alpha_t=((1-t)x+ty)_\#\pi,\qquad 0\le t\le1.
+\]
+<p>This is a constant-speed geodesic for the quadratic Wasserstein distance:</p>
+\[
+ W_2(\alpha_s,\alpha_t)=|s-t|W_2(\alpha_0,\alpha_1).
+\]
+<p>For an absolutely continuous source, the coupling is induced by the Brenier map \(T=\nabla\phi\), with \(\phi\) convex, and \(\alpha_t=(T_t)_\#\alpha_0\), where \(T_t=(1-t)\operatorname{Id}+tT\).</p>
+<p>A functional \(\mathcal F\) is \(\lambda\)-displacement convex when</p>
+\[
+ \begin{aligned}
+ \mathcal F(\alpha_t)
+ \le{}&(1-t)\mathcal F(\alpha_0)+t\mathcal F(\alpha_1)\\
+ &-\frac{\lambda}{2}t(1-t)W_2(\alpha_0,\alpha_1)^2.
+ \end{aligned}
+\]
+<p>Here we require the inequality along the geodesics under discussion. For absolutely continuous endpoints the geodesic is unique. In settings where geodesics are not unique, “along every geodesic” and “along some geodesic” must be distinguished.</p>
+
+<h2>Potential energy is the easy example</h2>
+<p>If \(V\) is a \(\lambda\)-convex function on \(\mathbb R^d\), apply its ordinary convexity inequality to each particle segment and integrate:</p>
+\[
+ \mathcal V(\alpha)=\int V(x)\,d\alpha(x)
+ \quad\Longrightarrow\quad
+ \mathcal V\text{ is }\lambda\text{-displacement convex}.
+\]
+<p>The converse follows by testing Dirac masses. This also gives a quick warning: \(\mathcal V\) is always linear along mixtures, even when \(V\) is nonconvex, so mixture convexity is not the relevant test.</p>
+<p>Similarly, if \(W(x,y)\) is jointly convex, then \(\frac12\iint W(x,y)\,d\alpha(x)d\alpha(y)\) is displacement convex. Apply the convexity of \(W\) to two independent copies of the optimal particle coupling. Internal energies, which depend on the density, require a different argument.</p>
+
+<h2>The Jacobian controls compression</h2>
+<p>Write \(\alpha_i=\rho_i\,dx\). In the smooth case, mass conservation along the transport map gives</p>
+\[
+ \rho_t(T_t(x))
+ =\frac{\rho_0(x)}{\det((1-t)I+tDT(x))}.
+\]
+<p>The matrix \(DT\) is positive semidefinite because \(T\) is the gradient of a convex function. This positivity is exactly what makes determinant inequalities available.</p>
+<p id="lemma-1"><strong>Lemma 1 (density along an optimal trajectory).</strong> For quadratic displacement interpolation between absolutely continuous measures,</p>
+\[
+ \begin{aligned}
+ \rho_t(T_t(x))^{-1/d}
+ \ge{}&(1-t)\rho_0(x)^{-1/d}\\
+      &+t\rho_1(T(x))^{-1/d}
+ \end{aligned}
+\]
+<p>for \(\alpha_0\)-almost every \(x\), whenever the endpoint densities are positive at the corresponding points.</p>
+<details class="blog-proof"><summary>Proof: the concavity of the determinant root</summary><div class="blog-proof-body">
+<p>For a smooth positive-definite Jacobian, the endpoint identity gives \(\rho_1(T(x))=\rho_0(x)/\det DT(x)\). The matrix inequality</p>
+\[
+ \det((1-t)I+tA)^{1/d}
+ \ge(1-t)+t\det(A)^{1/d},\qquad A\succeq0,
+\]
+<p>therefore yields the result after division by \(\rho_0(x)^{1/d}\).</p>
+<details class="blog-proof"><summary>Why does the determinant inequality hold?</summary><div class="blog-proof-body">
+<p>For positive eigenvalues \(\lambda_1,\ldots,\lambda_d\), let \(g=(\prod_i\lambda_i)^{1/d}\). Expand \(\prod_i((1-t)+t\lambda_i)\) by choosing \(k\) factors \(\lambda_i\) at a time. For \(1\le k\le d\), the arithmetic–geometric mean inequality over all \(\binom dk\) such products gives</p>
+\[
+ \sum_{|S|=k}\prod_{i\in S}\lambda_i
+ \ge\binom dk g^k.
+\]
+<p>Indeed, each eigenvalue occurs in exactly \(\binom{d-1}{k-1}\) subsets. Applying this bound to every coefficient in the expansion yields \(\det((1-t)I+tA)\ge((1-t)+tg)^d\). Zero eigenvalues follow by continuity.</p>
+</div></details>
+<p>For nonsmooth optimal maps, use their almost-everywhere approximate derivative and the change-of-variables theorem for Brenier maps. The derivative is symmetric positive semidefinite, and the same Jacobian identities hold almost everywhere on the positive-density sets. This is the standard optimal-Jacobian result underlying McCann's displacement-convexity theorem <a href="#ref-mccann">[2]</a>; smoothness of the map is not an additional hypothesis of the lemma. \(\square\)</p>
+</div></details>
+<p>For example, the convexity of \(-\log\det\) gives displacement convexity of the entropy \(\operatorname{Ent}(\rho)=\int\rho\log\rho\,dx\), when the integrals are well defined:</p>
+\[
+ \operatorname{Ent}(\alpha_t)
+ =\operatorname{Ent}(\alpha_0)
+  -\int\log\det((1-t)I+tDT)\,d\alpha_0.
+\]
+<p>Adding a \(\lambda\)-convex potential \(V\) gives \(\lambda\)-displacement convexity of \(\mathrm{KL}(\alpha\mid Z^{-1}e^{-V}dx)\), provided \(Z&lt;\infty\). The density cap below follows from the stronger determinant-root inequality.</p>
+
+<h2>A constant density cap survives the whole journey</h2>
+<p id="theorem-1"><strong>Theorem 1 (preservation of a density cap).</strong> Let \(\Omega\subset\mathbb R^d\) be convex, and let \(\alpha_0,\alpha_1\in\mathcal P_2(\Omega)\) have densities bounded above by a common constant \(\kappa&lt;\infty\). Their quadratic Wasserstein geodesic stays in \(\Omega\) and satisfies</p>
+\[
+ 0\le\rho_t\le\kappa
+ \qquad\text{for every }t\in[0,1].
+\]
+<details class="blog-proof"><summary>Proof: interpolate the reciprocal density</summary><div class="blog-proof-body">
+<p>Both endpoint terms in Lemma 1 are at least \(\kappa^{-1/d}\). Their convex combination is therefore at least \(\kappa^{-1/d}\), giving \(\rho_t(T_t(x))\le\kappa\) almost everywhere. Convexity of \(\Omega\) keeps each segment between \(x\) and \(T(x)\) inside \(\Omega\). \(\square\)</p>
+</div></details>
+<p>Equivalently, the set</p>
+\[
+ \mathcal K_\kappa
+ =\{\rho\,dx\in\mathcal P_2(\Omega):0\le\rho\le\kappa\}
+\]
+<p>is geodesically convex. Its indicator—zero on this set and \(+\infty\) outside—is a displacement-convex functional.</p>
+
+<h2>Why the congestion constraint can be inactive</h2>
+<p>The Benamou–Brenier formulation expresses transport as the least kinetic action among density–velocity pairs satisfying the continuity equation and fixed endpoints <a href="#ref-bb">[3]</a>:</p>
+\[
+ W_2(\alpha_0,\alpha_1)^2
+ =\inf\int_0^1\int|v_t(x)|^2\,d\alpha_t(x)\,dt.
+\]
+<p>Add the requirement \(\rho_t\le\kappa\). This can only increase the infimum. But Theorem 1 says that the ordinary optimal geodesic is feasible for the constrained problem, and its action is already \(W_2^2\). Thus the constrained and unconstrained values are equal.</p>
+<p>Every hypothesis matters. A nonconvex domain may force particles around obstacles; a varying cap \(\kappa(x)\) may create a bottleneck; an additional running cost may favor paths other than the ordinary geodesic. Genuine crowd-motion and congestion models can therefore behave very differently. The theorem concerns a constant cap, a convex Euclidean domain, admissible endpoints, and pure kinetic transport.</p>
+
+<h2>Numerical experimentation: the one-dimensional proof in motion</h2>
+<p>On the line, write \(Q_i\) for the endpoint quantiles. The interpolation is simply \(Q_t=(1-t)Q_0+tQ_1\), and density satisfies \(\rho_t(Q_t(r))=1/Q_t'(r)\). A cap means \(Q_i'\ge1/\kappa\), a condition immediately preserved by interpolation.</p>
+<p>The example uses, for \(0\le r\le1\) and \(0\le a&lt;1\),</p>
+\[
+ \begin{aligned}
+ Q_0(r)&=r+\frac{a}{2\pi}\sin(2\pi r),\\
+ Q_1(r)&=0.6+r-\frac{a}{2\pi}\sin(2\pi r).
+ \end{aligned}
+\]
+<p>The common endpoint cap is \(\kappa=(1-a)^{-1}\), while the intermediate maximum is exactly</p>
+\[
+ \|\rho_t\|_\infty
+ =\frac{1}{1-|1-2t|a}\le\kappa.
+\]
+<figure><iframe class="idea-experiment" data-experiment="caps" title="Exact Wasserstein geodesic preserving a constant density cap" src="assets/ot-lab/index.html?topic=caps" loading="lazy"></iframe><figcaption>Move time and modulation to see how the density relaxes below the endpoint cap. At halfway time the quantile is affine and the density is uniform. The cap is a consequence of the exact interpolation, not a numerical constraint imposed by a solver.</figcaption></figure>
+
+<h2>References</h2>
+<ol class="references">
+<li id="ref-book">Gabriel Peyré. <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.15.2.22"><em>Optimal Transport for Machine Learners</em>, §15.2 and Proposition 15.22</a>. Book manuscript.</li>
+<li id="ref-mccann">Robert J. McCann. <a href="https://www.math.toronto.edu/~mccann/papers/advances.pdf"><em>A Convexity Principle for Interacting Gases</em></a>. Advances in Mathematics 128(1), 153–179, 1997.</li>
+<li id="ref-bb">Jean-David Benamou and Yann Brenier. <a href="https://doi.org/10.1007/s002110050002"><em>A Computational Fluid Mechanics Solution to the Monge–Kantorovich Mass Transfer Problem</em></a>. Numerische Mathematik 84, 375–393, 2000.</li>
+<li id="ref-overview">Filippo Santambrogio. <a href="https://arxiv.org/abs/1609.03890"><em>{Euclidean, Metric, and Wasserstein} Gradient Flows: an Overview</em></a>. Bulletin of Mathematical Sciences 7, 87–154, 2017.</li>
+</ol>
+<p class="caption">For the relation between geodesic convexity, variational evolution, and density-constrained gradient flows, see also <a href="#ref-overview">[4]</a>.</p>
+</article></main>
+<footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Blog</a></div></footer>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <meta name="description" content="Sample, evaluate, average: an explicit polynomial approximation of functionals of probability measures, with a uniform proof and dimension-dependent rates.">
+  <title>Bernstein polynomials on probability measures — Alpha preview — Gabriel Peyré</title>
+  <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/bernstein-polynomials-on-measures.html">
+  <link rel="stylesheet" href="assets/drafts.css">
+  <script defer src="assets/drafts.js"></script>
+  <script defer src="assets/idea-experiments.js"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+</head>
+<body>
+<header class="draft-header"><div class="wrap">
+  <a class="draft-back" href="index.html">← Forthcoming posts</a>
+  <p class="draft-status">Alpha preview · Work in progress</p>
+  <p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
+  <h1>Bernstein polynomials on probability measures</h1>
+  <p class="subtitle">A constructive approximation theorem hidden inside the empirical measure.</p>
+  <p class="byline">Gabriel Peyré</p>
+</div></header>
+<main class="wrap"><article class="blog-prose">
+<p>Suppose the input of a learning problem is a whole distribution: a population, a point cloud, or a collection of tokens of arbitrary size. We would like to approximate a continuous functional \(F(\mu)\) of that distribution by something finite. There is a remarkably direct recipe: draw \(n\) points from \(\mu\), evaluate \(F\) on their empirical distribution, and average the answer.</p>
+<p>This recipe produces a <em>polynomial of the measure</em>. As \(n\) grows, it approximates every continuous functional, uniformly over all distributions on a compact space. Sampling error becomes approximation error. Bernstein’s probabilistic proof of the Weierstrass theorem <a href="#ref-bernstein">[1]</a> already contains the idea; its extension to probability measures belongs to the Bernstein–Schnabl construction <a href="#ref-schnabl">[2]</a>.</p>
+<p>The companion post <a href="wasserstein-polynomials.html">Polynomials of probability measures</a> explains the Stone–Weierstrass argument and its links to neural networks. Here the emphasis is constructive: which polynomial should we choose, why does it converge uniformly, and what determines its rate?</p>
+<aside class="note"><p>In my book <a href="#ref-book">[3]</a>, see §4.4, especially <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.4.4.36">Proposition 4.36, printed p. 81</a>, for particle polynomials and their approximation rates. Chapter 10 discusses empirical Wasserstein estimates.</p></aside>
+
+<h2>A polynomial whose variable is a distribution</h2>
+<p>Let \((K,d)\) be a nonempty compact metric space. Write \(\mathcal P(K)\) for its Borel probability measures. For \(1\le p&lt;\infty\), the Wasserstein distance is</p>
+\[
+ W_p(\mu,\nu)^p=\inf_{\pi\in\Pi(\mu,\nu)}
+                   \int d(x,y)^p\,d\pi(x,y),
+\]
+<p>where \(\Pi(\mu,\nu)\) is the set of couplings with the prescribed marginals. Compactness makes every finite \(W_p\) induce the weak topology, and makes \(\mathcal P(K)\) compact.</p>
+<p>A continuous interaction kernel \(\varphi:K^m\to\mathbb R\) gives a polynomial of order at most \(m\):</p>
+\[
+ P_\varphi(\mu)=\int_{K^m}\varphi(x_1,\ldots,x_m)\,
+                         d\mu(x_1)\cdots d\mu(x_m).
+\]
+<p>The order counts particles, not powers of their coordinates. For instance, the mean is order one and a pair interaction is order two. Along a mixture \(\mu_t=(1-t)\mu+t\nu\), expanding the \(m\) factors shows that \(P_\varphi(\mu_t)\) is an ordinary polynomial in \(t\), of degree at most \(m\). This is a statement about mixtures, not about Wasserstein geodesics.</p>
+<p>Products stay in the class: multiply the two kernels on separate groups of variables. Constants belong to it, and order-one observables \(\int\phi\,d\mu\) separate measures. Stone–Weierstrass therefore proves density, as in Cardaliaguet’s mean field game notes <a href="#ref-cardaliaguet">[4]</a>. The following operator gives a particular approximating sequence.</p>
+
+<h2>Sample, evaluate, average</h2>
+<p>For independent \(X_1,\ldots,X_n\sim\mu\), define</p>
+\[
+ \widehat\mu_n=\frac1n\sum_{i=1}^n\delta_{X_i},
+ \qquad
+ B_nF(\mu)=\mathbb E\,F(\widehat\mu_n).
+\]
+<p>This is a polynomial of order at most \(n\), with the symmetric kernel</p>
+\[
+ \varphi_n(x_1,\ldots,x_n)
+   =F\!\left(\frac1n\sum_{i=1}^n\delta_{x_i}\right).
+\]
+<p>The kernel is continuous: pairing corresponding points gives</p>
+\[
+ W_p\!\left(\frac1n\sum_i\delta_{x_i},
+            \frac1n\sum_i\delta_{y_i}\right)^p
+ \le\frac1n\sum_i d(x_i,y_i)^p.
+\]
+<p>Moreover, \(B_n\) is linear in \(F\), preserves constants and positivity, and satisfies \(\|B_nF\|_\infty\le\|F\|_\infty\). Averaging cannot amplify a uniform error.</p>
+
+<p id="theorem-1"><strong>Theorem 1 (uniform constructive approximation).</strong> If \(K\) is compact and \(F:\mathcal P(K)\to\mathbb R\) is continuous, then</p>
+\[
+ \sup_{\mu\in\mathcal P(K)}|B_nF(\mu)-F(\mu)|\longrightarrow0.
+\]
+<p>The supremum is the essential point: one particle count works for every input law, including discrete, singular, and continuous laws.</p>
+<details class="blog-proof">
+<summary>Proof: reduce the whole space to a finite histogram</summary>
+<div class="blog-proof-body">
+<p>Fix \(\delta&gt;0\). Choose a finite \(\delta\)-net with \(M\) points, and a measurable nearest-point map \(q\). Set \(\mu^\delta=q_\#\mu\) and \(\widehat\mu_n^\delta=q_\#\widehat\mu_n\), using the same samples. Each original law is within \(\delta\) of its quantized version in \(W_p\).</p>
+<p>Let \(w_j\) and \(\widehat w_j\) be the masses of the true and empirical histograms. Their expected mismatch satisfies</p>
+\[
+ \mathbb E\sum_{j=1}^M|\widehat w_j-w_j|
+ \le\sum_{j=1}^M\sqrt{\frac{w_j(1-w_j)}n}
+ \le\sqrt{\frac Mn}.
+\]
+<p>Keep the common mass in place and transport the unmatched mass, which is half this \(\ell^1\) difference, over distance at most \(D=\operatorname{diam}K\). Minkowski’s inequality and the triangle inequality give</p>
+\[
+ \sup_\mu\bigl(\mathbb E W_p(\widehat\mu_n,\mu)^p\bigr)^{1/p}
+ \le 2\delta+D\left(\frac12\sqrt{\frac Mn}\right)^{1/p}.
+\]
+<p>First let \(n\to\infty\), then \(\delta\to0\). Thus the expected \(p\)-th transport error tends to zero uniformly in \(\mu\).</p>
+<p>Finally \(F\) is bounded and uniformly continuous on the compact space \(\mathcal P(K)\). If \(\omega_F(\varepsilon)\) is its modulus of continuity, splitting according to whether \(W_p(\widehat\mu_n,\mu)\le\varepsilon\) gives</p>
+\[
+ |B_nF(\mu)-F(\mu)|
+ \le\omega_F(\varepsilon)
+ +\frac{2\|F\|_\infty}{\varepsilon^p}
+       \mathbb E W_p(\widehat\mu_n,\mu)^p.
+\]
+<p>Let \(n\to\infty\), then \(\varepsilon\to0\). \(\square\)</p>
+</div>
+</details>
+
+<h2>How dimension enters the rate</h2>
+<p>Suppose now \(K\subset\mathbb R^d\) is compact and \(F\) is Hölder in \(W_p\): for some \(L\ge0\) and \(0&lt;\eta\le1\),</p>
+\[
+ |F(\mu)-F(\nu)|\le L\,W_p(\mu,\nu)^\eta.
+\]
+<p id="theorem-2"><strong>Theorem 2 (a uniform sampling rate).</strong> There is a constant \(C\), depending only on a bounding cube for \(K\), \(d,p,\eta\), such that</p>
+\[
+ \|B_nF-F\|_\infty\le CL\,r_n^\eta,
+ \qquad
+ r_n=
+ \begin{cases}
+ n^{-1/(2p)},&d&lt;2p,\\
+ n^{-1/(2p)}(\log(1+n))^{1/p},&d=2p,\\
+ n^{-1/d},&d&gt;2p.
+ \end{cases}
+\]
+<p>These are general upper bounds over all laws on \(K\), of the type developed by Fournier and Guillin <a href="#ref-fournier">[5]</a>. A particular law or functional can converge faster. The critical logarithm is part of this bound, not a claim of optimality for every setting.</p>
+<details class="blog-proof">
+<summary>Proof: Hölder continuity followed by a multiscale histogram estimate</summary>
+<div class="blog-proof-body">
+<p>Jensen’s inequality immediately reduces the problem to empirical transport:</p>
+\[
+ |B_nF(\mu)-F(\mu)|
+ \le L\,\mathbb E W_p(\widehat\mu_n,\mu)^\eta
+ \le L\bigl(\mathbb E W_p(\widehat\mu_n,\mu)^p\bigr)^{\eta/p}.
+\]
+<p>After rescaling, work in \([0,1]^d\), partitioned at level \(j\) into \(2^{dj}\) dyadic cubes \(\mathcal D_j\). Boundary points are assigned consistently to one cube.</p>
+<p id="lemma-1"><strong>Lemma 1 (transport by scales).</strong> For probability laws \(\mu,\nu\) on the cube,</p>
+\[
+ W_p(\mu,\nu)^p
+ \le C_{d,p}\sum_{j\ge1}2^{-pj}
+             \sum_{Q\in\mathcal D_j}|\mu(Q)-\nu(Q)|.
+\]
+<details class="blog-proof">
+<summary>Proof of Lemma 1: balance mass from the leaves to the root</summary>
+<div class="blog-proof-body">
+<p>First replace each measure by its masses at the centers of level-\(J\) cubes. Within each parent cube, match as much of the surplus and deficit of its children as possible, then pass the remaining imbalance to the parent. Continue to the root, whose total imbalance is zero. This constructs a coupling.</p>
+<p>The amount matched between children at level \(j\) is at most \(\frac12\sum_{Q\in\mathcal D_j}|\mu(Q)-\nu(Q)|\). Every such pair lies in one parent cube, so its distance is at most \(\sqrt d\,2^{-(j-1)}\). Charge its \(p\)-th power to this level and sum. The bound is independent of \(J\). The center approximations converge to the original laws in \(W_p\), so letting \(J\to\infty\) proves the claim. \(\square\)</p>
+</div>
+</details>
+<p>For the empirical histogram, the variance calculation from the previous proof gives</p>
+\[
+ \mathbb E\sum_{Q\in\mathcal D_j}
+       |\widehat\mu_n(Q)-\mu(Q)|
+ \le \min\!\left\{2,\sqrt{\frac{2^{dj}}n}\right\}.
+\]
+<p>Thus</p>
+\[
+ \mathbb E W_p(\widehat\mu_n,\mu)^p
+ \le C_{d,p}\sum_{j\ge1}2^{-pj}
+                    \min\{1,2^{dj/2}n^{-1/2}\}.
+\]
+<p>Split at \(J=\lfloor(\log_2 n)/d\rfloor\). The coarse-scale sum is \(n^{-1/2}\sum_{j\le J}2^{j(d/2-p)}\); the fine-scale tail is at most \(C2^{-pJ}\). The coarse sum is bounded, grows like \(J\), or is dominated by its last term according as \(d&lt;2p\), \(d=2p\), or \(d&gt;2p\). These are exactly the three displayed rates for \(\mathbb E W_p^p\), followed by the exponent \(\eta/p\). \(\square\)</p>
+</div>
+</details>
+<p>The threshold \(d=2p\) compares two effects: the \(n^{-1/2}\) fluctuations of the mass in a coarse cell, and the spatial resolution needed to locate many particles in high dimension. Finer results can exploit the intrinsic geometry of the law rather than just its ambient dimension <a href="#ref-weed">[6]</a>.</p>
+
+<h2>The original Bernstein formula reappears</h2>
+<p>Take \(K=\{0,1\}\), \(\mu_a=(1-a)\delta_0+a\delta_1\), and write \(f(a)=F(\mu_a)\). The number of ones in the sample has binomial law, so</p>
+\[
+ B_nF(\mu_a)=
+ \sum_{k=0}^n f(k/n)\binom nk a^k(1-a)^{n-k}.
+\]
+<p>This is precisely the classical Bernstein polynomial. It averages nearby values of \(f\), with a window whose width is \(\sqrt{a(1-a)/n}\).</p>
+<p>Three examples make the mechanism visible. For \(f(a)=a\), the approximation is exact. For \(f(a)=a^2\),</p>
+\[
+ B_nf(a)=a^2+\frac{a(1-a)}n.
+\]
+<p>More generally, if \(F(\mu)=(\int x\,d\mu)^2\) on a bounded real interval, its bias is exactly \(\operatorname{Var}(\mu)/n\). Independence leaves only the diagonal terms in the square of the sample mean.</p>
+<p>For the corner \(f(a)=|a-\tfrac12|\), the approximation rounds the tip. At \(a=\tfrac12\), for even \(n=2m\), a binomial-sum identity gives</p>
+\[
+ B_{2m}f(1/2)
+ =\frac12\,\frac{\binom{2m}{m}}{4^m}
+ \sim \frac1{\sqrt{2\pi n}}.
+\]
+<p>Thus the \(n^{-1/2}\) fluctuation scale is genuinely visible at a nonsmooth observable, even on a two-point space. It is the error of this particular operator; it does not rule out better polynomial approximations chosen by another method.</p>
+
+<h2>Numerical experimentation</h2>
+<figure>
+  <iframe class="idea-experiment" data-experiment="bernstein" title="Bernstein approximation of three functionals of a two-point probability law" src="assets/ot-lab/index.html?topic=bernstein" loading="lazy"></iframe>
+  <figcaption>Change the interaction order \(n\) and compare a linear function, a square, and an absolute-value corner. The polynomial is evaluated by the full binomial sum, not Monte Carlo. The linear function is reproduced exactly; the square has the explicit \(a(1-a)/n\) bias; the corner is rounded on the sampling scale.</figcaption>
+</figure>
+
+<h2>A polynomial recipe is not a complexity bound</h2>
+<p>The construction is explicit, but the kernel \(\varphi_n\) lives on \(K^n\), a space of dimension \(dn\) in Euclidean coordinates. Representing a completely general kernel can be expensive. The rate in \(n\) is therefore a rate in <em>interaction order</em>, not automatically a rate in the number of network parameters or operations.</p>
+<p>There are two separate approximations if one evaluates \(B_nF\) by averaging \(R\) independent empirical clouds. The bias is \(B_nF-F\), studied above. The additional Monte Carlo fluctuation has root-mean-square size at most \(\|F\|_\infty/\sqrt R\). Increasing \(R\) reduces the second error, but does not remove the first.</p>
+<p>Useful architectures exploit additional structure: low-order interactions, a small family of features, or compositional rules acting on the law. This connects with <em>Stochastic Deep Networks</em> <a href="#ref-debie">[7]</a> and the pooling constructions in the <a href="wasserstein-polynomials.html">companion post</a>. The Bernstein operator gives a clean baseline against which those more economical representations can be understood.</p>
+
+<h2>References</h2>
+<ol class="references">
+  <li id="ref-bernstein">Sergei N. Bernstein. <a href="https://www.mathnet.ru/eng/khmo107"><em>Démonstration du théorème de Weierstrass fondée sur le calcul des probabilités</em></a>. Communications of the Kharkov Mathematical Society, second series, 13(1), 1–2, 1912.</li>
+  <li id="ref-schnabl">Roman Schnabl. <a href="https://doi.org/10.1007/BF01351885"><em>Zur Approximation durch Bernsteinpolynome auf gewissen Räumen von Wahrscheinlichkeitsmaßen</em></a>. Mathematische Annalen 180, 326–330, 1969.</li>
+  <li id="ref-book">Gabriel Peyré. <a href="https://arxiv.org/abs/2505.06589"><em>Optimal Transport for Machine Learners</em></a>, 2025–2026. <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.4.4.36">§4.4, Proposition 4.36</a>, and Chapter 10.</li>
+  <li id="ref-cardaliaguet">Pierre Cardaliaguet. <a href="https://www.ceremade.dauphine.fr/~cardaliaguet/MFG100629.pdf"><em>Notes on Mean Field Games</em></a>, from P.-L. Lions’s lectures at the Collège de France, 2012. §5.3, Proposition 5.9.</li>
+  <li id="ref-fournier">Nicolas Fournier and Arnaud Guillin. <a href="https://arxiv.org/abs/1312.2128"><em>On the rate of convergence in Wasserstein distance of the empirical measure</em></a>. Probability Theory and Related Fields 162, 707–738, 2015.</li>
+  <li id="ref-weed">Jonathan Weed and Francis Bach. <a href="https://arxiv.org/abs/1707.00087"><em>Sharp asymptotic and finite-sample rates of convergence of empirical measures in Wasserstein distance</em></a>. Bernoulli 25(4A), 2620–2648, 2019.</li>
+  <li id="ref-debie">Gwendoline de Bie, Gabriel Peyré, and Marco Cuturi. <a href="https://proceedings.mlr.press/v97/de-bie19a.html"><em>Stochastic Deep Networks</em></a>. ICML, PMLR 97, 1556–1565, 2019.</li>
+</ol>
+</article></main>
+<footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Blog</a></div></footer>
+</body>
+</html>

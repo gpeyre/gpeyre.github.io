@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <meta name="description" content="Why optimal equal-weight particles on the line have squared Wasserstein error of order n^-2, while independent samples have expected error of order n^-1.">
+  <title>Carefully placed particles versus random samples — Alpha preview — Gabriel Peyré</title>
+  <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/optimal-particles-versus-random-sampling.html">
+  <link rel="stylesheet" href="assets/drafts.css">
+  <script defer src="assets/drafts.js"></script>
+  <script defer src="assets/idea-experiments.js"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+</head>
+<body>
+<header class="draft-header"><div class="wrap">
+  <a class="draft-back" href="index.html">← Forthcoming posts</a>
+  <p class="draft-status">Alpha preview · Work in progress</p>
+  <p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
+  <h1>Carefully placed particles versus random samples</h1>
+  <p class="subtitle">On the line, choosing where particles go saves a full power of the squared Wasserstein error.</p>
+  <p class="byline">Gabriel Peyré</p>
+</div></header>
+<main class="wrap"><article class="blog-prose">
+<p>A probability distribution can be represented by a finite cloud of particles. The most familiar construction is to draw independent samples. But if the distribution is known and the particles can be placed deliberately, randomness is an unnecessary source of error.</p>
+<p>For a smooth, positive density on a bounded interval, the contrast is sharp. With \(n\) equally weighted particles, the smallest squared \(W_2\) error is of order \(n^{-2}\). Independent sampling gives expected squared error of order \(n^{-1}\). We can identify the optimal positions, compute the constants, and understand the difference using a single picture: approximate the quantile function by a staircase.</p>
+<p>This is <em>equal-weight quantization</em>. General quantization allows the weights to vary too; its theory is developed by Graf and Luschgy <a href="#ref-graf">[1]</a>. The prescribed-weight problem on the line is studied systematically by Xu and Berger <a href="#ref-xu">[2]</a>.</p>
+<aside class="note"><p>Book pointers: <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.6.4.14">Proposition 6.14, printed p. 110</a>, and <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.6.4.15">Proposition 6.15, printed p. 111</a>, in §6.4 of <em>Optimal Transport for Machine Learners</em> <a href="#ref-book">[3]</a>.</p></aside>
+
+<h2>Transport on the line is an approximation problem</h2>
+<p>Let \(\mu\) be a probability measure on \(\mathbb R\) with finite second moment. Its cumulative distribution function and quantile are</p>
+\[
+ F_\mu(x)=\mu((-\infty,x]),
+ \qquad
+ Q(r)=\inf\{x:F_\mu(x)\ge r\},\quad 0&lt;r&lt;1.
+\]
+<p>The one-dimensional transport formula says</p>
+\[
+ W_2(\mu,\nu)^2=\int_0^1|Q_\mu(r)-Q_\nu(r)|^2\,dr.
+\]
+<p>It follows from monotone matching: crossing two ordered assignments increases their quadratic cost. Equivalently, using the same uniform random variable \(U\) to generate \(Q_\mu(U)\) and \(Q_\nu(U)\) gives an optimal coupling <a href="#ref-bobkov">[4]</a>.</p>
+<p>For ordered particle positions \(z_1\le\cdots\le z_n\), the quantile of \(\nu_z=n^{-1}\sum_i\delta_{z_i}\) is the constant \(z_i\) on the interval \(I_i=((i-1)/n,i/n)\). Consequently,</p>
+\[
+ W_2(\mu,\nu_z)^2
+ =\sum_{i=1}^n\int_{I_i}|Q(r)-z_i|^2\,dr.
+\]
+<p>Choosing the best particles is exactly choosing the best constant on each fixed quantile bin.</p>
+
+<p id="theorem-1"><strong>Theorem 1 (the optimal particles are bin averages).</strong> For every \(\mu\in\mathcal P_2(\mathbb R)\), an optimal equal-weight \(n\)-particle approximation is</p>
+\[
+ \mu_n^*=\frac1n\sum_{i=1}^n\delta_{z_i^*},
+ \qquad
+ z_i^*=n\int_{I_i}Q(r)\,dr.
+\]
+<p>The ordered vector \(z^*\) is unique. Its entries may coincide if the original measure has atoms. More precisely, every ordered vector \(z\) satisfies the exact identity</p>
+\[
+ W_2(\mu,\nu_z)^2
+ =W_2(\mu,\mu_n^*)^2
+       +\frac1n\sum_{i=1}^n|z_i-z_i^*|^2.
+\]
+<details class="blog-proof">
+<summary>Proof: orthogonal projection onto a staircase</summary>
+<div class="blog-proof-body">
+<p>On \(I_i\), expand \(Q-z_i=(Q-z_i^*)+(z_i^*-z_i)\). The cross term vanishes because \(\int_{I_i}(Q-z_i^*)=0\). Integration gives</p>
+\[
+ \int_{I_i}|Q-z_i|^2
+ =\int_{I_i}|Q-z_i^*|^2+\frac1n|z_i-z_i^*|^2.
+\]
+<p>Since \(Q\) is nondecreasing, its averages over consecutive bins are nondecreasing too. Thus the unconstrained binwise optimum already satisfies the ordering constraint. Summing proves both optimality and uniqueness of the ordered vector. \(\square\)</p>
+</div>
+</details>
+<p>The familiar midpoint quantile \(Q((i-\tfrac12)/n)\) is generally only an approximation to the bin average. The exact optimizer uses an average in <em>quantile space</em>, or equivalently the mean of each equal-mass slice of the distribution. This is also a conditional expectation: replace \(Q(U)\) by its conditional mean given the bin containing \(U\).</p>
+
+<h2>The exact benchmark: a uniform distribution</h2>
+<p>For \(\mu=\operatorname{Unif}[0,1]\), \(Q(r)=r\). The optimal particles are the midpoints \(z_i^*=(i-\tfrac12)/n\), and</p>
+\[
+ W_2(\mu,\mu_n^*)^2
+ =n\int_{-1/(2n)}^{1/(2n)}s^2\,ds
+ =\frac1{12n^2}.
+\]
+<p>Now draw \(n\) independent uniform particles and sort them as \(U_{(1)}\le\cdots\le U_{(n)}\). For their empirical law \(\widehat\mu_n\), Theorem 1 gives an exact formula for each realization:</p>
+\[
+ W_2(\mu,\widehat\mu_n)^2
+ =\frac1{12n^2}
+  +\frac1n\sum_{i=1}^n
+       \left|U_{(i)}-\frac{i-\frac12}{n}\right|^2.
+\]
+<p>The second term is the cost of the random deviations from the optimal staircase. Averaging it gives the following particularly clean identity.</p>
+<p id="proposition-1"><strong>Proposition 1 (uniform sampling error).</strong> For every integer \(n\ge1\),</p>
+\[
+ \mathbb E W_2(\operatorname{Unif}[0,1],\widehat\mu_n)^2
+ =\frac1{6n}.
+\]
+<details class="blog-proof">
+<summary>Proof: the first two moments of an order statistic</summary>
+<div class="blog-proof-body">
+<p>The density of \(U_{(i)}\) is the beta density with parameters \(i,n+1-i\). Its moments are</p>
+\[
+ \mathbb E U_{(i)}=\frac{i}{n+1},
+ \qquad
+ \mathbb E U_{(i)}^2=\frac{i(i+1)}{(n+1)(n+2)}.
+\]
+<p>Substitute into \(\sum_i\int_{I_i}\mathbb E(U_{(i)}-r)^2\,dr\). The sum of the second-moment terms is \(1/3\), the sum of \(\int_{I_i}r^2\,dr\) is \(1/3\), and the sum of the cross terms is \((4n-1)/(6n)\). Their difference is \(1/(6n)\). \(\square\)</p>
+</div>
+</details>
+<p>On \([a,b]\), multiply both errors by \((b-a)^2\). The ratio of random expected squared error to deterministic optimal squared error is exactly \(2n\). For the distance itself, the deterministic error is of order \(n^{-1}\), whereas the <em>root-mean-square</em> random distance is of order \(n^{-1/2}\). The distinction between a squared error and its square root matters.</p>
+
+<h2>Numerical experimentation</h2>
+<figure>
+  <iframe class="idea-experiment" data-experiment="quantization" title="Optimal midpoint particles and independent uniform samples: CDFs and Wasserstein errors" src="assets/ot-lab/index.html?topic=quantization" loading="lazy"></iframe>
+  <figcaption>The target is uniform on \([0,1]\). Change the particle count or resample the random cloud. The left panel compares the cumulative distributions. On the right, the two curves are the exact \(1/(12n^2)\) optimum and \(1/(6n)\) random expectation; the blue dot is the error of the displayed realization. It need not lie on the expectation curve. Both axes of the error panel use base-10 logarithms.</figcaption>
+</figure>
+
+<h2>The same powers for a smooth positive density</h2>
+<p>Uniformity is not the reason for the two different powers. What matters is regularity of the quantile. Assume \(\mu\) is supported on \([a,b]\), with a density \(\rho\in C^1([a,b])\) satisfying \(0&lt;c\le\rho(x)\le C\). Then \(Q\in C^2([0,1])\), with</p>
+\[
+ Q'(r)=\frac1{\rho(Q(r))}.
+\]
+<p>A small density stretches quantile space: a given mass interval occupies more physical space, making it harder to replace by one point.</p>
+<p id="theorem-2"><strong>Theorem 2 (the leading constants).</strong> Under these assumptions,</p>
+\[
+ \begin{aligned}
+ n^2 W_2(\mu,\mu_n^*)^2
+ &\longrightarrow \frac1{12}\int_0^1 Q'(r)^2\,dr
+ =\frac1{12}\int_a^b\frac{dx}{\rho(x)},\\
+ n\,\mathbb E W_2(\mu,\widehat\mu_n)^2
+ &\longrightarrow \int_0^1 r(1-r)Q'(r)^2\,dr.
+ \end{aligned}
+\]
+<p>The first limit is local approximation error; the second is sampling fluctuation. The full theory of random quantile errors is developed in <a href="#ref-bobkov">[4]</a> and <a href="#ref-delbarrio">[5]</a>. In this regular setting, both limits have elementary proofs.</p>
+<details class="blog-proof">
+<summary>Proof: local slopes, then the fluctuations of order statistics</summary>
+<div class="blog-proof-body">
+<p><em>Deterministic placement.</em> Set \(h=1/n\) and let \(c_i\) be the midpoint of \(I_i\). Taylor’s formula, uniformly on every bin, gives</p>
+\[
+ Q(r)=Q(c_i)+Q'(c_i)(r-c_i)+O(h^2).
+\]
+<p>The bin average is \(Q(c_i)+O(h^2)\). After subtracting it, squaring and integrating,</p>
+\[
+ \int_{I_i}|Q(r)-z_i^*|^2\,dr
+ =\frac{h^3}{12}Q'(c_i)^2+O(h^4).
+\]
+<p>Sum the \(n\) bins and multiply by \(n^2\). The leading term is a Riemann sum; the remainder tends to zero. The substitution \(r=F_\mu(x)\), \(dr=\rho(x)\,dx\), gives the density expression.</p>
+<p><em>Random placement.</em> Write the sorted observations as \(Q(U_{(i)})\). For \(r\in I_i\), put \(\Delta=U_{(i)}-r\). Boundedness of \(Q'\) and \(Q''\) gives</p>
+\[
+ \mathbb E|Q(U_{(i)})-Q(r)|^2
+ =Q'(r)^2\,\mathbb E\Delta^2+O(\mathbb E|\Delta|^3),
+\]
+<p>uniformly in \(i,r\). The elementary order-statistic estimates are</p>
+\[
+ \mathbb E\Delta^2=\frac{r(1-r)}n+O(n^{-2}),
+ \qquad
+ \mathbb E|\Delta|^3=O(n^{-3/2}).
+\]
+<details class="blog-proof">
+<summary>Why these moment estimates are uniform, including near the endpoints</summary>
+<div class="blog-proof-body">
+<p>Set \(s_i=i/(n+1)\). Since \(|s_i-r|\le1/n\), the beta mean and variance</p>
+\[
+ \mathbb E U_{(i)}=s_i,\qquad
+ \operatorname{Var}(U_{(i)})
+   =\frac{s_i(1-s_i)}{n+2}
+\]
+<p>give the first estimate. To bound the third absolute moment, use the fourth moment and Cauchy–Schwarz. For beta parameters \(A=i\), \(B=n+1-i\), \(N=A+B=n+1\), the fourth central moment is</p>
+\[
+ \mathbb E(U_{(i)}-s_i)^4
+ =\frac{3AB\{AB(N+2)+2(A-B)^2\}}
+        {N^4(N+1)(N+2)(N+3)}
+ \le\frac{C_0}{n^2}.
+\]
+<p>This formula follows by expanding the centered fourth power and using \(\mathbb E U_{(i)}^k=\prod_{\ell=0}^{k-1}(i+\ell)/(n+1+\ell)\), for \(k\le4\). Adding the shift \(s_i-r\) gives \(\mathbb E\Delta^4=O(n^{-2})\). Therefore \(\mathbb E|\Delta|^3\le(\mathbb E\Delta^2\,\mathbb E\Delta^4)^{1/2}=O(n^{-3/2})\), with constants independent of the bin.</p>
+</div>
+</details>
+<p>Integrating over all bins now yields</p>
+\[
+ \mathbb E W_2(\mu,\widehat\mu_n)^2
+ =\frac1n\int_0^1 r(1-r)Q'(r)^2\,dr+O(n^{-3/2}).
+\]
+<p>Multiply by \(n\). This proves convergence of expectations directly, without needing to exchange a distributional limit and an expectation. \(\square\)</p>
+</div>
+</details>
+
+<h2>A small nonlinear example</h2>
+<p>Let the distribution be generated by the quantile \(Q(r)=r+\theta r^2\), with \(\theta&gt;0\). Its density is smooth and bounded above and below on \([0,1+\theta]\). On a bin with midpoint \(c_i\),</p>
+\[
+ z_i^*=c_i+\theta c_i^2+\frac{\theta}{12n^2},
+ \qquad
+ Q(c_i)=c_i+\theta c_i^2.
+\]
+<p>The exact particles lie slightly to the right of the midpoint quantiles. Theorem 1 quantifies the price of using the latter: their squared error exceeds the optimum by exactly \(\theta^2/(144n^4)\). This is lower order than the \(n^{-2}\) leading term, explaining why midpoint quantiles are asymptotically correct although not exactly optimal.</p>
+<p>The two leading constants can also be integrated explicitly:</p>
+\[
+ \begin{aligned}
+ \frac1{12}\int_0^1Q'(r)^2\,dr
+ &=\frac1{12}\left(1+2\theta+\frac43\theta^2\right),\\
+ \int_0^1r(1-r)Q'(r)^2\,dr
+ &=\frac16+\frac{\theta}3+\frac{\theta^2}5.
+ \end{aligned}
+\]
+
+<h2>What this comparison does and does not promise</h2>
+<p>The weights are fixed at \(1/n\). Allowing nonuniform weights changes the optimization problem: equal-length or nearest-neighbor cells need not carry equal mass. In higher dimensions there is no global ordering, so quantile bins no longer solve the problem; equal-weight constructions require different geometry <a href="#ref-chevallier">[6]</a>.</p>
+<p>The density assumptions also matter. If the density vanishes, or the support is unbounded, the integrals in Theorem 2 may diverge. In particular, one must not apply these finite constants unchanged to an untruncated Gaussian. The general empirical bounds in <a href="#ref-fournier">[7]</a> and the one-dimensional analysis in <a href="#ref-bobkov">[4]</a> describe how tails and regularity affect sampling rates.</p>
+<p>Finally, optimal placement assumes access to the target quantile, or to a sufficiently accurate approximation of it. If the distribution itself must be learned from data, quantization does not erase that statistical uncertainty. It separates two questions: how well do we know the distribution, and how efficiently can we represent the distribution we know?</p>
+
+<h2>References</h2>
+<ol class="references">
+  <li id="ref-graf">Siegfried Graf and Harald Luschgy. <a href="https://doi.org/10.1007/BFb0103945"><em>Foundations of Quantization for Probability Distributions</em></a>. Lecture Notes in Mathematics 1730, Springer, 2000.</li>
+  <li id="ref-xu">Chuang Xu and Arno Berger. <a href="https://arxiv.org/abs/1704.07871"><em>Best finite constrained approximations of one-dimensional probabilities</em></a>. Journal of Approximation Theory 244, 1–36, 2019.</li>
+  <li id="ref-book">Gabriel Peyré. <a href="https://arxiv.org/abs/2505.06589"><em>Optimal Transport for Machine Learners</em></a>, 2025–2026. <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.6.4.14">§6.4, Propositions 6.14–6.15</a>.</li>
+  <li id="ref-bobkov">Sergey Bobkov and Michel Ledoux. <a href="https://doi.org/10.1090/memo/1259"><em>One-Dimensional Empirical Measures, Order Statistics, and Kantorovich Transport Distances</em></a>. Memoirs of the American Mathematical Society 261(1259), 2019. <a href="https://www-users.cse.umn.edu/~bobko001/papers/2019_Memoirs%20BL%20One-dimensional%20Empirical%20Measures.pdf">Author’s copy</a>.</li>
+  <li id="ref-delbarrio">Eustasio del Barrio, Evarist Giné, and Frederic Utzet. <a href="https://doi.org/10.3150/bj/1110228245"><em>Asymptotics for L² functionals of the empirical quantile process, with applications to tests of fit based on weighted Wasserstein distances</em></a>. Bernoulli 11(1), 131–189, 2005.</li>
+  <li id="ref-chevallier">Julien Chevallier. <a href="https://arxiv.org/abs/1801.02871"><em>Uniform decomposition of probability measures: quantization, classification, rate of convergence</em></a>. arXiv:1801.02871, 2018.</li>
+  <li id="ref-fournier">Nicolas Fournier and Arnaud Guillin. <a href="https://arxiv.org/abs/1312.2128"><em>On the rate of convergence in Wasserstein distance of the empirical measure</em></a>. Probability Theory and Related Fields 162, 707–738, 2015.</li>
+</ol>
+</article></main>
+<footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Blog</a></div></footer>
+</body>
+</html>

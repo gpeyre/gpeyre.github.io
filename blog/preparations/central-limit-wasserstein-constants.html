@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,follow">
+<meta name="description" content="Bernoulli and continuous uniform sums have different sharp Wasserstein-1 central-limit rates. Exact constants, lattice corrections, and interactive CDF error plots.">
+<title>Two symmetric central limit theorems, two rates — Alpha preview — Gabriel Peyré</title>
+<link rel="canonical" href="https://www.gpeyre.com/blog/preparations/central-limit-wasserstein-constants.html">
+<link rel="stylesheet" href="assets/drafts.css">
+<script defer src="assets/drafts.js"></script>
+<script defer src="assets/idea-experiments.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+</head>
+<body>
+<header class="draft-header"><div class="wrap">
+<a class="draft-back" href="index.html">← Forthcoming posts</a>
+<p class="draft-status">Alpha preview · Work in progress</p>
+<p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
+<h1>Two symmetric central limit theorems, two rates</h1>
+<p class="subtitle">Symmetry removes skewness. It does not remove the small steps of a lattice.</p>
+<p class="byline">Gabriel Peyré</p>
+</div></header>
+<main class="wrap"><article class="blog-prose">
+<p>Average enough independent random variables, rescale, and a Gaussian emerges. The central limit theorem describes the limit; a more delicate question asks how quickly we reach it. Even two symmetric, bounded, unit-variance distributions can approach the Gaussian at different powers of the sample size.</p>
+<p>Compare a fair coin taking values \(\pm1\) with a continuous uniform variable on \([-\sqrt3,\sqrt3]\). Both have mean zero, variance one, and zero skewness. Yet their normalized sums satisfy</p>
+\[
+ \begin{aligned}
+ W_1(\operatorname{Law}(S_n^{\mathrm B}),\gamma)
+   &\sim\frac{1}{2\sqrt n},\\
+ W_1(\operatorname{Law}(S_n^{\mathrm U}),\gamma)
+   &\sim\frac{C_{\mathrm U}}n,
+ \end{aligned}
+\]
+<p>where \(\gamma=\mathcal N(0,1)\) and</p>
+\[
+ C_{\mathrm U}
+ =\frac{1+4e^{-3/2}}{10\sqrt{2\pi}}
+ \approx0.0755.
+\]
+<p>The difference comes from the small staircases in the coin-sum CDF. Their width is still of order \(n^{-1/2}\), regardless of symmetry. This is the phenomenon behind <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.10.1.3">Propositions 10.3–10.4 of <em>Optimal Transport for Machine Learners</em></a> <a href="#ref-book">[1]</a>.</p>
+
+<h2>Wasserstein distance is an area between CDFs</h2>
+<p>For probability laws \(\mu,\nu\) on the line with finite first moments,</p>
+\[
+ \begin{aligned}
+ W_1(\mu,\nu)
+ &=\inf_{(X,Y):\,X\sim\mu,\,Y\sim\nu}\mathbb E|X-Y|\\
+ &=\int_{\mathbb R}|F_\mu(x)-F_\nu(x)|\,dx.
+ \end{aligned}
+\]
+<p>The optimal coupling matches equal quantiles. The area between quantile graphs equals the area between the CDF graphs, which gives the second formula <a href="#ref-computational">[2]</a>. The absolute value matters: positive and negative CDF errors cannot cancel.</p>
+<p>Let \(X_1,X_2,\ldots\) be independent copies of a centered, unit-variance variable \(X\), and put \(S_n=n^{-1/2}\sum_{i=1}^nX_i\). Write \(F_n\) for its CDF and \(\Phi,\phi\) for the standard Gaussian CDF and density. We need to understand the <em>shape</em> of \(F_n-\Phi\), not just bound its maximum.</p>
+
+<h2>A lattice leaves a sawtooth</h2>
+<p>A lattice of span \(h\) is a set \(a+h\mathbb Z\). The <em>maximal span</em> is the largest spacing of a lattice containing the support. For a fair \(\pm1\) variable, it is \(2\), not \(1\): the normalized sum has adjacent values separated by \(2/\sqrt n\).</p>
+<p id="theorem-1"><strong>Theorem 1 (the symmetric lattice rate).</strong> Suppose \(X\) is symmetric, centered, has variance one, and has finite support contained in a lattice of maximal span \(h&gt;0\). Then</p>
+\[
+ W_1(\operatorname{Law}(S_n),\gamma)
+ =\frac{h}{4\sqrt n}+o(n^{-1/2}).
+\]
+<p>Thus the fair-coin constant is \(1/2\).</p>
+<details class="blog-proof"><summary>Proof: average the absolute continuity correction</summary><div class="blog-proof-body">
+<p>The lattice Edgeworth expansion gives</p>
+\[
+ \begin{aligned}
+ F_n(x)-\Phi(x)
+ &=\frac h{\sqrt n}\,
+   \psi\!\left(\frac{\sqrt n\,x-na}{h}\right)\phi(x)+r_n(x),\\
+ \psi(u)&=\tfrac12-\{u\},\qquad
+ \|r_n\|_{L^1}=o(n^{-1/2}),
+ \end{aligned}
+\]
+<p>where \(\{u\}\) is the fractional part. Values at the jump points have no effect on the integral. This is the usual half-cell continuity correction, with the weighted remainder supplied by lattice local-limit and Edgeworth theory <a href="#ref-petrov">[3]</a>, <a href="#ref-br">[4]</a>. Symmetry removes the smooth skewness term at this order.</p>
+<p>The inequality \(\bigl||u+v|-|u|\bigr|\le|v|\) shows that the remainder changes the Wasserstein distance by \(o(n^{-1/2})\). The absolute sawtooth oscillates increasingly rapidly and has mean</p>
+\[
+ \int_0^1\left|\tfrac12-u\right|\,du=\frac14.
+\]
+<p>Consequently its integral against \(\phi\) tends to \(1/4\). To see this without a probabilistic argument, first use a compactly supported step function as weight: each interval contains an integer number of full periods plus two negligible partial periods. Then approximate \(\phi\) in \(L^1\), using the uniform bound \(|\psi|\le1/2\). Multiplying by \(h/\sqrt n\) proves the result. \(\square\)</p>
+</div></details>
+<p>Geometrically, one transports a smooth Gaussian mass within cells of width \(h/\sqrt n\) to lattice sites near their centers. The average distance to the center of an interval of width \(\delta\) is \(\delta/4\). The theorem makes this picture precise and shows why the constant is universal within this symmetric lattice class.</p>
+
+<h2>A density exposes the fourth cumulant</h2>
+<p>For a symmetric continuous law, the staircase disappears. The first surviving smooth correction comes from the fourth cumulant</p>
+\[
+ \kappa_4=\mathbb E[X^4]-3.
+\]
+<p>The value \(3\) is the fourth moment of a standard Gaussian, so \(\kappa_4\) measures a departure from Gaussian shape after variance and skewness have been matched.</p>
+<p id="theorem-2"><strong>Theorem 2 (the symmetric density rate).</strong> Suppose \(X\) is symmetric, centered, has variance one, has a density, and has finite moments of every order. Then</p>
+\[
+ W_1(\operatorname{Law}(S_n),\gamma)
+ =\frac{|\kappa_4|}{24n}
+     \int_{\mathbb R}|x^3-3x|\phi(x)\,dx+o(n^{-1}).
+\]
+<p>If \(\kappa_4=0\), this asserts \(o(n^{-1})\); it does not assert a nonzero equivalent.</p>
+<details class="blog-proof"><summary>Proof: the first nonzero smooth Edgeworth term</summary><div class="blog-proof-body">
+<p>For fixed frequency \(t\), the characteristic function has the expansion</p>
+\[
+ \mathbb E e^{itS_n}
+ =e^{-t^2/2}
+   \left(1+\frac{\kappa_4t^4}{24n}+o(n^{-1})\right).
+\]
+<p>Symmetry removes the cubic term. Fourier inversion suggests a fourth derivative of the Gaussian density; integrating once produces the third Hermite polynomial \(H_3(x)=x^3-3x\).</p>
+<p>The rigorous nonlattice Edgeworth theorem, in its weighted-remainder form, gives</p>
+\[
+ F_n-\Phi
+ =-\frac{\kappa_4}{24n}H_3\phi+r_n,
+ \qquad \|r_n\|_{L^1}=o(n^{-1}).
+\]
+<p>A density makes the characteristic function tend to zero at infinity, hence supplies Cramér's condition; the stated moment assumptions permit a weighted remainder integrable on the line. These are the analytic inputs from <a href="#ref-petrov">[3]</a>, <a href="#ref-br">[4]</a>. The fixed-frequency expansion alone would not justify this global integral.</p>
+<p>Apply \(\bigl||u+v|-|u|\bigr|\le|v|\) and integrate to obtain the formula. \(\square\)</p>
+</div></details>
+
+<h2>The continuous uniform constant, explicitly</h2>
+<p>For \(X\) uniform on \([-\sqrt3,\sqrt3]\), \(\mathbb E[X^4]=9/5\), so \(\kappa_4=-6/5\). The remaining Gaussian integral can be evaluated without numerical quadrature.</p>
+<details class="blog-proof"><summary>Calculation: split at the roots of the Hermite polynomial</summary><div class="blog-proof-body">
+<p>The roots of \(H_3(x)=x(x^2-3)\) are \(0,\pm\sqrt3\), and</p>
+\[
+ \frac{d}{dx}\bigl[(x^2-1)\phi(x)\bigr]
+ =-(x^3-3x)\phi(x).
+\]
+<p>By symmetry and integration over the two positive intervals,</p>
+\[
+ \int_{\mathbb R}|x^3-3x|\phi(x)\,dx
+ =2\phi(0)+8\phi(\sqrt3).
+\]
+<p>Multiplication by \(|\kappa_4|/24=1/20\) gives</p>
+\[
+ C_{\mathrm U}
+ =\frac{\phi(0)+4\phi(\sqrt3)}{10}
+ =\frac{1+4e^{-3/2}}{10\sqrt{2\pi}}.
+\]
+</div></details>
+<p>There are two distinct mechanisms: a rapidly oscillating lattice error of order \(n^{-1/2}\), and a smooth kurtosis error of order \(n^{-1}\). Both are visible before taking any absolute-value integral.</p>
+
+<h2>Numerical experimentation</h2>
+<p>Choose the number of summands to inspect the CDF error, then compare the convergence curves and the rescaled quantities \(\sqrt n\,W_1\) and \(nW_1\). The first approaches \(1/2\) for Bernoulli input, and the second approaches \(C_{\mathrm U}\) for continuous uniform input.</p>
+<figure><iframe class="idea-experiment" data-experiment="clt" title="Bernoulli and continuous uniform central-limit rates in Wasserstein distance" src="assets/ot-lab/index.html?topic=clt" loading="lazy"></iframe><figcaption>The Bernoulli calculation uses the exact binomial law. The uniform calculation uses the continuous Irwin–Hall convolution CDF, not an atomic approximation of the input. Distances are obtained by integrating absolute CDF errors, including the Gaussian tails. The right panel rescales the Bernoulli CDF error by \(\sqrt n\) and the uniform error by \(n\), so both leading shapes remain visible as the errors shrink.</figcaption></figure>
+<p>This distinction matters numerically. If we first replace a uniform variable by a fixed finite grid, we have changed it into a lattice law. At sufficiently large \(n\), the lattice term dominates and the asymptotic rate changes. Increasing the quadrature resolution for the continuous CDF is legitimate; changing the input into discrete mass is a different experiment.</p>
+<p>Likewise, the coin characteristic function \(\cos t\) returns to modulus one at arbitrarily large frequencies. It fails the nonlattice condition in Theorem 2. Symmetry and arbitrarily many finite moments cannot remove that obstruction.</p>
+
+<h2>References</h2>
+<ol class="references">
+<li id="ref-book">Gabriel Peyré. <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.10.1.3"><em>Optimal Transport for Machine Learners</em>, Proposition 10.3</a> and <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.10.1.4">Proposition 10.4</a>. Book manuscript.</li>
+<li id="ref-computational">Gabriel Peyré and Marco Cuturi. <a href="https://arxiv.org/abs/1803.00567"><em>Computational Optimal Transport</em></a>. Foundations and Trends in Machine Learning 11(5–6), 355–607, 2019.</li>
+<li id="ref-petrov">Valentin V. Petrov. <a href="https://doi.org/10.1007/978-3-642-65809-9"><em>Sums of Independent Random Variables</em></a>. Springer, 1975. Chapters VI–VII.</li>
+<li id="ref-br">Rabi N. Bhattacharya and R. Ranga Rao. <a href="https://doi.org/10.1137/1.9780898719895"><em>Normal Approximation and Asymptotic Expansions</em></a>. SIAM, 2010; original edition 1976. Chapters 4–5.</li>
+</ol>
+</article></main>
+<footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Blog</a></div></footer>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,follow">
+<meta name="description" content="Definitions and examples of phi-divergences and Bregman divergences, with a short measure-level proof that their smooth overlap is precisely scaled Kullback–Leibler divergence.">
+<title>Why KL belongs to two divergence families — Alpha preview — Gabriel Peyré</title>
+<link rel="canonical" href="https://www.gpeyre.com/blog/preparations/divergences-and-bregman-geometry.html">
+<link rel="stylesheet" href="assets/drafts.css">
+<script defer src="assets/drafts.js"></script>
+<script defer src="assets/idea-experiments.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+</head>
+<body>
+<header class="draft-header"><div class="wrap">
+<a class="draft-back" href="index.html">← Forthcoming posts</a>
+<p class="draft-status">Alpha preview · Work in progress</p>
+<p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
+<h1>Why KL belongs to two divergence families</h1>
+<p class="subtitle">Density ratios and convex tangent planes meet at a rigid intersection.</p>
+<p class="byline">Gabriel Peyré</p>
+</div></header>
+<main class="wrap"><article class="blog-prose">
+<p>A discrepancy between probability distributions can be built in two quite different ways. We can compare their density ratio at each point. Or we can measure how far a convex functional lies above its tangent plane. The first construction comes from statistical information; the second comes from convex geometry and optimization.</p>
+<p>Kullback–Leibler divergence belongs to both families. This is more than a convenient coincidence: under natural smoothness assumptions, it is the <em>only</em> common member, up to scale. A short proof reveals why entropy appears so often when probability models meet convex optimization.</p>
+<p>The finite-alphabet characterization is Theorem 5 of Jiao, Courtade, No, Venkat, and Weissman <a href="#ref-jiao">[1]</a>. The measure-level formulation below follows <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.8.8.34">Proposition 8.34 of <em>Optimal Transport for Machine Learners</em></a> <a href="#ref-book">[2]</a>. We start with the two definitions, because similar-looking quadratic formulas can disguise genuinely different geometries.</p>
+
+<h2>First construction: compare density ratios</h2>
+<p>Let \(\alpha=p\,\omega\) and \(\beta=q\,\omega\) be probability measures with positive densities relative to a finite reference measure \(\omega\). For a convex function \(\phi:(0,\infty)\to\mathbb R\) satisfying \(\phi(1)=0\), define the <em>\(\phi\)-divergence</em>, also called an \(f\)-divergence, by</p>
+\[
+ D_\phi(\alpha\mid\beta)
+ =\int q(x)\phi\!\left(\frac{p(x)}{q(x)}\right)\,d\omega(x).
+\]
+<p>This depends only on \(\alpha,\beta\), not on the choice of dominating measure. Jensen's inequality under \(\beta\) gives \(D_\phi\ge\phi(\int p\,d\omega)=0\). Strict convexity at the relevant ratios gives equality only for equal measures.</p>
+<p>Three standard examples are</p>
+\[
+ \begin{array}{c|c}
+ \phi(r)&D_\phi(\alpha\mid\beta)\\ \hline
+ r\log r-r+1 & \displaystyle\int p\log(p/q)\,d\omega\\[3pt]
+ (r-1)^2/2 & \displaystyle\frac12\int\frac{(p-q)^2}{q}\,d\omega\\[3pt]
+ (\sqrt r-1)^2 & \displaystyle\int(\sqrt p-\sqrt q)^2\,d\omega .
+ \end{array}
+\]
+<p>These are KL, half the Pearson \(\chi^2\) divergence, and squared Hellinger distance with the displayed normalization. For probabilities, the linear terms in the KL generator integrate to zero. More generally, replacing \(\phi(r)\) by \(\phi(r)+a(r-1)\) leaves the divergence unchanged.</p>
+<details class="blog-proof"><summary>Definition at zero densities and for singular measures</summary><div class="blog-proof-body">
+<p>Write the Lebesgue decomposition \(\alpha=f\,\beta+\alpha^\perp\), with \(\alpha^\perp\) singular relative to \(\beta\). The lower-semicontinuous extension is</p>
+\[
+ D_\phi(\alpha\mid\beta)
+ =\int\phi(f)\,d\beta+\phi'_\infty\,\alpha^\perp(E),
+ \qquad
+ \phi'_\infty=\lim_{r\to\infty}\frac{\phi(r)}r.
+\]
+<p>At \(f=0\), use \(\phi(0)=\lim_{r\downarrow0}\phi(r)\), possibly infinite, and use \(0\cdot\infty=0\) for a vanishing singular mass. For KL, \(\phi'_\infty=+\infty\): any nonzero part of \(\alpha\) singular with respect to \(\beta\) gives infinite divergence, even if their topological supports overlap. The smooth theorem below stays inside strictly positive bounded densities, where no such convention is needed.</p>
+</div></details>
+
+<h2>Second construction: subtract a tangent plane</h2>
+<p>Let \(\Phi\) be a differentiable convex functional on a convex set of densities. Its <em>Bregman divergence</em> is</p>
+\[
+ B_\Phi(\alpha\mid\beta)
+ =\Phi(\alpha)-\Phi(\beta)
+  -\int\delta\Phi(\beta)\,d(\alpha-\beta).
+\]
+<p>The first variation \(\delta\Phi(\beta)\) describes the tangent plane at \(\beta\); convexity makes the remainder nonnegative. On probability measures, the first variation is defined only up to an additive constant, which disappears because \(\alpha-\beta\) has total mass zero. This construction goes back to Bregman <a href="#ref-bregman">[3]</a>.</p>
+<p>For a separable functional \(\Phi(p\,\omega)=\int F(p)\,d\omega\),</p>
+\[
+ B_\Phi(\alpha\mid\beta)
+ =\int\bigl[F(p)-F(q)-F'(q)(p-q)\bigr]\,d\omega.
+\]
+<p>Choosing \(F(r)=r^2/2\) gives \(\frac12\int(p-q)^2\,d\omega\). Notice the missing factor \(1/q\): this is squared \(L^2(\omega)\) error, not Pearson divergence. It changes if the reference measure changes while the formula for \(F\) is held fixed.</p>
+<p>Choosing \(F(r)=r\log r-r\) instead gives</p>
+\[
+ F(p)-F(q)-F'(q)(p-q)
+ =p\log(p/q)-p+q.
+\]
+<p>After integration over probabilities, this is KL. This is the first meeting of the two constructions, historically introduced in information theory by Kullback and Leibler <a href="#ref-kl">[4]</a>.</p>
+<p>Bregman generators need not be pointwise integrals. For a bounded feature map \(\psi:E\to\mathbb R^k\), the nonlocal functional</p>
+\[
+ \Phi(\alpha)=\frac12\left|\int\psi\,d\alpha\right|^2
+\]
+<p>has divergence \(\frac12|\int\psi\,d\alpha-\int\psi\,d\beta|^2\). It can vanish for different measures with the same features. “Divergence” therefore does not automatically mean a metric, or even a discrepancy separating every pair of laws.</p>
+
+<h2>A short rigidity theorem</h2>
+<p>For a precise domain, normalize the finite reference measure so that \(\omega(E)=1\), and assume it has a measurable set \(A\) with \(0&lt;\omega(A)&lt;1\). Let \(\mathcal D\) be all probability densities bounded above and bounded away from zero; the bounds may depend on the density.</p>
+<p id="theorem-1"><strong>Theorem 1 (the smooth intersection is KL).</strong> Suppose \(\phi\in C^2(0,\infty)\) is convex with \(\phi(1)=0\), and \(\Phi\) is convex and twice differentiable along bounded zero-mass density directions. If</p>
+\[
+ B_\Phi(p\,\omega\mid q\,\omega)
+ =D_\phi(p\,\omega\mid q\,\omega)
+ \quad\text{for all }p,q\in\mathcal D,
+\]
+<p>then, for some \(\kappa\ge0\),</p>
+\[
+ B_\Phi=D_\phi=\kappa\,\mathrm{KL}.
+\]
+<p>More precisely, \(\phi(r)=\kappa r\log r+a(r-1)\), and \(\Phi\) differs from \(\kappa\int p\log p\,d\omega\) by an affine functional on \(\mathcal D\).</p>
+<details class="blog-proof"><summary>Proof: the local Hessian determines the global Bregman divergence</summary><div class="blog-proof-body">
+<p><em>Step 1: compare second derivatives at equal densities.</em> Fix \(q\in\mathcal D\) and a bounded \(h\) with \(\int h\,d\omega=0\). For sufficiently small \(t\), \(q+th\in\mathcal D\). Differentiate the asserted equality twice at \(t=0\):</p>
+\[
+ D^2\Phi(q)[h,h]
+ =\phi''(1)\int\frac{h^2}{q}\,d\omega.
+\]
+<p>Set \(\kappa=\phi''(1)\ge0\). The right-hand side is exactly the second derivative of \(\kappa\operatorname{Ent}(q)=\kappa\int q\log q\,d\omega\). Thus \(\Psi=\Phi-\kappa\operatorname{Ent}\) has zero second derivative along every segment in \(\mathcal D\).</p>
+<p>Consequently \(\Psi\) is affine on each such segment, so its tangent-plane remainder is zero. Therefore \(B_\Phi=\kappa B_{\operatorname{Ent}}=\kappa\mathrm{KL}\) for all pairs—not just infinitesimally close pairs.</p>
+<p><em>Step 2: recover the scalar generator.</em> Put \(r(s)=\phi(s)-\kappa s\log s\). We now know that \(\int q\,r(p/q)\,d\omega=0\) for every pair.</p>
+<details class="blog-proof"><summary>Two-value lemma: a zero probability divergence is linear</summary><div class="blog-proof-body">
+<p>Choose any \(0&lt;x&lt;1&lt;y\), and set</p>
+\[
+ w=\frac{y-1}{y-x},\qquad 1-w=\frac{1-x}{y-x}.
+\]
+<p>Choose \(q\) constant on \(A\) and \(A^c\), with \(\beta(A)=w\). Set \(p=xq\) on \(A\) and \(p=yq\) on \(A^c\). Both are strictly positive bounded probability densities because \(wx+(1-w)y=1\). The zero divergence yields</p>
+\[
+ (y-1)r(x)+(1-x)r(y)=0,
+\]
+<p>hence \(r(x)/(x-1)=r(y)/(y-1)\). Varying \(x\) and \(y\) shows this ratio has the same constant value on both sides of one. Since \(r(1)=0\), \(r(s)=a(s-1)\) everywhere.</p>
+</div></details>
+<p>This proves the scalar formula and completes the characterization. \(\square\)</p>
+</div></details>
+<p>The two-point construction explains the minimal assumption on the reference space: it must distinguish at least two events. On a one-point probability space every divergence is zero, so no generator can be identified.</p>
+<p>The theorem also allows nonseparable \(\Phi\). It does not assume in advance that the Bregman generator is an integral of a scalar function. Its Hessian is forced to be that of entropy simply by matching the density-ratio divergence at every base density.</p>
+
+<h2>Why this matters for algorithms</h2>
+<p>The derivative of entropy is logarithmic. On a finite probability simplex, minimizing a linear cost regularized by KL gives an explicit multiplicative step:</p>
+\[
+ \begin{aligned}
+ p^\star&=\underset{p_i\ge0,\ \sum_i p_i=1}{\arg\min}
+ \left\{\sum_i c_ip_i+\frac1\eta\mathrm{KL}(p\mid q)\right\},\\
+ p_i^\star&=\frac{q_i e^{-\eta c_i}}
+                  {\sum_jq_j e^{-\eta c_j}},
+ \qquad q_i&gt;0,\quad\eta&gt;0.
+ \end{aligned}
+\]
+<p>A Lagrange multiplier for total mass makes \(\log(p_i/q_i)+\eta c_i\) constant, which gives the formula. Entropy geometry turns an additive change in dual coordinates into multiplicative reweighting in probability coordinates.</p>
+<p>The overlap theorem explains why KL simultaneously enjoys a density-ratio interpretation and a tangent-plane interpretation. It does not say that other divergences are inferior. Pearson, Hellinger, squared density error, and feature-mean errors encode different choices. What it rules out is freely exchanging their geometric formulas merely because all of them measure a discrepancy.</p>
+
+<h2>References</h2>
+<ol class="references">
+<li id="ref-jiao">Jiantao Jiao, Thomas A. Courtade, Albert No, Kartik Venkat, and Tsachy Weissman. <a href="https://arxiv.org/abs/1404.6810"><em>Information Measures: The Curious Case of the Binary Alphabet</em></a>. IEEE Transactions on Information Theory 60(12), 7616–7626, 2014. Theorem 5.</li>
+<li id="ref-book">Gabriel Peyré. <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.8.8.34"><em>Optimal Transport for Machine Learners</em>, Proposition 8.34</a>, <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.8.8.31">Definition 8.31</a>, and <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.7.3.16">Definition 7.16</a>. Book manuscript.</li>
+<li id="ref-bregman">Lev M. Bregman. <a href="https://doi.org/10.1016/0041-5553(67)90040-7"><em>The Relaxation Method of Finding the Common Point of Convex Sets and Its Application to the Solution of Problems in Convex Programming</em></a>. USSR Computational Mathematics and Mathematical Physics 7(3), 200–217, 1967.</li>
+<li id="ref-kl">Solomon Kullback and Richard A. Leibler. <a href="https://doi.org/10.1214/aoms/1177729694"><em>On Information and Sufficiency</em></a>. Annals of Mathematical Statistics 22(1), 79–86, 1951.</li>
+</ol>
+</article></main>
+<footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Blog</a></div></footer>
+</body>
+</html>

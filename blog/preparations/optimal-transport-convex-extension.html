@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <meta name="description" content="Kantorovich transport is the largest jointly convex lower-semicontinuous extension of a pointwise cost, with a short proof and a two-point envelope experiment.">
+  <title>Optimal transport as a convex extension — Alpha preview — Gabriel Peyré</title>
+  <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/optimal-transport-convex-extension.html">
+  <link rel="stylesheet" href="assets/drafts.css">
+  <script defer src="assets/drafts.js"></script>
+  <script defer src="assets/idea-experiments.js"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+</head>
+<body>
+<header class="draft-header"><div class="wrap">
+  <a class="draft-back" href="index.html">← Forthcoming posts</a>
+  <p class="draft-status">Alpha preview · Work in progress</p>
+  <p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
+  <h1>Optimal transport as a convex extension</h1>
+  <p class="subtitle">A transport plan is a convex decomposition of two distributions into pairs of points.</p>
+  <p class="byline">Gabriel Peyré</p>
+</div></header>
+<main class="wrap"><article class="blog-prose">
+<p>Suppose a cost \(c(x,y)\) tells us how expensive it is to move one point to another. How should we extend it to compare two probability distributions? Optimal transport answers by introducing a coupling and minimizing an average cost. But there is another way to arrive at the same construction: ask for the largest extension compatible with convexity and stability under weak limits.</p>
+<p>This viewpoint makes the transport plan almost inevitable. A coupling records a way to express a pair of distributions as an average of point-pairs, and convexity puts an upper bound on the cost of every such decomposition. The best of those bounds is precisely the Kantorovich value. Savaré and Sodini develop this relaxation approach in a much more general setting <a href="#ref-savare">[1]</a>; the compact probability version is <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.3.3.35">Theorem 3.35 of my book</a> <a href="#ref-book">[2]</a>.</p>
+
+<h2>The two requirements</h2>
+<p>Let \(X,Y\) be compact metric spaces and let \(c:X\times Y\to[0,\infty)\) be continuous. Write \(\mathcal P(X)\) for probability measures on \(X\), and \(\delta_x\) for a unit point mass. We seek a functional \(F(\alpha,\beta)\) which does not exceed \(c(x,y)\) on point masses:</p>
+\[
+  F(\delta_x,\delta_y)\le c(x,y).
+\]
+<p>The first requirement is <em>joint convexity</em>. Randomizing between two pairs of distributions should not cost more than randomizing their costs:</p>
+\[
+  \begin{aligned}
+  F((1-t)\alpha_0+t\alpha_1,\,
+    (1-t)\beta_0+t\beta_1)
+  \le (1-t)F(\alpha_0,\beta_0)+tF(\alpha_1,\beta_1).
+  \end{aligned}
+\]
+<p>The second is <em>joint weak lower semicontinuity</em>: if both marginals converge weakly, the limiting cost cannot exceed their limiting lower cost,</p>
+\[
+  F(\alpha,\beta)\le\liminf_{j\to\infty}F(\alpha_j,\beta_j).
+\]
+<p>Weak convergence means convergence of integrals against every continuous test function. It is the natural topology for approximating a distribution by increasingly fine point clouds on a compact space.</p>
+<p>These convex combinations mix measures; they do not move particles along Wasserstein geodesics. The theorem concerns convexity in the ordinary linear structure of measures, not displacement convexity.</p>
+
+<h2>The maximal extension theorem</h2>
+<p>Let \(\Pi(\alpha,\beta)\) denote the joint probability measures on \(X\times Y\) with the given marginals. Define</p>
+\[
+  T_c(\alpha,\beta)
+  =\min_{\pi\in\Pi(\alpha,\beta)}\int c(x,y)\,d\pi(x,y).
+\]
+<p>Compactness ensures that the minimum exists. The product law is always feasible, so \(T_c\) is finite.</p>
+<p id="theorem-1"><strong>Theorem 1 (the largest convex, weakly lower-semicontinuous extension).</strong> The functional \(T_c\) is jointly convex, jointly weakly lower semicontinuous, and satisfies \(T_c(\delta_x,\delta_y)=c(x,y)\). If a proper functional \(F:\mathcal P(X)\times\mathcal P(Y)\to\mathbb R\cup\{+\infty\}\) has the same convexity and lower-semicontinuity properties and satisfies the Dirac upper bound, then</p>
+\[
+  F(\alpha,\beta)\le T_c(\alpha,\beta)
+  \quad\text{for every }\alpha,\beta.
+\]
+<details class="blog-proof">
+<summary>Proof: mix plans, then approximate any plan by finitely many point-pairs</summary>
+<div class="blog-proof-body">
+<p><em>Step 1: the transport value belongs to the class.</em> If \(\pi_0,\pi_1\) are optimal plans, then \((1-t)\pi_0+t\pi_1\) couples the corresponding mixtures of marginals. Its cost is the mixture of the two optimal costs. Taking the minimum proves joint convexity.</p>
+<p>For lower semicontinuity, let \((\alpha_j,\beta_j)\) converge weakly. Choose a subsequence along which the optimal values realize their lower limit, and optimal plans \(\pi_j\). Compactness of \(\mathcal P(X\times Y)\) gives a further convergent subsequence. The limit \(\pi\) has marginals \(\alpha,\beta\), and continuity of \(c\) gives</p>
+\[
+  T_c(\alpha,\beta)\le\int c\,d\pi
+  =\lim_j T_c(\alpha_j,\beta_j).
+\]
+<p>There is only one coupling between two Dirac masses, namely \(\delta_{(x,y)}\), proving the pointwise equality.</p>
+<p><em>Step 2: every admissible extension is below it.</em> Fix any \(\pi\in\Pi(\alpha,\beta)\). Approximate it weakly by finitely supported probability measures</p>
+\[
+  \pi_j=\sum_k w_{j,k}\delta_{(x_{j,k},y_{j,k})}.
+\]
+<p>Their marginals \(\alpha_j,\beta_j\) converge to \(\alpha,\beta\). Finite convexity and the Dirac bound give</p>
+\[
+  \begin{aligned}
+  F(\alpha_j,\beta_j)
+  &\le\sum_k w_{j,k}F(\delta_{x_{j,k}},\delta_{y_{j,k}})\\
+  &\le\sum_k w_{j,k}c(x_{j,k},y_{j,k})
+   =\int c\,d\pi_j.
+  \end{aligned}
+\]
+<p>Lower semicontinuity of \(F\) and continuity of the cost integral imply \(F(\alpha,\beta)\le\int c\,d\pi\). Minimize over \(\pi\). \(\square\)</p>
+</div></details>
+<p>The central identity is the barycentric representation</p>
+\[
+  (\alpha,\beta)=\int_{X\times Y}(\delta_x,\delta_y)\,d\pi(x,y).
+\]
+<p>There are generally many ways to make this decomposition. Convexity bounds \(F\) by the average pointwise cost of <em>each</em> one, so it bounds \(F\) by the smallest of them. Lower semicontinuity is what lets finite decompositions control general distributions.</p>
+
+<h2>A complete example on two points</h2>
+<p>Take \(X=Y=\{0,1\}\), with cost \(c(x,y)=|x-y|\). The squared cost is the same on this two-point space. Write</p>
+\[
+  \alpha_a=(1-a)\delta_0+a\delta_1,
+  \qquad
+  \beta_b=(1-b)\delta_0+b\delta_1.
+\]
+<p id="proposition-1"><strong>Proposition 1 (the convex roof over a square).</strong> For \(a,b\in[0,1]\),</p>
+\[
+  T_c(\alpha_a,\beta_b)=|a-b|.
+\]
+<details class="blog-proof">
+<summary>Proof: only the imbalance must cross</summary>
+<div class="blog-proof-body">
+<p>Any coupling satisfies \(\pi_{10}-\pi_{01}=a-b\). Its cost is \(\pi_{10}+\pi_{01}\), hence at least \(|a-b|\). If \(a\ge b\), choose</p>
+\[
+  \pi_{00}=1-a,\quad \pi_{11}=b,\quad
+  \pi_{10}=a-b,\quad \pi_{01}=0.
+\]
+<p>This has the prescribed marginals and cost \(a-b\). The other case is symmetric. \(\square\)</p>
+</div></details>
+<p>The four Dirac pairs are the corners of the square of parameters \((a,b)\). The equal-point corners have cost \(0\), and the other two have cost \(1\). The V-shaped surface \(|a-b|\) is the largest convex function lying below those four heights.</p>
+<p>This also illustrates why one should state the theorem for the transport <em>cost</em>. On these two points \(W_2^2=|a-b|\), whereas \(W_2=\sqrt{|a-b|}\) is not convex in the marginals: along \(b=0\), it is a strictly concave function of \(a\).</p>
+
+<h2>Why “largest” is essential</h2>
+<p>Convexity, continuity, and agreement on Dirac masses do not uniquely determine a functional. On compact Euclidean supports, let</p>
+\[
+  F_\varepsilon(\alpha,\beta)
+  =T_c(\alpha,\beta)
+   -\varepsilon\bigl(\operatorname{Var}(\alpha)+\operatorname{Var}(\beta)\bigr),
+\]
+<p>where \(\operatorname{Var}(\alpha)=\int|x|^2\,d\alpha-|\int x\,d\alpha|^2\). Variance is concave in a law, so its negative is convex. It is also weakly continuous on compact supports. Thus \(F_\varepsilon\) is another jointly convex lower-semicontinuous functional with the same values on every Dirac pair, and it is smaller wherever the subtracted variance is positive.</p>
+<p>If one also wants nonnegative values, use \(\max(F_\varepsilon,0)\). The maximum of two convex lower-semicontinuous functions has the same properties, and the Dirac values remain unchanged because \(c\ge0\).</p>
+<figure>
+  <iframe class="idea-experiment" data-experiment="envelope" title="Two-point optimal transport as a convex envelope" src="assets/ot-lab/index.html?topic=envelope" loading="lazy"></iframe>
+  <figcaption>Move the two marginal probabilities across the square. The transport surface is \(|a-b|\); the section at the current \(b\) makes its kink visible. The comparison extension is \(\max(0,|a-b|-0.6[a(1-a)+b(1-b)])\). It is convex and agrees at all four Dirac corners, yet can be strictly smaller inside. Both formulas are evaluated exactly.</figcaption>
+</figure>
+
+<h2>Couplings as certificates of convex decomposition</h2>
+<p>Assign cost \(c(x,y)\) to the pairs \((\delta_x,\delta_y)\), and \(+\infty\) to every other pair of laws. Taking the convex lower-semicontinuous envelope of this function produces \(T_c\). On finite spaces, this is the familiar operation of taking the lower convex roof of finitely many points. On general compact spaces, weak limits complete that construction.</p>
+<p>The coupling is therefore more than an auxiliary variable introduced to relax a matching constraint. It is the certificate of a convex decomposition. Its marginal constraints say exactly that the decomposition averages to the two distributions we started with. This is one reason linear programming appears so naturally in optimal transport <a href="#ref-computational">[3]</a>.</p>
+
+<h2>The dual potentials are the supporting affine functions</h2>
+<p>This picture also explains Kantorovich duality. A continuous affine function of the two marginals has the form</p>
+\[
+  L_{u,v}(\alpha,\beta)=\int u\,d\alpha+\int v\,d\beta,
+\]
+<p>with any constant absorbed into \(u\). It lies below the pointwise cost exactly when</p>
+\[
+  u(x)+v(y)\le c(x,y)\quad\text{for all }x,y.
+\]
+<p>The standard supporting-hyperplane theorem for closed convex functions then identifies the convex envelope with the supremum of these affine minorants:</p>
+\[
+  T_c(\alpha,\beta)
+  =\sup_{\substack{u\in C(X),\,v\in C(Y)\\u(x)+v(y)\le c(x,y)}}
+  \left(\int u\,d\alpha+\int v\,d\beta\right).
+\]
+<details class="blog-proof">
+<summary>Why the envelope gives exactly this family of dual functions</summary>
+<div class="blog-proof-body">
+<p>Embed the probability measures in the vector spaces of finite signed measures, with the weak topologies induced by continuous test functions. Extend \(T_c\) by \(+\infty\) outside \(\mathcal P(X)\times\mathcal P(Y)\). Its epigraph is closed and convex by Theorem 1. The supporting-hyperplane representation expresses it as the supremum of its continuous affine minorants.</p>
+<p>Continuous linear functionals for these weak topologies are integrals against \(u\in C(X)\) and \(v\in C(Y)\). On probability measures, an affine constant can be absorbed into \(u\). A minorant must obey the Dirac inequalities \(u(x)+v(y)\le c(x,y)\). Conversely, every such pair is a minorant, because integrating this inequality against any coupling gives \(L_{u,v}(\alpha,\beta)\le\int c\,d\pi\), and hence \(L_{u,v}\le T_c\).</p>
+<p>Thus the supporting affine functions are exactly the admissible dual potentials. This argument invokes the general supporting-hyperplane theorem; the elementary maximal-extension proof above does not need it.</p>
+</div></details>
+<p>Savaré and Sodini use this perspective to obtain duality for more general spaces and lower-semicontinuous costs. Their formulation uses sublinearity on finite nonnegative measures; our compact probability version removes that extra machinery while preserving the central idea <a href="#ref-savare">[1]</a>. For the classical theory of transport duality, see also <a href="#ref-villani">[4]</a>.</p>
+
+<h2>References</h2>
+<ol class="references">
+  <li id="ref-savare">Giuseppe Savaré and Giacomo Enrico Sodini. <a href="https://cvgmt.sns.it/paper/5594/"><em>A Simple Relaxation Approach to Duality for Optimal Transport Problems in Completely Regular Spaces</em></a>. <em>Journal of Convex Analysis</em> 29(1), 1–12, 2022, Theorem 4.4.</li>
+  <li id="ref-book">Gabriel Peyré. <a href="https://arxiv.org/abs/2505.06589"><em>Optimal Transport for Machine Learners</em></a>, 2025–2026. <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.3.3.35">Theorem 3.35, p. 59</a>.</li>
+  <li id="ref-computational">Gabriel Peyré and Marco Cuturi. <a href="https://arxiv.org/abs/1803.00567"><em>Computational Optimal Transport</em></a>. <em>Foundations and Trends in Machine Learning</em> 11(5–6), 355–607, 2019.</li>
+  <li id="ref-villani">Cédric Villani. <a href="https://doi.org/10.1090/gsm/058"><em>Topics in Optimal Transportation</em></a>. Graduate Studies in Mathematics 58, American Mathematical Society, 2003.</li>
+</ol>
+</article></main>
+<footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Blog</a></div></footer>
+</body>
+</html>

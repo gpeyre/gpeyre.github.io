@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <meta name="description" content="Barycentric weak transport charges only conditional-mean displacements. Convex order turns it into a Wasserstein projection, with a unique map and a certified numerical experiment.">
+  <title>Weak transport and mean-preserving spreads — Alpha preview — Gabriel Peyré</title>
+  <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/weak-transport-and-convex-order.html">
+  <link rel="stylesheet" href="assets/drafts.css">
+  <script defer src="assets/drafts.js"></script>
+  <script defer src="assets/idea-experiments.js"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+</head>
+<body>
+<header class="draft-header"><div class="wrap">
+  <a class="draft-back" href="index.html">← Forthcoming posts</a>
+  <p class="draft-status">Alpha preview · Work in progress</p>
+  <p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
+  <h1>Weak transport and mean-preserving spreads</h1>
+  <p class="subtitle">Move the conditional means, then let the mass spread for free.</p>
+  <p class="byline">Gabriel Peyré</p>
+</div></header>
+<main class="wrap"><article class="blog-prose">
+<p>Imagine splitting a particle at the origin into two equal pieces, one sent to \(-1\), the other to \(+1\). Ordinary quadratic optimal transport charges one unit of cost. Yet the average destination has not moved at all.</p>
+<p>Barycentric weak transport measures precisely this average displacement. It distinguishes moving a population’s conditional means from spreading mass around those means. This leads to a beautiful connection with convex order and martingales: first transport to a suitable intermediate distribution, then apply a mean-preserving spread. The construction belongs to the theory of weak transport <a href="#ref-general">[1]</a>; its projection structure is developed by Gozlan and Juillet <a href="#ref-gozlan">[2]</a> and Backhoff-Veraguas, Beiglböck, and Pammer <a href="#ref-backhoff">[3]</a>.</p>
+<aside class="note"><p>In <em>Optimal Transport for Machine Learners</em> <a href="#ref-book">[4]</a>, the relevant results are <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.12.6.33">Proposition 12.33, printed p. 273</a>, on barycentric projection, and <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.12.6.44">Proposition 12.44, printed p. 278</a>, on the Brenier–Strassen projection, in §12.6.</p></aside>
+
+<h2>One coupling, two costs</h2>
+<p>Let \(\alpha,\beta\in\mathcal P_2(\mathbb R^d)\): probability measures with finite second moments. A coupling \(\pi\in\Pi(\alpha,\beta)\) is a joint distribution of \((X,Y)\) with these marginals. Disintegrate it as \(\pi(dx,dy)=\alpha(dx)\pi_x(dy)\). Its <em>barycentric projection</em> is</p>
+\[
+ T_\pi(x)=\int y\,d\pi_x(y)=\mathbb E[Y\mid X=x].
+\]
+<p>The two optimization problems are</p>
+\[
+ \begin{aligned}
+ W_2(\alpha,\beta)^2
+ &=\min_{\pi\in\Pi(\alpha,\beta)}\mathbb E|X-Y|^2,\\
+ V(\alpha,\beta)
+ &=\min_{\pi\in\Pi(\alpha,\beta)}
+                 \mathbb E|X-\mathbb E[Y\mid X]|^2.
+ \end{aligned}
+\]
+<p>The second is the quadratic barycentric weak transport cost. We write \(V\), rather than a distance symbol, because it is generally asymmetric and can vanish for different measures.</p>
+<p>Conditional expectation is an orthogonal projection in \(L^2\). Expanding around \(T_\pi(X)\) gives</p>
+\[
+ \mathbb E|X-Y|^2
+ =\mathbb E|X-T_\pi(X)|^2
+   +\mathbb E|Y-T_\pi(X)|^2.
+\]
+<p>The cross term vanishes after conditioning on \(X\). Weak transport pays for the first term and ignores the conditional variance in the second. In particular \(0\le V(\alpha,\beta)\le W_2(\alpha,\beta)^2\).</p>
+
+<h2>Convex order: a precise notion of being more spread out</h2>
+<p>Write \(\eta\preceq_{\mathrm{cx}}\beta\) if</p>
+\[
+ \int\varphi\,d\eta\le\int\varphi\,d\beta
+ \quad\text{for every finite convex }\varphi:\mathbb R^d\to\mathbb R.
+\]
+<p>The integrals may equal \(+\infty\); their negative parts are integrable because a finite convex function has an affine lower bound and the laws have finite first moments. Applying the definition to affine functions and their negatives forces the means to agree. Every convex penalty regards \(\beta\) as at least as spread out as \(\eta\).</p>
+<p>Strassen’s theorem <a href="#ref-strassen">[5]</a> gives the probabilistic equivalent:</p>
+\[
+ \eta\preceq_{\mathrm{cx}}\beta
+ \quad\Longleftrightarrow\quad
+ \exists(Z,Y):\
+ Z\sim\eta,\ Y\sim\beta,\ \mathbb E[Y\mid Z]=Z.
+\]
+<p>The pair \((Z,Y)\) is a one-step martingale. The forward-looking interpretation is literal: once \(Z\) is known, the later position \(Y\) has mean \(Z\). Necessity is just conditional Jensen. Sufficiency is the substantive part of Strassen’s theorem.</p>
+<details class="blog-proof">
+<summary>For finite clouds, sufficiency is a short linear-programming argument</summary>
+<div class="blog-proof-body">
+<p>Let \(\eta=\sum_i a_i\delta_{z_i}\) and \(\beta=\sum_j b_j\delta_{y_j}\), with positive weights. A martingale plan is a nonnegative matrix \(P\) satisfying row sums \(a\), column sums \(b\), and \(\sum_jP_{ij}(y_j-z_i)=0\) for every \(i\).</p>
+<p>If these linear constraints were infeasible, the finite-dimensional separation theorem (Farkas’ lemma) would provide numbers \(u_i,v_j\) and vectors \(h_i\) with</p>
+\[
+ \begin{aligned}
+ u_i+v_j+h_i\cdot(y_j-z_i)&\ge0
+       &&\text{for every }i,j,\\
+ \sum_i a_i u_i+\sum_j b_jv_j&\lt0.
+ \end{aligned}
+\]
+<p>But \(\varphi(y)=\max_i\{-u_i-h_i\cdot(y-z_i)\}\) is convex, \(v_j\ge\varphi(y_j)\), and \(\varphi(z_i)\ge-u_i\). Therefore</p>
+\[
+ \sum_i a_i u_i+\sum_j b_jv_j
+ \ge-\sum_i a_i\varphi(z_i)+\sum_j b_j\varphi(y_j)
+ \ge0,
+\]
+<p>contradicting the strict inequality. Thus convex order ensures a feasible martingale plan. \(\square\)</p>
+</div>
+</details>
+<p>Equal mean and a larger covariance are necessary for convex order, but are not sufficient for general distributions. For Gaussian laws with the same mean they are sufficient: adding an independent centered Gaussian with the covariance difference constructs the required martingale coupling. Counting target particles, or merely looking at the size of a cloud, is not a test for convex order.</p>
+
+<h2>A Wasserstein projection onto a convex-order constraint</h2>
+<p id="theorem-1"><strong>Theorem 1 (the weak transport projection).</strong> For all \(\alpha,\beta\in\mathcal P_2(\mathbb R^d)\),</p>
+\[
+ V(\alpha,\beta)
+ =\min_{\eta\preceq_{\mathrm{cx}}\beta}W_2(\alpha,\eta)^2.
+\]
+<p>Both minima are attained. The weak optimizer has a unique barycentric map \(T_*\), up to \(\alpha\)-almost-everywhere equality, although its coupling need not be unique. The minimizing intermediate law is unique and equals \(\eta_*=(T_*)_\#\alpha\); here \(T_\#\alpha\) denotes the law of \(T(X)\) when \(X\sim\alpha\). In particular,</p>
+\[
+ V(\alpha,\beta)=0
+ \quad\Longleftrightarrow\quad
+ \alpha\preceq_{\mathrm{cx}}\beta.
+\]
+<p>The geometric picture is: move \(\alpha\) to the closest law \(\eta_*\) that can spread into \(\beta\) without changing conditional means.</p>
+<details class="blog-proof">
+<summary>Proof: conditional Jensen in one direction, a martingale in the other</summary>
+<div class="blog-proof-body">
+<p><em>From a plan to an intermediate law.</em> For a feasible \((X,Y)\), set \(Z=\mathbb E[Y\mid X]\) and \(\eta=\operatorname{Law}(Z)\). Jensen gives \(\eta\preceq_{\mathrm{cx}}\beta\). Since \((X,Z)\) is a coupling,</p>
+\[
+ \inf_{\eta\preceq_{\mathrm{cx}}\beta}W_2(\alpha,\eta)^2
+ \le W_2(\alpha,\operatorname{Law}(Z))^2
+ \le\mathbb E|X-Z|^2.
+\]
+<p><em>From an intermediate law to a plan.</em> Given \(\eta\preceq_{\mathrm{cx}}\beta\), couple \(X\sim\alpha\) and \(Z\sim\eta\) optimally. By Strassen, there is a kernel from \(Z\) to \(Y\sim\beta\) with conditional mean \(Z\). Generate \(Y\) from this kernel independently of \(X\) conditional on \(Z\). Then \(\mathbb E[Y\mid X]=\mathbb E[Z\mid X]\), so</p>
+\[
+ V(\alpha,\beta)
+ \le\mathbb E|X-\mathbb E[Z\mid X]|^2
+ \le\mathbb E|X-Z|^2
+ =W_2(\alpha,\eta)^2.
+\]
+<p>Taking the infimum proves equality of the values.</p>
+<details class="blog-proof">
+<summary>Attainment: why a minimizing sequence has a limit</summary>
+<div class="blog-proof-body">
+<p>The set \(\Pi(\alpha,\beta)\) is weakly compact. The barycentric objective has the representation</p>
+\[
+ \int|x-T_\pi(x)|^2\,d\alpha(x)
+ =
+ \sup_{h\in C_b(\mathbb R^d;\mathbb R^d)}
+ \int\{2h(x)\cdot(x-y)-|h(x)|^2\}\,d\pi.
+\]
+<p>Indeed, this is the usual identity \(\|v\|_2^2=\sup_h(2\langle h,v\rangle-\|h\|_2^2)\) in \(L^2(\alpha)\); bounded continuous vector fields are dense in that space. For fixed \(h\), the integral on the right is continuous on the coupling set: truncate \(x,y\), then use the fixed marginals to control their first-moment tails uniformly. The objective is therefore a supremum of continuous functions, hence lower semicontinuous.</p>
+<p>A weak optimizer \(\pi_*\) exists. The two inequalities already proved show that \((T_{\pi_*})_\#\alpha\) attains the projection minimum too.</p>
+</div>
+</details>
+<p><em>Uniqueness of the map.</em> If \(\pi_0,\pi_1\) are weak optimizers with barycentric maps \(T_0,T_1\), their average is feasible and has map \((T_0+T_1)/2\). The squared-norm identity gives its cost as</p>
+\[
+ V(\alpha,\beta)-\frac14\int|T_0-T_1|^2\,d\alpha.
+\]
+<p>Minimality forces \(T_0=T_1\) almost everywhere.</p>
+<p><em>Uniqueness of the intermediate law.</em> If \(\eta\) is any minimizing intermediate law, the glued construction above has equality in conditional Jensen. Consequently \(Z=\mathbb E[Z\mid X]=T_*(X)\) almost surely, so \(\eta=(T_*)_\#\alpha\).</p>
+<p>Finally, a zero-cost optimizer satisfies \(\mathbb E[Y\mid X]=X\), exactly the martingale condition. Conversely a martingale plan has zero weak cost. Strassen gives the stated equivalence. \(\square\)</p>
+</div>
+</details>
+<p>The full Brenier–Strassen theorem goes further: \(T_*\) can be represented, \(\alpha\)-almost everywhere, by the gradient of a convex \(C^1\) function whose gradient is \(1\)-Lipschitz <a href="#ref-gozlan">[2]</a>, <a href="#ref-backhoff">[3]</a>. That regularity is a deeper structural result; the projection identity and uniqueness above already follow from conditional expectations and convexity.</p>
+
+<h2>Projecting an OT plan is a different operation</h2>
+<p>One can also start with an <em>ordinary</em> quadratic OT optimizer \(\pi_{\mathrm{OT}}\) and take its barycentric map \(T_{\mathrm{OT}}\). This map solves OT from \(\alpha\) to its own output law \((T_{\mathrm{OT}})_\#\alpha\), but it does not usually solve the weak problem.</p>
+<p id="proposition-1"><strong>Proposition 1 (optimality to the barycentric output).</strong> If \(\pi\) minimizes ordinary quadratic transport from \(\alpha\) to \(\beta\), then</p>
+\[
+ W_2(\alpha,(T_\pi)_\#\alpha)^2
+ =\int|x-T_\pi(x)|^2\,d\alpha(x).
+\]
+<details class="blog-proof">
+<summary>Proof: a cheaper first leg would make the original plan cheaper</summary>
+<div class="blog-proof-body">
+<p>For \((X,Y)\sim\pi\), put \(Z=T_\pi(X)\). The tower property gives \(\mathbb E[Y\mid Z]=Z\). If a coupling \((X',Z')\) between \(\alpha\) and \(\operatorname{Law}(Z)\) had a smaller quadratic cost, glue it to the conditional law of \(Y\) given \(Z\), independently of \(X'\) conditional on \(Z'\). The resulting \(Y'\) still has law \(\beta\), and</p>
+\[
+ \mathbb E|X'-Y'|^2
+ =\mathbb E|X'-Z'|^2+\mathbb E|Y-Z|^2.
+\]
+<p>The original cost is \(\mathbb E|X-Z|^2+\mathbb E|Y-Z|^2\). A cheaper first leg would contradict optimality of \(\pi\). \(\square\)</p>
+</div>
+</details>
+<p>The qualification “ordinary OT optimizer” matters. A general coupling need not have an optimal barycentric map. Also, the output law is usually different from \(\beta\); for a source supported on \(n\) points it has at most \(n\) atoms. See the <a href="/blog/2026/10/10/barycentric-projection-map/">post on barycentric projection</a> for this distinction.</p>
+<p>Here is a concrete separation between the two optimizations. Take</p>
+\[
+ \alpha=\tfrac12(\delta_{-1/2}+\delta_{1/2}),
+ \qquad
+ \beta=\tfrac12(\delta_{-1}+\delta_1).
+\]
+<p>Ordinary OT pairs each point with the endpoint of the same sign. Its barycentric map is \(T_{\mathrm{OT}}(x)=2x\), and its barycentric cost is \(1/4\). But the feasible plan, with rows ordered \(-1/2,1/2\) and columns ordered \(-1,1\),</p>
+\[
+ P=\begin{pmatrix}3/8&1/8\\1/8&3/8\end{pmatrix}
+\]
+<p>has barycenters \(-1/2,1/2\), so \(T_*(x)=x\) and \(V(\alpha,\beta)=0\). It accepts additional random motion to keep the conditional means fixed. Reversing the measures costs \(V(\beta,\alpha)=1/4\), since the conditional mean must lie in \([-1/2,1/2]\). This also exhibits the asymmetry.</p>
+
+<h2>A convex quadratic program for finite clouds</h2>
+<p>Let \(\alpha=\sum_{i=1}^n a_i\delta_{x_i}\) and \(\beta=\sum_{j=1}^m b_j\delta_{y_j}\), with positive weights summing to one. A plan is a nonnegative matrix with row sums \(a\) and column sums \(b\), denoted \(P\in\Pi(a,b)\). Its barycenters and weak objective are</p>
+\[
+ z_i(P)=\frac1{a_i}\sum_j P_{ij}y_j,
+ \qquad
+ \mathcal F(P)=\sum_i a_i|x_i-z_i(P)|^2.
+\]
+<p>The map \(P\mapsto z(P)\) is linear, so \(\mathcal F\) is convex quadratic. It need not be strictly convex in \(P\), but it is strictly convex in the vector of barycenters. This explains how several plans can give the same unique minimizing map.</p>
+<p>Frank–Wolfe solves a succession of ordinary linear transport problems <a href="#ref-jaggi">[6]</a>. At a feasible \(P\), its linearized cost is</p>
+\[
+ C_{ij}=\frac{\partial\mathcal F}{\partial P_{ij}}
+       =2(z_i(P)-x_i)\cdot y_j.
+\]
+<p>Find \(S\in\arg\min_{Q\in\Pi(a,b)}\langle C,Q\rangle\), then move towards \(S\). With \(d_i=z_i(S)-z_i(P)\), the exact quadratic line search is</p>
+\[
+ \gamma=
+ \operatorname{clip}_{[0,1]}
+ \frac{-\sum_i a_i(z_i(P)-x_i)\cdot d_i}
+      {\sum_i a_i|d_i|^2},
+ \qquad P^+=P+\gamma(S-P).
+\]
+<p>Take \(\gamma=0\) when the denominator is zero. Every iterate remains feasible.</p>
+<p id="proposition-2"><strong>Proposition 2 (a certificate for both cost and map).</strong> The Frank–Wolfe gap \(g=\langle C,P-S\rangle\) bounds</p>
+\[
+ \sum_i a_i|z_i(P)-z_i^*|^2
+ \le\mathcal F(P)-\mathcal F_*
+ \le g.
+\]
+<details class="blog-proof">
+<summary>Proof: first-order convexity and the geometry of projection</summary>
+<div class="blog-proof-body">
+<p>Convexity gives \(\mathcal F(P)-\mathcal F(P_*)\le\langle C,P-P_*\rangle\). Since \(S\) minimizes the linearized objective, this is at most \(\langle C,P-S\rangle=g\).</p>
+<p>For the other inequality, feasible barycenter vectors form a convex set. At its minimizer \(z^*\), the directional derivative towards any feasible \(z\) is nonnegative:</p>
+\[
+ \sum_i a_i(z_i^*-x_i)\cdot(z_i-z_i^*)\ge0.
+\]
+<p>Expand \(\sum_i a_i|z_i-x_i|^2\) around \(z^*\). The cross term is nonnegative, leaving at least \(\sum_i a_i|z_i-z_i^*|^2\) above the minimum. \(\square\)</p>
+</div>
+</details>
+<p>A small gap thus certifies not just the objective but the root-mean-square error of the displayed endpoints, bounded by \(\sqrt g\). The matrix itself can remain nonunique.</p>
+
+<h2>Numerical experimentation</h2>
+<figure>
+  <iframe class="idea-experiment" data-experiment="weak" title="Ordinary transport, its barycentric projection, and the weak optimal transport map" src="assets/ot-lab/index.html?topic=weak" loading="lazy"></iframe>
+  <figcaption>Drag red source points or blue target points, and change the two cloud sizes. The left panel shows an ordinary quadratic OT plan; the center shows its conditional means; the right recomputes the weak optimal barycentric map. Diamonds are mean destinations, not selected target atoms. The displayed weak gap bounds objective error and squared RMS endpoint error; use “Refine weak solution” to reduce it. Uniform masses are recomputed when cardinalities change.</figcaption>
+</figure>
+<p>The ordinary problem uses a minimum-cost-flow solver. The weak problem uses feasible Frank–Wolfe steps, including away steps to remove obsolete components from its current mixture of plans. The ordinary Frank–Wolfe gap remains the certificate. A finite iteration budget, especially while dragging, can leave a visible residual gap; the plot does not silently equate that iterate with the exact optimizer.</p>
+<p>A useful check is the lower bound</p>
+\[
+ V(\alpha,\beta)\ge|m_\alpha-m_\beta|^2,
+ \qquad m_\alpha=\int x\,d\alpha(x).
+\]
+<p>It follows from Jensen because \(\int T_\pi\,d\alpha=m_\beta\). Dragging changes the centroids without automatic recentering. Even when the centroids agree, weak cost need not vanish: finite clouds with the same mean need not be ordered in convex order.</p>
+
+<h2>Why the intermediate law is useful</h2>
+<p>Weak transport separates a deterministic correction from residual uncertainty. It asks which conditional means can be assigned to source points while retaining exactly the prescribed target distribution. That is a different modeling question from making every individual displacement small.</p>
+<p>The same convex-order constraint appears in martingale optimal transport and model-independent finance: distributions at two times must be compatible with a martingale, while one optimizes over the remaining joint dependence <a href="#ref-finance">[7]</a>. Weak transport turns failure of that compatibility into an optimization problem: move the initial law as little as possible until a mean-preserving spread becomes feasible.</p>
+<p>The important distinction is between the law of the conditional means and the final law. The first is selected by an optimal map; the second may require splitting every particle. Keeping both visible makes the term “weak” precise.</p>
+
+<h2>References</h2>
+<ol class="references">
+  <li id="ref-general">Nathael Gozlan, Cyril Roberto, Paul-Marie Samson, and Prasad Tetali. <a href="https://arxiv.org/abs/1412.7480"><em>Kantorovich duality for general transport costs and applications</em></a>. Journal of Functional Analysis 273(11), 3327–3405, 2017.</li>
+  <li id="ref-gozlan">Nathael Gozlan and Nicolas Juillet. <a href="https://arxiv.org/abs/1808.02681"><em>On a mixture of Brenier and Strassen theorems</em></a>. Proceedings of the London Mathematical Society 120(3), 434–463, 2020.</li>
+  <li id="ref-backhoff">Julio Backhoff-Veraguas, Mathias Beiglböck, and Gudmund Pammer. <a href="https://arxiv.org/abs/1809.05893"><em>Existence, duality, and cyclical monotonicity for weak transport costs</em></a>. Calculus of Variations and Partial Differential Equations 58, article 203, 2019.</li>
+  <li id="ref-book">Gabriel Peyré. <a href="https://arxiv.org/abs/2505.06589"><em>Optimal Transport for Machine Learners</em></a>, 2025–2026. <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.12.6.44">§12.6, Propositions 12.33 and 12.44</a>.</li>
+  <li id="ref-strassen">Volker Strassen. <a href="https://doi.org/10.1214/aoms/1177700153"><em>The Existence of Probability Measures with Given Marginals</em></a>. Annals of Mathematical Statistics 36(2), 423–439, 1965.</li>
+  <li id="ref-jaggi">Martin Jaggi. <a href="https://proceedings.mlr.press/v28/jaggi13.html"><em>Revisiting Frank-Wolfe: Projection-Free Sparse Convex Optimization</em></a>. ICML, PMLR 28(1), 427–435, 2013.</li>
+  <li id="ref-finance">Mathias Beiglböck, Pierre Henry-Labordère, and Friedrich Penkner. <a href="https://arxiv.org/abs/1106.5929"><em>Model-independent bounds for option prices: a mass transport approach</em></a>. Finance and Stochastics 17, 477–501, 2013.</li>
+</ol>
+</article></main>
+<footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Blog</a></div></footer>
+</body>
+</html>

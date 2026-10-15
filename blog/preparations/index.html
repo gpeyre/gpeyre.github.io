@@ -13,12 +13,38 @@
 <header class="draft-header"><div class="wrap"><a class="draft-back" href="/blog/">← Blog</a><p class="draft-status">Alpha previews · Work in progress</p><h1>Forthcoming posts</h1><p class="byline">Gabriel Peyré</p></div></header>
 <main class="wrap">
 <p>These forthcoming posts are shared as <strong>alpha previews</strong>. Their content may evolve before the finished articles appear on the blog.</p>
-<div class="draft-grid">
+<nav class="preview-topic-nav" aria-label="Browse forthcoming posts by topic">
+<a href="#transport">Optimal transport</a><a href="#flows">Flows and geometry</a><a href="#probability">Probability and sampling</a><a href="#measures">Functions of measures</a><a href="#optimization">Optimization and approximation</a>
+</nav>
+<section class="preview-group" id="transport"><h2>Optimal transport</h2><div class="draft-grid">
+<a class="draft-card" href="monge-gap-inversions.html"><small>Ordering &amp; learning</small><h2>The Monge gap and inversions</h2><p>Sorting reveals an exact sum of hinge penalties, turning optimality of a map into a convex regression regularizer.</p></a>
+<a class="draft-card" href="composing-optimal-transport-maps.html"><small>Maps &amp; matrices</small><h2>Composing optimal maps</h2><p>Two optimal steps can lose optimality. Symmetric matrices reveal the difference between monotonicity and being a convex gradient.</p></a>
+<a class="draft-card" href="wasserstein-distance-without-quantiles.html"><small>One-dimensional transport</small><h2>Wasserstein distance without quantiles</h2><p>A triangle-area identity expresses quadratic transport directly through cumulative distribution functions.</p></a>
+<a class="draft-card" href="noncrossing-matchings-catalan.html"><small>Geometry &amp; combinatorics</small><h2>Noncrossing is not enough</h2><p>Uncrossing improves Euclidean length, but a Catalan-sized family of matchings still remains to explore.</p></a>
+<a class="draft-card" href="when-independence-is-optimal.html"><small>Couplings &amp; interactions</small><h2>When is independence optimal?</h2><p>An independent plan is optimal exactly when the cost separates on the supports. A two-by-two cycle explains why.</p></a>
+<a class="draft-card" href="weak-transport-and-convex-order.html"><small>Conditional means</small><h2>Weak transport and convex order</h2><p>Pay only for the movement of conditional means, and discover a projection onto mean-preserving spreads.</p></a>
+<a class="draft-card" href="gaussian-gromov-wasserstein-counterexample.html"><small>Gromov–Wasserstein</small><h2>Gaussian marginals, non-Gaussian optimizer</h2><p>A radial coupling beats every jointly Gaussian coupling by exploiting a mixed fourth moment.</p></a>
+</div></section>
+<section class="preview-group" id="flows"><h2>Flows and geometry</h2><div class="draft-grid">
+<a class="draft-card" href="autonomous-wasserstein-statistics.html"><small>Moment closure</small><h2>Autonomous Wasserstein statistics</h2><p>When does one observable obey a closed scalar ODE? An affine squared-gradient identity gives the exact answer.</p></a>
+<a class="draft-card" href="wasserstein-geodesics-density-caps.html"><small>Displacement convexity</small><h2>Geodesics and density caps</h2><p>Transport straight lines preserve a constant upper density bound, explaining when a hard congestion constraint is inactive.</p></a>
+<a class="draft-card" href="energy-distance-wasserstein-convexity.html"><small>Gradient flows</small><h2>Energy distance and ordering</h2><p>Quantiles expose convexity hidden in an attractive–repulsive energy, while a two-atom example shows its failure in the plane.</p></a>
+</div></section>
+<section class="preview-group" id="probability"><h2>Probability and sampling</h2><div class="draft-grid">
+<a class="draft-card" href="central-limit-wasserstein-constants.html"><small>Central limit theorem</small><h2>One Gaussian limit, two rates</h2><p>Symmetry removes skewness but cannot remove a lattice: Bernoulli and uniform sums have different Wasserstein asymptotics.</p></a>
+<a class="draft-card" href="optimal-particles-versus-random-sampling.html"><small>Quantization</small><h2>Carefully placed versus random particles</h2><p>Quantile-bin averages give the best equal-weight particles, with an exact comparison to random sampling on an interval.</p></a>
+<a class="draft-card" href="divergences-and-bregman-geometry.html"><small>Information geometry</small><h2>Two geometries of divergence</h2><p>Density ratios and convex tangent gaps define different families. Their overlap singles out relative entropy.</p></a>
+</div></section>
+<section class="preview-group" id="measures"><h2>Functions of measures</h2><div class="draft-grid">
+<a class="draft-card" href="bernstein-polynomials-on-measures.html"><small>Constructive approximation</small><h2>Bernstein polynomials on measures</h2><p>Sample, evaluate, average: an explicit polynomial approximation with a uniform convergence proof and dimension-dependent rates.</p></a>
 <a class="draft-card" href="in-context-composition.html"><small>Transformers &amp; transport</small><h2>In-context composition</h2><p>Move the query and its context together: a lifted composition rule connecting transformer layers, particle dynamics, and the continuity equation.</p></a>
+<a class="draft-card" href="wasserstein-polynomials.html"><small>Functions of measures</small><h2>Universality of Wasserstein polynomials</h2><p>Stone–Weierstrass on probability measures, interaction features, and the passage from point clouds to operators.</p></a>
+</div></section>
+<section class="preview-group" id="optimization"><h2>Optimization and approximation</h2><div class="draft-grid">
+<a class="draft-card" href="optimal-transport-convex-extension.html"><small>Convex relaxation</small><h2>Transport as a convex extension</h2><p>Start with costs between points. Kantorovich transport is their largest convex, lower-semicontinuous extension to distributions.</p></a>
 <a class="draft-card" href="konno-quadratic-relaxation.html"><small>Optimization</small><h2>Konno’s quadratic relaxation</h2><p>Duplicate the variable, uncover the curvature condition for exactness, and connect the construction to Gromov–Wasserstein transport.</p></a>
 <a class="draft-card" href="dc-programming-toland-duality.html"><small>Convex duality</small><h2>DC programming and Toland duality</h2><p>A short duality proof, the DC algorithm, and how a convex dual can reveal global solutions of a nonconvex problem.</p></a>
-<a class="draft-card" href="wasserstein-polynomials.html"><small>Functions of measures</small><h2>Universality of Wasserstein polynomials</h2><p>Stone–Weierstrass on probability measures, interaction features, and the passage from point clouds to operators.</p></a>
 <a class="draft-card" href="convex-max-softmax-approximation.html"><small>Approximation theory</small><h2>Convex approximation by max and softmax</h2><p>Supporting planes, approximation rates, temperature and weight scales, with interactive one- and two-dimensional examples.</p></a>
-</div>
+</div></section>
 </main><footer class="draft-footer"><div class="wrap">Alpha previews · The finished articles will appear in the <a href="/blog/">blog</a> and its <a href="/blog/rss.xml">RSS</a> / <a href="/blog/atom.xml">Atom</a> feeds.</div></footer>
 </body></html>

@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <meta name="description" content="A triangle-area proof of the exact one-dimensional quadratic Wasserstein formula using only CDFs, with numerical quadrature and an unbiased estimator.">
+  <title>Wasserstein distance without quantiles — Alpha preview — Gabriel Peyré</title>
+  <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/wasserstein-distance-without-quantiles.html">
+  <link rel="stylesheet" href="assets/drafts.css">
+  <script defer src="assets/drafts.js"></script>
+  <script defer src="assets/idea-experiments.js"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+</head>
+<body>
+<header class="draft-header"><div class="wrap">
+  <a class="draft-back" href="index.html">← Forthcoming posts</a>
+  <p class="draft-status">Alpha preview · Work in progress</p>
+  <p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
+  <h1>Wasserstein distance without quantiles</h1>
+  <p class="subtitle">A squared displacement is twice the area of a triangle. That observation removes the inverse CDF.</p>
+  <p class="byline">Gabriel Peyré</p>
+</div></header>
+<main class="wrap"><article class="blog-prose">
+<p>One-dimensional optimal transport is often introduced as a sorting problem: line up the source and target quantiles, and match equal ranks. This gives an exact formula for Wasserstein distance. But sometimes a cumulative distribution function is easy to evaluate while its inverse is inconvenient. Gaussian mixtures are one example; data distributed across many machines are another.</p>
+<p>There is an exact alternative for the quadratic distance which uses only CDF values. The formula has a short geometric proof, works with atoms, and naturally suggests integration and sampling algorithms. The identity is recorded by Bobkov and Ledoux, who credit Eustasio del Barrio <a href="#ref-bobkov">[1]</a>. Its recent use for data-parallel sliced-Wasserstein estimation is due to Vauthier, Mérigot, and Korba <a href="#ref-cdf">[2]</a>. The formula also appears as <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.2.6.45">Proposition 2.45 in my book</a> <a href="#ref-book">[3]</a>.</p>
+
+<h2>From ranks to cumulative masses</h2>
+<p>For a probability law \(\alpha\) on \(\mathbb R\), write</p>
+\[
+  F_\alpha(x)=\alpha((-\infty,x]),
+  \qquad
+  Q_\alpha(r)=\inf\{x:F_\alpha(x)\ge r\}.
+\]
+<p>The quadratic Wasserstein distance is the least mean squared displacement over all couplings. If both laws have finite second moment, monotone matching gives</p>
+\[
+  W_2^2(\alpha,\beta)
+  =\int_0^1|Q_\alpha(r)-Q_\beta(r)|^2\,dr.
+\]
+<p>The aim is not to change the optimal coupling. It is to integrate the cost of that coupling in a different order. Define the nonnegative function, for \(x&lt;y\),</p>
+\[
+  H(x,y)
+  =(F_\alpha(x)-F_\beta(y))_+
+   +(F_\beta(x)-F_\alpha(y))_+,
+\]
+<p>where \(a_+=\max(a,0)\). The first term measures how many quantile levels have their source position to the left of \(x\) and target position to the right of \(y\). The second records motion in the opposite direction.</p>
+<p id="theorem-1"><strong>Theorem 1 (the CDF-only formula).</strong> For \(\alpha,\beta\in\mathcal P_2(\mathbb R)\),</p>
+\[
+  W_2^2(\alpha,\beta)
+  =2\int_{\mathbb R}\int_x^\infty H(x,y)\,dy\,dx.
+\]
+<p>If both laws are supported in \([a,b]\), the integration region reduces to the triangle \(a&lt;x&lt;y&lt;b\). No continuity or density assumption is needed.</p>
+<details class="blog-proof">
+<summary>Proof: integrate the triangle swept out by each matched pair</summary>
+<div class="blog-proof-body">
+<p>For \(u&lt;v\), the region \(u\le x&lt;y&lt;v\) is a triangle of area \((v-u)^2/2\). Thus, for arbitrary \(u,v\),</p>
+\[
+  |u-v|^2
+  =2\iint_{x\lt y}
+  \left[
+  \mathbf1_{\{u\le x,\ y\lt v\}}
+  +\mathbf1_{\{v\le x,\ y\lt u\}}
+  \right]dx\,dy.
+\]
+<p>Substitute \(u=Q_\alpha(r)\), \(v=Q_\beta(r)\), and integrate over \(r\in(0,1)\). The generalized-inverse identities give, up to irrelevant endpoints,</p>
+\[
+  \begin{aligned}
+  Q_\alpha(r)\le x&\iff r\le F_\alpha(x),\\
+  Q_\beta(r)>y&\iff r>F_\beta(y).
+  \end{aligned}
+\]
+<p>The set of \(r\)'s satisfying both has length \((F_\alpha(x)-F_\beta(y))_+\). The reverse direction gives the other positive part. All integrands are nonnegative, so Tonelli's theorem permits the change in integration order, even before finiteness is established. The second moments make the resulting Wasserstein value finite. \(\square\)</p>
+</div></details>
+<p>The triangular region matters: simply replacing it by the full square would change the answer. So does the use of two different thresholds \(x,y\). The expression \(\int|F_\alpha(x)-F_\beta(x)|^2\,dx\) is a Cramér-type discrepancy, not \(W_2^2\). In contrast, \(W_1=\int|F_\alpha-F_\beta|\) does use a single threshold.</p>
+
+<h2>An exactly solvable example</h2>
+<p>Take the uniform law \(\beta\) on \([0,1]\), and let \(\alpha\) have density</p>
+\[
+  \rho_\alpha(x)=1+\lambda\sin(2\pi x),
+  \qquad |\lambda|<1.
+\]
+<p>Its CDF is explicit:</p>
+\[
+  F_\alpha(x)=x+\frac{\lambda}{2\pi}(1-\cos(2\pi x)),
+  \qquad 0\le x\le1.
+\]
+<p>Although its inverse has no comparably simple expression, the exact transport cost is</p>
+\[
+  W_2^2(\alpha,\beta)=\frac{3\lambda^2}{8\pi^2}.
+\]
+<details class="blog-proof">
+<summary>Proof: for a uniform target, the source CDF is the transport map</summary>
+<div class="blog-proof-body">
+<p>The density is strictly positive, so \(F_\alpha\) is increasing and sends \(\alpha\) to the uniform law. It is therefore the optimal map. Consequently,</p>
+\[
+  W_2^2(\alpha,\beta)
+  =\int_0^1|F_\alpha(x)-x|^2
+              (1+\lambda\sin(2\pi x))\,dx.
+\]
+<p>The integral of \((1-\cos(2\pi x))^2\) is \(3/2\). Its product with \(\sin(2\pi x)\) integrates to zero, either by symmetry under \(x\mapsto1-x\) or by direct differentiation. This gives the claimed value. \(\square\)</p>
+</div></details>
+<p>This provides an independent reference for the numerical CDF integral. With \(\lambda=0.6\), the value is \(0.135/\pi^2\). Increasing the integration resolution should reduce the discrepancy with this value; the identity itself has no numerical error.</p>
+<figure>
+  <iframe class="idea-experiment" data-experiment="cdf" title="CDF-only Wasserstein formula and triangular quadrature" src="assets/ot-lab/index.html?topic=cdf" loading="lazy"></iframe>
+  <figcaption>The left panel shows the two CDFs; the right shades \(H(x,y)\) on the ordered triangle. The slider changes the midpoint-quadrature resolution, and the reported error is measured against the exact value \(0.135/\pi^2\). The heat map uses a separate fixed display grid.</figcaption>
+</figure>
+
+<h2>Sampling the triangle</h2>
+<p>For compactly supported laws, the formula also gives a particularly simple unbiased Monte Carlo estimator. Draw two independent uniforms on \([a,b]\), sort them into \(X&lt;Y\), and evaluate \(H(X,Y)\). The sorted pair is uniform on the triangle, whose area is \((b-a)^2/2\).</p>
+<p id="proposition-1"><strong>Proposition 1 (an unbiased CDF estimator).</strong> For independent triangle samples \((X_\ell,Y_\ell)\), set</p>
+\[
+  \widehat D_L
+  =\frac{(b-a)^2}{L}\sum_{\ell=1}^L H(X_\ell,Y_\ell).
+\]
+<p>Then</p>
+\[
+  \mathbb E\widehat D_L=W_2^2(\alpha,\beta),
+  \qquad
+  \operatorname{Var}(\widehat D_L)
+  \le\frac{(b-a)^4}{4L}.
+\]
+<details class="blog-proof">
+<summary>Proof: use the area factor and a bounded random variable</summary>
+<div class="blog-proof-body">
+<p>Theorem 1 and the triangle area give \(W_2^2=(b-a)^2\mathbb EH(X,Y)\). For \(x&lt;y\), the two positive parts cannot both be positive. Otherwise monotonicity of the CDFs would imply</p>
+\[
+  F_\alpha(x)>F_\beta(y)\ge F_\beta(x)
+  >F_\alpha(y)\ge F_\alpha(x),
+\]
+<p>a contradiction. Hence \(0\le H\le1\). A random variable in \([0,1]\) has variance at most \(1/4\), and averaging \(L\) independent copies divides the variance by \(L\). \(\square\)</p>
+</div></details>
+<p>This unbiasedness assumes exact CDF evaluations. If the CDFs are estimated from data, the estimator is conditionally unbiased for the distance between those empirical laws, not automatically for the distance between the population laws: the positive part is nonlinear.</p>
+
+<h2>When avoiding inversion helps</h2>
+<p>A Gaussian-mixture CDF is a weighted sum of Gaussian CDFs. It can be evaluated directly, whereas evaluating its inverse requires root finding. Unbounded support still needs care: one must control truncation error or use a suitable importance distribution on the unbounded triangle. A finite integration box is not an exact formula for an unbounded law.</p>
+<p>For distributed empirical data, each worker can contribute its local count below a threshold. Adding these weighted counts gives the global CDF. Crucially, one must aggregate the CDFs <em>before</em> taking the positive parts; averaging local Wasserstein distances solves a different problem.</p>
+<p>The same idea applies after projecting high-dimensional measures onto a line. For a direction \(\theta\), compute the CDFs of \(\theta^\top X\) and \(\theta^\top Y\), apply the formula, and then average over directions. This estimates the <em>sliced</em> Wasserstein distance, which is a different metric from the full high-dimensional Wasserstein distance. The recent paper <a href="#ref-cdf">[2]</a> develops estimators tailored to this setting.</p>
+<p>There is a computational tradeoff: a two-dimensional quadrature is not automatically cheaper than one-dimensional quantile integration or sorting a sample. The benefit is access to a different computational primitive—CDF evaluation—which can be particularly convenient for structured distributions and distributed data. For the broader algorithmic picture, see <a href="#ref-computational">[4]</a>.</p>
+
+<h2>References</h2>
+<ol class="references">
+  <li id="ref-bobkov">Sergey Bobkov and Michel Ledoux. <a href="https://doi.org/10.1090/memo/1259"><em>One-Dimensional Empirical Measures, Order Statistics, and Kantorovich Transport Distances</em></a>. <em>Memoirs of the American Mathematical Society</em> 261(1259), 2019. <a href="https://www-users.cse.umn.edu/~bobko001/papers/2019_Memoirs%20BL%20One-dimensional%20Empirical%20Measures.pdf">Author-hosted PDF</a>.</li>
+  <li id="ref-cdf">Christophe Vauthier, Quentin Mérigot, and Anna Korba. <a href="https://arxiv.org/abs/2606.30310"><em>Highly Data Parallelizable Estimation of the Sliced-Wasserstein Distance Using Cumulative Distribution Functions</em></a>. arXiv:2606.30310, 2026.</li>
+  <li id="ref-book">Gabriel Peyré. <a href="https://arxiv.org/abs/2505.06589"><em>Optimal Transport for Machine Learners</em></a>, 2025–2026. <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.2.6.45">Proposition 2.45, p. 31</a>.</li>
+  <li id="ref-computational">Gabriel Peyré and Marco Cuturi. <a href="https://arxiv.org/abs/1803.00567"><em>Computational Optimal Transport</em></a>. <em>Foundations and Trends in Machine Learning</em> 11(5–6), 355–607, 2019.</li>
+</ol>
+</article></main>
+<footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Blog</a></div></footer>
+</body>
+</html>
