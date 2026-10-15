@@ -97,7 +97,7 @@
  V(\alpha,\beta)
  =\min_{\eta\preceq_{\mathrm{cx}}\beta}W_2(\alpha,\eta)^2.
 \]
-<p>Both minima are attained. The weak optimizer has a unique barycentric map \(T_*\), up to \(\alpha\)-almost-everywhere equality, although its coupling need not be unique. The minimizing intermediate law is unique and equals \(\eta_*=(T_*)_\#\alpha\); here \(T_\#\alpha\) denotes the law of \(T(X)\) when \(X\sim\alpha\). In particular,</p>
+<p>Both minima are attained. The weak optimizer has a unique barycentric map \(T_*\), up to \(\alpha\)-almost-everywhere equality, although its coupling need not be unique. The minimizing intermediate law is unique and equals \(\eta_*=(T_*)_\#\alpha\); here \(T_\#\alpha\) denotes the law of \(T(X)\) when \(X\sim\alpha\). Moreover, \(T_*\) is an ordinary quadratic optimal transport map from \(\alpha\) to \(\eta_*\), even when \(\alpha\) has atoms. In particular,</p>
 \[
  V(\alpha,\beta)=0
  \quad\Longleftrightarrow\quad
@@ -132,7 +132,14 @@
  \int\{2h(x)\cdot(x-y)-|h(x)|^2\}\,d\pi.
 \]
 <p>Indeed, this is the usual identity \(\|v\|_2^2=\sup_h(2\langle h,v\rangle-\|h\|_2^2)\) in \(L^2(\alpha)\); bounded continuous vector fields are dense in that space. For fixed \(h\), the integral on the right is continuous on the coupling set: truncate \(x,y\), then use the fixed marginals to control their first-moment tails uniformly. The objective is therefore a supremum of continuous functions, hence lower semicontinuous.</p>
-<p>A weak optimizer \(\pi_*\) exists. The two inequalities already proved show that \((T_{\pi_*})_\#\alpha\) attains the projection minimum too.</p>
+<p>A weak optimizer \(\pi_*\) exists. For \(\eta_*=(T_{\pi_*})_\#\alpha\), the first chain of inequalities becomes</p>
+\[
+ V(\alpha,\beta)
+ \le W_2(\alpha,\eta_*)^2
+ \le\int|x-T_{\pi_*}(x)|^2\,d\alpha(x)
+ =V(\alpha,\beta).
+\]
+<p>All terms are equal. Thus \(\eta_*\) attains the projection minimum, and its graph coupling with \(\alpha\) is an ordinary OT optimizer.</p>
 </div>
 </details>
 <p><em>Uniqueness of the map.</em> If \(\pi_0,\pi_1\) are weak optimizers with barycentric maps \(T_0,T_1\), their average is feasible and has map \((T_0+T_1)/2\). The squared-norm identity gives its cost as</p>
@@ -178,7 +185,7 @@
 <p>has barycenters \(-1/2,1/2\), so \(T_*(x)=x\) and \(V(\alpha,\beta)=0\). It accepts additional random motion to keep the conditional means fixed. Reversing the measures costs \(V(\beta,\alpha)=1/4\), since the conditional mean must lie in \([-1/2,1/2]\). This also exhibits the asymmetry.</p>
 
 <h2>A convex quadratic program for finite clouds</h2>
-<p>Let \(\alpha=\sum_{i=1}^n a_i\delta_{x_i}\) and \(\beta=\sum_{j=1}^m b_j\delta_{y_j}\), with positive weights summing to one. A plan is a nonnegative matrix with row sums \(a\) and column sums \(b\), denoted \(P\in\Pi(a,b)\). Its barycenters and weak objective are</p>
+<p>Let \(\alpha=\sum_{i=1}^n a_i\delta_{x_i}\) and \(\beta=\sum_{j=1}^m b_j\delta_{y_j}\), with positive weights summing to one. Use distinct support points, merging coincident atoms first, so that conditioning on \(X=x_i\) means selecting row \(i\). A plan is a nonnegative matrix with row sums \(a\) and column sums \(b\), denoted \(P\in\Pi(a,b)\). Its barycenters and weak objective are</p>
 \[
  z_i(P)=\frac1{a_i}\sum_j P_{ij}y_j,
  \qquad

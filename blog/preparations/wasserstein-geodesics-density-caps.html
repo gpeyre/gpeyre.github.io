@@ -29,7 +29,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p>The reason is not a quirk of an algorithm. It is <em>displacement convexity</em>: convexity along the straight trajectories of optimally matched particles. The same geometry explains why potential energies, entropy, and certain density constraints behave well in Wasserstein space. Let us build up to the cap theorem, discussed in <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.15.2.22">Proposition 15.22 of <em>Optimal Transport for Machine Learners</em></a> <a href="#ref-book">[1]</a>.</p>
 
 <h2>There are two ways to draw a straight line between measures</h2>
-<p>The ordinary mixture \((1-t)\alpha_0+t\alpha_1\) removes mass from one distribution and adds it to the other. Displacement interpolation instead matches particles and moves them. If \(\pi\) is a quadratic optimal coupling, define</p>
+<p>Let \(\alpha_0,\alpha_1\in\mathcal P_2(\mathbb R^d)\), the probability laws with finite second moment. The ordinary mixture \((1-t)\alpha_0+t\alpha_1\) removes mass from one distribution and adds it to the other. Displacement interpolation instead matches particles and moves them. If \(\pi\) is a quadratic optimal coupling, define</p>
 \[
  \alpha_t=((1-t)x+ty)_\#\pi,\qquad 0\le t\le1.
 \]
@@ -97,10 +97,10 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
  =\operatorname{Ent}(\alpha_0)
   -\int\log\det((1-t)I+tDT)\,d\alpha_0.
 \]
-<p>Adding a \(\lambda\)-convex potential \(V\) gives \(\lambda\)-displacement convexity of \(\mathrm{KL}(\alpha\mid Z^{-1}e^{-V}dx)\), provided \(Z&lt;\infty\). The density cap below follows from the stronger determinant-root inequality.</p>
+<p>Adding a finite \(\lambda\)-convex potential \(V\) gives \(\lambda\)-displacement convexity of \(\mathrm{KL}(\alpha\mid Z^{-1}e^{-V}dx)\), where \(Z=\int e^{-V}dx&lt;\infty\). One first adds the entropy and potential inequalities for finite-energy endpoints; the extended-valued statement follows by approximation. This avoids manipulating undefined differences of infinite integrals. The density cap below follows from the stronger determinant-root inequality.</p>
 
 <h2>A constant density cap survives the whole journey</h2>
-<p id="theorem-1"><strong>Theorem 1 (preservation of a density cap).</strong> Let \(\Omega\subset\mathbb R^d\) be convex, and let \(\alpha_0,\alpha_1\in\mathcal P_2(\Omega)\) have densities bounded above by a common constant \(\kappa&lt;\infty\). Their quadratic Wasserstein geodesic stays in \(\Omega\) and satisfies</p>
+<p id="theorem-1"><strong>Theorem 1 (preservation of a density cap).</strong> Let \(\Omega\subset\mathbb R^d\) be convex, and let \(\alpha_0,\alpha_1\in\mathcal P_2(\Omega)\) have densities bounded above by a common constant \(0&lt;\kappa&lt;\infty\). Their quadratic Wasserstein geodesic stays in \(\Omega\) and satisfies</p>
 \[
  0\le\rho_t\le\kappa
  \qquad\text{for every }t\in[0,1].
@@ -108,6 +108,13 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <details class="blog-proof"><summary>Proof: interpolate the reciprocal density</summary><div class="blog-proof-body">
 <p>Both endpoint terms in Lemma 1 are at least \(\kappa^{-1/d}\). Their convex combination is therefore at least \(\kappa^{-1/d}\), giving \(\rho_t(T_t(x))\le\kappa\) almost everywhere. Convexity of \(\Omega\) keeps each segment between \(x\) and \(T(x)\) inside \(\Omega\). \(\square\)</p>
 </div></details>
+<p>The same proof gives a sharper bound for different endpoint caps \(\|\rho_i\|_\infty\le\kappa_i\):</p>
+\[
+ \|\rho_t\|_\infty
+ \le\bigl((1-t)\kappa_0^{-1/d}
+               +t\kappa_1^{-1/d}\bigr)^{-d}.
+\]
+<p>Optimality of the matching is essential. For example, let both endpoints be uniform on \([-1,1]\), with density \(1/2\). Matching \(x\) to \(-x\) has the correct marginals, but all interpolating particles collide at zero when \(t=1/2\). The resulting Dirac mass has no finite density cap. The optimal matching is instead the identity, which keeps the density unchanged.</p>
 <p>Equivalently, the set</p>
 \[
  \mathcal K_\kappa
@@ -121,11 +128,11 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
  W_2(\alpha_0,\alpha_1)^2
  =\inf\int_0^1\int|v_t(x)|^2\,d\alpha_t(x)\,dt.
 \]
-<p>Add the requirement \(\rho_t\le\kappa\). This can only increase the infimum. But Theorem 1 says that the ordinary optimal geodesic is feasible for the constrained problem, and its action is already \(W_2^2\). Thus the constrained and unconstrained values are equal.</p>
+<p>When motion is restricted to \(\Omega\), require each \(\alpha_t\) to be concentrated there and impose the continuity equation on \(\mathbb R^d\) after extension by zero; this encodes no flux through the boundary. Add the requirement \(\rho_t\le\kappa\). This can only increase the infimum. But Theorem 1 says that the ordinary optimal geodesic is feasible for the constrained problem, and its action is already \(W_2^2\). Thus the constrained and unconstrained values are equal.</p>
 <p>Every hypothesis matters. A nonconvex domain may force particles around obstacles; a varying cap \(\kappa(x)\) may create a bottleneck; an additional running cost may favor paths other than the ordinary geodesic. Genuine crowd-motion and congestion models can therefore behave very differently. The theorem concerns a constant cap, a convex Euclidean domain, admissible endpoints, and pure kinetic transport.</p>
 
 <h2>Numerical experimentation: the one-dimensional proof in motion</h2>
-<p>On the line, write \(Q_i\) for the endpoint quantiles. The interpolation is simply \(Q_t=(1-t)Q_0+tQ_1\), and density satisfies \(\rho_t(Q_t(r))=1/Q_t'(r)\). A cap means \(Q_i'\ge1/\kappa\), a condition immediately preserved by interpolation.</p>
+<p>On the line, write \(Q_i\) for the endpoint quantiles. The interpolation is simply \(Q_t=(1-t)Q_0+tQ_1\). In the smooth strictly increasing example below, density satisfies \(\rho_t(Q_t(r))=1/Q_t'(r)\). A cap means \(Q_i'\ge1/\kappa\), a condition immediately preserved by interpolation.</p>
 <p>The example uses, for \(0\le r\le1\) and \(0\le a&lt;1\),</p>
 \[
  \begin{aligned}

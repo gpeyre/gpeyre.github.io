@@ -25,7 +25,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p class="byline">Gabriel Peyré</p>
 </div></header>
 <main class="wrap"><article class="blog-prose">
-<p>Gaussians are wonderfully cooperative in quadratic optimal transport: an affine map solves the transport problem, and the answer can be expressed using means and covariance matrices. It is tempting to carry this intuition into Gromov–Wasserstein transport, where the task is to match <em>relations between pairs of points</em>.</p>
+<p>Gaussians are wonderfully cooperative in quadratic optimal transport: when the source is nondegenerate, an affine map solves the transport problem, and the answer can be expressed using means and covariance matrices. It is tempting to carry this intuition into Gromov–Wasserstein transport, where the task is to match <em>relations between pairs of points</em>.</p>
 <p>That intuition has a limit. A pair of Gaussian marginals need not admit a jointly Gaussian optimal coupling. The example below makes the obstruction explicit: linear correlation has a bounded budget, while correlating the <em>radii</em> can exploit fluctuations that grow with dimension.</p>
 <p>The construction is recorded in <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.13.3.34">Proposition 13.34 of <em>Optimal Transport for Machine Learners</em></a> <a href="#ref-book">[1]</a>. The Gaussian-constrained problem and the question of unrestricted optimality are studied by Antoine Salmona, Julie Delon, and Agnès Desolneux <a href="#ref-gaussian">[2]</a>. We will prove the strict separation directly, without claiming a formula for the unrestricted optimizer.</p>
 
@@ -81,10 +81,10 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p>This calculation identifies the possible escape route. In a jointly Gaussian law, the mixed fourth moment is tied to \(k\). For a general coupling, it is an independent source of improvement. We will set \(k=0\) and make the fourth moment large enough to compensate.</p>
 
 <h2>A radial coupling that beats the whole Gaussian class</h2>
-<p>Let \(G_j\) denote the CDF of the chi-squared law with \(j\) degrees of freedom, and let \(\Phi\) be the standard normal CDF. Draw \(Y\sim\mathcal N(0,I_n)\) and put</p>
+<p>Let \(F_j\) denote the CDF of the chi-squared law with \(j\) degrees of freedom, and write \(q_j=F_j^{-1}\) for its quantile. Draw \(Y\sim\mathcal N(0,I_n)\) and put</p>
 \[
  R=|Y|^2,\qquad
- U=G_n(R),\qquad A=G_1^{-1}(U).
+ U=F_n(R),\qquad A=q_1(U).
 \]
 <p>The variable \(U\) is uniform on \((0,1)\), so \(A\) has the same law as a squared standard normal. Choose an independent fair sign \(\varepsilon\in\{-1,1\}\), and set \(X=\varepsilon\sqrt A\). Then \(X\sim\mathcal N(0,1)\). The sign guarantees \(\mathbb E[YX]=0\), while \(X^2=A\) is an increasing function of \(|Y|^2\): large radii are matched with large magnitudes.</p>
 <p id="theorem-1"><strong>Theorem 1 (failure of Gaussian optimality).</strong> For all sufficiently large \(n\), the radial coupling above satisfies</p>
@@ -96,31 +96,31 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p>Since \(k=0\), the radial score is</p>
 \[
  \mathcal G(\pi_{\mathrm{rad}})
- =\int_0^1G_1^{-1}(u)G_n^{-1}(u)\,du.
+ =\int_0^1q_1(u)q_n(u)\,du.
 \]
 <p>The central limit theorem applied to the sum of \(n\) squared standard normals gives</p>
 \[
  \frac{R-n}{\sqrt{2n}}\ \Longrightarrow\ \mathcal N(0,1).
 \]
-<p>The standardized variables also have second moment exactly one. Weak convergence plus convergence of second moments is convergence in \(W_2\). In one dimension, \(W_2\) is the \(L^2\) distance between quantiles <a href="#ref-computational">[4]</a>, so</p>
+<p>The standardized variables also have second moment exactly one, matching the limit. Weak convergence plus convergence of second moments is convergence in \(W_2\). In one dimension, \(W_2\) is the \(L^2\) distance between quantiles <a href="#ref-computational">[4]</a>. Writing \(\Phi\) for the standard normal CDF, we obtain</p>
 \[
- \frac{G_n^{-1}-n}{\sqrt{2n}}
+ \frac{q_n-n}{\sqrt{2n}}
  \longrightarrow\Phi^{-1}
  \quad\text{in }L^2(0,1).
 \]
-<p>As \(G_1^{-1}\in L^2(0,1)\), with squared norm \(3\), Cauchy–Schwarz yields</p>
+<p>As \(q_1\in L^2(0,1)\), with mean \(1\) and squared norm \(3\), Cauchy–Schwarz yields</p>
 \[
  \begin{aligned}
  \mathcal G(\pi_{\mathrm{rad}})
  &=n+\sqrt{2n}\,(c+o(1)),\\
- c&=\int_0^1G_1^{-1}(u)\Phi^{-1}(u)\,du&gt;0.
+ c&=\int_0^1q_1(u)\Phi^{-1}(u)\,du&gt;0.
  \end{aligned}
 \]
 <details class="blog-proof"><summary>Why is the constant strictly positive?</summary><div class="blog-proof-body">
-<p>For independent uniforms \(U,V\), the mean of \(\Phi^{-1}(U)\) is zero and the mean of \(G_1^{-1}(U)\) is one. Expanding therefore gives</p>
+<p>For independent uniforms \(U,V\), the mean of \(\Phi^{-1}(U)\) is zero and the mean of \(q_1(U)\) is one. Expanding therefore gives</p>
 \[
  2c=\mathbb E\!\left[
- (G_1^{-1}(U)-G_1^{-1}(V))
+ (q_1(U)-q_1(V))
  (\Phi^{-1}(U)-\Phi^{-1}(V))\right].
 \]
 <p>Both quantile functions are strictly increasing. The integrand is strictly positive whenever \(U\ne V\), and it is integrable by Cauchy–Schwarz. Hence \(c&gt;0\).</p>
@@ -135,6 +135,11 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 
 <h2>What the example does—and does not—settle</h2>
 <p>The theorem uses unequal dimensions and only proves failure for sufficiently large \(n\). It does not identify the smallest failing dimension, and the radial competitor need not be the global optimizer. A single better feasible coupling is enough to rule out an entire proposed optimizer class.</p>
+<p>For a particular dimension, the same competitor gives a concrete one-dimensional test:</p>
+\[
+ \int_0^1 q_1(u)\bigl(q_n(u)-n\bigr)\,du&gt;4.
+\]
+<p>This inequality, if established, certifies failure of Gaussian optimality at that \(n\). It is stronger evidence than finding one non-Gaussian coupling better than one arbitrarily chosen Gaussian coupling: the benchmark \(n+4\) is the optimum over the <em>entire</em> jointly Gaussian class. The asymptotic proof avoids relying on numerical quadrature of the unbounded quantiles near \(u=1\).</p>
 <p>It also does not contradict the exact Gaussian-constrained formulas or the special unrestricted Gaussian-optimality cases in <a href="#ref-gaussian">[2]</a>. Nor does it concern inner-product GW, where the objective has a different dependence on moments. The useful lesson is to keep the optimization domain visible: restricting to Gaussian couplings can give an elegant, computable surrogate without solving the unrestricted problem.</p>
 
 <h2>References</h2>

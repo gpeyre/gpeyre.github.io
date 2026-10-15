@@ -61,7 +61,8 @@ experiments load this data bundle; the others use the small numerical core.
 Changing the CLT
 selection or energy time replays these computed data; the captions say so.
 All other controls evaluate exact formulas or recompute the stated numerical
-optimization. Monge regression reports its smoothed objective's gradient norm;
+optimization. Monge regression uses damped Newton and reports a
+strong-convexity bound for its smoothed objective error (with a roundoff floor);
 weak transport reports a Frank–Wolfe certificate and marginal residual.
 The distinction between exact formula, finite iterate, asymptotic result, and
 Monte Carlo realization is kept in each article and experiment.
@@ -74,6 +75,15 @@ the original signed-integral quadrature missed zeros exactly on its grid
 (including the symmetry zero), cancelling positive and negative error lobes.
 The corrected distances integrate the absolute CDF error without cancellation.
 The input files under `blog/ideas` are not edited.
+
+The second review adds true binomial jumps to the CLT display, readable
+logarithmic axes and selected-sample markers, and current-iterate markers on
+the energy curves. The CDF experiment integrates diagonal triangles at their
+centroids, clips its heatmap to the ordered triangle, and displays convergence
+against an exact answer. The matching experiment includes an explicit
+three-pair local trap from the proof. Monge fits are deterministic at each
+slider position; finite-difference derivative tests and strong-convexity
+checks guard against inaccurate or history-dependent solutions.
 
 Run `node tests/blog-ideas.test.js` for the numerical checks and
 `python3 tests/blog-clt-data.test.py` (NumPy and SciPy required) to independently

@@ -45,7 +45,7 @@
   \mathbb E|X-Y|^2
   =\mathbb E|X|^2+\mathbb E|Y|^2-2\mathbb E(X^\top Y).
 \]
-<p>This proves optimality without any density assumption. \(\square\)</p>
+<p>This proves optimality without any density assumption. It also proves uniqueness of the optimal coupling: equality in the expected square forces \(Y=AX\) almost surely. \(\square\)</p>
 </div></details>
 
 <h2>A counterexample with an exact cost gap</h2>
@@ -78,6 +78,11 @@
 <p>Since \(\operatorname{tr}D=6\), subtracting the costs gives \(2\sqrt{37}-12\). \(\square\)</p>
 </div></details>
 <p>The structural warning is already visible in \(D\): it is not symmetric. Thus it cannot be the gradient of a quadratic—or, indeed, agree almost everywhere on \(\mathbb R^2\) with any convex gradient. A gradient has symmetric distributional derivatives, while this linear field does not.</p>
+<p>There is also a geometric explanation. Set \(R=C^{-1}D\). Then \(RR^\top=I\), so</p>
+\[
+ D=CR,\qquad R_\#\mathcal N(0,I_2)=\mathcal N(0,I_2).
+\]
+<p>The product first rotates the source and then applies the optimal symmetric map \(C\). The rotation is invisible in the output distribution because the source is isotropic, but it changes which source point goes where. Removing it preserves the target and lowers the cost. This is the matrix version of <em>polar factorization</em> <a href="#ref-brenier">[2]</a>.</p>
 
 <h2>Monotone is not the same as a convex gradient</h2>
 <p>A map is <em>monotone</em> when</p>
@@ -97,7 +102,12 @@
     &\iff A=A^\top\succeq0.
   \end{aligned}
 \]
-<p>Our nonoptimal product \(D\) is actually still monotone: its symmetric part is \(\left(\begin{smallmatrix}4&3/2\\3/2&2\end{smallmatrix}\right)\), which is positive definite. Pairwise monotonicity does not certify transport optimality. The right nonsmooth condition is <em>cyclical monotonicity</em>, involving cycles of every length; Rockafellar's theorem relates it to convex subgradients <a href="#ref-rockafellar">[3]</a>.</p>
+<p>Our nonoptimal product \(D\) is actually still monotone: its symmetric part is \(\left(\begin{smallmatrix}4&3/2\\3/2&2\end{smallmatrix}\right)\), which is positive definite. Pairwise monotonicity does not certify transport optimality. The stronger condition is <em>cyclical monotonicity</em>: for every finite cycle \(x_1,\ldots,x_k,x_{k+1}=x_1\),</p>
+\[
+ \sum_{i=1}^k
+ \langle T(x_i),x_i-x_{i+1}\rangle\ge0.
+\]
+<p>For \(k=2\) this is ordinary monotonicity. Convex gradients satisfy every cycle inequality by summing the supporting-hyperplane inequalities. Conversely, Rockafellar's theorem places every cyclically monotone graph inside a convex subdifferential <a href="#ref-rockafellar">[3]</a>. The missing higher-order cycles explain why a monotone map can still be a poor transport assignment.</p>
 <p>Even monotonicity need not survive composition. For \(A=\operatorname{diag}(9,1)\) and \(B=\left(\begin{smallmatrix}1&2\\2&5\end{smallmatrix}\right)\), both factors are positive definite, but the symmetric part of \(BA\) is</p>
 \[
   \begin{pmatrix}9&10\\10&5\end{pmatrix},
@@ -111,12 +121,12 @@
 <div class="blog-proof-body">
 <p>If \(AB=BA\), the two matrices admit a common orthonormal eigenbasis. In that basis \(BA\) has positive diagonal entries, so Lemma 1 applies. Conversely, an optimal map from a nondegenerate Gaussian is a convex gradient by Brenier's theorem. Since the Gaussian density is strictly positive, the linear map \(BA\) must have symmetric derivative. But \((BA)^\top=AB\), so \(BA=AB\). \(\square\)</p>
 </div></details>
-<p>For nonlinear smooth convex potentials, the same local obstruction appears in the chain rule:</p>
+<p>For \(C^2\) convex potentials \(\phi,\psi\), defined on open sets containing the source domain and its image respectively, the same local obstruction appears in the chain rule:</p>
 \[
   D(\nabla\psi\circ\nabla\phi)(x)
   =D^2\psi(\nabla\phi(x))\,D^2\phi(x).
 \]
-<p>Even though both Hessians are symmetric positive semidefinite, their product need not be symmetric. On a convex domain, pointwise commutation of these Hessians is a sufficient condition: the derivative is then symmetric positive semidefinite, so the composition is again a convex gradient.</p>
+<p>Even though both Hessians are symmetric positive semidefinite, their product need not be symmetric. On a convex open source domain, pointwise commutation of these Hessians is a sufficient condition: the derivative is then symmetric positive semidefinite, so the composition is again a convex gradient. When the source and output have finite second moments, it therefore transports optimally to its own output law.</p>
 <p>On the line there is no matrix commutator. Compositions of nondecreasing maps remain nondecreasing and are therefore optimal to their own output distributions. For atomless source and intermediate laws, this agrees with composing their increasing quantile transport maps. With atoms, a deterministic map to a given target may not exist, so one should not cancel CDFs across jumps without checking the hypotheses.</p>
 
 <h2>Numerical experimentation</h2>

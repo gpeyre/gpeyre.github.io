@@ -42,6 +42,47 @@ for(const n of [2,3,7,24,50]) for(let trial=0;trial<50;trial++) {
   close(M.uniformMongeGap(values),direct);
 }
 
+// The smoothed Monge regression now solves the displayed convex objective,
+// not an uncontrolled iteration budget. Check both derivatives independently.
+const mongeRandom=M.rng(1),observations=Array.from({length:24},(_,i)=>{
+  const x=i/23;return x+.45*Math.sin(3*Math.PI*x)+.12*M.gaussian(mongeRandom);
+});
+const regression=M.mongeRegression(observations),probe=observations.map(v=>.7*v),h=1e-6;
+const stateAtProbe=regression.evaluate(probe,1,true);
+for(let j=0;j<probe.length;j++) {
+  const plus=[...probe],minus=[...probe];plus[j]+=h;minus[j]-=h;
+  const a=regression.evaluate(plus,1),b=regression.evaluate(minus,1);
+  close((a.value-b.value)/(2*h),stateAtProbe.gradient[j],2e-6);
+  for(let i=0;i<probe.length;i++)close((a.gradient[i]-b.gradient[i])/(2*h),stateAtProbe.hessian[i][j],2e-5);
+}
+for(const gamma of [.001,.01,.1,1,10,100]) {
+  const fit=regression.fit(gamma);
+  assert.ok(fit.gradientNorm<1e-7 && fit.errorBound<1e-12);
+  assert.ok(fit.iterations<30);
+  fit.values.forEach((v,i)=>close(fit.predict(i/23),v,2e-10));
+  assert.deepEqual(regression.fit(gamma).values,fit.values,"Fits must not depend on the slider's history");
+}
+
+// True lattice jumps, rather than a straight segment spanning each jump.
+for(const [x,cdf] of [[0,.5],[1,.8413447460685429],[2,.9772498680518208],[4,.9999683287581669]]) {
+  close(M.gaussianCDF(x),cdf,3e-15);close(M.gaussianCDF(-x),1-cdf,3e-15);
+}
+for(const n of [1,2,3,4,64,192]) {
+  const curve=M.bernoulliErrorCurve(n),jumps=curve.slice(1).map((p,i)=>p[0]===curve[i][0]?p[1]-curve[i][1]:0).filter(v=>v>1e-12);
+  const expected=Array.from({length:n+1},(_,i)=>(2*i-n)/Math.sqrt(n)).filter(x=>Math.abs(x)<=4).length;
+  assert.equal(jumps.length,expected);
+  assert.ok(curve.every(p=>p.every(Number.isFinite)));
+}
+
+// Triangle integration: exact extreme point masses, symmetry, and convergence.
+for(const n of [20,50,100,400]) {
+  const F=x=>x+.6*(1-Math.cos(2*Math.PI*x))/(2*Math.PI),G=x=>x;
+  close(M.cdfSquaredDistance(()=>1,()=>0,n),1);
+  close(M.cdfSquaredDistance(F,F,n),0);
+  close(M.cdfSquaredDistance(F,G,n),M.cdfSquaredDistance(G,F,n));
+  assert.ok(Math.abs(M.cdfSquaredDistance(F,G,n)-.135/Math.PI**2)<.18/(n*n));
+}
+
 // Exact binomial identities, including numerically difficult endpoint values.
 for(const n of [1,2,10,100,250]) for(const a of [0,1e-12,.01,.2,.5,.9,1-1e-12,1]) {
   close(M.bernstein(n,()=>1,a),1);
@@ -77,6 +118,19 @@ for(let n=1;n<=16;n++) {
     assert.equal(new Set(matching).size,n);
     assert.ok(!M.crossing(x,y,matching));
   }
+}
+// The advertised six-point trap is locally optimal for every pair swap,
+// but a three-cycle reaches a shorter noncrossing matching.
+const hexagon=[1/12,1/3,2/3,1,4/3,5/3].map(t=>[Math.cos(Math.PI*t),Math.sin(Math.PI*t)]);
+const red=hexagon.filter((_,i)=>i%2===0),blue=hexagon.filter((_,i)=>i%2===1),trap=[2,0,1];
+const length=p=>M.sum(red.map((v,i)=>Math.sqrt(M.dist2(v,blue[p[i]]))));
+assert.ok(!M.crossing(red,blue,trap));
+close(length(trap),2+2*Math.sin(5*Math.PI/24));
+close(length([0,1,2]),2+2*Math.sin(Math.PI/8));
+assert.ok(length([0,1,2])<length(trap));
+for(let i=0;i<3;i++)for(let j=0;j<i;j++) {
+  const swapped=[...trap];[swapped[i],swapped[j]]=[swapped[j],swapped[i]];
+  assert.ok(length(swapped)>length(trap));
 }
 // Stored trajectory data must agree with the captions about descending energies.
 for(const flow of [D.energy.one,D.energy.two]) {

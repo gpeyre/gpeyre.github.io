@@ -35,7 +35,7 @@
   \qquad
   Q_\alpha(r)=\inf\{x:F_\alpha(x)\ge r\}.
 \]
-<p>The quadratic Wasserstein distance is the least mean squared displacement over all couplings. If both laws have finite second moment, monotone matching gives</p>
+<p>The <em>square</em> of the quadratic Wasserstein distance is the least mean squared displacement over all couplings. If both laws have finite second moment, monotone matching gives</p>
 \[
   W_2^2(\alpha,\beta)
   =\int_0^1|Q_\alpha(r)-Q_\beta(r)|^2\,dr.
@@ -102,10 +102,10 @@
 \]
 <p>The integral of \((1-\cos(2\pi x))^2\) is \(3/2\). Its product with \(\sin(2\pi x)\) integrates to zero, either by symmetry under \(x\mapsto1-x\) or by direct differentiation. This gives the claimed value. \(\square\)</p>
 </div></details>
-<p>This provides an independent reference for the numerical CDF integral. With \(\lambda=0.6\), the value is \(0.135/\pi^2\). Increasing the integration resolution should reduce the discrepancy with this value; the identity itself has no numerical error.</p>
+<p>This provides an independent reference for the numerical CDF integral. With \(\lambda=0.6\), the value is \(0.135/\pi^2\). Refining the integration grid converges to this value, although individual errors need not decrease monotonically with every choice of grid size. The identity itself has no numerical error.</p>
 <figure>
   <iframe class="idea-experiment" data-experiment="cdf" title="CDF-only Wasserstein formula and triangular quadrature" src="assets/ot-lab/index.html?topic=cdf" loading="lazy"></iframe>
-  <figcaption>The left panel shows the two CDFs; the right shades \(H(x,y)\) on the ordered triangle. The slider changes the midpoint-quadrature resolution, and the reported error is measured against the exact value \(0.135/\pi^2\). The heat map uses a separate fixed display grid.</figcaption>
+  <figcaption>The first panel shows the two CDFs; the second shades \(H(x,y)\) on the ordered triangle. The slider changes the integration resolution, and the convergence panel compares the numerical result with the exact value \(0.135/\pi^2\). Off-diagonal cells use their midpoints; the diagonal half-cells use their triangular centroids. The heat map follows the resolution up to a display cap of 80 cells per axis.</figcaption>
 </figure>
 
 <h2>Sampling the triangle</h2>
@@ -133,11 +133,38 @@
 <p>a contradiction. Hence \(0\le H\le1\). A random variable in \([0,1]\) has variance at most \(1/4\), and averaging \(L\) independent copies divides the variance by \(L\). \(\square\)</p>
 </div></details>
 <p>This unbiasedness assumes exact CDF evaluations. If the CDFs are estimated from data, the estimator is conditionally unbiased for the distance between those empirical laws, not automatically for the distance between the population laws: the positive part is nonlinear.</p>
+<p>Errors in evaluating genuine CDFs can nevertheless be controlled. If two approximating laws on \([a,b]\) satisfy \(\|\widehat F_\alpha-F_\alpha\|_\infty\le\delta_\alpha\) and \(\|\widehat F_\beta-F_\beta\|_\infty\le\delta_\beta\), then</p>
+\[
+  \left|W_2^2(\widehat\alpha,\widehat\beta)
+         -W_2^2(\alpha,\beta)\right|
+  \le (b-a)^2(\delta_\alpha+\delta_\beta).
+\]
+<p>Indeed, the two positive parts cannot be simultaneously positive, so \(H\) is the maximum of zero and the two CDF differences. Changing each difference by at most \(\delta_\alpha+\delta_\beta\) changes their maximum by at most that amount. Integrate over a triangle of area \((b-a)^2/2\). This bound concerns CDF approximation; quadrature or Monte Carlo error must still be added separately.</p>
 
 <h2>When avoiding inversion helps</h2>
-<p>A Gaussian-mixture CDF is a weighted sum of Gaussian CDFs. It can be evaluated directly, whereas evaluating its inverse requires root finding. Unbounded support still needs care: one must control truncation error or use a suitable importance distribution on the unbounded triangle. A finite integration box is not an exact formula for an unbounded law.</p>
+<p>A Gaussian-mixture CDF is a weighted sum of Gaussian CDFs. It can be evaluated directly, whereas evaluating its inverse requires root finding. For unbounded laws, restricting the formula to a finite triangle has a precise interpretation: it computes the distance between the laws <em>clipped</em> to that interval.</p>
+<details class="blog-proof">
+<summary>Controlled truncation: what a finite integration interval actually computes</summary>
+<div class="blog-proof-body">
+<p>For \(I=[a,b]\), let \(P_I(x)=\max(a,\min(b,x))\), \(\alpha_I=(P_I)_\#\alpha\), and \(\beta_I=(P_I)_\#\beta\). Their CDFs agree with the original ones in the interior of \(I\). Therefore</p>
+\[
+  D_I:=2\int_a^b\int_x^b H(x,y)\,dy\,dx
+      =W_2^2(\alpha_I,\beta_I).
+\]
+<p>Define the root-mean-square clipping displacement by</p>
+\[
+  \delta_I(\alpha)
+  =\left(\int\operatorname{dist}(x,I)^2\,d\alpha(x)\right)^{1/2}.
+\]
+<p>Clipping both coordinates of a coupling cannot increase its displacement, because \(P_I\) is 1-Lipschitz. Hence \(W_2(\alpha_I,\beta_I)\le W_2(\alpha,\beta)\). The triangle inequality and the explicit couplings \(x\mapsto P_I(x)\) give the reverse estimate with a tail error:</p>
+\[
+  0\le W_2(\alpha,\beta)-\sqrt{D_I}
+    \le\delta_I(\alpha)+\delta_I(\beta).
+\]
+<p>Thus finite-window integration underestimates the true distance by a controlled amount. The relevant tail quantity is a squared displacement, not just the probability of being outside the interval.</p>
+</div></details>
 <p>For distributed empirical data, each worker can contribute its local count below a threshold. Adding these weighted counts gives the global CDF. Crucially, one must aggregate the CDFs <em>before</em> taking the positive parts; averaging local Wasserstein distances solves a different problem.</p>
-<p>The same idea applies after projecting high-dimensional measures onto a line. For a direction \(\theta\), compute the CDFs of \(\theta^\top X\) and \(\theta^\top Y\), apply the formula, and then average over directions. This estimates the <em>sliced</em> Wasserstein distance, which is a different metric from the full high-dimensional Wasserstein distance. The recent paper <a href="#ref-cdf">[2]</a> develops estimators tailored to this setting.</p>
+<p>The same idea applies after projecting high-dimensional measures onto a line. For a direction \(\theta\), compute the CDFs of \(\theta^\top X\) and \(\theta^\top Y\), apply the formula, and average the resulting <em>squared</em> distances over uniformly sampled directions. This estimates the square of the <em>sliced</em> Wasserstein distance; take a square root to obtain the distance itself. It is a different metric from the full high-dimensional Wasserstein distance. The recent paper <a href="#ref-cdf">[2]</a> develops estimators tailored to this setting.</p>
 <p>There is a computational tradeoff: a two-dimensional quadrature is not automatically cheaper than one-dimensional quantile integration or sorting a sample. The benefit is access to a different computational primitive—CDF evaluation—which can be particularly convenient for structured distributions and distributed data. For the broader algorithmic picture, see <a href="#ref-computational">[4]</a>.</p>
 
 <h2>References</h2>

@@ -27,7 +27,13 @@ const slugs=["monge-gap-inversions","autonomous-wasserstein-statistics","gaussia
         await page.locator("select").selectOption(option);
         if(option==="linear")assert.match(await page.locator("#status").innerText(),/error (?:0|[\d.]+e-1[4567])/);
       }
-      if(topic==="matchings")for(const label of ["Try 500 downhill swaps","Explore 100 random matchings","Uniform random matching"])await page.getByRole("button",{name:label,exact:true}).click();
+      if(topic==="matchings") {
+        for(const label of ["Try 500 downhill swaps","Explore 100 random matchings","Uniform random matching"])await page.getByRole("button",{name:label,exact:true}).click();
+        await page.getByRole("button",{name:"Load three-pair trap",exact:true}).click();
+        const before=await page.locator("#status").innerText();
+        await page.getByRole("button",{name:"Try 500 downhill swaps",exact:true}).click();
+        assert.equal(await page.locator("#status").innerText(),before,"Pair swaps must not escape the strict local minimum");
+      }
       if(topic==="weak") {
         await page.getByRole("button",{name:"Reset clouds"}).click();
         for(const cloud of ["x","y"]) {

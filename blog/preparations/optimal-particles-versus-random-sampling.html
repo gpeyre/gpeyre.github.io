@@ -130,7 +130,7 @@
  &\longrightarrow \int_0^1 r(1-r)Q'(r)^2\,dr.
  \end{aligned}
 \]
-<p>The first limit is local approximation error; the second is sampling fluctuation. The full theory of random quantile errors is developed in <a href="#ref-bobkov">[4]</a> and <a href="#ref-delbarrio">[5]</a>. In this regular setting, both limits have elementary proofs.</p>
+<p>The first constant measures local approximation error. The second contains the additional factor \(r(1-r)\), the variance profile of empirical mass fluctuations: these are strongest near the middle of the distribution. The full theory of random quantile errors is developed in <a href="#ref-bobkov">[4]</a> and <a href="#ref-delbarrio">[5]</a>. In this regular setting, both limits have elementary proofs.</p>
 <details class="blog-proof">
 <summary>Proof: local slopes, then the fluctuations of order statistics</summary>
 <div class="blog-proof-body">
@@ -204,6 +204,15 @@
 <h2>What this comparison does and does not promise</h2>
 <p>The weights are fixed at \(1/n\). Allowing nonuniform weights changes the optimization problem: equal-length or nearest-neighbor cells need not carry equal mass. In higher dimensions there is no global ordering, so quantile bins no longer solve the problem; equal-weight constructions require different geometry <a href="#ref-chevallier">[6]</a>.</p>
 <p>The density assumptions also matter. If the density vanishes, or the support is unbounded, the integrals in Theorem 2 may diverge. In particular, one must not apply these finite constants unchanged to an untruncated Gaussian. The general empirical bounds in <a href="#ref-fournier">[7]</a> and the one-dimensional analysis in <a href="#ref-bobkov">[4]</a> describe how tails and regularity affect sampling rates.</p>
+<p>Atoms can change the sampling rate too. For \(\mu=(\delta_0+\delta_1)/2\), write \(K_n\) for the number of sampled ones. Only the excess mass at one endpoint must cross the unit interval, so</p>
+\[
+ W_2(\mu,\widehat\mu_n)^2
+ =\left|\frac{K_n}{n}-\frac12\right|,
+ \qquad
+ \mathbb E W_2(\mu,\widehat\mu_n)^2
+ \sim\frac1{\sqrt{2\pi n}}.
+\]
+<p>The last equivalent follows from the binomial CLT and uniform integrability of the standardized absolute fluctuations. In contrast, for every even \(n\), deliberate equal-weight placement represents this law exactly by repeating each endpoint \(n/2\) times. The \(n^{-2}\) versus \(n^{-1}\) comparison is a theorem for the stated positive-density class, not a universal pair of rates for all measures. The same two-point fluctuation explains the general sampling bound in the <a href="bernstein-polynomials-on-measures.html">post on Bernstein polynomials of measures</a>.</p>
 <p>Finally, optimal placement assumes access to the target quantile, or to a sufficiently accurate approximation of it. If the distribution itself must be learned from data, quantization does not erase that statistical uncertainty. It separates two questions: how well do we know the distribution, and how efficiently can we represent the distribution we know?</p>
 
 <h2>References</h2>

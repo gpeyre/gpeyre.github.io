@@ -91,23 +91,29 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
  +\frac{2\gamma\Delta}{n}
      \sum_{i&lt;j}\bigl[(Kq)_i-(Kq)_j\bigr]_+.
 \]
-<p>This is convex. If \(K\) is positive definite, its coefficient vector is unique.</p>
+<p>The minimizing function is unique because \(\lambda&gt;0\). The coefficient problem is convex; its coefficient vector is unique if \(K\) is positive definite. A singular Gram matrix can give several coefficient vectors representing the same function.</p>
 <details class="blog-proof"><summary>Proof: the orthogonal component cannot help</summary><div class="blog-proof-body">
 <p>Split \(T=T_\parallel+T_\perp\), where \(T_\parallel\) lies in the span of \(k(x_i,\cdot)\). The reproducing identity gives \(T_\perp(x_i)=0\) for every \(i\). Both the data term and the Monge gap depend only on these evaluations, while</p>
 \[
  \|T\|_{\mathcal H_k}^2
  =\|T_\parallel\|_{\mathcal H_k}^2+\|T_\perp\|_{\mathcal H_k}^2.
 \]
-<p>Since \(\lambda&gt;0\), a minimizer has \(T_\perp=0\). Substituting the kernel expansion gives the stated objective. Positive definiteness makes the quadratic penalty strictly convex. This is the representer-theorem argument <a href="#ref-representer">[4]</a>. \(\square\)</p>
+<p>Since \(\lambda&gt;0\), a minimizer has \(T_\perp=0\). On this finite-dimensional span, continuity and coercivity give existence. The squared Hilbert norm makes the original objective strictly convex, so the minimizing function is unique. Substituting the kernel expansion gives the stated objective; positive definiteness of \(K\) also makes its coefficients unique. This is the representer-theorem argument <a href="#ref-representer">[4]</a>. \(\square\)</p>
 </div></details>
 <p>Introducing variables \(s_{ij}\ge0\) and constraints \(s_{ij}\ge(Kq)_i-(Kq)_j\) turns the last term into a linear function of the slacks. The resulting problem is a convex quadratic program.</p>
 
 <h2>Numerical experimentation</h2>
 <p>Increase the transport penalty and watch decreasing pairs become more expensive. The fitted curve, its sorted evaluations, and the exact inversion gap expose three different objects: the learned map, its rearrangement, and the excess transport cost.</p>
-<figure><iframe class="idea-experiment" data-experiment="monge" title="Kernel regression with a Monge-gap penalty" src="assets/ot-lab/index.html?topic=monge" loading="lazy"></iframe><figcaption>The solver uses a smooth approximation of the hinge, with smoothing parameter \(0.015\), and a finite optimization budget. The displayed exact hinge gap is checked against the difference of transport costs; it is not a claim that the nonsmooth regression problem has been solved exactly.</figcaption></figure>
+<p>For the numerical solver only, replace \(s_+\) by the smooth hinge \(h_\delta(s)=\delta\log(1+e^{s/\delta})\), with \(\delta=0.015\). Damped Newton iterations minimize this smooth objective, denoted by \(J_\delta(t)\), in the fitted values \(t=(t_i)\). The data term alone makes it \(2/n\)-strongly convex, giving the diagnostic</p>
+\[
+ J_\delta(t)-\min J_\delta
+ \le \frac n4\|\nabla J_\delta(t)\|^2.
+\]
+<figure><iframe class="idea-experiment" data-experiment="monge" title="Kernel regression with a Monge-gap penalty" src="assets/ot-lab/index.html?topic=monge" loading="lazy"></iframe><figcaption>The objective-error bound concerns the smooth optimization problem, not the exact hinge problem; its displayed floor of \(10^{-12}\) reflects floating-point precision. Separately, the exact nonsmooth Monge gap is evaluated and checked against the difference of transport costs.</figcaption></figure>
 
 <h2>Sorting is not regression</h2>
-<p>Sorting preserves the complete multiset of fitted values. Isotonic regression instead changes values, pooling neighboring observations when needed. Monge-gap regression balances prediction, complexity, and order. In the finite-dimensional positive-definite setting, as \(\gamma\to\infty\), its minimizers converge to the unique kernel-regression fit subject to nondecreasing evaluations: comparison with any feasible fit bounds \(\gamma\mathcal M\), coercivity gives compactness, and every limit solves the constrained problem.</p>
+<p>Sorting preserves the complete multiset of fitted values. Isotonic regression instead changes values, pooling neighboring observations when needed. Monge-gap regression balances prediction, complexity, and order. For the <em>exact hinge penalty</em>, in the finite-dimensional positive-definite setting, sending \(\gamma\to\infty\) gives the unique kernel-regression fit subject to nondecreasing evaluations: comparison with any feasible fit bounds \(\gamma\mathcal M\), coercivity gives compactness, and every limit solves the constrained problem.</p>
+<p>This limit should not be confused with increasing \(\gamma\) at a fixed numerical smoothing scale. The smooth hinge is positive even for an ordered pair, and can keep pushing its values apart. Since \(0\le h_\delta(s)-s_+\le\delta\log2\), the smoothed and exact objectives differ uniformly by at most \(\gamma\Delta(n-1)\delta\log2\). To recover the same constrained limit while smoothing, it suffices to let \(\delta\) decrease so that \(\gamma\delta\to0\).</p>
 <p>The constraint here is on the sampled inputs. It does not certify monotonicity between them. Nor does the pairwise formula directly extend to higher dimensions, where optimal maps are described by convex potentials rather than a total order. These boundaries help explain why this one-dimensional identity is so useful: an intrinsically transport-based criterion becomes a very concrete convex penalty.</p>
 
 <h2>References</h2>

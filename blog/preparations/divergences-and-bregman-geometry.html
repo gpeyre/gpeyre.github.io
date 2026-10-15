@@ -35,7 +35,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
  D_\phi(\alpha\mid\beta)
  =\int q(x)\phi\!\left(\frac{p(x)}{q(x)}\right)\,d\omega(x).
 \]
-<p>This depends only on \(\alpha,\beta\), not on the choice of dominating measure. Jensen's inequality under \(\beta\) gives \(D_\phi\ge\phi(\int p\,d\omega)=0\). Strict convexity at the relevant ratios gives equality only for equal measures.</p>
+<p>This depends only on \(\alpha,\beta\), not on the choice of dominating measure. Jensen's inequality under \(\beta\) gives \(D_\phi\ge\phi(\int p\,d\omega)=0\). If \(\phi\) is strictly convex, equality holds only for equal measures.</p>
 <p>Three standard examples are</p>
 \[
  \begin{array}{c|c}
@@ -104,7 +104,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 \]
 <p>Set \(\kappa=\phi''(1)\ge0\). The right-hand side is exactly the second derivative of \(\kappa\operatorname{Ent}(q)=\kappa\int q\log q\,d\omega\). Thus \(\Psi=\Phi-\kappa\operatorname{Ent}\) has zero second derivative along every segment in \(\mathcal D\).</p>
 <p>Consequently \(\Psi\) is affine on each such segment, so its tangent-plane remainder is zero. Therefore \(B_\Phi=\kappa B_{\operatorname{Ent}}=\kappa\mathrm{KL}\) for all pairs—not just infinitesimally close pairs.</p>
-<p><em>Step 2: recover the scalar generator.</em> Put \(r(s)=\phi(s)-\kappa s\log s\). We now know that \(\int q\,r(p/q)\,d\omega=0\) for every pair.</p>
+<p><em>Step 2: recover the scalar generator.</em> Put \(\psi(s)=\phi(s)-\kappa s\log s\). We now know that \(\int q\,\psi(p/q)\,d\omega=0\) for every pair.</p>
 <details class="blog-proof"><summary>Two-value lemma: a zero probability divergence is linear</summary><div class="blog-proof-body">
 <p>Choose any \(0&lt;x&lt;1&lt;y\), and set</p>
 \[
@@ -112,14 +112,21 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 \]
 <p>Choose \(q\) constant on \(A\) and \(A^c\), with \(\beta(A)=w\). Set \(p=xq\) on \(A\) and \(p=yq\) on \(A^c\). Both are strictly positive bounded probability densities because \(wx+(1-w)y=1\). The zero divergence yields</p>
 \[
- (y-1)r(x)+(1-x)r(y)=0,
+ (y-1)\psi(x)+(1-x)\psi(y)=0,
 \]
-<p>hence \(r(x)/(x-1)=r(y)/(y-1)\). Varying \(x\) and \(y\) shows this ratio has the same constant value on both sides of one. Since \(r(1)=0\), \(r(s)=a(s-1)\) everywhere.</p>
+<p>hence \(\psi(x)/(x-1)=\psi(y)/(y-1)\). Varying \(x\) and \(y\) shows this ratio has the same constant value on both sides of one. Since \(\psi(1)=0\), \(\psi(s)=a(s-1)\) everywhere.</p>
 </div></details>
 <p>This proves the scalar formula and completes the characterization. \(\square\)</p>
 </div></details>
 <p>The two-point construction explains the minimal assumption on the reference space: it must distinguish at least two events. On a one-point probability space every divergence is zero, so no generator can be identified.</p>
 <p>The theorem also allows nonseparable \(\Phi\). It does not assume in advance that the Bregman generator is an integral of a scalar function. Its Hessian is forced to be that of entropy simply by matching the density-ratio divergence at every base density.</p>
+<p>Local agreement alone is much weaker. Every smooth \(\phi\)-divergence has, for a bounded zero-mass perturbation \(h\), the expansion</p>
+\[
+ D_\phi((q+th)\omega\mid q\omega)
+ =\frac{\phi''(1)t^2}{2}
+       \int\frac{h^2}{q}\,d\omega+o(t^2).
+\]
+<p>This common quadratic form is the Fisher information metric; it does not make Hellinger or Pearson divergence equal to KL. Rigidity comes from requiring one Bregman generator to realize the divergence for <em>all pairs</em>. Its Hessian at every base point then determines its tangent-plane remainders globally. If the divergence separates distinct laws, the scale in Theorem 1 must satisfy \(\kappa&gt;0\); \(\kappa=0\) gives the identically zero divergence.</p>
 
 <h2>Why this matters for algorithms</h2>
 <p>The derivative of entropy is logarithmic. On a finite probability simplex, minimizing a linear cost regularized by KL gives an explicit multiplicative step:</p>

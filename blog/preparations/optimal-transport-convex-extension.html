@@ -47,6 +47,7 @@
 \]
 <p>Weak convergence means convergence of integrals against every continuous test function. It is the natural topology for approximating a distribution by increasingly fine point clouds on a compact space.</p>
 <p>These convex combinations mix measures; they do not move particles along Wasserstein geodesics. The theorem concerns convexity in the ordinary linear structure of measures, not displacement convexity.</p>
+<p>“Jointly” is essential too. Independent averaging, \(F(\alpha,\beta)=\iint c\,d\alpha\,d\beta\), is affine in each marginal separately. But for \(c(x,y)=|x-y|\) on \(\{0,1\}\), it is zero at both \((\delta_0,\delta_0)\) and \((\delta_1,\delta_1)\), while it is \(1/2\) at their common midpoint. Thus it fails joint convexity. The <a href="when-independence-is-optimal.html">post on independence and optimal transport</a> examines this coupling from another angle.</p>
 
 <h2>The maximal extension theorem</h2>
 <p>Let \(\Pi(\alpha,\beta)\) denote the joint probability measures on \(X\times Y\) with the given marginals. Define</p>
@@ -70,7 +71,7 @@
   =\lim_j T_c(\alpha_j,\beta_j).
 \]
 <p>There is only one coupling between two Dirac masses, namely \(\delta_{(x,y)}\), proving the pointwise equality.</p>
-<p><em>Step 2: every admissible extension is below it.</em> Fix any \(\pi\in\Pi(\alpha,\beta)\). Approximate it weakly by finitely supported probability measures</p>
+<p><em>Step 2: every admissible extension is below it.</em> Fix any \(\pi\in\Pi(\alpha,\beta)\). Partition the compact product into finitely many measurable cells of diameter tending to zero, and place each cell's mass at one representative point. This gives weakly converging finite approximations</p>
 \[
   \pi_j=\sum_k w_{j,k}\delta_{(x_{j,k},y_{j,k})}.
 \]
@@ -90,6 +91,7 @@
   (\alpha,\beta)=\int_{X\times Y}(\delta_x,\delta_y)\,d\pi(x,y).
 \]
 <p>There are generally many ways to make this decomposition. Convexity bounds \(F\) by the average pointwise cost of <em>each</em> one, so it bounds \(F\) by the smallest of them. Lower semicontinuity is what lets finite decompositions control general distributions.</p>
+<p>Without that last assumption, the conclusion is false. On \(X=Y=[0,1]\), set \(F=T_c\) when both marginals have finite support, and \(F=+\infty\) otherwise. This functional is convex and agrees with the cost on every Dirac pair, but it assigns infinite value to diffuse distributions. Weak lower semicontinuity excludes precisely this kind of jump from finite clouds to their limit.</p>
 
 <h2>A complete example on two points</h2>
 <p>Take \(X=Y=\{0,1\}\), with cost \(c(x,y)=|x-y|\). The squared cost is the same on this two-point space. Write</p>
@@ -116,13 +118,27 @@
 <p>This also illustrates why one should state the theorem for the transport <em>cost</em>. On these two points \(W_2^2=|a-b|\), whereas \(W_2=\sqrt{|a-b|}\) is not convex in the marginals: along \(b=0\), it is a strictly concave function of \(a\).</p>
 
 <h2>Why “largest” is essential</h2>
-<p>Convexity, continuity, and agreement on Dirac masses do not uniquely determine a functional. On compact Euclidean supports, let</p>
+<p>Joint convexity, weak lower semicontinuity, and agreement on Dirac masses do not uniquely determine a functional. On compact Euclidean supports, choose \(\varepsilon&gt;0\) and let</p>
 \[
   F_\varepsilon(\alpha,\beta)
   =T_c(\alpha,\beta)
    -\varepsilon\bigl(\operatorname{Var}(\alpha)+\operatorname{Var}(\beta)\bigr),
 \]
 <p>where \(\operatorname{Var}(\alpha)=\int|x|^2\,d\alpha-|\int x\,d\alpha|^2\). Variance is concave in a law, so its negative is convex. It is also weakly continuous on compact supports. Thus \(F_\varepsilon\) is another jointly convex lower-semicontinuous functional with the same values on every Dirac pair, and it is smaller wherever the subtracted variance is positive.</p>
+<details class="blog-proof">
+<summary>Why subtracting variance preserves convexity</summary>
+<div class="blog-proof-body">
+<p>Let \(m_i=\int x\,d\alpha_i(x)\). Expanding the square of the mixed mean gives</p>
+\[
+  \begin{aligned}
+  \operatorname{Var}((1-t)\alpha_0+t\alpha_1)
+  ={}&(1-t)\operatorname{Var}(\alpha_0)
+     +t\operatorname{Var}(\alpha_1)\\
+     &+t(1-t)|m_0-m_1|^2.
+  \end{aligned}
+\]
+<p>The extra term is nonnegative, proving concavity. On a fixed compact support, both \(x\) and \(|x|^2\) are bounded continuous test functions, so the mean and variance vary continuously under weak convergence. Subtracting the variance therefore preserves both convexity and lower semicontinuity of \(T_c\).</p>
+</div></details>
 <p>If one also wants nonnegative values, use \(\max(F_\varepsilon,0)\). The maximum of two convex lower-semicontinuous functions has the same properties, and the Dirac values remain unchanged because \(c\ge0\).</p>
 <figure>
   <iframe class="idea-experiment" data-experiment="envelope" title="Two-point optimal transport as a convex envelope" src="assets/ot-lab/index.html?topic=envelope" loading="lazy"></iframe>

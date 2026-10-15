@@ -43,7 +43,7 @@
                          d\mu(x_1)\cdots d\mu(x_m).
 \]
 <p>The order counts particles, not powers of their coordinates. For instance, the mean is order one and a pair interaction is order two. Along a mixture \(\mu_t=(1-t)\mu+t\nu\), expanding the \(m\) factors shows that \(P_\varphi(\mu_t)\) is an ordinary polynomial in \(t\), of degree at most \(m\). This is a statement about mixtures, not about Wasserstein geodesics.</p>
-<p>Products stay in the class: multiply the two kernels on separate groups of variables. Constants belong to it, and order-one observables \(\int\phi\,d\mu\) separate measures. Stone–Weierstrass therefore proves density, as in Cardaliaguet’s mean field game notes <a href="#ref-cardaliaguet">[4]</a>. The following operator gives a particular approximating sequence.</p>
+<p>Products stay in the class: multiply the two kernels on separate groups of variables. Sums do too: add unused variables to a lower-order kernel, then add the kernels. Constants belong to it, and order-one observables \(\int\phi\,d\mu\) separate measures. These functions form an algebra, so Stone–Weierstrass proves density, as in Cardaliaguet’s mean field game notes <a href="#ref-cardaliaguet">[4]</a>. The following operator gives a particular approximating sequence.</p>
 
 <h2>Sample, evaluate, average</h2>
 <p>For independent \(X_1,\ldots,X_n\sim\mu\), define</p>
@@ -64,6 +64,7 @@
  \le\frac1n\sum_i d(x_i,y_i)^p.
 \]
 <p>Moreover, \(B_n\) is linear in \(F\), preserves constants and positivity, and satisfies \(\|B_nF\|_\infty\le\|F\|_\infty\). Averaging cannot amplify a uniform error.</p>
+<p>It also reproduces every linear observable exactly: if \(F(\mu)=\int\phi\,d\mu\), then \(B_nF(\mu)=\int\phi\,d\mu\), because the sample average is unbiased. Approximation enters when \(F\) depends nonlinearly on the distribution.</p>
 
 <p id="theorem-1"><strong>Theorem 1 (uniform constructive approximation).</strong> If \(K\) is compact and \(F:\mathcal P(K)\to\mathbb R\) is continuous, then</p>
 \[
@@ -153,6 +154,22 @@
 </div>
 </details>
 <p>The threshold \(d=2p\) compares two effects: the \(n^{-1/2}\) fluctuations of the mass in a coarse cell, and the spatial resolution needed to locate many particles in high dimension. Finer results can exploit the intrinsic geometry of the law rather than just its ambient dimension <a href="#ref-weed">[6]</a>.</p>
+<p>The low-dimensional exponent can already be attained on a <em>two-point space</em>. Put \(K=\{0,1\}\), \(\mu_*=(\delta_0+\delta_1)/2\), and \(F(\mu)=W_p(\mu,\mu_*)^\eta\). This is an \(\eta\)-Hölder functional with constant one. At \(\mu_*\), its Bernstein error is of order \(n^{-\eta/(2p)}\), exactly the first rate in Theorem 2.</p>
+<details class="blog-proof">
+<summary>Why two atoms can attain this rate</summary>
+<div class="blog-proof-body">
+<p>Write \(\mu_a=(1-a)\delta_0+a\delta_1\). Unmatched mass travels distance one, so \(W_p(\mu_a,\mu_b)^p=|a-b|\). If \(K_n\) has binomial law with parameters \(n,1/2\), then</p>
+\[
+ B_nF(\mu_*)-F(\mu_*)
+ =\mathbb E\left|\frac{K_n}{n}-\frac12\right|^{\eta/p}.
+\]
+<p>The central limit theorem gives \((K_n-n/2)/\sqrt n\Rightarrow Z/2\), where \(Z\) is standard Gaussian. These variables have second moment \(1/4\), so their powers of order \(\eta/p\le1\) are uniformly integrable. Consequently,</p>
+\[
+ n^{\eta/(2p)}B_nF(\mu_*)
+ \longrightarrow\mathbb E|Z/2|^{\eta/p}>0.
+\]
+<p>The obstruction is random mass imbalance, not spatial dimension. This concerns the Bernstein sampling operator; it is not a lower bound for every possible polynomial approximation.</p>
+</div></details>
 
 <h2>The original Bernstein formula reappears</h2>
 <p>Take \(K=\{0,1\}\), \(\mu_a=(1-a)\delta_0+a\delta_1\), and write \(f(a)=F(\mu_a)\). The number of ones in the sample has binomial law, so</p>
@@ -165,7 +182,7 @@
 \[
  B_nf(a)=a^2+\frac{a(1-a)}n.
 \]
-<p>More generally, if \(F(\mu)=(\int x\,d\mu)^2\) on a bounded real interval, its bias is exactly \(\operatorname{Var}(\mu)/n\). Independence leaves only the diagonal terms in the square of the sample mean.</p>
+<p>More generally, if \(F(\mu)=(\int x\,d\mu)^2\) on a bounded real interval, its bias is exactly \(\operatorname{Var}(\mu)/n\). After subtracting the square of the mean, independence leaves only the diagonal variance terms.</p>
 <p>For the corner \(f(a)=|a-\tfrac12|\), the approximation rounds the tip. At \(a=\tfrac12\), for even \(n=2m\), a binomial-sum identity gives</p>
 \[
  B_{2m}f(1/2)

@@ -5,12 +5,12 @@ const $=id=>document.getElementById(id);
 const fmt=(x,k=4)=>Number.isFinite(x)?x.toPrecision(k):"--";
 let cancel=()=>{}, active="";
 const requestedTopic=new URLSearchParams(location.search).get("topic") || "weak";
-function line(points,color=TEAL,width=1.8,opacity=1) {
-  return `<polyline points="${points.map(p=>p.join(",")).join(" ")}" fill="none" stroke="${color}" stroke-width="${width}" opacity="${opacity}"/>`;
+function line(points,color=TEAL,width=1.8,opacity=1,dash="") {
+  return `<polyline points="${points.map(p=>p.join(",")).join(" ")}" fill="none" stroke="${color}" stroke-width="${width}" opacity="${opacity}"${dash?` stroke-dasharray="${dash}"`:""}/>`;
 }
 function dot(p,color,r=3,extra=""){return `<circle cx="${p[0]}" cy="${p[1]}" r="${r}" fill="${color}" ${extra}/>`;}
 function text(p,s,anchor="middle"){return `<text x="${p[0]}" y="${p[1]}" text-anchor="${anchor}">${s}</text>`;}
-function plot(title,xrange,yrange,axes=true) {
+function plot(title,xrange,yrange,axes=true,ticks={}) {
   const wrap=document.createElement("div");wrap.className="plot";
   const heading=document.createElement("h3");heading.textContent=title;wrap.appendChild(heading);
   const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
@@ -25,14 +25,14 @@ function plot(title,xrange,yrange,axes=true) {
   let base="";
   if(axes){
     base=line([[40,30],[40,250],[360,250]],GRAY,.8);
-    for(let i=0;i<=4;i++){
-      const x=xrange[0]+(xrange[1]-xrange[0])*i/4,y=yrange[0]+(yrange[1]-yrange[0])*i/4;
-      base+=text([40+80*i,269],fmt(x,2));base+=text([33,254-55*i],fmt(y,2),"end");
-    }
+    const xticks=ticks.x||Array.from({length:5},(_,i)=>{const x=xrange[0]+(xrange[1]-xrange[0])*i/4;return [x,fmt(x,2)];});
+    const yticks=ticks.y||Array.from({length:5},(_,i)=>{const y=yrange[0]+(yrange[1]-yrange[0])*i/4;return [y,fmt(y,2)];});
+    for(const [x,label] of xticks)base+=text([project([x,yrange[0]])[0],269],label);
+    for(const [y,label] of yticks){const py=project([xrange[0],y])[1];base+=line([[40,py],[360,py]],GRAY,.5,.2)+text([33,py+4],label,"end");}
   }
   return {svg,project,unproject,draw:s=>{svg.innerHTML=base+s;},
           fitGeometry:(xr,yr)=>{if(axes)throw Error("Only geometry panels can change their view bounds");sx=sy=Math.min(320/(xr[1]-xr[0]),220/(yr[1]-yr[0]));mx=(xr[0]+xr[1])/2;my=(yr[0]+yr[1])/2;},
-          path:(points,c,w,o)=>line(points.map(project),c,w,o)};
+          path:(points,c,w,o,dash)=>line(points.map(project),c,w,o,dash)};
 }
 function slider(label,min,max,value,step=1) {
   const box=document.createElement("label"),span=document.createElement("span"),out=document.createElement("output");
@@ -136,17 +136,20 @@ function clt(){
     "Blue: symmetric Bernoulli. Red: continuous uniform. Select the number of summands. On the right, multiply the CDF errors by √n and n respectively to reveal their different leading shapes.",
     "Bernoulli is evaluated from binomial masses; the uniform law uses a continuous Irwin-Hall spline CDF. Numerical integration is refined independently. Neither rate is estimated from a discretized uniform input.",2);
   const s=slider("Number of summands n",0,D.clt.profiles.length-1,0);
-  const p=plot("W1 error versus n (log-log)",[0,Math.log10(192)],[-4,0]);
+  const p=plot("W₁ error versus n (log scales)",[0,Math.log10(192)],[-4,0],true,{
+    x:[1,2,5,10,20,50,100,192].map(n=>[Math.log10(n),String(n)]),
+    y:[[-4,"10⁻⁴"],[-3,"10⁻³"],[-2,"10⁻²"],[-1,"10⁻¹"],[0,"1"]]});
   const e=plot("Rescaled CDF errors: √n blue, n red",[-4,4],[-.42,.42]);
   const redraw=()=>{
     const data=D.clt,profile=data.profiles[+s.value],index=data.n.indexOf(profile.n);let a="";
     s.parentElement.querySelector("output").textContent=String(profile.n);
     for(const [key,col] of [["bernoulli",BLUE],["uniform",RED]]){
       a+=p.path(data.n.map((n,i)=>[Math.log10(n),Math.log10(data[key][i])]),col);
-      a+=p.path(data.n.map(n=>[Math.log10(n),Math.log10(key==="bernoulli"?.5/Math.sqrt(n):data.uniformConstant/n)]),col,.8,.5);
+      a+=p.path(data.n.map(n=>[Math.log10(n),Math.log10(key==="bernoulli"?.5/Math.sqrt(n):data.uniformConstant/n)]),col,1,.55,"4 3");
+      a+=dot(p.project([Math.log10(profile.n),Math.log10(data[key][index])]),col,3.5);
     }p.draw(a);
-    e.draw(e.path(profile.x.map((x,i)=>[x,Math.sqrt(profile.n)*profile.bernoulli[i]]),BLUE,1.3)+e.path(profile.x.map((x,i)=>[x,profile.n*profile.uniform[i]]),RED,1.6));
-    $("status").textContent=`n = ${profile.n} | Bernoulli √n W₁ = ${fmt(Math.sqrt(profile.n)*data.bernoulli[index],6)} → 0.5 | uniform n W₁ = ${fmt(profile.n*data.uniform[index],6)} → ${fmt(data.uniformConstant,6)} | rate-plot axes show base-10 logarithms`;
+    e.draw(e.path(M.bernoulliErrorCurve(profile.n),BLUE,1.3)+e.path(profile.x.map((x,i)=>[x,profile.n*profile.uniform[i]]),RED,1.6));
+    $("status").textContent=`n = ${profile.n} | Bernoulli √n W₁ = ${fmt(Math.sqrt(profile.n)*data.bernoulli[index],6)} → 0.5 | uniform n W₁ = ${fmt(profile.n*data.uniform[index],6)} → ${fmt(data.uniformConstant,6)} | dashed curves: leading asymptotics; dots: selected n`;
   };s.addEventListener("input",redraw);redraw();
 }
 
@@ -160,11 +163,15 @@ function energy(){
   const e=plot("Energy / initial energy",[0,1],[0,1]);
   function redraw(){const a=D.energy.one,b=D.energy.two,k=+s.value;
     const i=Math.round(k*(a.q.length-1)/100),j=Math.round(k*(b.points.length-1)/100);
-    const inv=r=>{let t=0;while(t<a.targetCDF.length-1 && a.targetCDF[t]<r)t++;return a.x[t];};
+    const inv=r=>{let t=0;while(t<a.targetCDF.length-1 && a.targetCDF[t]<r)t++;
+      if(t===0)return a.x[0];
+      const weight=(r-a.targetCDF[t-1])/(a.targetCDF[t]-a.targetCDF[t-1]);
+      return a.x[t-1]+weight*(a.x[t]-a.x[t-1]);};
     p.draw(p.path(a.q[i].map((v,z)=>[(z+.5)/a.q[i].length,v]),RED)+p.path(a.q[i].map((_,z)=>[(z+.5)/a.q[i].length,inv((z+.5)/a.q[i].length)]),BLUE,1.5));
     let ss=b.target.map(v=>dot(q.project(v),GRAY,1.5)).join("");
     b.points[j].forEach((v,z)=>{if(z%3===0)ss+=q.path(b.points.slice(0,j+1).map(row=>row[z]),TEAL,.8,.5);ss+=dot(q.project(v),RED,2.4);});q.draw(ss);
-    e.draw(e.path(a.energy.map((v,z)=>[z/(a.energy.length-1),v/a.energy[0]]),TEAL)+e.path(b.energy.map((v,z)=>[z/(b.energy.length-1),v/b.energy[0]]),BLUE));
+    e.draw(e.path(a.energy.map((v,z)=>[z/(a.energy.length-1),v/a.energy[0]]),TEAL)+e.path(b.energy.map((v,z)=>[z/(b.energy.length-1),v/b.energy[0]]),BLUE)
+      +dot(e.project([i/(a.energy.length-1),a.energy[i]/a.energy[0]]),TEAL,3.5)+dot(e.project([j/(b.energy.length-1),b.energy[j]/b.energy[0]]),BLUE,3.5));
     $("status").textContent=`1D time ${fmt(a.times[i])}, energy ${fmt(a.energy[i])} | 2D time ${fmt(b.times[j])}, mollified energy ${fmt(b.energy[j])} | energy plot: normalized experiment time, teal 1D / blue 2D`;
   }s.addEventListener("input",redraw);redraw();
 }
@@ -198,22 +205,29 @@ function composition(){
 function cdf(){
   setup("19 / A CDF-only formula for W2 squared",
     "Compare a positive sinusoidal density with the uniform law on [0,1]. The colored triangle is the positive-part integrand; no inverse CDF is used in its quadrature.",
-    "The exact squared distance for this example is 0.135/pi^2. A two-dimensional quadrature is not automatically cheaper than a one-dimensional quantile calculation; the advantage can be easy, distributable CDF evaluations.",2);
+    "The exact squared distance is 0.135/pi^2. Off-diagonal cells use midpoint quadrature; diagonal triangles use their centroids. The last panel measures actual error against the exact answer. A two-dimensional quadrature is not automatically cheaper than a quantile calculation.");
   const s=slider("Quadrature cells per axis",20,400,100,10);
   const p=plot("The two cumulative functions",[0,1],[0,1]);
   const q=plot("CDF integrand on x < y",[0,1],[0,1]);
+  const errorplot=plot("Absolute quadrature error (log scales)",[Math.log10(20),Math.log10(400)],[-7,-3],true,{
+    x:[20,40,100,200,400].map(n=>[Math.log10(n),String(n)]),
+    y:[[-7,"10⁻⁷"],[-6,"10⁻⁶"],[-5,"10⁻⁵"],[-4,"10⁻⁴"],[-3,"10⁻³"]]});
   const F=x=>x+.6*(1-Math.cos(2*Math.PI*x))/(2*Math.PI);
   const H=(x,y)=>Math.max(F(x)-y,0)+Math.max(x-F(y),0);
+  const exact=.135/Math.PI**2;
+  const convergence=Array.from({length:39},(_,i)=>{const n=20+10*i;return {n,value:M.cdfSquaredDistance(F,x=>x,n)};});
   function redraw(){p.draw(p.path(Array.from({length:201},(_,i)=>[i/200,F(i/200)]),RED)+p.path([[0,0],[1,1]],BLUE));
-    let ss="";const size=45;
+    let ss="";const n=+s.value,size=Math.min(n,80);
     for(let i=0;i<size;i++)for(let j=i;j<size;j++){
-      const x=(i+.5)/size,y=(j+.5)/size,h=H(x,y),v=q.project([i/size,(j+1)/size]);
-      ss+=`<rect x="${v[0]}" y="${v[1]}" width="${320/size+.1}" height="${220/size+.1}" fill="${TEAL}" opacity="${Math.min(1,h/.18)}"/>`;
+      const diagonal=i===j,x=(i+(diagonal?1/3:.5))/size,y=(j+(diagonal?2/3:.5))/size,h=H(x,y);
+      const corners=diagonal?[[i/size,i/size],[i/size,(i+1)/size],[(i+1)/size,(i+1)/size]]:
+        [[i/size,j/size],[i/size,(j+1)/size],[(i+1)/size,(j+1)/size],[(i+1)/size,j/size]];
+      ss+=`<polygon points="${corners.map(v=>q.project(v).join(",")).join(" ")}" fill="${TEAL}" opacity="${Math.min(1,h/(.6/Math.PI))}"/>`;
     }q.draw(ss);
-    const n=+s.value;let val=0;
-    for(let i=0;i<n;i++)for(let j=i;j<n;j++)val+=H((i+.5)/n,(j+.5)/n)*(i===j?.5:1);
-    val*=2/(n*n);const exact=.135/Math.PI**2;
-    $("status").textContent=`CDF quadrature ${fmt(val,8)} | exact ${fmt(exact,8)} | absolute error ${fmt(Math.abs(val-exact),3)} | triangular midpoint quadrature`;
+    const val=convergence.find(point=>point.n===n).value,error=Math.abs(val-exact);
+    errorplot.draw(errorplot.path(convergence.map(v=>[Math.log10(v.n),Math.log10(Math.abs(v.value-exact))]),TEAL,1.8)
+      +dot(errorplot.project([Math.log10(n),Math.log10(error)]),RED,4));
+    $("status").textContent=`CDF quadrature ${fmt(val,8)} | exact ${fmt(exact,8)} | absolute error ${fmt(error,3)} | ${n*(n+1)/2} integration cells; heatmap resolution capped at 80 per axis`;
   }s.addEventListener("input",redraw);redraw();
 }
 
@@ -231,11 +245,13 @@ function matchings(){
     $("status").textContent=`Catalan count ${Math.round(M.catalan(x.length)).toLocaleString()} | current ${fmt(cost(p))} | best visited ${fmt(best)} | global optimum ${fmt(opt)} | proper crossings ${M.crossing(x,y,p)?"ERROR":"none"}`;
   }
   function record(){current=cost(p);best=Math.min(best,current);history.push(current);draw();}
-  function reset(){const n=+s.value,rr=M.rng(21);
-    const all=Array.from({length:2*n},(_,i)=>{const a=i*Math.PI/n+(rr()-.5)*.08;return [1.6*Math.cos(a),Math.sin(a)];});
-    x=all.filter((_,i)=>i%2===0);y=all.filter((_,i)=>i%2===1);p=M.sampleMatching(n,random);
+  function setCloud(all,matching){const n=all.length/2;
+    x=all.filter((_,i)=>i%2===0);y=all.filter((_,i)=>i%2===1);p=matching||M.sampleMatching(n,random);
     const c=x.map(v=>y.map(w=>Math.sqrt(M.dist2(v,w))));const z=M.transport(c,x.map(()=>1/n),y.map(()=>1/n));
     opt=M.sum(z.map((row,i)=>M.sum(row.map((v,j)=>v*c[i][j]))));best=Infinity;history=[];record();
+  }
+  function reset(){const n=+s.value,rr=M.rng(21);
+    setCloud(Array.from({length:2*n},(_,i)=>{const a=i*Math.PI/n+(rr()-.5)*.08;return [1.6*Math.cos(a),Math.sin(a)];}));
   }
   button("Uniform random matching",()=>{p=M.sampleMatching(x.length,random);record();});
   button("Try 500 downhill swaps",()=>{
@@ -245,6 +261,10 @@ function matchings(){
     }record();
   });
   button("Explore 100 random matchings",()=>{for(let z=0;z<100;z++){p=M.sampleMatching(x.length,random);current=cost(p);best=Math.min(best,current);history.push(current);}draw();});
+  button("Load three-pair trap",()=>{
+    s.value=3;s.parentElement.querySelector("output").textContent="3";
+    setCloud([1/12,1/3,2/3,1,4/3,5/3].map(t=>[Math.cos(Math.PI*t),Math.sin(Math.PI*t)]),[2,0,1]);
+  });
   s.addEventListener("input",reset);reset();
 }
 
@@ -268,7 +288,9 @@ function quantization(){
     "The blue error is one realization, not its expectation. The exact expected squared error is 1/(6n); the optimal deterministic error is 1/(12n^2). The power comparison is for this regular one-dimensional setting.",2);
   const s=slider("Particle count n",2,150,18);let seed=34;
   const p=plot("CDFs: random (blue), optimal (teal)",[0,1],[0,1]);
-  const q=plot("Squared W2 error (log-log)",[Math.log10(2),Math.log10(256)],[-7,-.7]);
+  const q=plot("Squared W₂ error (log scales)",[Math.log10(2),Math.log10(256)],[-7,-.7],true,{
+    x:[2,10,50,256].map(n=>[Math.log10(n),String(n)]),
+    y:[[-7,"10⁻⁷"],[-5,"10⁻⁵"],[-3,"10⁻³"],[-1,"10⁻¹"]]});
   function redraw(){const n=+s.value,rr=M.rng(seed),xs=Array.from({length:n},()=>rr()).sort((a,b)=>a-b),zs=xs.map((_,i)=>(i+.5)/n);
     const stairs=arr=>{const v=[[0,0]];arr.forEach((x,i)=>v.push([x,i/n],[x,(i+1)/n]));v.push([1,1]);return v;};
     p.draw(p.path([[0,0],[1,1]],GRAY,.8)+p.path(stairs(xs),BLUE,1.5)+p.path(stairs(zs),TEAL,1.5));
@@ -276,38 +298,26 @@ function quantization(){
     const nn=Array.from({length:100},(_,i)=>2*Math.exp(i*Math.log(128)/99));
     q.draw(q.path(nn.map(n=>[Math.log10(n),Math.log10(1/(6*n))]),BLUE)+q.path(nn.map(n=>[Math.log10(n),Math.log10(1/(12*n*n))]),TEAL)
       +dot(q.project([Math.log10(n),Math.log10(er)]),BLUE,4));
-    $("status").textContent=`random realization ${fmt(er)} | random expectation ${fmt(1/(6*n))} | optimal ${fmt(opt)} | seed ${seed} | right axes: base-10 logarithms`;
+    $("status").textContent=`random realization ${fmt(er)} | random expectation ${fmt(1/(6*n))} | optimal ${fmt(opt)} | seed ${seed} | right: lines are exact rates, blue dot is one realization`;
   }button("Resample random particles",()=>{seed++;redraw();});s.addEventListener("input",redraw);redraw();
 }
 
 function monge(){
   setup("1 / Inversions as a convex regression penalty",
     "Increase the Monge-gap weight. Red observations are fitted by a Gaussian-kernel regressor; the gray line sorts the fitted values without changing their empirical law.",
-    "The optimizer uses a smooth hinge with delta = 0.015 and a finite descent budget. The displayed gap is the exact nonsmooth inversion formula, not the smoothed penalty. Sorting and monotone regression are different operations.",1);
+    "Damped Newton minimizes a smooth hinge with delta = 0.015. Strong convexity bounds its remaining objective error (reported with a 10⁻¹² roundoff floor). The displayed Monge gap uses the exact nonsmooth inversion formula; the bound concerns the smooth objective only. Sorting and monotone regression differ.",1);
   const s=slider("Penalty exponent (gamma = 10^value)",-3,2,-3,.1);
-  const p=plot("Fitted values (teal), sorted fitted values (gray)",[0,1],[-.6,1.8]);
+  const p=plot("Kernel fit (teal), sorted evaluations (gray)",[0,1],[-.6,1.8]);
   const n=24,x=Array.from({length:n},(_,i)=>i/(n-1)),rr=M.rng(1);
   const y=x.map(t=>t+.45*Math.sin(3*Math.PI*t)+.12*M.gaussian(rr));
-  const K=x.map(a=>x.map(b=>Math.exp(-(((a-b)/.075)**2)/2)));
-  const inv=K.map((_,i)=>M.solve(K,x.map((_,j)=>i===j?1:0)));
-  const lam=.0008,delta=.015,kappa=2/(n*(n-1));
-  let fit=[...y];
-  function fg(t,gamma){const kt=inv.map(row=>M.dot(row,t)),grad=t.map((v,i)=>2*(v-y[i])/n+2*lam*kt[i]);
-    let val=M.sum(t.map((v,i)=>(v-y[i])**2))/n+lam*M.dot(t,kt);
-    for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){
-      const z=(t[i]-t[j])/delta;val+=gamma*kappa*delta*(Math.max(z,0)+Math.log1p(Math.exp(-Math.abs(z))));
-      const v=gamma*kappa/(1+Math.exp(-z));grad[i]+=v;grad[j]-=v;
-    }return {val,grad};
-  }
-  function redraw(){const gamma=10**(+s.value);let t=fit;
-    for(let it=0;it<500;it++){const {val,grad}=fg(t,gamma);let h=1,tt;
-      do {tt=t.map((v,i)=>v-h*grad[i]);if(fg(tt,gamma).val<=val-.1*h*M.dot(grad,grad))break;h/=2;}while(h>1e-10);
-      t=tt;if(M.dot(grad,grad)<1e-11)break;
-    }fit=t;const sorted=[...t].sort((a,b)=>a-b);let ss=p.path(x.map((v,i)=>[v,t[i]]),TEAL,2)+p.path(x.map((v,i)=>[v,sorted[i]]),GRAY,1.3);
+  const model=M.mongeRegression(y);
+  function redraw(){const gamma=10**(+s.value),solution=model.fit(gamma),t=solution.values;
+    const sorted=[...t].sort((a,b)=>a-b);
+    let ss=p.path(Array.from({length:301},(_,i)=>[i/300,solution.predict(i/300)]),TEAL,2)+p.path(x.map((v,i)=>[v,sorted[i]]),GRAY,1.3);
     x.forEach((v,i)=>ss+=dot(p.project([v,y[i]]),RED,3));p.draw(ss);
     const gap=M.uniformMongeGap(t);
     const direct=M.sum(x.map((v,i)=>(v-t[i])**2-(v-sorted[i])**2))/n;
-    $("status").textContent=`gamma ${fmt(gamma)} | exact Monge gap ${fmt(gap)} | cost-difference check ${fmt(Math.abs(gap-direct),2)} | smooth objective gradient norm ${fmt(Math.sqrt(M.dot(fg(t,gamma).grad,fg(t,gamma).grad)),3)}`;
+    $("status").textContent=`gamma ${fmt(gamma)} | exact Monge gap ${fmt(gap)} | cost-difference check ${fmt(Math.abs(gap-direct),2)} | smooth objective error bound ≤ ${fmt(Math.max(1e-12,solution.errorBound),3)} | Newton steps ${solution.iterations}`;
   }s.addEventListener("input",redraw);redraw();
 }
 

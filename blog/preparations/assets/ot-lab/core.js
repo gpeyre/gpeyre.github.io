@@ -172,12 +172,105 @@
     for(let i=0;i<n;i++)for(let j=i+1;j<n;j++)gap+=Math.max(values[i]-values[j],0);
     return 2*gap/(n*(n-1));
   }
+  function mongeRegression(observations, options={}) {
+    const n=observations.length,lambda=options.lambda??.0008,delta=options.delta??.015;
+    const bandwidth=options.bandwidth??.075,x=observations.map((_,i)=>i/(n-1));
+    const kernel=x.map(a=>x.map(b=>Math.exp(-.5*((a-b)/bandwidth)**2)));
+    const inverse=transpose(x.map((_,i)=>solve(kernel,x.map((_,j)=>i===j?1:0))));
+    // Roundoff in the separate solves must not introduce an antisymmetric
+    // part into the quadratic objective or its Hessian.
+    for(let i=0;i<n;i++)for(let j=0;j<i;j++)inverse[i][j]=inverse[j][i]=(inverse[i][j]+inverse[j][i])/2;
+    const factor=2/(n*(n-1));
+    function evaluate(values,gamma,secondOrder=false) {
+      const kt=inverse.map(row=>dot(row,values));
+      let value=sum(values.map((v,i)=>(v-observations[i])**2))/n+lambda*dot(values,kt);
+      const gradient=values.map((v,i)=>2*(v-observations[i])/n+2*lambda*kt[i]);
+      const hessian=secondOrder?inverse.map((row,i)=>row.map((v,j)=>2*lambda*v+(i===j?2/n:0))):null;
+      for(let i=0;i<n;i++)for(let j=i+1;j<n;j++) {
+        const z=(values[i]-values[j])/delta;
+        const sigmoid=z>=0?1/(1+Math.exp(-z)):Math.exp(z)/(1+Math.exp(z));
+        value+=gamma*factor*delta*(Math.max(z,0)+Math.log1p(Math.exp(-Math.abs(z))));
+        const first=gamma*factor*sigmoid;gradient[i]+=first;gradient[j]-=first;
+        if(hessian) {
+          const second=gamma*factor*sigmoid*(1-sigmoid)/delta;
+          hessian[i][i]+=second;hessian[j][j]+=second;hessian[i][j]-=second;hessian[j][i]-=second;
+        }
+      }
+      return {value,gradient,hessian};
+    }
+    function fit(gamma) {
+      // Every slider position starts from the same ridge fit. Backtracking
+      // Newton is insensitive to the ill-conditioning that stalled descent.
+      let values=solve(inverse.map((row,i)=>row.map((v,j)=>lambda*n*v+(i===j?1:0))),observations);
+      let iterations=0;
+      for(;iterations<60;iterations++) {
+        const state=evaluate(values,gamma,true),norm2=dot(state.gradient,state.gradient);
+        if(norm2<1e-16)break;
+        const direction=solve(state.hessian,state.gradient.map(v=>-v)),slope=dot(state.gradient,direction);
+        let step=1,accepted=false;
+        while(step>=2**-30) {
+          const next=values.map((v,i)=>v+step*direction[i]);
+          if(evaluate(next,gamma).value<=state.value+1e-4*step*slope+1e-14) {
+            values=next;accepted=true;break;
+          }
+          step/=2;
+        }
+        if(!accepted)break;
+      }
+      const state=evaluate(values,gamma),norm2=dot(state.gradient,state.gradient);
+      const coefficients=inverse.map(row=>dot(row,values));
+      // The data term alone is 2/n-strongly convex in the fitted values.
+      // This certifies the SMOOTH objective only, not the exact hinge problem.
+      return {values,iterations,value:state.value,gradientNorm:Math.sqrt(norm2),errorBound:n*norm2/4,
+        predict:point=>dot(x.map(t=>Math.exp(-.5*((point-t)/bandwidth)**2)),coefficients)};
+    }
+    return {evaluate,fit};
+  }
+  function gaussianCDF(x) {
+    if(x===0)return .5;
+    if(Math.abs(x)>8)return x<0?0:1;
+    const t=Math.abs(x);let term=t,total=t;
+    // Positive-term series for exp(x²/2) ∫_0^x exp(-u²/2) du.
+    for(let k=1;k<200;k++){term*=t*t/(2*k+1);total+=term;if(term<total*1e-16)break;}
+    return .5+Math.sign(x)*Math.exp(-t*t/2)*total/Math.sqrt(2*Math.PI);
+  }
+  function bernoulliErrorCurve(n,extent=4) {
+    const mode=Math.floor(n/2),mass=Array(n+1).fill(0);mass[mode]=1;
+    for(let i=mode;i>0;i--)mass[i-1]=mass[i]*i/(n-i+1);
+    for(let i=mode;i<n;i++)mass[i+1]=mass[i]*(n-i)/(i+1);
+    const total=sum(mass),root=Math.sqrt(n),atoms=mass.map((_,i)=>(2*i-n)/root);
+    const nodes=Array.from({length:401},(_,i)=>({x:-extent+2*extent*i/400}));
+    atoms.forEach((x,i)=>{if(x>=-extent && x<=extent)nodes.push({x,atom:i});});
+    nodes.sort((a,b)=>a.x-b.x||((a.atom??-1)-(b.atom??-1)));
+    let cdf=0,index=0;const curve=[];
+    for(const node of nodes) {
+      while(index<atoms.length && atoms[index]<node.x){cdf+=mass[index]/total;index++;}
+      const phi=gaussianCDF(node.x);
+      curve.push([node.x,root*(cdf-phi)]);
+      if(node.atom!==undefined && index===node.atom) {
+        cdf+=mass[index++]/total;curve.push([node.x,root*(cdf-phi)]);
+      }
+    }
+    return curve;
+  }
   function convexEnvelope(a,b,epsilon=0) {
     return Math.max(0,Math.abs(a-b)-epsilon*(a*(1-a)+b*(1-b)));
   }
+  function cdfSquaredDistance(F,G,n,lower=0,upper=1) {
+    const step=(upper-lower)/n;
+    const h=(x,y)=>Math.max(F(x)-G(y),0)+Math.max(G(x)-F(y),0);
+    let value=0;
+    for(let i=0;i<n;i++) {
+      // Each diagonal cell contributes a triangle, sampled at its centroid.
+      value+=.5*h(lower+(i+1/3)*step,lower+(i+2/3)*step);
+      for(let j=i+1;j<n;j++)value+=h(lower+(i+.5)*step,lower+(j+.5)*step);
+    }
+    return 2*step*step*value;
+  }
   const api={sum,dot,zeros,dist2,rng,gaussian,transport,bary,objective,feasibility,
     weakStep,weakAwayStep,weakCertificate,crossing,catalan,sampleMatching,sqrtSPD,matmul,transpose,solve,
-    twoPointPlan,twoPointTransport,bernstein,uniformQuantization,uniformMongeGap,convexEnvelope};
+    twoPointPlan,twoPointTransport,bernstein,uniformQuantization,uniformMongeGap,mongeRegression,
+    gaussianCDF,bernoulliErrorCurve,convexEnvelope,cdfSquaredDistance};
   if(typeof module!=="undefined" && module.exports)module.exports=api;
   root.BlogMath=api;
 })(typeof window!=="undefined"?window:globalThis);

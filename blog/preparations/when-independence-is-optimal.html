@@ -56,7 +56,7 @@
   m&=\iint c(x,y)\,d\alpha(x)\,d\beta(y).
   \end{aligned}
 \]
-<p>The centered interaction is \(r(x,y)=c(x,y)-a(x)-b(y)+m\). It is continuous and has zero mean in each row and each column. Hence, for sufficiently small \(t&gt;0\),</p>
+<p>The centered interaction is \(r(x,y)=c(x,y)-a(x)-b(y)+m\). It is continuous and has zero mean in each row and each column. Indeed, integrating over \(y\) gives \(a(x)-a(x)-m+m=0\), and similarly over \(x\). Hence, for \(0&lt;t\le1/\|r\|_\infty\) when \(r\ne0\),</p>
 \[
   d\pi_t=(1-tr(x,y))\,d\alpha(x)\,d\beta(y)
 \]
@@ -78,7 +78,7 @@
   \int c\,d(\alpha\otimes\beta)-\operatorname{OT}_c(\alpha,\beta)
   \ge\frac{\|r\|_{L^2(\alpha\otimes\beta)}^2}{\|r\|_\infty}.
 \]
-<p>The cost's centered interaction is a concrete improving direction. Compactness keeps it bounded; continuity upgrades an almost-everywhere conclusion to one on the full supports. With merely measurable costs or noncompact supports, the theorem needs the corresponding integrability and almost-everywhere qualifications.</p>
+<p>The perturbation has a simple meaning: reduce mass where the cost is higher than its row-and-column prediction, and increase mass where it is lower. Centering makes these changes cancel separately in every marginal. Compactness keeps the direction bounded; continuity upgrades an almost-everywhere conclusion to one on the full supports. With merely measurable costs or noncompact supports, the theorem needs corresponding integrability and almost-everywhere qualifications.</p>
 
 <h2>The smallest possible cycle</h2>
 <p>For two points on each side, keeping the row and column sums fixed permits the perturbation</p>
@@ -125,7 +125,8 @@
   \left\{\int c\,d\pi
   +\varepsilon\,\mathrm{KL}(\pi\mid\alpha\otimes\beta)\right\}.
 \]
-<p>The relative entropy penalizes dependence and is uniquely minimized by the product. This is the setting behind Sinkhorn algorithms <a href="#ref-cuturi">[3]</a>, <a href="#ref-computational">[4]</a>. Yet for a nonseparable cost, independence is not the minimizer at any finite \(\varepsilon\): near the product, the cost decreases to first order while the entropy changes only to second order.</p>
+<p>Here \(\varepsilon&gt;0\). If \(d\pi=p\,d(\alpha\otimes\beta)\), the relative entropy is \(\int p\log p\,d(\alpha\otimes\beta)\), with \(0\log0=0\); it is \(+\infty\) if no such density exists. For fixed marginals, it is also the mutual information of the two coordinates. It penalizes dependence and is uniquely minimized by the product.</p>
+<p>This is the setting behind Sinkhorn algorithms <a href="#ref-cuturi">[3]</a>, <a href="#ref-computational">[4]</a>. Yet for a nonseparable cost, independence is not the minimizer at any finite positive \(\varepsilon\): near the product, the cost decreases to first order while the entropy changes only to second order.</p>
 <details class="blog-proof">
 <summary>Proof: linear cost improvement beats the quadratic entropy penalty</summary>
 <div class="blog-proof-body">
@@ -135,6 +136,24 @@
   =\tfrac12t^2\int r^2\,d(\alpha\otimes\beta)+O(t^3).
 \]
 <p>The cost change is exactly \(-t\int r^2\,d(\alpha\otimes\beta)\). For \(r\ne0\), the sum is negative for sufficiently small positive \(t\), at every fixed finite \(\varepsilon\). If \(r=0\), the cost is constant over couplings and the entropy selects the product uniquely. \(\square\)</p>
+</div></details>
+<p>For the two-point experiment above, the regularized solution can be written explicitly:</p>
+\[
+  t_\varepsilon
+  =\frac{1}{2\bigl(1+\exp(-4\cos\theta/\varepsilon)\bigr)}.
+\]
+<details class="blog-proof">
+<summary>Calculation: a logistic interpolation between matching and independence</summary>
+<div class="blog-proof-body">
+<p>For \(\pi(t)\), the entropy relative to the uniform product matrix is</p>
+\[
+  K(t)=2t\log(4t)+2(1/2-t)\log(2-4t).
+\]
+<p>On \(0&lt;t&lt;1/2\), its derivative is \(2\log(t/(1/2-t))\). Setting the derivative of \(C_\theta(t)+\varepsilon K(t)\) to zero gives</p>
+\[
+  \log\frac{t}{1/2-t}=\frac{4\cos\theta}{\varepsilon},
+\]
+<p>and therefore the stated formula. Strict convexity of \(K\) makes this the unique minimizer. For \(0\le\theta&lt;\pi/2\), it tends to \(1/2\) as \(\varepsilon\downarrow0\), and to the independent value \(1/4\) as \(\varepsilon\to\infty\). At the orthogonal angle it equals \(1/4\) for every positive temperature.</p>
 </div></details>
 <p>The infinite-regularization limit is different. Comparing a minimizer \(\pi_\varepsilon\) with the product gives</p>
 \[

@@ -74,7 +74,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
  \|r_n\|_{L^1}=o(n^{-1/2}),
  \end{aligned}
 \]
-<p>where \(\{u\}\) is the fractional part. Values at the jump points have no effect on the integral. This is the usual half-cell continuity correction, with the weighted remainder supplied by lattice local-limit and Edgeworth theory <a href="#ref-petrov">[3]</a>, <a href="#ref-br">[4]</a>. Symmetry removes the smooth skewness term at this order.</p>
+<p>where \(\{u\}\) is the fractional part. Values at the jump points have no effect on the integral. Lattice local-limit and Edgeworth theory give this half-cell correction with \(\|r_n\|_\infty=O(n^{-1})\) <a href="#ref-petrov">[3]</a>, <a href="#ref-br">[4]</a>. A uniform fourth-moment bound then yields the stated \(L^1\) remainder by the <a href="#integrated-remainder">tail argument below</a>. Symmetry removes the smooth skewness term at order \(n^{-1/2}\).</p>
 <p>The inequality \(\bigl||u+v|-|u|\bigr|\le|v|\) shows that the remainder changes the Wasserstein distance by \(o(n^{-1/2})\). The absolute sawtooth oscillates increasingly rapidly and has mean</p>
 \[
  \int_0^1\left|\tfrac12-u\right|\,du=\frac14.
@@ -84,7 +84,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p>Geometrically, one transports a smooth Gaussian mass within cells of width \(h/\sqrt n\) to lattice sites near their centers. The average distance to the center of an interval of width \(\delta\) is \(\delta/4\). The theorem makes this picture precise and shows why the constant is universal within this symmetric lattice class.</p>
 
 <h2>A density exposes the fourth cumulant</h2>
-<p>For a symmetric continuous law, the staircase disappears. The first surviving smooth correction comes from the fourth cumulant</p>
+<p>For a symmetric law with a density, the staircase disappears. The first possible smooth correction comes from the fourth cumulant</p>
 \[
  \kappa_4=\mathbb E[X^4]-3.
 \]
@@ -95,7 +95,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
  =\frac{|\kappa_4|}{24n}
      \int_{\mathbb R}|x^3-3x|\phi(x)\,dx+o(n^{-1}).
 \]
-<p>If \(\kappa_4=0\), this asserts \(o(n^{-1})\); it does not assert a nonzero equivalent.</p>
+<p>The moment assumptions are convenient sufficient conditions, rather than a minimal list. If \(\kappa_4=0\), the conclusion is \(o(n^{-1})\); it does not assert a nonzero equivalent.</p>
 <details class="blog-proof"><summary>Proof: the first nonzero smooth Edgeworth term</summary><div class="blog-proof-body">
 <p>For fixed frequency \(t\), the characteristic function has the expansion</p>
 \[
@@ -104,13 +104,29 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
    \left(1+\frac{\kappa_4t^4}{24n}+o(n^{-1})\right).
 \]
 <p>Symmetry removes the cubic term. Fourier inversion suggests a fourth derivative of the Gaussian density; integrating once produces the third Hermite polynomial \(H_3(x)=x^3-3x\).</p>
-<p>The rigorous nonlattice Edgeworth theorem, in its weighted-remainder form, gives</p>
+<p>The Edgeworth theorem, together with a tail estimate, gives the integrated expansion</p>
 \[
  F_n-\Phi
  =-\frac{\kappa_4}{24n}H_3\phi+r_n,
  \qquad \|r_n\|_{L^1}=o(n^{-1}).
 \]
-<p>A density makes the characteristic function tend to zero at infinity, hence supplies Cramér's condition; the stated moment assumptions permit a weighted remainder integrable on the line. These are the analytic inputs from <a href="#ref-petrov">[3]</a>, <a href="#ref-br">[4]</a>. The fixed-frequency expansion alone would not justify this global integral.</p>
+<p>The analytic input is the usual uniform Edgeworth expansion <a href="#ref-petrov">[3]</a>, <a href="#ref-br">[4]</a>. It applies because a density makes the characteristic function \(\chi(t)=\mathbb E e^{itX}\) tend to zero at infinity, so Cramér's condition \(\limsup_{|t|\to\infty}|\chi(t)|&lt;1\) holds. The fixed-frequency calculation alone would not justify integration over the entire line.</p>
+<details class="blog-proof" id="integrated-remainder"><summary>Why the remainders in both theorems can be integrated</summary><div class="blog-proof-body">
+<p>Use the uniform Edgeworth expansion through order \(n^{-2}\). Symmetry removes the terms of orders \(n^{-1/2}\) and \(n^{-3/2}\); the remaining correction after the displayed \(n^{-1}\) term is a Gaussian times a polynomial, of order \(n^{-2}\). Thus \(\|r_n\|_\infty=O(n^{-2})\).</p>
+<p>Also \(\sup_n\mathbb E|S_n|^8&lt;\infty\). Indeed, expanding the eighth power, independence and centering eliminate every term with a singly occurring index. At most four distinct indices remain, giving \(O(n^4)\) terms before normalization by \(n^4\).</p>
+<p>Put \(R_n=n^{1/4}\). Integrating the uniform bound on \([-R_n,R_n]\) gives \(O(n^{-7/4})\). Outside this interval, with \(Z\sim\gamma\),</p>
+\[
+ \begin{aligned}
+ \int_{|x|&gt;R_n}|F_n(x)-\Phi(x)|\,dx
+ &\le\mathbb E(|S_n|-R_n)_+
+      +\mathbb E(|Z|-R_n)_+\\
+ &\le\frac{\mathbb E|S_n|^8+\mathbb E|Z|^8}{R_n^7}
+ =O(n^{-7/4}).
+ \end{aligned}
+\]
+<p>The tail of \(n^{-1}H_3\phi\) is exponentially small. Combining the central interval and the tails proves \(\|r_n\|_1=o(n^{-1})\). This is the step which a pointwise expansion cannot replace.</p>
+<p>For Theorem 1, the same argument uses \(\|r_n\|_\infty=O(n^{-1})\) and uniformly bounded fourth moments. With the same \(R_n=n^{1/4}\), the central integral is \(O(n^{-3/4})\), and the tail is \(O(R_n^{-3})=O(n^{-3/4})\); the sawtooth times \(\phi\) has a Gaussian tail. Thus \(\|r_n\|_1=o(n^{-1/2})\), as required there.</p>
+</div></details>
 <p>Apply \(\bigl||u+v|-|u|\bigr|\le|v|\) and integrate to obtain the formula. \(\square\)</p>
 </div></details>
 
@@ -140,7 +156,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p>Choose the number of summands to inspect the CDF error, then compare the convergence curves and the rescaled quantities \(\sqrt n\,W_1\) and \(nW_1\). The first approaches \(1/2\) for Bernoulli input, and the second approaches \(C_{\mathrm U}\) for continuous uniform input.</p>
 <figure><iframe class="idea-experiment" data-experiment="clt" title="Bernoulli and continuous uniform central-limit rates in Wasserstein distance" src="assets/ot-lab/index.html?topic=clt" loading="lazy"></iframe><figcaption>The Bernoulli calculation uses the exact binomial law. The uniform calculation uses the continuous Irwin–Hall convolution CDF, not an atomic approximation of the input. Distances are obtained by integrating absolute CDF errors, including the Gaussian tails. The right panel rescales the Bernoulli CDF error by \(\sqrt n\) and the uniform error by \(n\), so both leading shapes remain visible as the errors shrink.</figcaption></figure>
 <p>This distinction matters numerically. If we first replace a uniform variable by a fixed finite grid, we have changed it into a lattice law. At sufficiently large \(n\), the lattice term dominates and the asymptotic rate changes. Increasing the quadrature resolution for the continuous CDF is legitimate; changing the input into discrete mass is a different experiment.</p>
-<p>Likewise, the coin characteristic function \(\cos t\) returns to modulus one at arbitrarily large frequencies. It fails the nonlattice condition in Theorem 2. Symmetry and arbitrarily many finite moments cannot remove that obstruction.</p>
+<p>Likewise, the coin characteristic function \(\cos t\) returns to modulus one at arbitrarily large frequencies. It fails Cramér's condition. More generally, merely being nonlattice is weaker than satisfying that condition. Symmetry and arbitrarily many finite moments cannot remove the coin's lattice obstruction.</p>
 
 <h2>References</h2>
 <ol class="references">

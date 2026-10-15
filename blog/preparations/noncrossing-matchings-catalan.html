@@ -56,7 +56,7 @@
   \bigl(|x_i-y_j|^2\bigr)_{i,j}
   =\begin{pmatrix}121&300\\3&121\end{pmatrix}.
 \]
-<p>The crossing assignment costs \(242\), versus \(303\) after swapping. For ordinary length, the comparison reverses: \(22&gt;\sqrt{300}+\sqrt3\). The choice of ground cost is essential.</p>
+<p>The crossing assignment has total squared cost \(242\), versus \(303\) after swapping; divide both by two for the mean costs. For ordinary total length, the comparison reverses: \(22&gt;\sqrt{300}+\sqrt3\). The choice of ground cost is essential.</p>
 </div></details>
 
 <h2>Counting the survivors</h2>
@@ -81,6 +81,17 @@
 <p>Expanding the square root gives \(C_n=(n+1)^{-1}\binom{2n}{n}\); Stirling's formula gives the asymptotic. Equivalently, any ordinary noncrossing perfect matching on these alternating vertices is automatically red–blue: a chord must leave an even number of vertices on each side, so its endpoints have opposite parity. \(\square\)</p>
 </div></details>
 <p>Already \(C_{10}=16{,}796\), and \(C_{20}=6{,}564{,}120{,}420\). Removing crossings leaves a large search space. This is a counting statement, <em>not</em> a computational-hardness result: minimum-cost assignment is polynomial-time solvable, for instance by the Hungarian method <a href="#ref-kuhn">[3]</a>. On a convex polygon, the same interval recursion also yields a dynamic program for the best noncrossing matching.</p>
+<details class="blog-proof">
+<summary>From counting to exact optimization in cubic time</summary>
+<div class="blog-proof-body">
+<p>Write the cyclically ordered vertices as \(v_0,\ldots,v_{2n-1}\). For an interval containing an even number of vertices, let \(L_{i,j}\) be its minimum total matching length; an empty interval has value zero. Conditioning on the partner of \(v_i\) gives</p>
+\[
+  L_{i,j}
+  =\min_{\substack{k=i+1,i+3,\ldots,j}}
+  \left\{|v_i-v_k|+L_{i+1,k-1}+L_{k+1,j}\right\}.
+\]
+<p>The admissible partners have the opposite color, and the chord splits the remaining vertices into independent subproblems. Compute intervals in increasing order of length. There are \(O(n^2)\) intervals and at most \(O(n)\) choices per interval, so the minimum is found with \(O(n^3)\) arithmetic operations. The mean optimal cost is \(L_{0,2n-1}/n\). Exponentially many feasible objects need not require exponential enumeration.</p>
+</div></details>
 
 <h2>Uniform exploration without rejection</h2>
 <p>Drawing a random permutation and rejecting all crossings quickly becomes wasteful. The counting proof gives a direct sampler instead.</p>
@@ -109,24 +120,39 @@
   -|x_i-y_{\sigma(i)}|-|x_k-y_{\sigma(k)}|
   \right).
 \]
-<p>Accepting only strict decreases gives a finite greedy descent: the cost decreases and a finite matching cannot be revisited. Its stopping point need not be globally optimal. In particular, “I could not improve it by the tested swaps” is weaker than an optimality certificate.</p>
+<p>Accepting only strict decreases permits only finitely many successful moves, because no matching can be revisited. Testing a finite batch of random swaps does not even certify local optimality; checking every pair does, but still does not certify global optimality. The distinction occurs with just three pairs on a circle.</p>
+<details class="blog-proof">
+<summary>An explicit strict local minimum which is not global</summary>
+<div class="blog-proof-body">
+<p>Place six alternating vertices on the unit circle at angles</p>
+\[
+  (\theta_0,\ldots,\theta_5)
+  =(\pi/12,\pi/3,2\pi/3,\pi,4\pi/3,5\pi/3).
+\]
+<p>The matching \((0,5),(2,1),(4,3)\) has total length \(2+2\sin(5\pi/24)\). The other all-adjacent matching \((0,1),(2,3),(4,5)\) is strictly shorter, with length \(2+2\sin(\pi/8)\).</p>
+<p>Nevertheless, the three possible two-pair swaps from the first matching have total lengths</p>
+\[
+  3+2\sin(\pi/8),\qquad
+  2+2\sin(11\pi/24),\qquad
+  3+2\sin(5\pi/24).
+\]
+<p>All are larger. For the first, use \(2[\sin(5\pi/24)-\sin(\pi/8)]&lt;\pi/6&lt;1\); the other two comparisons are immediate. The starting matching is therefore a strict local minimum even among <em>all</em> pair swaps, while a better noncrossing matching exists. A simultaneous three-cycle of destinations is needed to pass directly to that better matching.</p>
+</div></details>
 <p>One can also turn exploration into a Metropolis sampler. At temperature \(\tau&gt;0\), accept a symmetric proposal with probability \(\min(1,e^{-\Delta E/\tau})\). The corresponding equilibrium weights are proportional to \(e^{-E/\tau}\), as in the Markov-chain methodology of <a href="#ref-hastings">[4]</a>.</p>
 <details class="blog-proof">
 <summary>Why occasional global proposals give a valid equilibrium sampler</summary>
 <div class="blog-proof-body">
-<p>For a symmetric proposal probability \(q(\sigma,\sigma')\), detailed balance follows from</p>
+<p>Write \(w(\sigma)=e^{-E(\sigma)/\tau}\) and let \(a(\sigma,\sigma')=\min(1,w(\sigma')/w(\sigma))\) be the acceptance probability. For a symmetric proposal \(q\),</p>
 \[
-  e^{-E(\sigma)/\tau}q(\sigma,\sigma')
-  \min(1,e^{-(E(\sigma')-E(\sigma))/\tau})
-  =
-  q(\sigma,\sigma')\min(e^{-E(\sigma)/\tau},e^{-E(\sigma')/\tau}).
+  w(\sigma)\,q(\sigma,\sigma')\,a(\sigma,\sigma')
+  =q(\sigma,\sigma')\min(w(\sigma),w(\sigma')).
 \]
 <p>The expression is symmetric in the two states. Local pair swaps alone would additionally require a connectivity argument. Instead, occasionally propose a whole matching using Proposition 2. This gives positive proposal probability between every pair of states. Add a fixed probability of staying put: the resulting finite chain is irreducible and aperiodic, so it converges to its unique Boltzmann equilibrium at every fixed positive temperature.</p>
 <p>As \(\tau\downarrow0\), those equilibrium laws concentrate on minimum-cost matchings. This statement does not assert convergence to a global optimum under an arbitrary finite cooling schedule.</p>
 </div></details>
 
 <h2>Numerical experimentation</h2>
-<p>The points below alternate around an irregularly spaced convex ellipse. Draw a uniform noncrossing matching, try downhill swaps, or explore many independent matchings. The figure reports the true unrestricted assignment optimum as a reference; Proposition 1 guarantees that this optimum is attained by a noncrossing matching.</p>
+<p>The points below alternate around an irregularly spaced convex ellipse. Draw a uniform noncrossing matching, try downhill swaps, or explore many independent matchings. “Load three-pair trap” switches to the explicit circular example above: every downhill swap is rejected even though the displayed optimum is strictly lower. The figure reports the true unrestricted assignment optimum as a reference; Proposition 1 guarantees that this optimum is attained by a noncrossing matching.</p>
 <figure>
   <iframe class="idea-experiment" data-experiment="matchings" title="Catalan matching sampler, greedy swaps, and the exact minimum cost" src="assets/ot-lab/index.html?topic=matchings" loading="lazy"></iframe>
   <figcaption>Change the number of pairs to see the Catalan family grow. Every displayed configuration is checked for proper crossings. Uniform exploration can increase the current cost while improving the best cost seen; the downhill button only accepts feasible improvements. The blue reference is an independently solved transport optimum, not the best matching found by random search.</figcaption>

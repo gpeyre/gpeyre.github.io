@@ -39,6 +39,15 @@
   k_o(x,y)=|x-o|+|y-o|-|x-y|.
 \]
 <p>The anchoring terms disappear when integrated against \(\alpha-\beta\), whose total mass is zero. This link between distance statistics and kernel statistics is developed in <a href="#ref-kernel">[3]</a>. The unanchored kernel itself is not positive semidefinite on arbitrary coefficients.</p>
+<p>As a squared Hilbert-space discrepancy, \(E_\beta\) is convex under <em>mixtures</em> of measures in every dimension. More precisely,</p>
+\[
+  \begin{aligned}
+  E_\beta((1-t)\alpha_0+t\alpha_1)
+  ={}&(1-t)E_\beta(\alpha_0)+tE_\beta(\alpha_1)\\
+     &-t(1-t)E_{\alpha_1}(\alpha_0).
+  \end{aligned}
+\]
+<p>This follows by expanding the three quadratic forms. It does not yet say anything about moving the locations of particles: mixtures change how much mass follows each law, whereas Wasserstein interpolation moves the mass itself.</p>
 <p>On the line, positivity has an especially concrete expression. With \(F_\alpha(x)=\alpha((-\infty,x])\),</p>
 \[
   E_\beta(\alpha)
@@ -112,7 +121,7 @@
 </div></details>
 
 <h2>The flow becomes a family of scalar equations</h2>
-<p>Assume that the target CDF \(F_\beta\) is continuous. Then \(V_\beta'(x)=2F_\beta(x)-1\). Differentiating the quantile expression above gives the Wasserstein gradient flow</p>
+<p>Assume that the target CDF \(F_\beta\) is continuous. Then \(V_\beta'(x)=2F_\beta(x)-1\). In quantile coordinates the Wasserstein gradient flow satisfies, for almost every rank \(r\),</p>
 \[
   \partial_t Q_t(r)=4\bigl(r-F_\beta(Q_t(r))\bigr).
 \]
@@ -126,7 +135,36 @@
   Q^{k+1}(r)+4hF_\beta(Q^{k+1}(r))
   =Q^k(r)+4hr.
 \]
-<p>The left side is continuous, strictly increasing, and onto \(\mathbb R\), so bisection finds the unique solution. Its inverse is increasing; hence the update preserves quantile ordering. It is the proximal step for the convex quantile energy and decreases that energy. If \(\beta\) has atoms, replace the CDF value by its subdifferential interval \([F_\beta(x^-),F_\beta(x)]\). The complete nonsmooth flow theory is in <a href="#ref-flow">[2]</a>; Sobolev regularizations are studied in <a href="#ref-sobolev">[4]</a>.</p>
+<p>The left side is continuous, strictly increasing, and onto \(\mathbb R\), so bisection finds the unique solution. Its inverse is increasing; hence the update preserves quantile ordering. This matters: a gradient step in an arbitrary \(L^2\) function would not automatically describe a probability law through its quantiles.</p>
+<details class="blog-proof">
+<summary>Why the scalar update is the genuine Wasserstein proximal step</summary>
+<div class="blog-proof-body">
+<p>The quantile expression in Theorem 1 extends to a finite convex functional on all of \(L^2(0,1)\):</p>
+\[
+  \mathcal E(Q)
+  =2\int_0^1\bigl[V_\beta(Q(r))-(2r-1)Q(r)\bigr]\,dr
+   -\mathbb E|Y-Y'|.
+\]
+<p>For nondecreasing \(Q\), this equals \(E_\beta(Q_\#dr)\), where \(dr\) is uniform probability on \((0,1)\). Minimizing</p>
+\[
+  \mathcal E(Q)+\frac1{2h}\|Q-Q^k\|_{L^2}^2
+\]
+<p>separates into a strictly convex scalar problem at each rank. Its first-order condition is exactly the implicit equation above. Because \(r\mapsto Q^k(r)+4hr\) is increasing, the pointwise minimizer is itself nondecreasing. Therefore it also minimizes over the quantile cone: no projection or sorting has been silently omitted.</p>
+<p>Comparing the minimum with the candidate \(Q=Q^k\) gives the energy estimate</p>
+\[
+  \mathcal E(Q^{k+1})
+  +\frac1{2h}\|Q^{k+1}-Q^k\|_{L^2}^2
+  \le\mathcal E(Q^k).
+\]
+<p>The usual convex subgradient-flow limit of these proximal steps yields the displayed evolution; its quantile formulation is developed in <a href="#ref-flow">[2]</a>.</p>
+</div></details>
+<p>If \(\beta\) has atoms, the correct implicit condition uses an interval:</p>
+\[
+  Q^k(r)+4hr
+  \in Q^{k+1}(r)
+  +4h\,[F_\beta(Q^{k+1}(r)^-),F_\beta(Q^{k+1}(r))].
+\]
+<p>It still has a unique solution, as the resolvent of a monotone subdifferential. Selecting an arbitrary value of a discontinuous CDF can miss it. Sobolev regularizations of the quantile evolution are studied in <a href="#ref-sobolev">[4]</a>.</p>
 
 <h2>Why the plane is different</h2>
 <p>Without a total ordering, the self-interaction need not be affine along a transport geodesic. The failure is visible with just two source atoms.</p>
@@ -155,7 +193,7 @@
 <p>Empirical averages give a particle method, with the self-term omitted. The appropriate particle metric is \(n^{-1}\sum_i|\dot x_i|^2\); this explains why the velocity is \(n\) times the negative ordinary gradient with respect to a single particle. Energy descent is meaningful, but it is not a proof of displacement convexity or global convergence.</p>
 
 <h2>Numerical experimentation</h2>
-<p>Move the time slider to compare the quantile evolution on the line with a planar particle descent. The line uses implicit quantile steps. In the plane, the norm is replaced by \(\sqrt{|z|^2+\eta^2}\), with \(\eta=0.002\), and a backtracking step decreases that same regularized objective. Since each distance changes by at most \(\eta\), the regularized and original energies differ by at most \(4\eta\).</p>
+<p>Move the time slider to compare the quantile evolution on the line with a planar particle descent. The line samples the rank variable at bin midpoints and applies implicit quantile steps: both rank and time are discretized. In the plane, the norm is replaced by \(\sqrt{|z|^2+\eta^2}\), with \(\eta=0.002\), and a backtracking step decreases that same regularized objective. Since each distance changes by at most \(\eta\), the regularized and original energies differ by at most \(4\eta\).</p>
 <figure>
   <iframe class="idea-experiment" data-experiment="energy" title="Energy-distance quantile and particle flows" src="assets/ot-lab/index.html?topic=energy" loading="lazy"></iframe>
   <figcaption>The slider replays saved, energy-checked numerical iterates. In one dimension, red quantiles approach the blue target quantiles. In the plane, source particles move towards the gray target cloud. The two energy curves use their own initial energy and normalized experiment time; the planar curve belongs to the mollified finite-particle problem.</figcaption>
