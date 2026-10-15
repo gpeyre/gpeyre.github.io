@@ -1,7 +1,7 @@
 # Forthcoming blog posts: public alpha previews
 
 The public preview index is `/blog/preparations/`, linked from the blog archive.
-Open `index.html` to review the four standalone HTML articles. Each article uses
+Open `index.html` to review the standalone HTML articles. Each article uses
 the shared files in `assets/`; mathematical typesetting loads MathJax from its
 CDN, so the initial equation rendering requires an Internet connection.
 
