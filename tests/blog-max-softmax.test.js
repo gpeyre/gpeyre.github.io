@@ -66,4 +66,28 @@ const range = surfaces.bounds(fit);
 assert.ok(fit.grid.every(v => [v.f, v.max, v.soft].every(z => z >= range.low && z <= range.high)),
     "shared surface scale contains both learned functions");
 assert.ok(fit.grid.every(v => Object.values(v).every(Number.isFinite)));
-console.log("Max/softmax gradients, Adam fits, free affine parameters, dense values and analytic normals passed.");
+
+// Exact active faces must tile the domain and agree with the actual max network.
+const duplicate = { a: 0.2, b: -0.1, c: 0.3 };
+for (const bank of [fit.max.planes, training.serializeModel(training.createModel(6, { seed: 19 })),
+    [duplicate, { ...duplicate }, { a: 0.2, b: -0.1, c: -1 }]]) {
+    const original = JSON.stringify(bank), cells = surfaces.maxCells(bank);
+    assert.strictEqual(cells, surfaces.maxCells(bank), "camera redraw reuses clipped faces");
+    let area = 0;
+    for (const cell of cells) {
+        const polygon = cell.polygon;
+        let twiceArea = 0;
+        for (let j = 0; j < polygon.length; j++) {
+            const p = polygon[j], q = polygon[(j + 1) % polygon.length];
+            twiceArea += p.x * q.y - q.x * p.y;
+            assert.ok(Math.abs(p.x) <= 1 + 1e-9 && Math.abs(p.y) <= 1 + 1e-9);
+            const z = cell.a * p.x + cell.b * p.y + cell.c;
+            assert.ok(bank.every(plane => z >= plane.a * p.x + plane.b * p.y + plane.c - 1e-8),
+                "face vertices lie on the max envelope");
+        }
+        area += Math.abs(twiceArea) / 2;
+    }
+    assert.ok(Math.abs(area - 4) < 1e-8, "exact faces cover the square once");
+    assert.equal(JSON.stringify(bank), original, "clipping never changes learned weights");
+}
+console.log("Max/softmax gradients, Adam fits, free parameters, analytic normals and exact surface faces passed.");

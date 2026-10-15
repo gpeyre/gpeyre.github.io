@@ -21,10 +21,13 @@ main thread; changed controls supersede pending jobs. Completed fits are cached
 locally for repeated settings. The displays report validation losses and sampled
 errors; the tangent-grid certificates from the theoretical construction do not
 apply to these trained fits.
-The paired 3D surface views and heatmaps use a 201-by-201 evaluation grid,
-independent of network width. Analytic LSE gradients give smooth normals without
-blurring model values. Both 3D panels share a camera and height scale; visible
-target wireframes provide a geometric reference.
+The heatmaps and 3D softmax surface use a 201-by-201 evaluation grid, independent
+of network width. The 3D max surface uses the exact clipped affine faces.
+Analytic LSE gradients give smooth normals without blurring model values.
+Both 3D panels share a camera, height scale, and studio
+lighting with view-dependent specular highlights. The max keeps flat facet
+normals; the LSE uses its smooth analytic normals. The target remains available
+in the separate 2D contour views, without a wireframe over the 3D surfaces.
 Run node tests/blog-max-softmax.test.js to check parameter gradients, deterministic
 training, free affine parameters, sampled values, and analytic surface normals.
 

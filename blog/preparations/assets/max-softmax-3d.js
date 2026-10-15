@@ -3,9 +3,7 @@
 
   var TAU = 2 * Math.PI;
   var COLORS = { max: [18, 143, 150], soft: [220, 119, 60] };
-  var INK = [34, 49, 58];
-  var LIGHT = unit([-0.45, -0.7, 1.6]);
-  var FILL = unit([0.9, 0.5, 0.6]);
+  var maxCellCache = new WeakMap();
 
   function unit(v) {
     var length = Math.hypot(v[0], v[1], v[2]) || 1;
@@ -66,7 +64,7 @@
     var offsetY = margins.top + (availableHeight - scale * (extent.bottom - extent.top)) / 2 - scale * extent.top;
 
     return {
-      scale: scale, right: right, toward: toward,
+      scale: scale, right: right, up: up, toward: toward,
       project: function (x, y, z) {
         var p = world(x, y, z);
         return { x: offsetX + scale * p.x, y: offsetY + scale * p.y, depth: p.depth };
@@ -78,20 +76,48 @@
     };
   }
 
-  function shade(x, y, z) {
-    var length = Math.hypot(x, y, z) || 1;
-    return 0.38 + 0.57 * Math.max(0, (x * LIGHT[0] + y * LIGHT[1] + z * LIGHT[2]) / length) +
-      0.12 * Math.max(0, (x * FILL[0] + y * FILL[1] + z * FILL[2]) / length);
+  function studio(projection, color) {
+    var right = projection.right, up = projection.up, view = projection.toward;
+    function direction(horizontal, vertical, front) {
+      return unit([0, 1, 2].map(function (i) {
+        return horizontal * right[i] + vertical * up[i] + front * view[i];
+      }));
+    }
+    var key = direction(-0.55, 0.75, 1.1);
+    var fill = direction(0.9, 0.2, 0.65);
+    return {
+      color: color, view: view, key: key, fill: fill,
+      half: unit(key.map(function (v, i) { return v + view[i]; })),
+      fillHalf: unit(fill.map(function (v, i) { return v + view[i]; }))
+    };
   }
 
-  function triangleShade(a, b, c) {
+  // A shared studio material reveals normals through diffuse shading and
+  // view-dependent white reflections. It never changes the model geometry.
+  function shade(x, y, z, lighting) {
+    var length = Math.hypot(x, y, z) || 1;
+    x /= length; y /= length; z /= length;
+    var facing = x * lighting.view[0] + y * lighting.view[1] + z * lighting.view[2];
+    if (facing < 0) { x = -x; y = -y; z = -z; facing = -facing; }
+    function cosine(v) { return Math.max(0, x * v[0] + y * v[1] + z * v[2]); }
+    var diffuse = 0.25 + 0.58 * cosine(lighting.key) + 0.13 * cosine(lighting.fill);
+    var highlight = 0.34 * Math.pow(cosine(lighting.half), 42) +
+      0.09 * Math.pow(cosine(lighting.half), 8) +
+      0.06 * Math.pow(cosine(lighting.fillHalf), 22);
+    var rim = 0.055 * Math.pow(1 - Math.min(1, facing), 4);
+    return lighting.color.map(function (channel, i) {
+      return Math.min(255, channel * diffuse + 255 * highlight + [210, 228, 240][i] * rim);
+    });
+  }
+
+  function triangleShade(a, b, c, lighting) {
     var ux = b.wx - a.wx, uy = b.wy - a.wy, uz = b.wz - a.wz;
     var vx = c.wx - a.wx, vy = c.wy - a.wy, vz = c.wz - a.wz;
     var x = uy * vz - uz * vy, y = uz * vx - ux * vz, z = ux * vy - uy * vx;
-    return z < 0 ? shade(-x, -y, -z) : shade(x, y, z);
+    return shade(x, y, z, lighting);
   }
 
-  function vertices(data, key, range, projection, ratio) {
+  function vertices(data, key, range, projection, ratio, lighting) {
     var r = data.resolution, result = new Array(r * r);
     var step = 2 / (r - 1);
     for (var j = 0; j < r; j++) {
@@ -112,7 +138,8 @@
           // Analytic log-sum-exp gradients give a smooth normal field even when
           // a low temperature concentrates curvature into a narrow transition.
           // Only lighting is interpolated; the model values are never filtered.
-          p.shade = shade(-range.vertical * dx, -range.vertical * dy, 1);
+          var color = shade(-range.vertical * dx, -range.vertical * dy, 1, lighting);
+          p.red = color[0]; p.green = color[1]; p.blue = color[2];
         }
         result[index] = p;
       }
@@ -122,7 +149,7 @@
 
   // An orthographic z-buffer makes every azimuth behave consistently, including
   // views where the near rim hides part of the graph. Depth increases toward us.
-  function rasterTriangle(a, b, c, buffer, width, height, pixels, color, flatShade) {
+  function rasterTriangle(a, b, c, buffer, width, height, pixels, flatColor) {
     var denominator = (b.y - c.y) * (a.x - c.x) + (c.x - b.x) * (a.y - c.y);
     if (Math.abs(denominator) < 1e-9) return;
     // Rasterize pixel centers only. Tight boxes matter for a fine surface mesh:
@@ -137,11 +164,10 @@
     var firstU = duX * (minX + 0.5 - c.x) + duY * (minY + 0.5 - c.y);
     var firstV = dvX * (minX + 0.5 - c.x) + dvY * (minY + 0.5 - c.y);
     var depthU = a.depth - c.depth, depthV = b.depth - c.depth;
-    var smooth = pixels && flatShade === null;
-    var shadeU = smooth ? a.shade - c.shade : 0, shadeV = smooth ? b.shade - c.shade : 0;
-    var red = pixels && !smooth ? color[0] * flatShade + 9 : 0;
-    var green = pixels && !smooth ? color[1] * flatShade + 9 : 0;
-    var blue = pixels && !smooth ? color[2] * flatShade + 9 : 0;
+    var smooth = flatColor === null;
+    var redU = smooth ? a.red - c.red : 0, redV = smooth ? b.red - c.red : 0;
+    var greenU = smooth ? a.green - c.green : 0, greenV = smooth ? b.green - c.green : 0;
+    var blueU = smooth ? a.blue - c.blue : 0, blueV = smooth ? b.blue - c.blue : 0;
     for (var y = minY; y <= maxY; y++) {
       var u = firstU, v = firstV;
       for (var x = minX; x <= maxX; x++, u += duX, v += dvX) {
@@ -151,36 +177,104 @@
         var index = y * width + x;
         if (depth < buffer[index]) continue;
         buffer[index] = depth;
-        if (pixels) {
-          var offset = 4 * index;
-          if (smooth) {
-            var brightness = c.shade + u * shadeU + v * shadeV;
-            pixels[offset] = color[0] * brightness + 9;
-            pixels[offset + 1] = color[1] * brightness + 9;
-            pixels[offset + 2] = color[2] * brightness + 9;
-          } else {
-            pixels[offset] = red; pixels[offset + 1] = green; pixels[offset + 2] = blue;
-          }
-          pixels[offset + 3] = 255;
+        var offset = 4 * index;
+        if (smooth) {
+          pixels[offset] = c.red + u * redU + v * redV;
+          pixels[offset + 1] = c.green + u * greenU + v * greenV;
+          pixels[offset + 2] = c.blue + u * blueU + v * blueV;
+        } else {
+          pixels[offset] = flatColor[0]; pixels[offset + 1] = flatColor[1]; pixels[offset + 2] = flatColor[2];
         }
+        pixels[offset + 3] = 255;
       }
       firstU += duY; firstV += dvY;
     }
   }
 
-  function rasterMesh(points, resolution, depth, width, height, pixels, color, smooth) {
+  function rasterMesh(points, resolution, depth, width, height, pixels, lighting, smooth) {
     for (var j = 0; j < resolution - 1; j++) {
       for (var i = 0; i < resolution - 1; i++) {
         var a = points[j * resolution + i];
         var b = points[j * resolution + i + 1];
         var c = points[(j + 1) * resolution + i + 1];
         var d = points[(j + 1) * resolution + i];
-        rasterTriangle(a, b, c, depth, width, height, pixels, color,
-          smooth || !pixels ? null : triangleShade(a, b, c));
-        rasterTriangle(a, c, d, depth, width, height, pixels, color,
-          smooth || !pixels ? null : triangleShade(a, c, d));
+        rasterTriangle(a, b, c, depth, width, height, pixels,
+          smooth ? null : triangleShade(a, b, c, lighting));
+        rasterTriangle(a, c, d, depth, width, height, pixels,
+          smooth ? null : triangleShade(a, c, d, lighting));
       }
     }
+  }
+
+  // A sampled grid straddles the creases of a max-affine function, creating
+  // tiny triangles with normals that belong to none of its actual planes.
+  // Clip each plane's active region instead, retaining exact flat faces.
+  function maxCells(planes) {
+    if (!Array.isArray(planes) || !planes.length || planes.some(function (plane) {
+      return !plane || !Number.isFinite(plane.a) || !Number.isFinite(plane.b) || !Number.isFinite(plane.c);
+    })) return null;
+    if (maxCellCache.has(planes)) return maxCellCache.get(planes);
+
+    function clip(polygon, a, b, c) {
+      var length = Math.hypot(a, b);
+      a /= length; b /= length; c /= length;
+      function distance(point) {
+        var value = a * point.x + b * point.y + c;
+        return Math.abs(value) < 1e-12 ? 0 : value;
+      }
+      var result = [], previous = polygon[polygon.length - 1];
+      var previousDistance = distance(previous);
+      polygon.forEach(function (current) {
+        var currentDistance = distance(current);
+        if ((currentDistance >= 0) !== (previousDistance >= 0)) {
+          var t = previousDistance / (previousDistance - currentDistance);
+          result.push({ x: previous.x + t * (current.x - previous.x),
+            y: previous.y + t * (current.y - previous.y) });
+        }
+        if (currentDistance >= 0) result.push(current);
+        previous = current; previousDistance = currentDistance;
+      });
+      // A line through a polygon vertex can otherwise duplicate that vertex.
+      return result.filter(function (point, index) {
+        var other = result[(index + 1) % result.length];
+        return Math.hypot(point.x - other.x, point.y - other.y) > 1e-12;
+      });
+    }
+
+    var cells = [];
+    planes.forEach(function (plane, i) {
+      var polygon = [{ x: -1, y: -1 }, { x: 1, y: -1 },
+        { x: 1, y: 1 }, { x: -1, y: 1 }];
+      for (var j = 0; j < planes.length && polygon.length >= 3; j++) {
+        if (i === j) continue;
+        var other = planes[j];
+        var a = plane.a - other.a, b = plane.b - other.b, c = plane.c - other.c;
+        if (a === 0 && b === 0) {
+          // Equal planes have a single owner; a parallel higher plane hides us.
+          if (c < 0 || (c === 0 && j < i)) polygon = [];
+        } else {
+          polygon = clip(polygon, a, b, c);
+        }
+      }
+      if (polygon.length >= 3) cells.push({ a: plane.a, b: plane.b, c: plane.c, polygon: polygon });
+    });
+    maxCellCache.set(planes, cells);
+    return cells;
+  }
+
+  function rasterMaxCells(cells, range, projection, ratio, depth, width, height, pixels, lighting) {
+    cells.forEach(function (cell) {
+      var points = cell.polygon.map(function (point) {
+        var value = cell.a * point.x + cell.b * point.y + cell.c;
+        var projected = projection.project(point.x, point.y, value);
+        projected.x *= ratio; projected.y *= ratio;
+        return projected;
+      });
+      var color = shade(-cell.a * range.vertical, -cell.b * range.vertical, 1, lighting);
+      for (var i = 1; i < points.length - 1; i++) {
+        rasterTriangle(points[0], points[i], points[i + 1], depth, width, height, pixels, color);
+      }
+    });
   }
 
   function blendPixel(pixels, index, color, opacity) {
@@ -189,7 +283,7 @@
     pixels[offset + 3] = 255;
   }
 
-  function depthLine(a, b, image, depth, targetDepth, color, ratio, tolerance) {
+  function depthLine(a, b, image, depth, color, ratio, tolerance) {
     var width = image.width, height = image.height, pixels = image.data;
     var length = Math.hypot(b.x - a.x, b.y - a.y);
     var steps = Math.max(1, Math.ceil(length * 1.2));
@@ -206,26 +300,8 @@
           var alpha = Math.max(0, Math.min(0.82, radius + 0.45 - distance));
           if (!alpha) continue;
           var index = iy * width + ix;
-          if (z + tolerance < depth[index] || (targetDepth && z + tolerance < targetDepth[index])) continue;
+          if (z + tolerance < depth[index]) continue;
           blendPixel(pixels, index, color, alpha);
-        }
-      }
-    }
-  }
-
-  function targetWireframe(points, resolution, image, surfaceDepth, targetDepth, ratio, projection) {
-    var lines = {};
-    for (var k = 0; k <= 8; k++) lines[Math.round(k * (resolution - 1) / 8)] = true;
-    // The tolerance accounts only for a line's subpixel footprint, not its height.
-    var tolerance = Math.max(0.002, 0.7 / projection.scale);
-    for (var j = 0; j < resolution; j++) {
-      for (var i = 0; i < resolution; i++) {
-        var index = j * resolution + i;
-        if (lines[j] && i < resolution - 1) {
-          depthLine(points[index], points[index + 1], image, surfaceDepth, targetDepth, INK, ratio, tolerance);
-        }
-        if (lines[i] && j < resolution - 1) {
-          depthLine(points[index], points[index + resolution], image, surfaceDepth, targetDepth, INK, ratio, tolerance);
         }
       }
     }
@@ -285,7 +361,7 @@
     function rasterAxis(a, b) {
       depthLine({ x: a.x * ratio, y: a.y * ratio, depth: a.depth },
         { x: b.x * ratio, y: b.y * ratio, depth: b.depth },
-        image, surfaceDepth, null, [103, 121, 129], ratio, 0.006);
+        image, surfaceDepth, [103, 121, 129], ratio, 0.006);
     }
 
     axes.forEach(function (axis) {
@@ -333,14 +409,17 @@
     drawFloor(ctx, projection, range);
     var image = ctx.getImageData(0, 0, pixelWidth, pixelHeight);
     var surfaceDepth = new Float32Array(pixelWidth * pixelHeight);
-    var targetDepth = new Float32Array(pixelWidth * pixelHeight);
-    surfaceDepth.fill(-Infinity); targetDepth.fill(-Infinity);
-    var surface = vertices(data, key, range, projection, ratio);
-    var target = vertices(data, "f", range, projection, ratio);
-    rasterMesh(surface, data.resolution, surfaceDepth, pixelWidth, pixelHeight,
-      image.data, COLORS[key], key === "soft");
-    rasterMesh(target, data.resolution, targetDepth, pixelWidth, pixelHeight, null, null, false);
-    targetWireframe(target, data.resolution, image, surfaceDepth, targetDepth, ratio, projection);
+    surfaceDepth.fill(-Infinity);
+    var lighting = studio(projection, COLORS[key]);
+    var planes = key === "max" && ((data.maxModel && data.maxModel.planes) || (data.max && data.max.planes));
+    var cells = planes && maxCells(planes);
+    if (cells) {
+      rasterMaxCells(cells, range, projection, ratio, surfaceDepth, pixelWidth, pixelHeight, image.data, lighting);
+    } else {
+      var surface = vertices(data, key, range, projection, ratio, lighting);
+      rasterMesh(surface, data.resolution, surfaceDepth, pixelWidth, pixelHeight,
+        image.data, lighting, key === "soft");
+    }
     var annotations = drawAxes(ctx, image, surfaceDepth, projection, range, ratio);
     ctx.putImageData(image, 0, 0);
     annotations.forEach(function (label) {
@@ -355,7 +434,7 @@
     return true;
   }
 
-  var api = { draw: draw, bounds: bounds, camera: camera, zTicks: zTicks };
+  var api = { draw: draw, bounds: bounds, camera: camera, zTicks: zTicks, maxCells: maxCells };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   root.MaxSoftmax3D = api;
 }(typeof window !== "undefined" ? window : globalThis));
