@@ -3,6 +3,7 @@ layout: default
 title: Blog
 description: Notes on mathematics, optimal transport, machine learning, and scientific life, by Gabriel Peyré.
 blog: true
+blog_search: true
 permalink: /blog/
 ---
 <a class="blog-skip" href="#posts">Skip to posts</a>
@@ -15,6 +16,8 @@ permalink: /blog/
     </div>
 </header>
 <main id="posts" class="blog-archive-wrap">
+    {% include blog-search.html %}
+    <div data-blog-browse>
     <aside class="blog-forthcoming" aria-labelledby="forthcoming-heading">
         <span class="blog-alpha-label">Alpha previews</span>
         <h2 id="forthcoming-heading">Forthcoming posts</h2>
@@ -39,4 +42,5 @@ permalink: /blog/
     </article>
     {% endfor %}
     <p class="blog-colophon">Gabriel Peyré &middot; Mathematics, machine learning, and scientific life.</p>
+    </div>
 </main>

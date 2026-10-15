@@ -3,6 +3,28 @@ title: "Optimal Transport for Machine Learners"
 subtitle: "An alpha release, with an interactive online edition."
 description: "The alpha version of my new book is online, including interactive figures."
 topic: Books
+keywords:
+  - "Optimal Transport for Machine Learners"
+  - "OT4ML"
+  - "optimal transport"
+  - "transport optimal"
+  - "OT"
+  - "machine learning"
+  - "apprentissage automatique"
+  - "Gabriel Peyré"
+  - "optimal transport book"
+  - "livre de transport optimal"
+  - "interactive textbook"
+  - "online textbook"
+  - "alpha release"
+  - "interactive figures"
+  - "mathematical exposition"
+  - "visual intuition"
+  - "transport geometry"
+  - "computational optimal transport"
+  - "notebook resources"
+  - "learning resources"
+  - "mathematics education"
 ---
 
 The alpha version of my new book, [*Optimal Transport for Machine Learners*](https://www.gpeyre.com/ot4ml/), is out. In particular, there is an **online version with interactive figures**, so that the mathematical exposition can be explored alongside the examples.

@@ -9,6 +9,38 @@ linked from the archive. They are standalone HTML pages, visibly marked as work
 in progress, without dates or feed entries. Their README is excluded from the
 website build; the preview pages and assets are included.
 
+## Search published and forthcoming posts
+
+Both `/blog/` and `/blog/preparations/` offer the same local search, with
+Published/Forthcoming filters, relevance-ranked titles, and expandable keyword
+lists. Multiple query words are combined with AND; matching ignores accents,
+case, and punctuation and supports partial words. Titles rank above keywords,
+which rank above summary-only matches. Short acronyms such as OT and KL match
+whole words. Search state is shareable in `?q=...&status=forthcoming` URLs.
+The ordinary archives remain available if JavaScript is disabled or fails.
+
+Every published article has a `keywords:` YAML array in its front matter.
+Every standalone preview has a comma-separated `<meta name="keywords">` tag.
+Add at least 18 specific terms per article (currently 21–35), including actual
+concepts, theorem/algorithm names, acronyms, author names, and useful language
+variants. Do not use generic filler or unrelated topics. The search result's
+“All keywords” disclosure lets readers inspect the full list and follow a term.
+
+After adding, renaming, redating, publishing, or changing keywords/metadata of
+an article, run `ruby scripts/build-blog-search.rb` and commit the regenerated
+`js/blog-search-index.js` along with the source changes. The generator reads
+all blog posts and standalone preview articles, excludes `published: false`,
+and derives titles, summaries, dates, and URLs directly from their metadata.
+It fails on missing or duplicate keyword lists. The committed catalogue works
+with GitHub Pages safe builds and local static previews without plugins,
+external services, or a data-fetch request. The actual matching runs in
+`js/blog-search-core.js`; rendering uses safe text nodes in `js/blog-search.js`.
+
+Run `ruby scripts/build-blog-search.rb --check` to detect stale or incomplete
+catalogues, `node tests/blog-search-core.test.js` for matching/ranking, and
+`ruby tests/blog-search-index.test.rb /path/to/built/site` for metadata and
+link coverage. Browser checks live in `tests/blog-search-browser.test.js`.
+
 ## Subscribe
 
 The blog publishes RSS 2.0 at /blog/rss.xml and Atom 1.0 at /blog/atom.xml.
@@ -39,6 +71,10 @@ title: "A short, descriptive title"
 subtitle: "Optional one-line introduction."
 description: "A plain-text summary for metadata and screen readers."
 topic: Optimal transport
+keywords:
+  - optimal transport
+  - transport optimal
+  # Add the other article-specific concepts, names, and abbreviations.
 ---
 ~~~
 

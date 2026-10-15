@@ -13,6 +13,12 @@ are published. These files are not Jekyll posts and have no publication dates
 or RSS/Atom entries. Publishing a finished article should create a selected
 dated post in `blog/_posts`, then update its preview to link to that article.
 
+The index offers search across both published and forthcoming articles. Each
+preview has a `<meta name="keywords">` list of at least 18 specific terms.
+After changing article metadata or adding a preview, run
+`ruby scripts/build-blog-search.rb` from the repository root and include the
+updated catalogue. See `../README.md` for search authoring and verification.
+
 ## OT4ML idea collection
 
 The fifteen selected topics in `../ideas/ot4ml-blog-post-ideas.tex` and its

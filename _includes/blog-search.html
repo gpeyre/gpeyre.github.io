@@ -1,0 +1,21 @@
+<section id="blog-search" class="blog-search" data-blog-search data-site-root="{{ site.baseurl }}/" aria-labelledby="blog-search-heading">
+    <h2 id="blog-search-heading">Find a post</h2>
+    <p class="blog-search-intro">Search published articles and forthcoming alpha previews together.</p>
+    <form role="search" aria-label="Search blog posts" action="{{ site.baseurl }}/blog/" method="get">
+        <label class="blog-search-label" for="blog-search-query">Title, keyword, or topic</label>
+        <div class="blog-search-input-row">
+            <input id="blog-search-query" type="search" name="q" maxlength="256" placeholder="Try Sinkhorn, covariance, ReLU…" autocomplete="off" spellcheck="false" aria-describedby="blog-search-help" aria-controls="blog-search-results" disabled>
+            <button type="button" data-search-clear hidden>Clear</button>
+        </div>
+        <fieldset class="blog-search-filters" disabled>
+            <legend>Search in</legend>
+            <label><input type="radio" name="status" value="all" checked> All posts</label>
+            <label><input type="radio" name="status" value="published"> Published</label>
+            <label><input type="radio" name="status" value="forthcoming"> Forthcoming</label>
+        </fieldset>
+    </form>
+    <p id="blog-search-help" class="blog-search-help">Search titles, keywords, and summaries. Accents and capitalization do not matter.</p>
+    <p class="blog-search-status" data-search-status role="status" aria-live="polite" aria-atomic="true">Loading search… The article list remains available below.</p>
+    <div id="blog-search-results" class="blog-search-results" data-search-results hidden></div>
+    <noscript>Search needs JavaScript. You can still browse the published articles below and the <a href="{{ site.baseurl }}/blog/preparations/">forthcoming previews</a>.</noscript>
+</section>

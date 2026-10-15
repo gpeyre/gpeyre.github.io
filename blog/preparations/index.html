@@ -8,11 +8,36 @@
 <title>Forthcoming posts — Gabriel Peyré</title>
 <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/">
 <link rel="stylesheet" href="assets/drafts.css">
+<link rel="stylesheet" href="../../css/blog-search.css">
+<script defer src="../../js/blog-search-index.js"></script>
+<script defer src="../../js/blog-search-core.js"></script>
+<script defer src="../../js/blog-search.js"></script>
 </head>
 <body>
 <header class="draft-header"><div class="wrap"><a class="draft-back" href="/blog/">← Blog</a><p class="draft-status">Alpha previews · Work in progress</p><h1>Forthcoming posts</h1><p class="byline">Gabriel Peyré</p></div></header>
 <main class="wrap">
 <p>These forthcoming posts are shared as <strong>alpha previews</strong>. Their content may evolve before the finished articles appear on the blog.</p>
+<section id="blog-search" class="blog-search" data-blog-search data-site-root="../../" aria-labelledby="blog-search-heading">
+<h2 id="blog-search-heading">Find a post</h2>
+<p class="blog-search-intro">Search published articles and forthcoming alpha previews together.</p>
+<form role="search" aria-label="Search blog posts" action="index.html" method="get">
+<label class="blog-search-label" for="blog-search-query">Title, keyword, or topic</label>
+<div class="blog-search-input-row">
+<input id="blog-search-query" type="search" name="q" maxlength="256" placeholder="Try Sinkhorn, covariance, ReLU…" autocomplete="off" spellcheck="false" aria-describedby="blog-search-help" aria-controls="blog-search-results" disabled>
+<button type="button" data-search-clear hidden>Clear</button>
+</div>
+<fieldset class="blog-search-filters" disabled><legend>Search in</legend>
+<label><input type="radio" name="status" value="all" checked> All posts</label>
+<label><input type="radio" name="status" value="published"> Published</label>
+<label><input type="radio" name="status" value="forthcoming"> Forthcoming</label>
+</fieldset>
+</form>
+<p id="blog-search-help" class="blog-search-help">Search titles, keywords, and summaries. Accents and capitalization do not matter.</p>
+<p class="blog-search-status" data-search-status role="status" aria-live="polite" aria-atomic="true">Loading search… The article list remains available below.</p>
+<div id="blog-search-results" class="blog-search-results" data-search-results hidden></div>
+<noscript>Search needs JavaScript. You can still browse the previews below or visit the <a href="../">published blog</a>.</noscript>
+</section>
+<div data-blog-browse>
 <nav class="preview-topic-nav" aria-label="Browse forthcoming posts by topic">
 <a href="#transport">Optimal transport</a><a href="#flows">Flows and geometry</a><a href="#probability">Probability and sampling</a><a href="#measures">Functions of measures</a><a href="#optimization">Optimization and approximation</a>
 </nav>
@@ -48,5 +73,5 @@
 <a class="draft-card" href="dc-programming-toland-duality.html"><small>Convex duality</small><h2>DC programming and Toland duality</h2><p>A short duality proof, the DC algorithm, and how a convex dual can reveal global solutions of a nonconvex problem.</p></a>
 <a class="draft-card" href="convex-max-softmax-approximation.html"><small>Approximation theory</small><h2>Convex approximation by max and softmax</h2><p>Supporting planes, approximation rates, temperature and weight scales, with interactive one- and two-dimensional examples.</p></a>
 </div></section>
-</main><footer class="draft-footer"><div class="wrap">Alpha previews · The finished articles will appear in the <a href="/blog/">blog</a> and its <a href="/blog/rss.xml">RSS</a> / <a href="/blog/atom.xml">Atom</a> feeds.</div></footer>
+</div></main><footer class="draft-footer"><div class="wrap">Alpha previews · The finished articles will appear in the <a href="/blog/">blog</a> and its <a href="/blog/rss.xml">RSS</a> / <a href="/blog/atom.xml">Atom</a> feeds.</div></footer>
 </body></html>
