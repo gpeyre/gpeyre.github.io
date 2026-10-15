@@ -4,6 +4,11 @@ The public archive is /blog/, linked from the main navigation. Each article is a
 Jekyll Markdown post in blog/_posts/YYYY-MM-DD-title.md. These are separate from
 the older news posts in the root _posts directory.
 
+Forthcoming posts are available as public alpha previews at /blog/preparations/,
+linked from the archive. They are standalone HTML pages, visibly marked as work
+in progress, without dates or feed entries. Their README is excluded from the
+website build; the preview pages and assets are included.
+
 ## Subscribe
 
 The blog publishes RSS 2.0 at /blog/rss.xml and Atom 1.0 at /blog/atom.xml.

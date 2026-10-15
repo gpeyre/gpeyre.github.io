@@ -15,7 +15,8 @@ permalink: pretty
 paginate: 5
 # Keep deliberately future-dated posts visible when publishing them.
 future: true
-exclude: ["node_modules", "blog/blog-todo.md", "blog/README.md", "tests", "scripts"]
+# Forthcoming articles are public static previews; exclude their authoring notes.
+exclude: ["node_modules", "blog/blog-todo.md", "blog/README.md", "blog/preparations/README.md", "tests", "scripts"]
 
 defaults:
   - scope:

@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <title>Universality of Wasserstein polynomials — Alpha preview — Gabriel Peyré</title>
+  <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/wasserstein-polynomials.html">
+  <meta name="description" content="How Stone–Weierstrass proves universality on Wasserstein space, from products of expectations to networks acting on measures.">
+  <link rel="stylesheet" href="assets/drafts.css">
+  <script defer src="assets/drafts.js"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+</head>
+<body>
+<header class="draft-header">
+  <div class="wrap">
+    <a class="draft-back" href="index.html">← Forthcoming posts</a>
+    <p class="draft-status">Alpha preview · Work in progress</p>
+    <p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
+    <h1>Polynomials of probability measures</h1>
+    <p class="subtitle">Stone–Weierstrass, finite interactions, and neural networks on Wasserstein space</p>
+    <p class="byline">Gabriel Peyré</p>
+  </div>
+</header>
+<main class="wrap">
+<article class="blog-prose">
+<p>A dataset is often better represented by a probability measure than by a vector. A point cloud may contain ten points or ten thousand; its ordering should not matter. A population in a mean field game has the same feature: what matters is the distribution of states, rather than a list of named individuals. This raises a basic approximation question: what are the analogues of polynomials when the input is a whole probability distribution?</p>
+
+<p>The answer is pleasantly concrete. Start with expectations of continuous features, multiply a finite number of them, and take linear combinations. On a compact ground space, these expressions approximate <em>every continuous functional of a probability measure</em>, uniformly over all measures. The proof is a direct application of Stone–Weierstrass. It explains why averaging features can be a universal architecture, and why finite-particle interactions are useful coordinates for an infinite-dimensional space. This is also the subject of the “Measure-to-Vector Maps on Wasserstein Space” section of my book <a href="#ref-book">[1]</a>.</p>
+
+<figure class="portrait-pair">
+  <div class="portrait-pair-images">
+    <div><img src="assets/marshall-stone.jpg" width="1000" height="776" alt="Marshall H. Stone in profile" loading="lazy"><p>Marshall H. Stone</p></div>
+    <div><img src="assets/karl-weierstrass.jpg" width="901" height="1322" alt="Karl Weierstrass, with his signature" loading="lazy"><p>Karl Weierstrass</p></div>
+  </div>
+  <figcaption>Stone: <a href="https://photoarchive.lib.uchicago.edu/db.xqy?one=apf1-07972.xml">University of Chicago Photographic Archive, apf1-07972</a>, Hanna Holborn Gray Special Collections Research Center, University of Chicago Library; <a href="https://photoarchive.lib.uchicago.edu/rights.html">educational and scholarly use permission</a>. Weierstrass: Smithsonian Institution Libraries, via <a href="https://commons.wikimedia.org/wiki/File:Karl_Weierstrass.jpg">Wikimedia Commons</a>, public domain.</figcaption>
+</figure>
+
+<h2>A compact space whose points are measures</h2>
+<p>Let \((K,d)\) be a nonempty compact metric space and let \(\mathcal P(K)\) be its Borel probability measures. Fix \(1\le p&lt;\infty\). The Wasserstein distance is</p>
+\[
+W_p(\mu,\nu)^p
+=\inf_{\pi\in\Pi(\mu,\nu)}\int_{K\times K}d(x,y)^p\,d\pi(x,y),
+\]
+<p>where \(\Pi(\mu,\nu)\) contains the joint laws with marginals \(\mu\) and \(\nu\). Because \(K\) is compact, \(\mathcal P(K)\) is compact too, and convergence in \(W_p\) is equivalent to weak convergence: convergence of \(\int\phi\,d\mu\) for every \(\phi\in C(K)\). Thus all finite choices of \(p\) give the same continuous functionals here <a href="#ref-book">[1]</a>.</p>
+
+<p>For a continuous feature \(\phi:K\to\mathbb R\), write</p>
+\[
+m_\phi(\mu)=\int_K\phi(x)\,d\mu(x).
+\]
+<p>This is a linear observable of the measure. Its dependence on the point \(x\) can be completely nonlinear: \(\phi\) could be a cosine, a bump, or a neural-network feature.</p>
+
+<h2>What is a polynomial of a measure?</h2>
+<p>A <em>moment polynomial</em> is a finite linear combination of products</p>
+\[
+M(\mu)=\prod_{j=1}^{r}m_{\phi_j}(\mu).
+\]
+<p>The empty product is \(1\). More generally, a continuous interaction kernel \(\Phi:K^r\to\mathbb R\) defines a <em>Wasserstein polynomial of order at most \(r\)</em>:</p>
+\[
+P_\Phi(\mu)=\int_{K^r}\Phi(x_1,\ldots,x_r)\,d\mu^{\otimes r}.
+\]
+<p>Equivalently, draw independent \(X_1,\ldots,X_r\) with law \(\mu\), and take \(\mathbb E\Phi(X_1,\ldots,X_r)\). The order counts how many particles interact; it does not count powers of their spatial coordinates. Symmetrizing \(\Phi\) leaves \(P_\Phi\) unchanged. Lower-order terms can be included by adding dummy variables, since \(\mu(K)=1\).</p>
+
+<p>Why call this a polynomial? Along a mixture \(\mu_t=(1-t)\mu+t\nu\), the value \(P_\Phi(\mu_t)\) is an ordinary polynomial in \(t\), of degree at most \(r\): simply expand the \(r\) factors of \(\mu_t^{\otimes r}\). This is a statement about <em>mixing measures</em>, not about moving their particles along a Wasserstein geodesic.</p>
+
+<p>Every moment monomial is such an interaction, with \(\Phi(x_1,\ldots,x_r)=\prod_j\phi_j(x_j)\). A general continuous kernel need not be an exact finite sum of these separated products. However, Stone–Weierstrass on \(K^r\) approximates it by such sums; integration preserves the uniform error. The two classes therefore have the same uniform closure.</p>
+
+<p>For example, on a compact subset of \(\mathbb R\), variance is an order-two polynomial:</p>
+\[
+\operatorname{Var}(\mu)
+=m_{x^2}(\mu)-m_x(\mu)^2
+=\frac12\iint(x-y)^2\,d\mu(x)d\mu(y).
+\]
+<p>Likewise, \(\iint V(x,y)\,d\mu(x)d\mu(y)\) describes a pair interaction. By contrast, \(\mu\mapsto W_p(\mu,\nu)\), with a fixed target \(\nu\), is typically not itself a finite polynomial. It is continuous, so the next theorem still applies.</p>
+
+<h2>Universality in three observations</h2>
+<p id="theorem-1"><strong>Theorem 1 (polynomial universality).</strong> For every continuous \(F:\mathcal P(K)\to\mathbb R\) and every \(\varepsilon&gt;0\), there is a moment polynomial \(P\) such that</p>
+\[
+\sup_{\mu\in\mathcal P(K)}|F(\mu)-P(\mu)|&lt;\varepsilon.
+\]
+<p>In particular, Wasserstein polynomials are uniformly dense. This classical argument appears explicitly in Cardaliaguet’s notes on mean field games, §5.3, Proposition 5.9 <a href="#ref-cardaliaguet">[2]</a>.</p>
+
+<details class="blog-proof">
+<summary>Proof: constants, products, and separation</summary>
+<div class="blog-proof-body">
+<p>Let \(\mathcal A\) be the moment polynomials. Every member is continuous. Constants belong to \(\mathcal A\), and multiplying two finite products gives another finite product; hence \(\mathcal A\) is a unital algebra.</p>
+<p>If \(\mu\ne\nu\), some continuous \(\phi\) satisfies \(\int\phi\,d\mu\ne\int\phi\,d\nu\): continuous test functions determine Borel measures on a compact metric space. The order-one observables therefore already separate measures.</p>
+<p>The real Stone–Weierstrass theorem <a href="#ref-stone">[3]</a>, applied to the compact space \(\mathcal P(K)\), gives \(\overline{\mathcal A}=C(\mathcal P(K))\). \(\square\)</p>
+</div>
+</details>
+
+<p>The crucial distinction is between <em>one fixed finite list of moments</em> and a list that may grow with the desired accuracy. Two distributions can have the same mean and variance. The theorem allows us to add the features needed to distinguish the distributions relevant to the target functional.</p>
+
+<h2>An explicit approximation: sample, evaluate, average</h2>
+<p>Stone–Weierstrass proves existence. There is also a natural construction. For independent samples \(X_i\sim\mu\), define the empirical measure and its averaged prediction:</p>
+\[
+\widehat\mu_n=\frac1n\sum_{i=1}^n\delta_{X_i},
+\qquad B_nF(\mu)=\mathbb E F(\widehat\mu_n).
+\]
+<p>This is a Wasserstein polynomial of order at most \(n\), with symmetric kernel \(\Phi_n(x_1,\ldots,x_n)=F(n^{-1}\sum_i\delta_{x_i})\). The kernel is continuous: pairing corresponding points bounds the Wasserstein distance between their empirical measures by their largest displacement. These are Bernstein–Schnabl operators <a href="#ref-schnabl">[4]</a>. For \(K=\{0,1\}\), writing \(\mu_t=(1-t)\delta_0+t\delta_1\), the formula reduces to the ordinary Bernstein polynomial</p>
+\[
+B_nF(\mu_t)=\sum_{k=0}^{n}F(\mu_{k/n})
+\binom nk t^k(1-t)^{n-k}.
+\]
+
+<p id="theorem-2"><strong>Theorem 2 (uniform particle approximation).</strong> For every \(F\in C(\mathcal P(K))\),</p>
+\[
+\sup_{\mu\in\mathcal P(K)}|B_nF(\mu)-F(\mu)|\longrightarrow0.
+\]
+<p>The uniformity is important: the same number of particles works for <em>all</em> input measures. Pointwise convergence of empirical measures alone would not prove this stronger statement.</p>
+
+<details class="blog-proof">
+<summary>Proof: repeated sample indices are the only error on monomials</summary>
+<div class="blog-proof-body">
+<p id="lemma-1"><strong>Lemma 1.</strong> If \(M=\prod_{j=1}^r m_{\phi_j}\), with \(r\ge1\) and \(n\ge r\), then</p>
+\[
+\|B_nM-M\|_\infty
+\le\frac{r(r-1)}n\prod_{j=1}^r\|\phi_j\|_\infty.
+\]
+<details class="blog-proof">
+<summary>Proof of Lemma 1: expand the sample averages</summary>
+<div class="blog-proof-body">
+<p>For \(r=1\), equality is exact. Otherwise, expand the product of the \(r\) sample averages. Equivalently, choose \(r\) indices independently and uniformly from \(\{1,\ldots,n\}\), independently of the samples. Conditional on distinct indices, the expectation of the product is exactly \(M(\mu)\). The probability of a repeated index is at most \(\binom r2/n\), by the union bound. Conditional on a repetition, both the expected product and \(M(\mu)\) have absolute value at most \(\prod_j\|\phi_j\|_\infty\). Their difference is therefore bounded by twice this quantity. Multiplying by the repetition probability proves the estimate. \(\square\)</p>
+</div>
+</details>
+<p>Constants are preserved, and the lemma plus linearity gives \(B_nP\to P\) uniformly for every moment polynomial. Also, averaging is a contraction:</p>
+\[
+\|B_nF-B_nP\|_\infty\le\|F-P\|_\infty.
+\]
+<p>Choose \(P\) close to \(F\) using Theorem 1, and write</p>
+\[
+\|B_nF-F\|_\infty
+\le2\|F-P\|_\infty+\|B_nP-P\|_\infty.
+\]
+<p>First let \(n\to\infty\), then make \(\|F-P\|_\infty\) arbitrarily small. \(\square\)</p>
+</div>
+</details>
+
+<p>The error has a familiar face. For variance on a compact subset of \(\mathbb R\),</p>
+\[
+B_n\operatorname{Var}(\mu)=\left(1-\frac1n\right)\operatorname{Var}(\mu).
+\]
+<p>Indeed, its pair-interaction formula has \(n(n-1)\) off-diagonal terms, each involving two independent samples, and \(n\) diagonal terms that vanish. The usual finite-sample variance bias is exactly the repeated-index phenomenon in the proof.</p>
+
+<p>For a functional that is \(L\)-Lipschitz in \(W_p\), there is a useful quantitative starting point:</p>
+\[
+|B_nF(\mu)-F(\mu)|\le L\,\mathbb E W_p(\widehat\mu_n,\mu).
+\]
+<p>For \(K\subset\mathbb R^d\), empirical Wasserstein estimates such as those of Fournier and Guillin <a href="#ref-fournier">[5]</a> therefore become approximation estimates. Their dimension dependence matters; arbitrary compact metric spaces require bounds adapted to their geometry. Neither Theorem 1 nor a bound on the interaction order makes an arbitrary kernel on \(K^n\) inexpensive to evaluate or learn.</p>
+
+<h2>From moments to neural networks</h2>
+<p>A moment polynomial only uses finitely many features. It can therefore be written</p>
+\[
+P(\mu)=q\!\left(\int_K\phi(x)\,d\mu(x)\right),
+\]
+<p>where \(\phi:K\to\mathbb R^s\) is continuous and \(q:\mathbb R^s\to\mathbb R\) is an ordinary multivariate polynomial. This suggests a simple architecture: transform each point, average the resulting vectors, and apply a nonlinear readout. It connects the measure viewpoint to Deep Sets <a href="#ref-deepsets">[6]</a> and to explicit universality results for neural networks on probability measures <a href="#ref-pevny">[7]</a>.</p>
+
+<p id="corollary-1"><strong>Corollary 1 (neural features and pooling).</strong> If \(K\subset\mathbb R^d\) is compact, maps</p>
+\[
+\mu\longmapsto\rho\!\left(\int_K\phi(x)\,d\mu(x)\right),
+\]
+<p>with finite ReLU networks \(\phi\) and \(\rho\), and an unrestricted finite feature dimension \(s\), are uniformly dense in \(C(\mathcal P(K))\). Here the networks have biases, ReLU hidden activations, and affine output layers; their sizes may depend on the target and the accuracy.</p>
+<details class="blog-proof">
+<summary>Proof: approximate the features and the finite-dimensional readout</summary>
+<div class="blog-proof-body">
+<p>Choose a moment polynomial \(q(\int\phi\,d\mu)\) within \(\varepsilon/3\) of \(F\). Take a compact box containing every feature average \(\int\phi\,d\mu\), with a margin of one in each coordinate. Uniform continuity of \(q\) on this box supplies \(0&lt;\delta&lt;1\) such that changing its input by at most \(\delta\), coordinatewise, changes its output by less than \(\varepsilon/3\).</p>
+<p>Approximate each feature uniformly on \(K\) by a ReLU network, giving a vector \(\widetilde\phi\) with error at most \(\delta\). Because \(\mu\) is a probability measure, the same bound holds for its feature averages, uniformly in \(\mu\). Finally approximate \(q\) on the box by a ReLU network \(\rho\), with error less than \(\varepsilon/3\). The three errors—polynomial approximation, feature approximation, and readout approximation—sum to less than \(\varepsilon\). \(\square\)</p>
+</div>
+</details>
+
+<p>On an empirical measure, the same parameters give</p>
+\[
+\rho\!\left(\frac1N\sum_{i=1}^N\phi(x_i)\right).
+\]
+<p>This is permutation invariant and applies to every sample size \(N\). Normalization is meaningful: duplicating the entire cloud does not change its empirical probability measure. A task that depends on the raw number of observations must also receive that number; it is not solely a functional of the normalized measure.</p>
+
+<p>With Gwendoline de Bie and Marco Cuturi, we developed this measure-based viewpoint in <em>Stochastic Deep Networks</em> <a href="#ref-debie">[8]</a>. A basic block averages pairwise information, \(T_\mu(x)=\int h(x,y)\,d\mu(y)\), and transports the input measure to \((T_\mu)_\#\mu\). This resembles attention at the level of operations on a distribution, although it is not the usual normalized softmax formula. The paper also considers tensorization and auxiliary noise; that noise matters when a measure-to-measure model must split an atom into a nontrivial distribution.</p>
+
+<p>Our more recent work with Takashi Furuya and Maarten de Hoop proves universality for attention-based <em>in-context maps</em> \((\mu,x)\mapsto G(\mu,x)\) on compact token domains <a href="#ref-attention">[9]</a>. This addresses a different architecture and output: a query and its context interact, and the context itself evolves through layers. It is not a direct consequence of the pooling corollary. A common theme is that probability measures let us state approximation results independently of a fixed number of tokens.</p>
+
+<h2>Why mean field games already needed these polynomials</h2>
+<p>In mean field games, an agent responds to the distribution of the population. Costs and value functions consequently depend on a measure, as in the framework introduced by Lasry and Lions <a href="#ref-mfg">[10]</a>. Polynomial test functionals provide a tractable family with which to study this dependence. Cardaliaguet’s notes, based on Lions’s lectures, make the density argument explicit and then use it in the theory of symmetric particle systems <a href="#ref-cardaliaguet">[2]</a>.</p>
+
+<p>The connection with exchangeability is particularly natural. If a random measure directs conditionally independent observations, their joint test-function expectations are averages of products \(\prod_j\int\phi_j\,d\mu\). Knowing all these averages determines the law of the random measure: by density, it determines the expectation of every continuous \(F\) on \(\mathcal P(K)\). This is the uniqueness mechanism behind the directing measure in the de Finetti–Hewitt–Savage representation <a href="#ref-hewitt">[11]</a>. Neural networks on distributions reuse a much older mathematical language.</p>
+
+<h2>What compactness and continuity are doing</h2>
+<p>The statement is uniform over \(\mathcal P(K)\) because \(K\) is compact. On the full noncompact space \(\mathcal P_p(\mathbb R^d)\), this global conclusion does not follow. It does hold on every <em>fixed \(W_p\)-compact subset</em>: bounded continuous test functions still give continuous observables, separate measures, and generate a unital algebra. Apply Stone–Weierstrass to that compact subset.</p>
+<p>The restriction is genuine. Polynomials made from bounded features are bounded, so they cannot uniformly approximate the continuous, unbounded functional \(\mu\mapsto\int |x|^p\,d\mu(x)\) over all of \(\mathcal P_p(\mathbb R^d)\).</p>
+
+<p>Continuity is equally essential. Point mass \(\mu\mapsto\mu(\{x_0\})\) is discontinuous when \(x_0\) is not isolated; moving a Dirac mass towards \(x_0\) exhibits the jump. Such a functional cannot be a uniform limit of continuous polynomials. Likewise, density-based quantities such as entropy require a more restricted domain or regularization. Universality is powerful once the input space and its topology match the quantity we want to learn.</p>
+
+<h2>References</h2>
+<ol class="references">
+  <li id="ref-book">Gabriel Peyré. <a href="https://arxiv.org/abs/2505.06589"><em>Optimal Transport for Machine Learners</em></a>, 2025–2026. See “Measure-to-Vector Maps on Wasserstein Space,” §4.4 in the current <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf">book manuscript</a>.</li>
+  <li id="ref-cardaliaguet">Pierre Cardaliaguet. <a href="https://www.ceremade.dauphine.fr/~cardaliaguet/MFG100629.pdf"><em>Notes on Mean Field Games</em></a>, from P.-L. Lions’s lectures at the Collège de France, version of 15 January 2012. §5.3, Proposition 5.9, and §5.4.</li>
+  <li id="ref-stone">Marshall H. Stone. <a href="https://doi.org/10.2307/3029750">The Generalized Weierstrass Approximation Theorem</a>. <em>Mathematics Magazine</em> 21(4), 167–184, 1948.</li>
+  <li id="ref-schnabl">Roman Schnabl. <a href="https://doi.org/10.1007/BF01351885">Zur Approximation durch Bernsteinpolynome auf gewissen Räumen von Wahrscheinlichkeitsmaßen</a>. <em>Mathematische Annalen</em> 180, 326–330, 1969.</li>
+  <li id="ref-fournier">Nicolas Fournier and Arnaud Guillin. <a href="https://arxiv.org/abs/1312.2128">On the rate of convergence in Wasserstein distance of the empirical measure</a>. <em>Probability Theory and Related Fields</em> 162, 707–738, 2015.</li>
+  <li id="ref-deepsets">Manzil Zaheer, Satwik Kottur, Siamak Ravanbakhsh, Barnabás Póczos, Ruslan Salakhutdinov, and Alexander J. Smola. <a href="https://arxiv.org/abs/1703.06114">Deep Sets</a>. <em>NeurIPS</em>, 2017.</li>
+  <li id="ref-pevny">Tomáš Pevný and Vojtěch Kovařík. <a href="https://arxiv.org/abs/1906.00764">Approximation capability of neural networks on spaces of probability measures and tree-structured domains</a>. arXiv:1906.00764, 2019.</li>
+  <li id="ref-debie">Gwendoline de Bie, Gabriel Peyré, and Marco Cuturi. <a href="https://proceedings.mlr.press/v97/de-bie19a.html">Stochastic Deep Networks</a>. <em>ICML</em>, PMLR 97, 1556–1565, 2019.</li>
+  <li id="ref-attention">Takashi Furuya, Maarten V. de Hoop, and Gabriel Peyré. <a href="https://arxiv.org/abs/2408.01367">Transformers are Universal In-context Learners</a>. <em>ICLR</em>, 2025.</li>
+  <li id="ref-mfg">Jean-Michel Lasry and Pierre-Louis Lions. <a href="https://doi.org/10.1007/s11537-007-0657-8">Mean field games</a>. <em>Japanese Journal of Mathematics</em> 2, 229–260, 2007.</li>
+  <li id="ref-hewitt">Edwin Hewitt and Leonard J. Savage. <a href="https://doi.org/10.1090/S0002-9947-1955-0076206-8">Symmetric measures on Cartesian products</a>. <em>Transactions of the American Mathematical Society</em> 80(2), 470–501, 1955.</li>
+</ol>
+</article>
+</main>
+<footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Blog</a></div></footer>
+</body>
+</html>
