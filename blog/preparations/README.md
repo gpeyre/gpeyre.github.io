@@ -97,6 +97,18 @@ write screenshots only to the specified temporary directory, not the site.
 The shared scripts deliberately do not schedule or publish any of these
 previews as dated posts, and the existing RSS/Atom entries remain unchanged.
 
+## Gaussian Sinkhorn
+
+`gaussian-sinkhorn-convergence.html` adds the centered Gaussian covariance
+recursion and its exact scalar convergence factor. Its interactive companion
+uses `assets/gaussian-sinkhorn-core.js` and the `gaussian` experiment topic.
+The temperature slider is logarithmic; all trajectories use closed-form
+cross-ratio coordinates, with errors evaluated directly in the log domain.
+The covariance ellipses are joint laws of two scalar variables, not spatial
+marginals. Run `node tests/blog-gaussian-sinkhorn.test.js` for independent
+recurrence, covariance, relative-entropy, and rate checks. This preview has
+no date or feed entry, like the other forthcoming articles.
+
 ## Max and softmax experiment
 
 The max/softmax experiment retains a tangent-plane construction for its 1D

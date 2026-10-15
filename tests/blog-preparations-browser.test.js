@@ -4,8 +4,8 @@ const assert=require("node:assert/strict"),fs=require("node:fs"),path=require("n
 const {chromium}=require(process.env.BLOG_PLAYWRIGHT_PATH||"playwright");
 const base=process.env.BLOG_PREVIEW_URL||"http://127.0.0.1:4189";
 const shots=process.env.BLOG_SCREENSHOT_DIR||"/private/tmp";
-const topics=["monge","moments","caps","clt","energy","composition","cdf","matchings","bernstein","quantization","weak","independence","envelope"];
-const slugs=["monge-gap-inversions","autonomous-wasserstein-statistics","gaussian-gromov-wasserstein-counterexample","wasserstein-geodesics-density-caps","central-limit-wasserstein-constants","divergences-and-bregman-geometry","energy-distance-wasserstein-convexity","composing-optimal-transport-maps","wasserstein-distance-without-quantiles","noncrossing-matchings-catalan","when-independence-is-optimal","optimal-transport-convex-extension","bernstein-polynomials-on-measures","optimal-particles-versus-random-sampling","weak-transport-and-convex-order"];
+const topics=["monge","moments","caps","clt","energy","composition","cdf","matchings","bernstein","quantization","weak","independence","envelope","gaussian"];
+const slugs=["monge-gap-inversions","autonomous-wasserstein-statistics","gaussian-gromov-wasserstein-counterexample","wasserstein-geodesics-density-caps","central-limit-wasserstein-constants","divergences-and-bregman-geometry","energy-distance-wasserstein-convexity","composing-optimal-transport-maps","wasserstein-distance-without-quantiles","noncrossing-matchings-catalan","when-independence-is-optimal","optimal-transport-convex-extension","bernstein-polynomials-on-measures","optimal-particles-versus-random-sampling","weak-transport-and-convex-order","gaussian-sinkhorn-convergence"];
 (async()=>{
   const browser=await chromium.launch({headless:true,channel:"chrome"});
   try {
@@ -26,6 +26,14 @@ const slugs=["monge-gap-inversions","autonomous-wasserstein-statistics","gaussia
       if(topic==="bernstein")for(const option of ["square","linear","corner"]) {
         await page.locator("select").selectOption(option);
         if(option==="linear")assert.match(await page.locator("#status").innerText(),/error (?:0|[\d.]+e-1[4567])/);
+      }
+      if(topic==="gaussian") {
+        await page.getByRole("button",{name:"Play cycles",exact:true}).click();
+        await page.waitForTimeout(200);
+        assert.ok(+(await sliders.nth(1).inputValue())>0,"Gaussian playback must advance");
+        await page.getByRole("button",{name:"Restart",exact:true}).click();
+        assert.equal(await sliders.nth(1).inputValue(),"0");
+        assert.equal(await page.locator('script[src="data.js"]').count(),0,"Gaussian experiment must not load unrelated trajectories");
       }
       if(topic==="matchings") {
         for(const label of ["Try 500 downhill swaps","Explore 100 random matchings","Uniform random matching"])await page.getByRole("button",{name:label,exact:true}).click();
@@ -54,7 +62,7 @@ const slugs=["monge-gap-inversions","autonomous-wasserstein-statistics","gaussia
     if(process.env.BLOG_TEST_ONLY!=="experiments") {
       await page.goto(base+"/blog/preparations/");
       const links=await page.locator(".draft-card").evaluateAll(nodes=>nodes.map(n=>new URL(n.href).pathname));
-      assert.equal(links.length,20);assert.equal(new Set(links).size,20);
+      assert.equal(links.length,21);assert.equal(new Set(links).size,21);
       await page.screenshot({path:path.join(shots,"forthcoming-index.png"),fullPage:true});
       for(const slug of slugs.filter(slug=>!process.env.BLOG_START_AT||slugs.indexOf(slug)>=slugs.indexOf(process.env.BLOG_START_AT))) {
         const response=await page.goto(base+"/blog/preparations/"+slug+".html");
