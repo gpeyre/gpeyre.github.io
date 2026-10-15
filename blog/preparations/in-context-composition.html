@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <meta name="description" content="In-context composition updates both a query and its context. A lifted-space interpretation connects transformer layers to particle dynamics and the continuity equation.">
+  <title>In-context composition — Alpha preview — Gabriel Peyré</title>
+  <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/in-context-composition.html">
+  <link rel="stylesheet" href="assets/drafts.css">
+  <script defer src="assets/drafts.js"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+</head>
+<body>
+<header class="draft-header"><div class="wrap">
+  <a class="draft-back" href="index.html">← Forthcoming posts</a>
+  <p class="draft-status">Alpha preview · Work in progress</p>
+  <p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
+  <h1>In-context composition</h1>
+  <p class="subtitle">Moving a point also changes the world in which the next layer acts.</p>
+  <p class="byline">Gabriel Peyré</p>
+</div></header>
+<main class="wrap">
+<article class="blog-prose">
+<p>Composing two functions usually means feeding the output of the first into the second. A transformer layer introduces a small twist: a token is transformed using the other tokens as context, and those other tokens are transformed too. The next layer sees a new point <em>and a new context</em>.</p>
+
+<p>In <em>Transformers are Universal In-context Learners</em>, with Takashi Furuya and Maarten de Hoop, we called the resulting operation <em>in-context composition</em> and denoted it by \(\diamond\) <a href="#ref-universality">[1]</a>. Its definition uses a pushforward of the context measure. There is a simple way to understand the whole construction: enlarge the state to include both the measure and the query. Then this apparently twisted composition becomes ordinary composition. The same viewpoint connects successive layers to particle transport and to an advection equation.</p>
+
+<h2>A function of a distribution and a point</h2>
+<p>A context is a probability measure \(\mu\) on \(\mathbb R^d\). For a finite collection of tokens, its empirical distribution is</p>
+\[
+  \mu=\frac1n\sum_{i=1}^n\delta_{x_i}.
+\]
+<p>This representation forgets the ordering of the tokens, which is appropriate for unmasked self-attention without positional information. It also makes sense for a continuous distribution or a weighted point cloud.</p>
+
+<p>An <em>in-context map</em> takes both a context and a query:</p>
+\[
+  f(\mu,x)=f_\mu(x).
+\]
+<p>For fixed \(\mu\), \(f_\mu\) is an ordinary spatial map. The query \(x\) can be one of the context tokens, but it can also be a separate point. Merely evaluating a query does not add it to the context.</p>
+
+<p>To keep all formulas well defined, we work with compactly supported probability measures and maps continuous in the spatial variable. Their pushforwards then remain compactly supported. All maps in the main discussion have values in the same \(\mathbb R^d\); different embedding dimensions are also possible when successive domains and ranges match. Regularity with respect to \(\mu\) will enter later.</p>
+
+<h2>Pushforward: move the points, carry their mass</h2>
+<p>For a measurable map \(T:\mathbb R^d\to\mathbb R^d\), the <em>pushforward</em> \(T_\#\mu\) is the distribution after applying \(T\). For a Borel set \(B\),</p>
+\[
+  (T_\#\mu)(B)=\mu(T^{-1}(B)).
+\]
+<p>Here \(T^{-1}(B)\) is an inverse image of a set; \(T\) need not be invertible. Equivalently, for every bounded continuous test function \(\varphi\),</p>
+\[
+  \int\varphi(y)\,d(T_\#\mu)(y)
+  =\int\varphi(T(x))\,d\mu(x).
+\]
+<p>If \(X\) has law \(\mu\), then \(T(X)\) has law \(T_\#\mu\). In the empirical case,</p>
+\[
+  T_\#\mu=\frac1n\sum_{i=1}^n\delta_{T(x_i)}.
+\]
+<p>The weights stay the same; the positions move, and some positions may merge. The identity behind everything that follows is</p>
+\[
+  (S\circ T)_\#\mu=S_\#(T_\#\mu).
+\]
+
+<h2>The next layer must see the updated context</h2>
+<p>Apply \(g\) first. Its spatial map is \(g_\mu\), so the new query and context are \(g_\mu(x)\) and \((g_\mu)_\#\mu\). Applying \(f\) next therefore means</p>
+\[
+  \begin{aligned}
+    \nu&=(g_\mu)_\#\mu,\\
+    (f\diamond g)(\mu,x)&=f(\nu,g_\mu(x)).
+  \end{aligned}
+\]
+<p>Equivalently, as an equality of spatial maps,</p>
+\[
+  (f\diamond g)_\mu=f_\nu\circ g_\mu.
+\]
+<p>This is the definition in §2.2, equation (10), of our paper <a href="#ref-universality">[1]</a>. The order follows ordinary composition: \(g\) acts first. The difference from the frozen-context expression \(f_\mu\circ g_\mu\) is that the second layer uses \(\nu\).</p>
+
+<p>For a finite context, write</p>
+\[
+  y_i=g(\mu,x_i),\qquad
+  \nu=\frac1n\sum_{i=1}^n\delta_{y_i}.
+\]
+<p>The second layer outputs \(f(\nu,y_i)\). Thus \(\diamond\) exactly reproduces ordinary composition of the maps acting on the <em>whole token array</em>. It is the pointwise, measure-based description of that composition which needs a new symbol.</p>
+
+<h2>Ordinary composition on a lifted space</h2>
+<p>Let \(\mathcal P_c(\mathbb R^d)\) denote the compactly supported probability measures. Define the measure update \(P_f\) and the lifted map \(\widehat f\) by</p>
+\[
+  \begin{aligned}
+    P_f(\mu)&=(f_\mu)_\#\mu,\\
+    \widehat f(\mu,x)&=(P_f(\mu),f_\mu(x)).
+  \end{aligned}
+\]
+<p>The lifted state lies in \(\mathcal P_c(\mathbb R^d)\times\mathbb R^d\): a population together with a tagged point. Its two components are updated consistently by the same spatial map.</p>
+
+<p id="theorem-1"><strong>Theorem 1 (the lift removes the twist).</strong> For any such in-context maps,</p>
+\[
+  \widehat{f\diamond g}=\widehat f\circ\widehat g,
+  \qquad
+  P_{f\diamond g}=P_f\circ P_g.
+\]
+<p>Consequently, \(\diamond\) is associative, and \(e(\mu,x)=x\) is its identity.</p>
+
+<details class="blog-proof">
+<summary>Proof: compose the pushforwards</summary>
+<div class="blog-proof-body">
+<p>Set \(\nu=P_g(\mu)\). The spatial identity above gives</p>
+\[
+  \begin{aligned}
+    P_{f\diamond g}(\mu)
+    &=(f_\nu\circ g_\mu)_\#\mu\\
+    &=(f_\nu)_\#\nu=P_f(\nu).
+  \end{aligned}
+\]
+<p>The query component is \(f_\nu(g_\mu(x))\), exactly the second component of \(\widehat f(\widehat g(\mu,x))\). This proves the two identities.</p>
+<p>The lift is injective: its second component determines \(f(\mu,x)\). Ordinary associativity of lifted maps therefore implies</p>
+\[
+  (f\diamond g)\diamond h=f\diamond(g\diamond h).
+\]
+<p>Finally, \(P_e(\mu)=\mu\), so \(e\diamond f=f\diamond e=f\). \(\square\)</p>
+</div>
+</details>
+
+<p>Thus in-context maps form a monoid: they can be composed associatively and have an identity. The lift identifies them with a family of ordinary maps closed under composition. If both maps ignore the context, \(f(\mu,x)=F(x)\) and \(g(\mu,x)=G(x)\), then \((f\diamond g)(\mu,x)=F(G(x))\).</p>
+
+<h2>A revealing example: center the cloud twice</h2>
+<p>Let \(m(\mu)=\int y\,d\mu(y)\) be the mean and consider centering:</p>
+\[
+  c(\mu,x)=x-m(\mu).
+\]
+<p>The updated context has mean zero. Hence</p>
+\[
+  c\diamond c=c.
+\]
+<p>By contrast, freezing the original context would give \(c_\mu(c_\mu(x))=x-2m(\mu)\). The first formula is what one expects from centering a dataset twice.</p>
+
+<p>Order also matters. For a fixed translation \(\tau_a(\mu,x)=x+a\),</p>
+\[
+  c\diamond\tau_a=c,\qquad
+  (\tau_a\diamond c)(\mu,x)=c(\mu,x)+a.
+\]
+<p>Translating and then centering removes the translation; centering and then translating retains it.</p>
+
+<p>There is a subtle loss of information here. Each spatial map \(c_\mu\) is a bijective translation. Nevertheless, the lifted centering map is not invertible: simultaneously translating the original context and query gives the same centered output. Pointwise invertibility for each fixed context does not guarantee invertibility of the full in-context transformation.</p>
+
+<h2>Self-attention as a transport rule</h2>
+<p>A single attention head gives a concrete example. Let \(Q,K:\mathbb R^d\to\mathbb R^r\) and \(V:\mathbb R^d\to\mathbb R^d\) be linear maps, and write</p>
+\[
+  \begin{aligned}
+    w(x,y)&=\exp\!\left(\frac{\langle Qx,Ky\rangle}{\sqrt r}\right),\\
+    A(\mu,x)&=\frac{\int w(x,y)\,Vy\,d\mu(y)}
+                       {\int w(x,y)\,d\mu(y)}.
+  \end{aligned}
+\]
+<p>Compact support makes these integrals finite and the denominator positive. For an empirical measure, the integrals reduce to the usual softmax-weighted sum. A residual layer can be written as \(g_h(\mu,x)=x+hA(\mu,x)\). Its context update is \((g_{h,\mu})_\#\mu\), so stacking layers uses \(\diamond\).</p>
+
+<p>This measure-theoretic description of attention has earlier roots in the work of Vuckovic, Baratin, and Tachet des Combes <a href="#ref-attention">[2]</a>. It makes the connection with interacting particles explicit: each token moves according to a rule depending on the distribution of all tokens. The dynamical viewpoint is developed in detail by Geshkovski, Letrouit, Polyanskiy, and Rigollet <a href="#ref-transformers">[3]</a>.</p>
+
+<h2>Discrete advection and the continuity equation</h2>
+<p>More generally, let \(v[\mu](x)\) be a velocity depending on the current distribution. A residual layer with step size \(h&gt;0\) is</p>
+\[
+  g_h(\mu,x)=x+h\,v[\mu](x).
+\]
+<p>Repeated in-context composition gives the coupled recursion</p>
+\[
+  \begin{aligned}
+    \mu_{k+1}&=(\operatorname{Id}+h\,v[\mu_k])_\#\mu_k,\\
+    x_{k+1}&=x_k+h\,v[\mu_k](x_k).
+  \end{aligned}
+\]
+<p>For an empirical context, every particle follows the same explicit Euler update, with the velocity recomputed from the new cloud at each step. This is a discrete Lagrangian transport scheme: follow the particles and carry their mass. Here \(k\) counts layers; \(t=kh\) will play the role of continuous depth, as in the residual-network and neural-ODE viewpoint <a href="#ref-neural-ode">[4]</a>.</p>
+
+<p id="proposition-1"><strong>Proposition 1 (consistency with the continuity equation).</strong> Let \(\varphi\in C_c^2(\mathbb R^d)\) and assume \(\int|v[\mu_k]|^2\,d\mu_k&lt;\infty\). Then</p>
+\[
+  \begin{aligned}
+  \frac1h\left(\int\varphi\,d\mu_{k+1}
+                  -\int\varphi\,d\mu_k\right)
+  &=\int\nabla\varphi\cdot v[\mu_k]\,d\mu_k+R_k,\\
+  |R_k|&\le\frac h2\|D^2\varphi\|_\infty
+                \int|v[\mu_k]|^2\,d\mu_k.
+  \end{aligned}
+\]
+
+<details class="blog-proof">
+<summary>Proof: test the pushforward and use Taylor's formula</summary>
+<div class="blog-proof-body">
+<p>The pushforward identity rewrites the difference of integrals as</p>
+\[
+  \int\bigl[\varphi(x+h\,v[\mu_k](x))-\varphi(x)\bigr]\,d\mu_k(x).
+\]
+<p>Taylor's formula gives the linear term \(h\nabla\varphi(x)\cdot v[\mu_k](x)\) and a remainder bounded by \(\tfrac12h^2\|D^2\varphi\|_\infty|v[\mu_k](x)|^2\). Integrate and divide by \(h\). \(\square\)</p>
+</div>
+</details>
+
+<p>Letting \(h\) tend to zero suggests the weak equation</p>
+\[
+  \frac{d}{dt}\int\varphi\,d\mu_t
+  =\int\nabla\varphi\cdot v[\mu_t]\,d\mu_t,
+\]
+<p>or, in distributional notation,</p>
+\[
+  \partial_t\mu_t+\nabla\cdot(\mu_t\,v[\mu_t])=0.
+\]
+<p>The Taylor estimate is a consistency statement. Convergence additionally needs control of the velocity and its dependence on the measure; Lipschitz and growth assumptions provide a standard framework for well-posedness and convergent particle schemes <a href="#ref-transport">[5]</a>.</p>
+
+<p>If \(\mu_t\) has density \(\rho_t\), the equation reads \(\partial_t\rho+\nabla\cdot(\rho v)=0\). This is the mass-conserving <em>continuity equation</em>, also called a transport equation. Expanding it gives \(\partial_t\rho+v\cdot\nabla\rho+\rho\,\nabla\cdot v=0\). The last term accounts for compression or expansion; the passive-scalar advection equation omits it and coincides with this equation only when \(v\) is divergence free.</p>
+
+<p>The characteristic point satisfies \(\dot X_t(x)=v[\mu_t](X_t(x))\), with \(\mu_t=(X_t)_\#\mu_0\). For an autonomous velocity rule with globally defined, unique characteristic solutions, let \(F_t(\mu,x)\) denote this characteristic starting from context \(\mu\). Restarting at time \(t\) yields</p>
+\[
+  F_{s+t}=F_s\diamond F_t.
+\]
+<p>The nonlinear evolution is a semigroup under in-context composition. Its lift is an ordinary semigroup on measure–point pairs. If the velocity also depends explicitly on depth, one instead uses a two-time evolution family.</p>
+
+<h2>An exactly solvable flow: attraction to the mean</h2>
+<p>Take \(v[\mu](x)=m(\mu)-x\). A discrete step gives</p>
+\[
+  g_h(\mu,x)=(1-h)x+h\,m(\mu).
+\]
+<p>For \(0&lt;h&lt;1\), this pulls every point towards the mean. The mean stays fixed, and the covariance is multiplied by \((1-h)^2\). After \(k\) steps,</p>
+\[
+  g_h^{\diamond k}(\mu,x)
+  =m(\mu)+(1-h)^k(x-m(\mu)).
+\]
+<p>Passing to \(t=kh\), the continuous formula is</p>
+\[
+  F_t(\mu,x)=m(\mu)+e^{-t}(x-m(\mu)).
+\]
+<p>The distribution contracts around its conserved mean, and its covariance decays as \(e^{-2t}\). The identity \(F_{s+t}=F_s\diamond F_t\) can be checked directly because every intermediate distribution has the same mean. This is a simple model of consensus; general attention dynamics need not preserve the mean or follow this particular contraction.</p>
+
+<h2>Why the Wasserstein viewpoint is natural</h2>
+<p>A measure-based description should be stable when the context points move. The \(1\)-Wasserstein distance compares distributions by coupling their points:</p>
+\[
+  W_1(\mu,\nu)=\inf_{\pi\in\Pi(\mu,\nu)}
+                 \int|x-y|\,d\pi(x,y),
+\]
+<p>where \(\Pi(\mu,\nu)\) is the set of joint laws with marginals \(\mu\) and \(\nu\).</p>
+
+<p id="proposition-2"><strong>Proposition 2 (stability of the context update).</strong> Suppose</p>
+\[
+  |f_\mu(x)-f_\nu(y)|
+  \le L_x|x-y|+L_\mu W_1(\mu,\nu).
+\]
+<p>Then</p>
+\[
+  W_1(P_f(\mu),P_f(\nu))
+  \le(L_x+L_\mu)W_1(\mu,\nu).
+\]
+
+<details class="blog-proof">
+<summary>Proof: transport a coupling through the two spatial maps</summary>
+<div class="blog-proof-body">
+<p>For any \(\pi\in\Pi(\mu,\nu)\), the law \((f_\mu,f_\nu)_\#\pi\) couples the two updated measures. Consequently,</p>
+\[
+  \begin{aligned}
+  W_1(P_f(\mu),P_f(\nu))
+  &\le\int|f_\mu(x)-f_\nu(y)|\,d\pi(x,y)\\
+  &\le L_x\int|x-y|\,d\pi+L_\mu W_1(\mu,\nu).
+  \end{aligned}
+\]
+<p>Take the infimum over \(\pi\). \(\square\)</p>
+</div>
+</details>
+
+<p>Such estimates connect finite clouds to continuous contexts and allow errors to be propagated across layers. Attention regularity is studied in <a href="#ref-regularity">[6]</a>; our universality paper uses continuity in the context measure to formulate approximation uniformly over its number of tokens <a href="#ref-universality">[1]</a>.</p>
+
+<h2>Related viewpoints and a few boundaries</h2>
+<p>The pushed measure \(P_f(\mu)\) records where the population ends up, but it does not retain every pointwise correspondence. For a distribution symmetric about the origin, the identity and reflection \(x\mapsto-x\) give the same updated measure while moving a tagged query differently. This is why the measure–point lift contains more information than the measure update alone.</p>
+
+<p>Architectures acting compositionally on distributions also appear in our earlier <em>Stochastic Deep Networks</em> with Gwendoline de Bie and Marco Cuturi <a href="#ref-stochastic">[7]</a>. The distinctive feature emphasized here is to keep the tagged-point map visible together with its induced distribution update.</p>
+
+<p>Transport by pushforward does not by itself make a layer an <em>optimal</em> transport map, or make its continuous-depth limit a Wasserstein gradient flow. Those require extra structure. <em>Sinkformers</em>, with Michael Sander, Pierre Ablin, and Mathieu Blondel, studies a particular attention normalization and its links to transport and gradient-flow interpretations <a href="#ref-sinkformers">[8]</a>.</p>
+
+<p>Finally, the choice of state depends on the architecture. In causal self-attention, retain each token's position \(s\) and push the joint context by \((y,s)\mapsto(g(\mu,y,s),s)\): the embedding moves, while its position label stays fixed, as in equation (13) of <a href="#ref-universality">[1]</a>. In cross-attention to a fixed external memory, that memory is unchanged, so ordinary composition with the memory held fixed is appropriate. The diamond rule describes a context which evolves together with its queries.</p>
+
+<h2>References</h2>
+<ol class="references">
+  <li id="ref-universality">Takashi Furuya, Maarten V. de Hoop, and Gabriel Peyré. <a href="https://arxiv.org/abs/2408.01367"><em>Transformers are Universal In-context Learners</em></a>. <a href="https://proceedings.iclr.cc/paper_files/paper/2025/hash/c9028f7874df04843e7bf435ee4cd3c3-Abstract-Conference.html">ICLR</a>, 2025.</li>
+  <li id="ref-attention">James Vuckovic, Aristide Baratin, and Remi Tachet des Combes. <a href="https://arxiv.org/abs/2007.02876"><em>A Mathematical Theory of Attention</em></a>. arXiv:2007.02876, 2020.</li>
+  <li id="ref-transformers">Borjan Geshkovski, Cyril Letrouit, Yury Polyanskiy, and Philippe Rigollet. <a href="https://arxiv.org/abs/2312.10794"><em>A mathematical perspective on Transformers</em></a>. <a href="https://doi.org/10.1090/bull/1863">Bulletin of the American Mathematical Society</a> 62(3), 427–479, 2025.</li>
+  <li id="ref-neural-ode">Ricky T. Q. Chen, Yulia Rubanova, Jesse Bettencourt, and David K. Duvenaud. <a href="https://papers.nips.cc/paper_files/paper/2018/hash/69386f6bb1dfed68692a24c8686939b9-Abstract.html"><em>Neural Ordinary Differential Equations</em></a>. NeurIPS, 2018.</li>
+  <li id="ref-transport">Benedetto Piccoli and Francesco Rossi. <a href="https://arxiv.org/abs/1106.2555"><em>Transport equation with nonlocal velocity in Wasserstein spaces: convergence of numerical schemes</em></a>. <a href="https://doi.org/10.1007/s10440-012-9771-6">Acta Applicandae Mathematicae</a> 124, 73–105, 2013.</li>
+  <li id="ref-regularity">James Vuckovic, Aristide Baratin, and Remi Tachet des Combes. <a href="https://arxiv.org/abs/2102.05628"><em>On the Regularity of Attention</em></a>. arXiv:2102.05628, 2021.</li>
+  <li id="ref-stochastic">Gwendoline de Bie, Gabriel Peyré, and Marco Cuturi. <a href="https://proceedings.mlr.press/v97/de-bie19a.html"><em>Stochastic Deep Networks</em></a>. ICML, PMLR 97, 1556–1565, 2019.</li>
+  <li id="ref-sinkformers">Michael E. Sander, Pierre Ablin, Mathieu Blondel, and Gabriel Peyré. <a href="https://proceedings.mlr.press/v151/sander22a.html"><em>Sinkformers: Transformers with Doubly Stochastic Attention</em></a>. AISTATS, PMLR 151, 3515–3530, 2022.</li>
+</ol>
+</article>
+</main>
+<footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Blog</a></div></footer>
+</body>
+</html>
