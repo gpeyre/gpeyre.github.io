@@ -13,6 +13,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 </script>
 <script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
 <script defer src="assets/drafts.js"></script>
+<script defer src="assets/max-softmax-3d.js"></script>
 <script defer src="assets/max-softmax.js"></script>
 </head>
 <body>
@@ -174,7 +175,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <label for="max-temperature">Manual temperature (logarithmic scale)
 <input id="max-temperature" type="range" min="-4" max="0" step="0.05" value="-2" disabled>
 <output id="max-temperature-value" for="max-temperature max-auto"></output></label></div>
-<label for="max-view">2D display
+<label for="max-view">Heatmap display
 <select id="max-view"><option value="error">Signed approximation error</option><option value="values">Values and level sets</option></select></label>
 <div><button id="max-reset" type="button">Reset experiment</button></div>
 </div>
@@ -189,6 +190,23 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p class="metric" id="max-stats-2d" aria-live="polite"></p>
 <p class="metric" id="max-bound"></p>
 <p class="caption">Errors are maxima on the displayed sampling grid, not certified suprema. The two heatmaps share a color scale, recomputed after each change; read its endpoints when comparing widths. In error mode, blue means underestimation and red overestimation. In value mode, black contours show the target, white dashed contours the approximation. Small dots mark tangent locations.</p>
+<div class="surface-section" id="max-surfaces">
+<h3>3D surface view</h3>
+<p class="caption" id="max-3d-description">The same approximations shown as surfaces: the max has planar faces, while softmax rounds their junctions. Both panels use the same camera and height scale. Adjust the grid size and temperature above, or rotate the view below.</p>
+<div class="controls">
+<label for="max-azimuth">Rotation
+<input id="max-azimuth" type="range" min="-180" max="180" step="1" value="-45">
+<output id="max-azimuth-value" for="max-azimuth"></output></label>
+<label for="max-elevation">Elevation
+<input id="max-elevation" type="range" min="15" max="70" step="1" value="30">
+<output id="max-elevation-value" for="max-elevation"></output></label>
+</div>
+<div class="panel-grid">
+<div><h4>3D · Max of planes</h4><canvas class="plot-surface" id="max-3d" role="img" aria-label="Three-dimensional surface of the max-affine approximation" aria-describedby="max-3d-description max-3d-caption max-stats-2d"></canvas></div>
+<div><h4>3D · Softmax of the same planes</h4><canvas class="plot-surface" id="softmax-3d" role="img" aria-label="Three-dimensional surface of the smooth log-sum-exp approximation" aria-describedby="max-3d-description max-3d-caption max-stats-2d"></canvas></div>
+</div>
+<p class="caption" id="max-3d-caption">Teal and orange surfaces show the approximations; the dark wireframe shows visible parts of the quadratic target. Heights are function values, not errors. The surfaces use the same 81 × 81 sampling grid as the heatmaps.</p>
+</div>
 </section>
 <p>The automatic setting uses \(\tau=\beta/[2(n-1)^2\log(n^2)]\), where \(\beta\) is the largest eigenvalue of \(Q\). This makes the 2D smoothing bound half the tangent-plane bound \(\beta/(n-1)^2\). Turn it off to see what happens at fixed temperature: a finer grid reduces the tangent-error bound, while the unnormalized LSE can acquire a larger upward offset.</p>
 

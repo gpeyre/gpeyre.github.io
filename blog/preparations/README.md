@@ -15,6 +15,9 @@ dated post in `blog/_posts`, then update its preview to link to that article.
 The max/softmax experiment evaluates supporting-plane constructions directly;
 it does not train neural networks. Its plots label sampled errors as sampled
 errors. Temperature, network width, and the smoothing bound remain explicit.
+The paired 3D surface views use the same sampled values as the 2D heatmaps,
+with a shared camera and height scale. Rotation and elevation controls apply
+to both surfaces; visible target wireframes provide a geometric reference.
 
 Image credits are also given in the relevant articles:
 

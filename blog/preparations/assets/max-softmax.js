@@ -87,6 +87,7 @@
   if (!byId("max-experiment")) return;
   var widthInput = byId("max-width"), autoInput = byId("max-auto");
   var temperatureInput = byId("max-temperature"), viewInput = byId("max-view");
+  var azimuthInput = byId("max-azimuth"), elevationInput = byId("max-elevation");
   var data, pending = false;
   var ink = "#24333b", teal = "#007d85", orange = "#d16b2f";
 
@@ -230,6 +231,17 @@
       ctx.textAlign = "right"; ctx.fillText(String(v), left - 7, top + (1 - v) * size / 2 + 4);
     });
   }
+  function render3D() {
+    if (!data || !window.MaxSoftmax3D) return;
+    var view = {
+      azimuth: Number(azimuthInput.value),
+      elevation: Number(elevationInput.value)
+    };
+    byId("max-azimuth-value").textContent = view.azimuth + "°";
+    byId("max-elevation-value").textContent = view.elevation + "°";
+    window.MaxSoftmax3D.draw(byId("max-3d"), data, "max", view);
+    window.MaxSoftmax3D.draw(byId("softmax-3d"), data, "soft", view);
+  }
   function render() {
     if (!data) return;
     drawCurve();
@@ -250,6 +262,7 @@
     byId("max-bound").textContent = "Certified 2D bounds · tangent error ≤ " +
       number(tangentBound) + " · smoothing shift ≤ " + number(smoothingBound) +
       " · total softmax error ≤ " + number(Math.max(tangentBound, smoothingBound));
+    render3D();
   }
   function update() {
     var n = Number(widthInput.value);
@@ -269,9 +282,18 @@
   temperatureInput.addEventListener("input", scheduleUpdate);
   autoInput.addEventListener("change", scheduleUpdate);
   viewInput.addEventListener("change", render);
+  var cameraPending = false;
+  function scheduleCamera() {
+    if (cameraPending) return;
+    cameraPending = true;
+    window.requestAnimationFrame(function () { cameraPending = false; render3D(); });
+  }
+  azimuthInput.addEventListener("input", scheduleCamera);
+  elevationInput.addEventListener("input", scheduleCamera);
   byId("max-reset").addEventListener("click", function () {
     widthInput.value = "6"; autoInput.checked = true;
-    temperatureInput.value = "-2"; viewInput.value = "error"; update();
+    temperatureInput.value = "-2"; viewInput.value = "error";
+    azimuthInput.value = "-45"; elevationInput.value = "30"; update();
   });
   var resizePending = false;
   window.addEventListener("resize", function () {
