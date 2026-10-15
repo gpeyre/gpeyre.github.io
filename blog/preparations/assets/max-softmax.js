@@ -9,20 +9,11 @@
       (Q[0] * x * x + 2 * Q[1] * x * y + Q[2] * y * y) / 2;
   }
 
-  function planes(n, dimension) {
+  function planes(n) {
     var result = [];
     for (var i = 0; i < n; i++) {
       var x = -1 + 2 * i / (n - 1);
-      var count = dimension === 1 ? 1 : n;
-      for (var j = 0; j < count; j++) {
-        var y = dimension === 1 ? 0 : -1 + 2 * j / (n - 1);
-        result.push({
-          x: x, y: y,
-          a: dimension === 1 ? x : Q[0] * x + Q[1] * y,
-          b: dimension === 1 ? 0 : Q[1] * x + Q[2] * y,
-          c: -target(x, y, dimension)
-        });
-      }
+      result.push({ x: x, y: 0, a: x, b: 0, c: -x * x / 2 });
     }
     return result;
   }
@@ -41,13 +32,14 @@
   }
 
   function automaticTemperature(n) {
-    return beta / (2 * (n - 1) * (n - 1) * Math.log(n * n));
+    return 0.5 / n;
   }
 
-  function compute(n, tau, resolution) {
-    var bank1 = planes(n, 1), bank2 = planes(n, 2);
-    var curve = [], grid = [], errors1 = [0, 0], errors2 = [0, 0], valueMax = 0;
-    var i, j, x, y, f, v;
+  // The 1D reference stays constructive; both 2D models are trained in a worker.
+  function compute(n, tau) {
+    var bank1 = planes(n);
+    var curve = [], errors1 = [0, 0];
+    var i, x, f, v;
     for (i = 0; i <= 400; i++) {
       x = -1 + 2 * i / 400;
       f = target(x, 0, 1);
@@ -56,22 +48,9 @@
       errors1[0] = Math.max(errors1[0], Math.abs(v.max - f));
       errors1[1] = Math.max(errors1[1], Math.abs(v.soft - f));
     }
-    for (j = 0; j < resolution; j++) {
-      y = 1 - 2 * j / (resolution - 1);
-      for (i = 0; i < resolution; i++) {
-        x = -1 + 2 * i / (resolution - 1);
-        f = target(x, y, 2);
-        v = evaluate(x, y, bank2, tau);
-        grid.push({ f: f, max: v.max, soft: v.soft });
-        errors2[0] = Math.max(errors2[0], Math.abs(v.max - f));
-        errors2[1] = Math.max(errors2[1], Math.abs(v.soft - f));
-        valueMax = Math.max(valueMax, f, v.soft);
-      }
-    }
     return {
-      n: n, tau: tau, resolution: resolution,
-      bank1: bank1, bank2: bank2, curve: curve, grid: grid,
-      errors1: errors1, errors2: errors2, valueMax: valueMax
+      n: n, tau: tau, bank1: bank1, curve: curve,
+      errors1: errors1, grid: [], resolution: 201
     };
   }
 
@@ -88,6 +67,9 @@
   var widthInput = byId("max-width"), autoInput = byId("max-auto");
   var temperatureInput = byId("max-temperature"), viewInput = byId("max-view");
   var azimuthInput = byId("max-azimuth"), elevationInput = byId("max-elevation");
+  var experiment = byId("max-experiment"), trainingStatus = byId("max-training-status");
+  var trainerURL = new URL("max-softmax-train.js", document.currentScript.src);
+  var trainer = null, job = 0, trainingTimer = null, fitCache = new Map();
   var data, pending = false;
   var ink = "#24333b", teal = "#007d85", orange = "#d16b2f";
 
@@ -164,8 +146,9 @@
   function blend(a, b, t) {
     return a.map(function (v, i) { return Math.round(v + t * (b[i] - v)); });
   }
-  function heatColor(value, scale, errorMode) {
-    if (!errorMode) return blend([237, 247, 245], [0, 106, 118], Math.max(0, Math.min(1, value / scale)));
+  function heatColor(value, scale, errorMode, minimum) {
+    if (!errorMode) return blend([237, 247, 245], [0, 106, 118],
+      Math.max(0, Math.min(1, (value - minimum) / (scale - minimum || 1))));
     var t = Math.max(-1, Math.min(1, value / scale));
     return t < 0 ? blend([251, 251, 249], [23, 107, 156], -t) :
       blend([251, 251, 249], [182, 78, 54], t);
@@ -207,7 +190,7 @@
     buffer.width = r; buffer.height = r;
     var bctx = buffer.getContext("2d"), pixels = bctx.createImageData(r, r);
     data.grid.forEach(function (v, i) {
-      var c = heatColor(errorMode ? v[key] - v.f : v[key], scale, errorMode);
+      var c = heatColor(errorMode ? v[key] - v.f : v[key], scale, errorMode, data.valueMin);
       pixels.data[4 * i] = c[0]; pixels.data[4 * i + 1] = c[1];
       pixels.data[4 * i + 2] = c[2]; pixels.data[4 * i + 3] = 255;
     });
@@ -219,11 +202,6 @@
       contours(ctx, "f", levels, left, top, size, "#1c3039", false);
       contours(ctx, key, levels, left, top, size, "#ffffff", true);
     }
-    ctx.fillStyle = "rgba(22,40,48,0.48)";
-    data.bank2.forEach(function (z) {
-      ctx.beginPath(); ctx.arc(left + (z.x + 1) * size / 2,
-        top + (1 - z.y) * size / 2, data.n > 12 ? 1.2 : 1.8, 0, 2 * Math.PI); ctx.fill();
-    });
     ctx.strokeStyle = "#819b9e"; ctx.lineWidth = 1; ctx.strokeRect(left, top, size, size);
     ctx.fillStyle = "#617078";
     [-1, 0, 1].forEach(function (v) {
@@ -239,39 +217,107 @@
     };
     byId("max-azimuth-value").textContent = view.azimuth + "°";
     byId("max-elevation-value").textContent = view.elevation + "°";
+    if (!data.grid.length) return;
     window.MaxSoftmax3D.draw(byId("max-3d"), data, "max", view);
     window.MaxSoftmax3D.draw(byId("softmax-3d"), data, "soft", view);
   }
   function render() {
     if (!data) return;
     drawCurve();
+    if (!data.grid.length) {
+      ["max-2d", "softmax-2d", "max-3d", "softmax-3d"].forEach(function (id) {
+        var drawing = setup(byId(id));
+        drawing.ctx.fillStyle = "#617078";
+        drawing.ctx.textAlign = "center";
+        drawing.ctx.fillText("Optimizing 2D networks…", drawing.width / 2, drawing.height / 2);
+      });
+      byId("max-stats-2d").textContent = "";
+      byId("max-fit-metrics").textContent = "";
+      ["max-color-low", "max-color-mid", "max-color-high"].forEach(function (id) { byId(id).textContent = ""; });
+      render3D();
+      return;
+    }
     var errorMode = viewInput.value === "error";
     var scale = errorMode ? Math.max(data.errors2[0], data.errors2[1], 1e-5) : data.valueMax;
     drawSurface("max-2d", "max", scale, errorMode);
     drawSurface("softmax-2d", "soft", scale, errorMode);
-    byId("max-color-low").textContent = errorMode ? "−" + number(scale) : "0";
+    byId("max-color-low").textContent = errorMode ? "−" + number(scale) : number(data.valueMin);
     byId("max-color-mid").textContent = errorMode ? "0" : "Value";
     byId("max-color-high").textContent = "+" + number(scale);
     byId("max-colorbar").querySelector(".ramp").style.background = errorMode ?
       "linear-gradient(90deg,#176b9c,#fbfbf9,#b64e36)" : "linear-gradient(90deg,#edf7f5,#006a76)";
     byId("max-stats-2d").textContent = "2D · " + data.n * data.n +
-      " planes · sampled max error: " + number(data.errors2[0]) +
+      " learned planes per network · sampled max error: " + number(data.errors2[0]) +
       " · sampled softmax error: " + number(data.errors2[1]);
-    var tangentBound = beta / ((data.n - 1) * (data.n - 1));
-    var smoothingBound = data.tau * Math.log(data.n * data.n);
-    byId("max-bound").textContent = "Certified 2D bounds · tangent error ≤ " +
-      number(tangentBound) + " · smoothing shift ≤ " + number(smoothingBound) +
-      " · total softmax error ≤ " + number(Math.max(tangentBound, smoothingBound));
+    byId("max-fit-metrics").textContent = "Validation mean squared error · max: " +
+      number(data.maxModel.initialLoss) + " → " + number(data.maxModel.validationLoss) +
+      " · softmax: " + number(data.softModel.initialLoss) + " → " + number(data.softModel.validationLoss);
     render3D();
+  }
+  function acceptFit(result, cached) {
+    data.grid = result.grid;
+    data.resolution = result.resolution;
+    data.errors2 = result.errors2;
+    data.valueMax = result.valueMax;
+    data.valueMin = result.valueMin;
+    if (!Number.isFinite(data.valueMin)) data.valueMin = data.grid.reduce(function (low, v) {
+      return Math.min(low, v.f, v.max, v.soft);
+    }, 0);
+    data.maxModel = result.max; data.softModel = result.softmax;
+    experiment.dataset.trainingState = "ready";
+    experiment.removeAttribute("aria-busy");
+    trainingStatus.textContent = "2D fits ready · Adam · " + result.max.iterations +
+      " steps per network" + (cached ? " · cached fit" : "");
+    render();
+  }
+  function beginTraining(id, key) {
+    if (id !== job) return;
+    try {
+      trainer = new Worker(trainerURL);
+      trainer.onmessage = function (event) {
+        var result = event.data;
+        if (id !== job || result.id !== id) return;
+        if (result.type === "progress") {
+          trainingStatus.textContent = "Optimizing the " + (result.kind === "max" ? "max" : "softmax") +
+            " network · " + data.n * data.n + " neurons · Adam step " +
+            result.iteration + " / " + result.steps;
+        } else if (result.type === "result") {
+          trainer.terminate(); trainer = null;
+          fitCache.set(key, result);
+          if (fitCache.size > 4) fitCache.delete(fitCache.keys().next().value);
+          acceptFit(result, false);
+        } else if (result.type === "error") {
+          trainingFailed(result.message);
+        }
+      };
+      trainer.onerror = function () { if (id === job) trainingFailed(); };
+      trainer.postMessage({ id: id, n: data.n, tau: data.tau, resolution: 201 });
+    } catch (_) { trainingFailed(); }
+  }
+  function trainingFailed() {
+    if (trainer) { trainer.terminate(); trainer = null; }
+    experiment.dataset.trainingState = "error";
+    experiment.removeAttribute("aria-busy");
+    trainingStatus.textContent = "The 2D fit could not finish. Change the width or temperature to try again.";
   }
   function update() {
     var n = Number(widthInput.value);
     var tau = autoInput.checked ? automaticTemperature(n) : Math.pow(10, Number(temperatureInput.value));
     temperatureInput.disabled = autoInput.checked;
-    byId("max-width-value").textContent = n + " per axis · " + n + " / " + n * n + " neurons in 1D / 2D";
+    byId("max-width-value").textContent = "n = " + n + " · " + n + " / " + n * n + " neurons in 1D / 2D";
     byId("max-temperature-value").textContent = "τ = " + number(tau) + (autoInput.checked ? " (automatic)" : " (manual)");
-    data = compute(n, tau, 81);
+    job++;
+    if (trainer) { trainer.terminate(); trainer = null; }
+    clearTimeout(trainingTimer);
+    data = compute(n, tau);
+    var key = n + ":" + tau.toPrecision(12);
+    if (fitCache.has(key)) { acceptFit(fitCache.get(key), true); return; }
+    experiment.dataset.trainingState = "training";
+    experiment.setAttribute("aria-busy", "true");
+    trainingStatus.textContent = "Optimizing " + n * n + " neurons per 2D network with Adam…";
     render();
+    var id = job;
+    trainingTimer = setTimeout(function () { beginTraining(id, key); }, 150);
   }
   function scheduleUpdate() {
     if (pending) return;

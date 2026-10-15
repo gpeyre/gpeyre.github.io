@@ -4,6 +4,8 @@
   var TAU = 2 * Math.PI;
   var COLORS = { max: [18, 143, 150], soft: [220, 119, 60] };
   var INK = [34, 49, 58];
+  var LIGHT = unit([-0.45, -0.7, 1.6]);
+  var FILL = unit([0.9, 0.5, 0.6]);
 
   function unit(v) {
     var length = Math.hypot(v[0], v[1], v[2]) || 1;
@@ -17,14 +19,12 @@
   // Both plots use bounds from all three functions, including negative max values.
   function bounds(data) {
     var low = 0, high = Math.max(data.valueMax || 0, 0.05);
-    data.grid.forEach(function (v) {
-      ["f", "max", "soft"].forEach(function (key) {
-        if (Number.isFinite(v[key])) {
-          low = Math.min(low, v[key]);
-          high = Math.max(high, v[key]);
-        }
-      });
-    });
+    for (var i = 0; i < data.grid.length; i++) {
+      var v = data.grid[i];
+      if (Number.isFinite(v.f)) { low = Math.min(low, v.f); high = Math.max(high, v.f); }
+      if (Number.isFinite(v.max)) { low = Math.min(low, v.max); high = Math.max(high, v.max); }
+      if (Number.isFinite(v.soft)) { low = Math.min(low, v.soft); high = Math.max(high, v.soft); }
+    }
     var span = high - low || 1;
     return { low: low, high: high, span: span, floor: low - 0.04 * span, vertical: 1.8 / span };
   }
@@ -78,19 +78,17 @@
     };
   }
 
-  function shade(normal) {
-    var light = unit([-0.45, -0.7, 1.6]);
-    var fill = unit([0.9, 0.5, 0.6]);
-    return 0.38 + 0.57 * Math.max(0, dot(normal, light)) + 0.12 * Math.max(0, dot(normal, fill));
+  function shade(x, y, z) {
+    var length = Math.hypot(x, y, z) || 1;
+    return 0.38 + 0.57 * Math.max(0, (x * LIGHT[0] + y * LIGHT[1] + z * LIGHT[2]) / length) +
+      0.12 * Math.max(0, (x * FILL[0] + y * FILL[1] + z * FILL[2]) / length);
   }
 
-  function triangleNormal(a, b, c) {
-    var u = [b.wx - a.wx, b.wy - a.wy, b.wz - a.wz];
-    var v = [c.wx - a.wx, c.wy - a.wy, c.wz - a.wz];
-    var n = [u[1] * v[2] - u[2] * v[1],
-      u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]];
-    if (n[2] < 0) n = n.map(function (t) { return -t; });
-    return unit(n);
+  function triangleShade(a, b, c) {
+    var ux = b.wx - a.wx, uy = b.wy - a.wy, uz = b.wz - a.wz;
+    var vx = c.wx - a.wx, vy = c.wy - a.wy, vz = c.wz - a.wz;
+    var x = uy * vz - uz * vy, y = uz * vx - ux * vz, z = ux * vy - uy * vx;
+    return z < 0 ? shade(-x, -y, -z) : shade(x, y, z);
   }
 
   function vertices(data, key, range, projection, ratio) {
@@ -98,17 +96,23 @@
     var step = 2 / (r - 1);
     for (var j = 0; j < r; j++) {
       for (var i = 0; i < r; i++) {
-        var index = j * r + i, value = data.grid[index][key];
+        var index = j * r + i, vertex = data.grid[index], value = vertex[key];
         var x = -1 + i * step, y = 1 - j * step;
         var p = projection.project(x, y, value);
         p.x *= ratio; p.y *= ratio;
         p.wx = x; p.wy = y; p.wz = (value - range.low) * range.vertical;
         if (key === "soft") {
-          var left = Math.max(0, i - 1), right = Math.min(r - 1, i + 1);
-          var top = Math.max(0, j - 1), bottom = Math.min(r - 1, j + 1);
-          var dx = (data.grid[j * r + right].soft - data.grid[j * r + left].soft) / ((right - left) * step);
-          var dy = (data.grid[top * r + i].soft - data.grid[bottom * r + i].soft) / ((bottom - top) * step);
-          p.shade = shade(unit([-range.vertical * dx, -range.vertical * dy, 1]));
+          var dx = vertex.softDx, dy = vertex.softDy;
+          if (!Number.isFinite(dx) || !Number.isFinite(dy)) {
+            var left = Math.max(0, i - 1), right = Math.min(r - 1, i + 1);
+            var top = Math.max(0, j - 1), bottom = Math.min(r - 1, j + 1);
+            dx = (data.grid[j * r + right].soft - data.grid[j * r + left].soft) / ((right - left) * step);
+            dy = (data.grid[top * r + i].soft - data.grid[bottom * r + i].soft) / ((bottom - top) * step);
+          }
+          // Analytic log-sum-exp gradients give a smooth normal field even when
+          // a low temperature concentrates curvature into a narrow transition.
+          // Only lighting is interpolated; the model values are never filtered.
+          p.shade = shade(-range.vertical * dx, -range.vertical * dy, 1);
         }
         result[index] = p;
       }
@@ -121,29 +125,42 @@
   function rasterTriangle(a, b, c, buffer, width, height, pixels, color, flatShade) {
     var denominator = (b.y - c.y) * (a.x - c.x) + (c.x - b.x) * (a.y - c.y);
     if (Math.abs(denominator) < 1e-9) return;
-    var minX = Math.max(0, Math.floor(Math.min(a.x, b.x, c.x)));
-    var maxX = Math.min(width - 1, Math.ceil(Math.max(a.x, b.x, c.x)));
-    var minY = Math.max(0, Math.floor(Math.min(a.y, b.y, c.y)));
-    var maxY = Math.min(height - 1, Math.ceil(Math.max(a.y, b.y, c.y)));
+    // Rasterize pixel centers only. Tight boxes matter for a fine surface mesh:
+    // many triangles occupy less than a pixel in one direction.
+    var minX = Math.max(0, Math.ceil(Math.min(a.x, b.x, c.x) - 0.5));
+    var maxX = Math.min(width - 1, Math.floor(Math.max(a.x, b.x, c.x) - 0.5));
+    var minY = Math.max(0, Math.ceil(Math.min(a.y, b.y, c.y) - 0.5));
+    var maxY = Math.min(height - 1, Math.floor(Math.max(a.y, b.y, c.y) - 0.5));
+    if (minX > maxX || minY > maxY) return;
     var duX = (b.y - c.y) / denominator, duY = (c.x - b.x) / denominator;
     var dvX = (c.y - a.y) / denominator, dvY = (a.x - c.x) / denominator;
     var firstU = duX * (minX + 0.5 - c.x) + duY * (minY + 0.5 - c.y);
     var firstV = dvX * (minX + 0.5 - c.x) + dvY * (minY + 0.5 - c.y);
+    var depthU = a.depth - c.depth, depthV = b.depth - c.depth;
+    var smooth = pixels && flatShade === null;
+    var shadeU = smooth ? a.shade - c.shade : 0, shadeV = smooth ? b.shade - c.shade : 0;
+    var red = pixels && !smooth ? color[0] * flatShade + 9 : 0;
+    var green = pixels && !smooth ? color[1] * flatShade + 9 : 0;
+    var blue = pixels && !smooth ? color[2] * flatShade + 9 : 0;
     for (var y = minY; y <= maxY; y++) {
       var u = firstU, v = firstV;
       for (var x = minX; x <= maxX; x++, u += duX, v += dvX) {
         var w = 1 - u - v;
         if (u < -1e-7 || v < -1e-7 || w < -1e-7) continue;
-        var depth = u * a.depth + v * b.depth + w * c.depth;
+        var depth = c.depth + u * depthU + v * depthV;
         var index = y * width + x;
         if (depth < buffer[index]) continue;
         buffer[index] = depth;
         if (pixels) {
-          var brightness = flatShade === null ? u * a.shade + v * b.shade + w * c.shade : flatShade;
           var offset = 4 * index;
-          pixels[offset] = Math.min(255, color[0] * brightness + 9);
-          pixels[offset + 1] = Math.min(255, color[1] * brightness + 9);
-          pixels[offset + 2] = Math.min(255, color[2] * brightness + 9);
+          if (smooth) {
+            var brightness = c.shade + u * shadeU + v * shadeV;
+            pixels[offset] = color[0] * brightness + 9;
+            pixels[offset + 1] = color[1] * brightness + 9;
+            pixels[offset + 2] = color[2] * brightness + 9;
+          } else {
+            pixels[offset] = red; pixels[offset + 1] = green; pixels[offset + 2] = blue;
+          }
           pixels[offset + 3] = 255;
         }
       }
@@ -159,9 +176,9 @@
         var c = points[(j + 1) * resolution + i + 1];
         var d = points[(j + 1) * resolution + i];
         rasterTriangle(a, b, c, depth, width, height, pixels, color,
-          smooth || !pixels ? null : shade(triangleNormal(a, b, c)));
+          smooth || !pixels ? null : triangleShade(a, b, c));
         rasterTriangle(a, c, d, depth, width, height, pixels, color,
-          smooth || !pixels ? null : shade(triangleNormal(a, c, d)));
+          smooth || !pixels ? null : triangleShade(a, c, d));
       }
     }
   }
@@ -197,16 +214,17 @@
   }
 
   function targetWireframe(points, resolution, image, surfaceDepth, targetDepth, ratio, projection) {
-    var stride = Math.max(1, Math.round((resolution - 1) / 8));
+    var lines = {};
+    for (var k = 0; k <= 8; k++) lines[Math.round(k * (resolution - 1) / 8)] = true;
     // The tolerance accounts only for a line's subpixel footprint, not its height.
     var tolerance = Math.max(0.002, 0.7 / projection.scale);
     for (var j = 0; j < resolution; j++) {
       for (var i = 0; i < resolution; i++) {
         var index = j * resolution + i;
-        if (j % stride === 0 && i < resolution - 1) {
+        if (lines[j] && i < resolution - 1) {
           depthLine(points[index], points[index + 1], image, surfaceDepth, targetDepth, INK, ratio, tolerance);
         }
-        if (i % stride === 0 && j < resolution - 1) {
+        if (lines[i] && j < resolution - 1) {
           depthLine(points[index], points[index + resolution], image, surfaceDepth, targetDepth, INK, ratio, tolerance);
         }
       }
@@ -326,7 +344,7 @@
     var annotations = drawAxes(ctx, image, surfaceDepth, projection, range, ratio);
     ctx.putImageData(image, 0, 0);
     annotations.forEach(function (label) {
-      ctx.font = (label.axis ? "italic 12px" : "10px") + " system-ui, sans-serif";
+      ctx.font = (label.axis ? "italic 12px" : "11px") + " system-ui, sans-serif";
       ctx.fillStyle = label.axis ? "#30434c" : "#617078";
       ctx.textAlign = label.align; ctx.textBaseline = "middle";
       // A small white halo keeps numbers readable near projected grid lines.

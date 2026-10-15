@@ -159,19 +159,28 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p>There is also a parameterization issue. Writing the network as \(\tau\,\mathrm{LSE}((Ax+b)/\tau)\), the weights and biases entering the standard LSE activation scale like \(1/\tau\). The physical slopes \(a_i\) of the planes may stay bounded even while these internal parameters grow. Any theorem imposing bounds on weights must specify which convention it uses.</p>
 
 <h2>Numerical experimentation</h2>
-<p>Here the neurons are exact tangent planes, not the result of training. In one dimension the target is \(f(x)=x^2/2\); in two dimensions it is \(f(x)=x^\top Qx/2\), with</p>
+<p>The one-dimensional panel illustrates the tangent-plane construction for \(f(x)=x^2/2\). In two dimensions, we instead <em>learn the affine pieces</em> of the max and softmax networks. The target is \(f(x)=x^\top Qx/2\), with</p>
 \[
  Q=\begin{pmatrix}1.5&amp;0.4\\0.4&amp;0.8\end{pmatrix}.
 \]
-<p>Both domains are \([-1,1]^d\). A grid with \(n\) points per coordinate gives \(N=n\) neurons in 1D and \(N=n^2\) in 2D. At a grid point \(z\), the tangent is \((Qz)\cdot x-z^\top Qz/2\) (with \(Q=1\) in 1D). The maximum and LSE use exactly the same planes.</p>
+<p>Both domains are \([-1,1]^d\). The width parameter \(n\) sets \(n\) neurons in the 1D reference and \(N=n^2\) neurons in each 2D network. The 2D planes start from nonuniform, reproducible random initializations. Adam <a href="#ref-adam">[10]</a> then optimizes their slopes and offsets to minimize sampled mean squared error:</p>
+\[
+ \mathcal L(\theta)=\frac1B\sum_{j=1}^B
+ \bigl(F_\theta(z_j)-f(z_j)\bigr)^2.
+\]
+<p>The max and LSE models are fitted independently, rather than sharing a fixed set of supporting planes. Convexity is preserved by their architectures, but the fitted functions can lie on either side of the target. The displays report sampled errors and validation losses, not certificates of global optimality.</p>
+<details class="blog-proof"><summary>Training details</summary><div class="blog-proof-body">
+<p>Each model takes 2,000 Adam steps. A batch contains 256 stratified random interior points and 32 random boundary points. A separate 33 × 33 validation grid selects the best checkpoint; the 201 × 201 display grid is evaluated afterward. Fixed seeds make the fits reproducible.</p>
+<p>For conditioning, hard-max and low-temperature fits use free plane centers and free intercept offsets. This is an invertible reparameterization of the affine coefficients, not a constraint that the planes remain tangent to the quadratic. Every slope and intercept is allowed to change.</p>
+</div></details>
 <section class="experiment" id="max-experiment" aria-label="Interactive max and softmax approximation">
-<h3>Planes versus smoothing</h3>
-<noscript>Enable JavaScript for the interactive plots. The maximum of tangent planes underestimates the quadratic; smoothing raises it by at most \(\tau\log N\).</noscript>
+<h3>Learning the affine pieces</h3>
+<noscript>Enable JavaScript for the interactive plots. The 1D reference uses tangent planes; the two 2D networks are fitted with Adam.</noscript>
 <div class="controls">
-<label for="max-width">Grid points per coordinate
+<label for="max-width">Width parameter n
 <input id="max-width" type="range" min="2" max="18" step="1" value="6">
 <output id="max-width-value" for="max-width"></output></label>
-<div><label class="check" for="max-auto"><input id="max-auto" type="checkbox" checked> Reduce temperature with grid spacing</label>
+<div><label class="check" for="max-auto"><input id="max-auto" type="checkbox" checked> Reduce temperature with network width</label>
 <label for="max-temperature">Manual temperature (logarithmic scale)
 <input id="max-temperature" type="range" min="-4" max="0" step="0.05" value="-2" disabled>
 <output id="max-temperature-value" for="max-temperature max-auto"></output></label></div>
@@ -182,17 +191,18 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <div class="legend"><span style="--c:#24333b">Target</span><span style="--c:#007d85">Max</span><span style="--c:#d16b2f">Softmax / LSE</span></div>
 <canvas class="plot-1d" id="max-1d" role="img" aria-label="One-dimensional target, max and softmax curves, with signed residuals below"></canvas>
 <p class="metric" id="max-stats-1d"></p>
+<p class="metric training-status" id="max-training-status" role="status"></p>
 <div class="panel-grid">
-<div><h4>2D · Max of planes</h4><canvas class="plot-2d" id="max-2d" role="img" aria-label="Two-dimensional max approximation"></canvas></div>
-<div><h4>2D · Softmax of the same planes</h4><canvas class="plot-2d" id="softmax-2d" role="img" aria-label="Two-dimensional softmax approximation"></canvas></div>
+<div><h4>2D · Trained max network</h4><canvas class="plot-2d" id="max-2d" role="img" aria-label="Two-dimensional trained max approximation"></canvas></div>
+<div><h4>2D · Trained softmax network</h4><canvas class="plot-2d" id="softmax-2d" role="img" aria-label="Two-dimensional trained softmax approximation"></canvas></div>
 </div>
 <div class="colorbar" id="max-colorbar"><div class="ramp"></div><div class="ends"><span id="max-color-low"></span><span id="max-color-mid"></span><span id="max-color-high"></span></div></div>
 <p class="metric" id="max-stats-2d" aria-live="polite"></p>
-<p class="metric" id="max-bound"></p>
-<p class="caption">Errors are maxima on the displayed sampling grid, not certified suprema. The two heatmaps share a color scale, recomputed after each change; read its endpoints when comparing widths. In error mode, blue means underestimation and red overestimation. In value mode, black contours show the target, white dashed contours the approximation. Small dots mark tangent locations.</p>
+<p class="metric" id="max-fit-metrics"></p>
+<p class="caption">Errors are maxima on a fine evaluation grid, separate from the training samples, not certified suprema. The two heatmaps share a color scale, recomputed after each fit. In error mode, blue means underestimation and red overestimation. In value mode, black contours show the target, white dashed contours the fitted network.</p>
 <div class="surface-section" id="max-surfaces">
 <h3>3D surface view</h3>
-<p class="caption" id="max-3d-description">The same approximations shown as surfaces: the max has planar faces, while softmax rounds their junctions. Both panels use the same camera and height scale. Adjust the grid size and temperature above, or rotate the view below.</p>
+<p class="caption" id="max-3d-description">The learned approximations shown as surfaces: the max has planar faces, while softmax is smooth. Both panels use the same camera and height scale. Adjust the neuron count and temperature above, or rotate the view below.</p>
 <div class="controls">
 <label for="max-azimuth">Rotation
 <input id="max-azimuth" type="range" min="-180" max="180" step="1" value="-45">
@@ -202,13 +212,13 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <output id="max-elevation-value" for="max-elevation"></output></label>
 </div>
 <div class="panel-grid">
-<div><h4>3D · Max of planes</h4><canvas class="plot-surface" id="max-3d" role="img" aria-label="Three-dimensional surface of the max-affine approximation" aria-describedby="max-3d-description max-3d-caption max-stats-2d"></canvas></div>
-<div><h4>3D · Softmax of the same planes</h4><canvas class="plot-surface" id="softmax-3d" role="img" aria-label="Three-dimensional surface of the smooth log-sum-exp approximation" aria-describedby="max-3d-description max-3d-caption max-stats-2d"></canvas></div>
+<div><h4>3D · Trained max network</h4><canvas class="plot-surface" id="max-3d" role="img" aria-label="Three-dimensional surface of the trained max-affine approximation" aria-describedby="max-3d-description max-3d-caption max-stats-2d"></canvas></div>
+<div><h4>3D · Trained softmax network</h4><canvas class="plot-surface" id="softmax-3d" role="img" aria-label="Three-dimensional surface of the trained smooth log-sum-exp approximation" aria-describedby="max-3d-description max-3d-caption max-stats-2d"></canvas></div>
 </div>
-<p class="caption" id="max-3d-caption">Teal and orange surfaces show the approximations; the dark wireframe shows visible parts of the quadratic target. Heights are function values, not errors. The surfaces use the same 81 × 81 sampling grid as the heatmaps.</p>
+<p class="caption" id="max-3d-caption">Teal and orange surfaces show the learned networks; the dark wireframe shows visible parts of the quadratic target. Heights are function values, not errors. The surfaces use a 201 × 201 evaluation grid, with analytic softmax gradients for smooth shading. No smoothing is applied to the fitted functions.</p>
 </div>
 </section>
-<p>The automatic setting uses \(\tau=\beta/[2(n-1)^2\log(n^2)]\), where \(\beta\) is the largest eigenvalue of \(Q\). This makes the 2D smoothing bound half the tangent-plane bound \(\beta/(n-1)^2\). Turn it off to see what happens at fixed temperature: a finer grid reduces the tangent-error bound, while the unnormalized LSE can acquire a larger upward offset.</p>
+<p>The automatic setting uses \(\tau=1/(2n)\); manual mode lets you explore other temperatures and refits the softmax network. At very low temperature, an LSE can genuinely approach a polyhedral shape even though it is smooth. The fine mesh and analytic normals reduce rendering artifacts without artificially rounding the surface. The smoothing lemma compares max and LSE built from the <em>same</em> planes; the two independently trained 2D models need not satisfy that comparison.</p>
 
 <h2>What this buys us—and what it does not</h2>
 <p>A max-affine epigraph is described by linear inequalities, which is convenient in optimization. Its smooth LSE counterpart provides an explicit gradient and a positive semidefinite Hessian. Both are universal convex models, and their rates expose the usual dependence on dimension. Differences of two LSE networks can in turn represent much richer, nonconvex functions <a href="#ref-dlse">[6]</a>.</p>
@@ -225,6 +235,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <li id="ref-icnn">Brandon Amos, Lei Xu and J. Zico Kolter. <a href="https://proceedings.mlr.press/v70/amos17b.html">Input Convex Neural Networks.</a> <em>ICML</em>, PMLR 70:146–155, 2017.</li>
 <li id="ref-ot">Ashok Makkuva, Amirhossein Taghvaei, Sewoong Oh and Jason Lee. <a href="https://proceedings.mlr.press/v119/makkuva20a.html">Optimal transport mapping via input convex neural networks.</a> <em>ICML</em>, PMLR 119:6672–6681, 2020.</li>
 <li id="ref-stability">Pierre Blanchard, Desmond J. Higham and Nicholas J. Higham. <a href="https://arxiv.org/abs/1909.03469">Accurately computing the log-sum-exp and softmax functions.</a> <em>IMA Journal of Numerical Analysis</em>, 41(4):2311–2330, 2021. <a href="https://doi.org/10.1093/imanum/draa038">DOI</a>.</li>
+<li id="ref-adam">Diederik P. Kingma and Jimmy Ba. <a href="https://arxiv.org/abs/1412.6980">Adam: A Method for Stochastic Optimization.</a> <em>ICLR</em>, 2015.</li>
 </ol>
 </article></main>
 <footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Blog</a></div></footer>

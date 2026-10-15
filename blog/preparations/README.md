@@ -1,7 +1,8 @@
 # Forthcoming blog posts: public alpha previews
 
 The public preview index is `/blog/preparations/`, linked from the blog archive.
-Open `index.html` to review the standalone HTML articles. Each article uses
+Serve the pages over HTTP and open `index.html` to review the standalone HTML
+articles; the training worker requires an HTTP origin. Each article uses
 the shared files in `assets/`; mathematical typesetting loads MathJax from its
 CDN, so the initial equation rendering requires an Internet connection.
 
@@ -12,12 +13,20 @@ are published. These files are not Jekyll posts and have no publication dates
 or RSS/Atom entries. Publishing a finished article should create a selected
 dated post in `blog/_posts`, then update its preview to link to that article.
 
-The max/softmax experiment evaluates supporting-plane constructions directly;
-it does not train neural networks. Its plots label sampled errors as sampled
-errors. Temperature, network width, and the smoothing bound remain explicit.
-The paired 3D surface views use the same sampled values as the 2D heatmaps,
-with a shared camera and height scale. Rotation and elevation controls apply
-to both surfaces; visible target wireframes provide a geometric reference.
+The max/softmax experiment retains a tangent-plane construction for its 1D
+reference. Its 2D max and LSE networks are fitted independently with Adam in
+assets/max-softmax-train.js, using nonuniform seeded initializations and free
+affine slopes and offsets. A worker keeps training and dense evaluation off the
+main thread; changed controls supersede pending jobs. Completed fits are cached
+locally for repeated settings. The displays report validation losses and sampled
+errors; the tangent-grid certificates from the theoretical construction do not
+apply to these trained fits.
+The paired 3D surface views and heatmaps use a 201-by-201 evaluation grid,
+independent of network width. Analytic LSE gradients give smooth normals without
+blurring model values. Both 3D panels share a camera and height scale; visible
+target wireframes provide a geometric reference.
+Run node tests/blog-max-softmax.test.js to check parameter gradients, deterministic
+training, free affine parameters, sampled values, and analytic surface normals.
 
 Image credits are also given in the relevant articles:
 
