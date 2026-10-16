@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,follow">
+<meta name="keywords" content="perspective transform, perspective function, convex analysis, joint convexity, positive homogeneity, recession function, convex conjugate, Fenchel duality, functions of measures, Radon measures, reference measure, Radon–Nikodym derivative, singular measures, Lebesgue decomposition, Csiszár f-divergence, Imre Csiszár, Ali–Silvey divergence, relative entropy, Kullback–Leibler divergence, Hellinger distance, total variation, data processing inequality, coarse graining, unbalanced optimal transport, Benamou–Brenier formulation, Jean-David Benamou, Yann Brenier, dynamic optimal transport, continuity equation, momentum, kinetic energy, Hamilton–Jacobi inequality, Wasserstein–Fisher–Rao, Hellinger–Kantorovich, convex optimization, second-order cone, proximal splitting, transformée perspective, transport optimal dynamique">
+<meta name="description" content="A short convexity proof connects Csiszár divergences, the Benamou–Brenier action, and transport with mass creation. Perspectives turn density ratios into convex, reference-independent functionals on measures.">
+<title>The perspective transform: convexity on measures — Alpha preview — Gabriel Peyré</title>
+<link rel="canonical" href="https://www.gpeyre.com/blog/preparations/perspective-transform-on-measures.html">
+<link rel="stylesheet" href="assets/drafts.css">
+<script defer src="assets/drafts.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+</head>
+<body>
+<header class="draft-header"><div class="wrap">
+<a class="draft-back" href="index.html">← Forthcoming posts</a>
+<p class="draft-status">Alpha preview · Work in progress</p>
+<p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
+<h1>The perspective transform: convexity on measures</h1>
+<p class="subtitle">Density ratios, momentum, and the same one-line construction.</p>
+<p class="byline">Gabriel Peyré</p>
+</div></header>
+<main class="wrap"><article class="blog-prose">
+<p>When designing an optimization problem over measures, a familiar difficulty is that the natural quantity is a ratio. A divergence compares one density to another. A transport model divides momentum by mass to recover velocity. Ratios look nonlinear, but the right combination of a ratio and a weight has a remarkably simple convex structure.</p>
+<p>The construction is the <em>perspective transform</em>:</p>
+\[
+ P_f(z,r)=r\,f(z/r),\qquad r>0.
+\]
+<p>Read \(r\) as an amount of mass, \(z/r\) as a quantity per unit mass, and \(f\) as its cost. Multiplying by \(r\) returns a total cost. Convexity of \(f\) then becomes <em>joint</em> convexity in \((z,r)\). This elementary fact explains why both Csiszár divergences and the Benamou–Brenier formulation of optimal transport lead to convex optimization problems. It also tells us how to define these costs for atoms and at zero density.</p>
+<p>We will prove this once, then use it in information geometry, transport, and transport with mass creation. Standard references for the convex construction are Boyd and Vandenberghe <a href="#ref-boyd">[1]</a> and Combettes <a href="#ref-combettes">[2]</a>.</p>
+
+<h2>Mix masses before mixing their ratios</h2>
+<p>Let \(f:\mathbb R^k\to[0,+\infty]\) be a proper, lower-semicontinuous convex function: it is finite somewhere, and its epigraph is closed. The value \(+\infty\) can encode a constraint. For now take positive masses \(r_0,r_1\) and finite costs.</p>
+<p id="theorem-1"><strong>Theorem 1 (perspective convexity).</strong> The perspective \(P_f\) is jointly convex for \(r>0\). It is also positively one-homogeneous:</p>
+\[
+ P_f(tz,tr)=tP_f(z,r),\qquad t>0.
+\]
+<details class="blog-proof"><summary>Proof: Jensen with mass-weighted coefficients</summary><div class="blog-proof-body">
+<p>For \(0<\theta<1\), set</p>
+\[
+ r_\theta=(1-\theta)r_0+\theta r_1,
+ \qquad z_\theta=(1-\theta)z_0+\theta z_1.
+\]
+<p>The ratio of the mixtures is a mixture of the ratios, with weights proportional to their masses:</p>
+\[
+ \frac{z_\theta}{r_\theta}
+ =\frac{(1-\theta)r_0}{r_\theta}\frac{z_0}{r_0}
+ +\frac{\theta r_1}{r_\theta}\frac{z_1}{r_1}.
+\]
+<p>These two coefficients sum to one. Apply convexity of \(f\), then multiply by \(r_\theta\):</p>
+\[
+ P_f(z_\theta,r_\theta)
+ \le(1-\theta)P_f(z_0,r_0)+\theta P_f(z_1,r_1).
+\]
+<p>Homogeneity follows directly from the definition. \(\square\)</p>
+</div></details>
+<p>This is the whole mechanism. Mixing two populations means averaging their per-unit quantities according to mass. The same ratio \(z/r\) is unchanged when both quantities are scaled, while the total cost scales linearly.</p>
+
+<h2>What should happen at zero mass?</h2>
+<p>Dividing by zero is not a definition. The correct extension is determined by the growth of \(f\) at infinity. Its <em>recession function</em> is</p>
+\[
+ f^\infty(z)=\lim_{t\to\infty}
+ \frac{f(u_0+tz)-f(u_0)}{t},
+ \qquad u_0\in\operatorname{dom}f.
+\]
+<p>The limit exists in \([0,+\infty]\) and is independent of the chosen base point \(u_0\). The closed perspective is</p>
+\[
+ P_f(z,r)=
+ \begin{cases}
+ r f(z/r),&r>0,\\
+ f^\infty(z),&r=0,\\
+ +\infty,&r<0.
+ \end{cases}
+\]
+<p>It remains convex and is lower semicontinuous <a href="#ref-combettes">[2]</a>. In particular \(P_f(0,0)=0\). For the quadratic cost \(f(u)=\lVert u\rVert^2/2\), the recession cost is infinite in every nonzero direction, so</p>
+\[
+ P_f(z,r)=\frac{\lVert z\rVert^2}{2r}\quad(r>0),
+ \qquad
+ P_f(z,0)=
+ \begin{cases}0,&z=0,\\+\infty,&z\ne0.\end{cases}
+\]
+<p>For a linearly growing function, a nonzero numerator at zero denominator can instead have a finite cost. Thus the boundary convention is part of the model.</p>
+<details class="blog-proof"><summary>Why this extension is convex and closed: a dual proof</summary><div class="blog-proof-body">
+<p>Define the convex conjugate \(f^*(a)=\sup_u\{a\cdot u-f(u)\}\). The identity \(f=f^{**}\) gives, for \(r>0\),</p>
+\[
+ P_f(z,r)=\sup_{a\in\operatorname{dom}f^*}
+ \{a\cdot z-rf^*(a)\}.
+\]
+<p>At \(r=0\), the same expression is the support function of \(\operatorname{dom}f^*\), which equals \(f^\infty\). Consequently the formula holds for every \(r\ge0\). It is a supremum of continuous linear functions on that half-space, so the extension by \(+\infty\) to \(r<0\) is convex and lower semicontinuous.</p>
+<details class="blog-proof"><summary>Lemma: the recession function is that support function</summary><div class="blog-proof-body">
+<p>Fenchel's inequality gives, for every \(a\in\operatorname{dom}f^*\),</p>
+\[
+ f(u_0+tz)\ge a\cdot(u_0+tz)-f^*(a).
+\]
+<p>Divide by \(t\) and let \(t\) grow to get \(f^\infty(z)\ge a\cdot z\). Conversely, if \(S=\sup_a a\cdot z\) is finite, biconjugacy gives</p>
+\[
+ f(u_0+tz)
+ \le\sup_a\{a\cdot u_0-f^*(a)\}+tS
+ =f(u_0)+tS.
+\]
+<p>Hence \(f^\infty(z)\le S\). If \(S=+\infty\), the first inequality already forces equality. \(\square\)</p>
+</div></details>
+<p>The extension is also the lower-semicontinuous closure of the positive-mass formula: \((z+ru_0,r)\to(z,0)\) has cost tending to \(f^\infty(z)\). This explains why the recession value is forced, rather than an arbitrary choice at vacuum.</p>
+</div></details>
+
+<h2>From a pointwise cost to a functional on measures</h2>
+<p>Let \(X\) be a measurable space, \(\rho\) a finite nonnegative measure, and \(m\) a finite \(\mathbb R^k\)-valued measure. Choose any finite positive measure \(\lambda\) dominating both, for instance \(\lambda=\rho+|m|\), where \(|m|\) is the total variation measure. Define</p>
+\[
+ \mathcal A_f(\rho,m)
+ =\int_X P_f\!\left(
+ \frac{dm}{d\lambda},\frac{d\rho}{d\lambda}
+ \right)d\lambda.
+\]
+<p>The Radon–Nikodym derivatives are densities with respect to this common reference. Nothing here requires densities with respect to Lebesgue measure.</p>
+<p id="theorem-2"><strong>Theorem 2 (a convex functional of measures).</strong> The value of \(\mathcal A_f\) is independent of \(\lambda\), and \(\mathcal A_f\) is jointly convex in \((\rho,m)\).</p>
+<details class="blog-proof"><summary>Proof: the reference density cancels</summary><div class="blog-proof-body">
+<p>Compare two dominating measures \(\lambda_0,\lambda_1\) through \(\nu=\lambda_0+\lambda_1\). Write \(h=d\lambda_0/d\nu\). The chain rule for densities and one-homogeneity give</p>
+\[
+ P_f\!\left(\frac{dm}{d\nu},\frac{d\rho}{d\nu}\right)
+ =h\,P_f\!\left(\frac{dm}{d\lambda_0},
+                    \frac{d\rho}{d\lambda_0}\right)
+ \quad\nu\text{-a.e.}
+\]
+<p>On \(\{h=0\}\), both measures vanish and the left side is \(P_f(0,0)=0\); the right side is interpreted as zero. Integrating proves equality of the values using \(\nu\) and \(\lambda_0\), and likewise for \(\lambda_1\).</p>
+<p>For convexity, choose one reference measure dominating the two pairs being mixed. Their densities mix linearly. Apply Theorem 1, including its boundary extension, pointwise and integrate. \(\square\)</p>
+</div></details>
+<p>This is why one-homogeneity is so useful on measures: changing the reference measure changes all the densities by the same local factor, which cancels in the integral. Convexity here refers to ordinary linear mixtures of measures.</p>
+
+<h2>First example: Csiszár divergences</h2>
+<figure class="portrait-single">
+<img src="assets/imre-csiszar.jpg" width="274" height="400" alt="Imre Csiszár in 1976" loading="lazy">
+<figcaption>Imre Csiszár (1976). Photo: Konrad Jacobs, Archives of the Mathematisches Forschungsinstitut Oberwolfach. <a href="https://commons.wikimedia.org/wiki/File:ImreCsiszar1976.jpg">Source</a> · <a href="https://creativecommons.org/licenses/by-sa/2.0/de/deed.en">CC BY-SA 2.0 Germany</a>. Unmodified.</figcaption>
+</figure>
+<p>Take a lower-semicontinuous convex function \(\phi:[0,\infty)\to[0,+\infty]\) with \(\phi(1)=0\), and extend it by \(+\infty\) on negative numbers. For two finite nonnegative measures \(\alpha,\beta\), set</p>
+\[
+ D_\phi(\alpha\mid\beta)
+ =\int_X P_\phi\!\left(
+ \frac{d\alpha}{d\lambda},\frac{d\beta}{d\lambda}
+ \right)d\lambda.
+\]
+<p>If \(\alpha=p\lambda\) and \(\beta=q\lambda\) with \(q>0\), the integrand is the familiar \(q\phi(p/q)\). These are the <em>Csiszár \(f\)-divergences</em>, also associated with the early work of Ali and Silvey <a href="#ref-csiszar">[3]</a>, <a href="#ref-ali">[4]</a>. We use the letter \(\phi\) to distinguish the scalar generator from the divergence functional.</p>
+<p>Common choices illustrate how much geometry fits inside the same construction:</p>
+<div class="equation-scroll"><table>
+<thead><tr><th>Generator \(\phi(u)\)</th><th>Perspective at \(q>0\)</th><th>Divergence</th></tr></thead>
+<tbody>
+<tr><td>\(u\log u-u+1\)</td><td>\(p\log(p/q)-p+q\)</td><td>Generalized KL</td></tr>
+<tr><td>\((\sqrt u-1)^2\)</td><td>\((\sqrt p-\sqrt q)^2\)</td><td>Squared Hellinger</td></tr>
+<tr><td>\(|u-1|\)</td><td>\(|p-q|\)</td><td>Total variation norm</td></tr>
+</tbody></table></div>
+<p>Here \(0\log0=0\). On probability measures the linear KL terms integrate to zero. For measures of different masses, keep them: the resulting cost is nonnegative and vanishes at equal measures. The total variation row uses the full norm \(\int|p-q|\,d\lambda\), twice the usual total variation distance between probabilities.</p>
+<p>Theorem 2 immediately gives joint convexity of \(D_\phi\). It also supplies the correct singular part. Writing the Lebesgue decomposition \(\alpha=h\beta+\alpha^\perp\),</p>
+\[
+ D_\phi(\alpha\mid\beta)
+ =\int_X\phi(h)\,d\beta
+   +\phi'_\infty\,\alpha^\perp(X),
+\]
+\[
+ \phi'_\infty=\lim_{u\to\infty}\frac{\phi(u)}u.
+\]
+<p>Use \(0\cdot\infty=0\) when the singular mass vanishes. For KL, \(\phi'_\infty=+\infty\), so finite cost requires \(\alpha\ll\beta\). For Hellinger, \(\phi'_\infty=1\), so mass where \(\beta\) is absent has a finite linear cost. In particular, \(D_\phi(a\delta_x\mid b\delta_x)=b\phi(a/b)\) for \(b>0\), and its value at \(b=0\) is \(a\phi'_\infty\).</p>
+<details class="blog-proof"><summary>Why the singular correction has exactly this form</summary><div class="blog-proof-body">
+<p>On the part dominated by \(\beta\), choose \(\beta\) as reference to obtain \(P_\phi(h,1)=\phi(h)\). On the singular part, choose \(\alpha^\perp\) as reference: the two densities are \((1,0)\), with cost \(P_\phi(1,0)=\phi^\infty(1)=\phi'_\infty\). The independence from the reference measure lets us combine these two calculations. \(\square\)</p>
+</div></details>
+
+<h3>A short consequence: coarse-graining reduces divergence</h3>
+<p>Suppose \(p_i,q_i\) are masses on a finite alphabet, and we merge indices into bins \(B\). Let \(p_B=\sum_{i\in B}p_i\) and similarly for \(q_B\).</p>
+<p id="proposition-1"><strong>Proposition 1 (deterministic data processing).</strong> Merging bins cannot increase the divergence:</p>
+\[
+ \sum_B P_\phi(p_B,q_B)
+ \le\sum_i P_\phi(p_i,q_i).
+\]
+<details class="blog-proof"><summary>Proof: convexity plus homogeneity is subadditivity</summary><div class="blog-proof-body">
+<p>For any two pairs \(u,v\), these two properties give</p>
+\[
+ P_\phi(u+v)
+ =2P_\phi((u+v)/2)
+ \le P_\phi(u)+P_\phi(v).
+\]
+<p>Apply this repeatedly within each bin and sum. The proof includes zero masses and infinite costs without dividing by them. \(\square\)</p>
+</div></details>
+<p>Thus a basic information-theoretic inequality follows from the same geometry that makes the divergence convex. A stochastic coarse-graining works similarly: split each pair with the transition probabilities, use homogeneity, then merge.</p>
+
+<h3>Soft marginal constraints in unbalanced transport</h3>
+<p>Classical transport imposes the two marginals of a nonnegative plan \(\pi\) exactly. If the input masses differ, there is no feasible plan. A common unbalanced model replaces these constraints by penalties <a href="#ref-lms">[5]</a>, <a href="#ref-scaling">[6]</a>:</p>
+\[
+ \inf_{\pi\ge0}\left\{
+ \int_{X\times X}c(x,y)\,d\pi(x,y)
+ +\tau_0D_\phi(\pi_0\mid\alpha)
+ +\tau_1D_\phi(\pi_1\mid\beta)
+ \right\}.
+\]
+<p>Here \(\pi_0,\pi_1\) are the marginals, \(c\ge0\) is a transport cost, and \(\tau_0,\tau_1>0\) control marginal fidelity. Marginalization is linear. The transport term is linear, and the divergence terms are convex. The whole problem is therefore convex in \(\pi\). Joint convexity is useful when the reference measures are also optimized, for example in a reconstruction or barycenter problem with convex additional constraints.</p>
+
+<h2>Second example: the Benamou–Brenier action</h2>
+<figure class="portrait-pair">
+<div class="portrait-pair-images">
+<div><img src="assets/jean-david-benamou.jpg" width="600" height="400" alt="Jean-David Benamou on the left, with Virginie Ehrlacher and Daniel Matthes, at Oberwolfach in 2017" loading="lazy"><p>Jean-David Benamou, on the left</p></div>
+<div><img src="assets/yann-brenier.jpg" width="328" height="400" alt="Yann Brenier at Oberwolfach in 2011" loading="lazy"><p>Yann Brenier</p></div>
+</div>
+<figcaption>Left photo (2017), left to right: Jean-David Benamou, Virginie Ehrlacher, Daniel Matthes. Tatjana Ruf, Archives of the Mathematisches Forschungsinstitut Oberwolfach; <a href="https://opc.mfo.de/detail?photo_id=21486">source</a>, <a href="https://creativecommons.org/licenses/by-sa/2.0/de/deed.en">CC BY-SA 2.0 Germany</a>, used under the archive's <a href="https://opc.mfo.de/terms_of_use">terms</a>. Right photo (2011): MFO, <a href="https://commons.wikimedia.org/wiki/File:Brenier.jpg">source</a>, <a href="https://creativecommons.org/licenses/by-sa/2.5/">CC BY-SA 2.5</a>. Both images unmodified; the MFO watermark is retained.</figcaption>
+</figure>
+<p>A fluid with density \(r(t,x)\) and velocity \(v(t,x)\) has kinetic action</p>
+\[
+ \int_0^1\!\int_{\mathbb R^d}
+ \tfrac12\lVert v\rVert^2 r\,dx\,dt.
+\]
+<p>It conserves mass through \(\partial_t r+\nabla\cdot(rv)=0\). The key change of variables is to optimize the <em>momentum density</em> \(m=rv\), together with \(r\). The action becomes</p>
+\[
+ \int_0^1\!\int_{\mathbb R^d}
+ \frac{\lVert m\rVert^2}{2r}\,dx\,dt,
+ \qquad \partial_t r+\nabla\cdot m=0.
+\]
+<p>The integrand is the perspective of \(f(v)=\lVert v\rVert^2/2\), so it is jointly convex in mass and momentum. The continuity equation is now linear in the unknowns. This is the convex structure behind the dynamic transport formulation of Jean-David Benamou and Yann Brenier <a href="#ref-bb">[7]</a>.</p>
+<p>To include singular distributions, use a narrowly continuous curve of probabilities \(\rho_t\) and a measurable family of finite vector measures \(m_t\). Define</p>
+\[
+ \mathscr K(\rho,m)=\int_0^1\mathcal A_f(\rho_t,m_t)\,dt,
+ \qquad f(v)=\tfrac12\lVert v\rVert^2.
+\]
+<p>Finite action forces \(m_t=v_t\rho_t\) for almost every time, with \(\int_0^1\int\lVert v_t\rVert^2\,d\rho_t\,dt<\infty\). The continuity equation and endpoints are understood weakly: for every test function \(\psi\) smooth up to \(t=0,1\) and compactly supported in space,</p>
+\[
+ \int_0^1\!\left[
+ \int\partial_t\psi\,d\rho_t
+ +\int\nabla\psi\cdot dm_t\right]dt
+ =\int\psi(1,\cdot)\,d\beta
+ -\int\psi(0,\cdot)\,d\alpha.
+\]
+<p id="theorem-3"><strong>Theorem 3 (Benamou–Brenier).</strong> For probability measures \(\alpha,\beta\) on \(\mathbb R^d\) with finite second moments,</p>
+\[
+ \frac12W_2(\alpha,\beta)^2
+ =\min_{\substack{\partial_t\rho+\nabla\cdot m=0\\
+                   \rho_0=\alpha,\ \rho_1=\beta}}
+ \mathscr K(\rho,m).
+\]
+<p>Here \(W_2^2\) is the minimum of \(\int\lVert x-y\rVert^2\,d\pi(x,y)\) over couplings of the endpoints. The factor \(1/2\) matches our convention for kinetic energy. Convexity follows from Theorem 2 and the linear constraints.</p>
+<details class="blog-proof"><summary>Proof: straight particle paths are cheapest</summary><div class="blog-proof-body">
+<p><em>From a coupling to a flow.</em> Choose an optimal coupling \(\pi\) of \(\alpha,\beta\). Move each pair \((x,y)\) along the segment \(X_t=(1-t)x+ty\). Let \(\rho_t\) be the law of \(X_t\), and define its momentum by</p>
+\[
+ \int b\cdot dm_t
+ =\int b(X_t)\cdot(y-x)\,d\pi(x,y).
+\]
+<p>Differentiating a test function along the segment gives the continuity equation. The velocity at a location is the conditional mean of \(y-x\) given \(X_t\). Jensen's inequality then gives</p>
+\[
+ \mathscr K(\rho,m)
+ \le\frac12\int\lVert y-x\rVert^2\,d\pi
+ =\frac12W_2(\alpha,\beta)^2.
+\]
+<p><em>From a flow to a coupling.</em> The superposition principle for finite-action solutions of the continuity equation represents the flow by a probability law on absolutely continuous paths \(X_t\) satisfying \(\dot X_t=v_t(X_t)\); see Ambrosio, Gigli, and Savaré <a href="#ref-ags">[8]</a>. Their endpoint law is a coupling. Cauchy–Schwarz along each path yields</p>
+\[
+ \tfrac12\lVert X_1-X_0\rVert^2
+ \le\tfrac12\int_0^1\lVert\dot X_t\rVert^2\,dt.
+\]
+<p>Average over paths to obtain \(W_2^2/2\le\mathscr K(\rho,m)\). This proves equality and attainment. The superposition principle is the measure-theoretic ingredient; for a smooth velocity field it is simply the representation by its characteristic curves. \(\square\)</p>
+</div></details>
+<p>For example, transporting \(\delta_a\) to \(\delta_b\) is achieved by \(\rho_t=\delta_{(1-t)a+tb}\) and \(m_t=(b-a)\rho_t\), with action \(\lVert b-a\rVert^2/2\). The measure formulation handles this moving atom directly. Requiring a Lebesgue density would exclude it.</p>
+
+<h3>The Hamilton–Jacobi inequality is the same convexity in dual form</h3>
+<p>The quadratic perspective has the elementary representation</p>
+\[
+ P_f(m,r)=\sup_b\{b\cdot m-\tfrac12\lVert b\rVert^2r\},
+ \qquad r\ge0.
+\]
+<p>For \(r>0\), complete the square; at \(r=0\), the supremum is zero if \(m=0\) and infinite otherwise. Now take a \(C^1\) potential \(\psi\) on \([0,1]\times\mathbb R^d\), compactly supported in space. If it satisfies</p>
+\[
+ \partial_t\psi+\tfrac12\lVert\nabla\psi\rVert^2\le0,
+\]
+<p>then every admissible flow has cost at least \(\int\psi(1)\,d\beta-\int\psi(0)\,d\alpha\). Indeed, apply the pointwise inequality with \(b=\nabla\psi\) and integrate using the continuity equation. The compact support makes all these terms integrable. This is the Hamilton–Jacobi constraint underlying the dynamic transport dual <a href="#ref-bb">[7]</a>, and each such potential gives a certificate bounding the optimal cost from below.</p>
+
+<h2>A third example: transport with creation and destruction</h2>
+<p>The same idea allows a source term. Write \(s=rg\), where \(g\) is a per-unit growth rate, and replace continuity by</p>
+\[
+ \partial_t r+\nabla\cdot m=s.
+\]
+<p>For a parameter \(\delta>0\), consider the local cost</p>
+\[
+ \frac{\lVert m\rVert^2+\delta^2s^2}{2r}
+ =r\,f(m/r,s/r),
+ \qquad
+ f(v,g)=\tfrac12(\lVert v\rVert^2+\delta^2g^2).
+\]
+<p>It is again a perspective, now with a vector and a scalar in its numerator. Minimize its integrated, closed measure extension subject to the continuity equation with source and prescribed finite nonnegative endpoints. Both the objective and the admissible set are convex. This is a normalization of the dynamic Wasserstein–Fisher–Rao model, also called Hellinger–Kantorovich transport <a href="#ref-wfr">[9]</a>, <a href="#ref-dynamic">[10]</a>, <a href="#ref-lms">[5]</a>. Its static entropy-transport representation uses a specific transport cost.</p>
+<p>On a space containing just one point, only mass change remains. Minimizing over nonnegative absolutely continuous mass paths \(r\), its action is</p>
+\[
+ \inf_{r(0)=a,\ r(1)=b}
+ \frac{\delta^2}{2}\int_0^1\frac{\dot r(t)^2}{r(t)}\,dt
+ =2\delta^2(\sqrt b-\sqrt a)^2.
+\]
+<details class="blog-proof"><summary>Proof: the square root makes the problem Euclidean</summary><div class="blog-proof-body">
+<p>Set \(r=u^2\). For a finite-action path, applying the chain rule to \(u_\varepsilon=\sqrt{r+\varepsilon}\) gives \(\int\dot u_\varepsilon^2\le\frac14\int\dot r^2/r\). Letting \(\varepsilon\downarrow0\) proves that \(u=\sqrt r\) is absolutely continuous with square-integrable derivative, including at zeros. Thus \(\dot r^2/r=4\dot u^2\) almost everywhere, using the closed perspective. Cauchy–Schwarz gives</p>
+\[
+ 2\delta^2\int_0^1\dot u^2\,dt
+ \ge2\delta^2\bigl(u(1)-u(0)\bigr)^2.
+\]
+<p>Equality is attained by the nonnegative affine path \(u(t)=(1-t)\sqrt a+t\sqrt b\). Thus the optimal mass trajectory is the square of this affine function. The formula remains valid when an endpoint mass is zero. \(\square\)</p>
+</div></details>
+<p>The square-root geometry of Hellinger therefore appears naturally when mass may change in time, while the momentum term supplies transport in space.</p>
+
+<h2>What this buys us in optimization</h2>
+<p>The construction suggests a practical modeling rule: express unknowns as amounts, fluxes, or momenta, put the per-unit cost inside a perspective, and keep conservation laws linear. Local costs can then be combined with linear observations and convex constraints without losing convexity.</p>
+<p>For a discretized quadratic transport action, even the epigraph has a simple form. A cell cost \(e\) satisfies</p>
+\[
+ e\ge P_f(m,r)
+ \quad\Longleftrightarrow\quad
+ r\ge0,\quad e\ge0,\quad 2re\ge\lVert m\rVert^2.
+\]
+<p>This is a rotated second-order cone constraint, including vacuum exactly. Alternatively, proximal and primal–dual methods exploit the local perspective terms and the global linear continuity equation; see Papadakis, Peyré, and Oudet <a href="#ref-proximal">[11]</a> and Combettes and Müller <a href="#ref-prox-calculus">[12]</a>.</p>
+<p>The most useful feature is that the same finite-dimensional convex construction survives passage to measures. Ratios describe local geometry; one-homogeneity makes that geometry independent of coordinates; integrating produces a convex variational model.</p>
+
+<h2>References</h2>
+<ol class="references">
+<li id="ref-boyd">Stephen Boyd and Lieven Vandenberghe. <a href="https://web.stanford.edu/~boyd/cvxbook/"><em>Convex Optimization</em></a>. Cambridge University Press, 2004. Section 3.2.6.</li>
+<li id="ref-combettes">Patrick L. Combettes. <a href="https://arxiv.org/abs/1610.01552"><em>Perspective Functions: Properties, Constructions, and Examples</em></a>. Set-Valued and Variational Analysis 26, 247–264, 2018.</li>
+<li id="ref-csiszar">Imre Csiszár. <em>Information-type measures of difference of probability distributions and indirect observations</em>. Studia Scientiarum Mathematicarum Hungarica 2, 299–318, 1967. <a href="https://users.renyi.hu/~csiszar/publist2012.pdf">Author's bibliography, entry 13</a>.</li>
+<li id="ref-ali">S. M. Ali and S. D. Silvey. <a href="https://doi.org/10.1111/j.2517-6161.1966.tb00626.x"><em>A General Class of Coefficients of Divergence of One Distribution from Another</em></a>. Journal of the Royal Statistical Society, Series B 28(1), 131–142, 1966.</li>
+<li id="ref-lms">Matthias Liero, Alexander Mielke, and Giuseppe Savaré. <a href="https://arxiv.org/abs/1508.07941"><em>Optimal Entropy-Transport Problems and a New Hellinger–Kantorovich Distance between Positive Measures</em></a>. Inventiones Mathematicae 211, 969–1117, 2018.</li>
+<li id="ref-scaling">Lénaïc Chizat, Gabriel Peyré, Bernhard Schmitzer, and François-Xavier Vialard. <a href="https://arxiv.org/abs/1607.05816"><em>Scaling Algorithms for Unbalanced Transport Problems</em></a>. Mathematics of Computation 87(314), 2563–2609, 2018.</li>
+<li id="ref-bb">Jean-David Benamou and Yann Brenier. <a href="https://doi.org/10.1007/s002110050002"><em>A Computational Fluid Mechanics Solution to the Monge–Kantorovich Mass Transfer Problem</em></a>. Numerische Mathematik 84, 375–393, 2000. <a href="https://www.ceremade.dauphine.fr/~carlier/brenierbenamou.pdf">Full text</a>.</li>
+<li id="ref-ags">Luigi Ambrosio, Nicola Gigli, and Giuseppe Savaré. <a href="https://link.springer.com/book/10.1007/978-3-7643-8722-8"><em>Gradient Flows in Metric Spaces and in the Space of Probability Measures</em></a>. Second edition, Birkhäuser, 2008. Theorem 8.2.1.</li>
+<li id="ref-wfr">Lénaïc Chizat, Gabriel Peyré, Bernhard Schmitzer, and François-Xavier Vialard. <a href="https://arxiv.org/abs/1506.06430"><em>An Interpolating Distance between Optimal Transport and Fisher–Rao Metrics</em></a>. Foundations of Computational Mathematics 18, 1–44, 2018.</li>
+<li id="ref-dynamic">Lénaïc Chizat, Gabriel Peyré, Bernhard Schmitzer, and François-Xavier Vialard. <a href="https://arxiv.org/abs/1508.05216"><em>Unbalanced Optimal Transport: Dynamic and Kantorovich Formulations</em></a>. Journal of Functional Analysis 274(11), 3090–3123, 2018.</li>
+<li id="ref-proximal">Nicolas Papadakis, Gabriel Peyré, and Édouard Oudet. <a href="https://arxiv.org/abs/1304.5784"><em>Optimal Transport with Proximal Splitting</em></a>. SIAM Journal on Imaging Sciences 7(1), 212–238, 2014.</li>
+<li id="ref-prox-calculus">Patrick L. Combettes and Christian L. Müller. <a href="https://doi.org/10.1016/j.jmaa.2016.12.021"><em>Perspective Functions: Proximal Calculus and Applications in High-Dimensional Statistics</em></a>. Journal of Mathematical Analysis and Applications 457(2), 1283–1306, 2018.</li>
+</ol>
+</article></main>
+<footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Published blog</a></div></footer>
+</body></html>

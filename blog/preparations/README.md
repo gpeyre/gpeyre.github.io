@@ -19,6 +19,23 @@ After changing article metadata or adding a preview, run
 `ruby scripts/build-blog-search.rb` from the repository root and include the
 updated catalogue. See `../README.md` for search authoring and verification.
 
+## Perspective transform
+
+`perspective-transform-on-measures.html` develops closed perspectives and their
+reference-independent integral on measures, with numbered results and nested
+proof disclosures. The main examples are Csiszár divergences and the quadratic
+Benamou–Brenier action; coarse-graining and the dynamic Wasserstein–Fisher–Rao
+model provide further applications. The action uses kinetic energy with a
+factor one-half, so its transport value is `W2²/2`. No general equivalence is
+claimed between arbitrary KL-marginal-penalized OT and the dynamic reaction
+model. The article remains an undated alpha preview, outside the feeds.
+
+Portrait credits are in the article: Csiszár (Konrad Jacobs/MFO, CC BY-SA 2.0
+Germany), Brenier (MFO, CC BY-SA 2.5), and the watermarked group photograph
+showing Benamou with Virginie Ehrlacher and Daniel Matthes (Tatjana Ruf/MFO,
+CC BY-SA 2.0 Germany). Files are unmodified; retain the complete Benamou group
+image and its MFO watermark.
+
 ## Attention token sample complexity
 
 The attention article was published on 16 October 2026. Its source is now

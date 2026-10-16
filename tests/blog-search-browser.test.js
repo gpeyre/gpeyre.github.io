@@ -15,8 +15,8 @@ const shots=process.env.BLOG_SCREENSHOT_DIR||"/private/tmp";
       await page.locator('[data-blog-search][data-ready="true"]').waitFor();
       const input=page.getByLabel("Title, keyword, or topic"),status=page.locator("[data-search-status]"),cards=page.locator(".blog-search-result");
       const records=await page.evaluate(()=>window.BLOG_SEARCH_RECORDS);
-      assert.equal(records.length,46);
-      assert.match(await status.innerText(),/24 published articles · 22 forthcoming previews/);
+      assert.equal(records.length,47);
+      assert.match(await status.innerText(),/24 published articles · 23 forthcoming previews/);
       assert.equal(await page.locator("[data-blog-browse]").isVisible(),true);
       async function search(query){await input.fill(query);await page.locator("form[role=search]").evaluate(form=>form.requestSubmit());}
       await search("Sinkhorn");
@@ -78,7 +78,7 @@ const shots=process.env.BLOG_SCREENSHOT_DIR||"/private/tmp";
       await page.getByLabel("Published",{exact:true}).check();
       assert.equal(await cards.count(),24);
       await page.getByLabel("Forthcoming",{exact:true}).check();
-      assert.equal(await cards.count(),22);
+      assert.equal(await cards.count(),23);
       for(const record of records){
         const response=await page.request.get(base+record.url);
         assert.equal(response.status(),200,record.url);
