@@ -32,11 +32,12 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
             assert.equal(feedResult.errors, 0, format + " must be valid XML");
             assert.equal(feedResult.entries, await page.locator(".blog-preview").count());
         }
-        assert.equal(await page.locator(".blog-preview").count(), 24);
+        assert.equal(await page.locator(".blog-preview").count(), 25);
         const dates = await page.locator(".blog-preview time").evaluateAll(nodes => nodes.map(n => n.dateTime));
         assert.deepEqual(dates, dates.slice().sort().reverse());
         const paths = await page.locator(".blog-preview h2 a").evaluateAll(nodes => nodes.map(n => new URL(n.href).pathname));
-        assert.equal(new Set(paths).size, 24);
+        assert.equal(new Set(paths).size, 25);
+        assert.ok(paths.includes("/blog/2026/10/17/when-independence-is-optimal/"));
         assert.ok(paths.includes("/blog/2026/10/16/token-sample-complexity-attention/"));
         assert.ok(paths.includes("/blog/2026/10/15/icnn-universality-and-depth/"));
         assert.ok(paths.includes("/blog/2026/10/16/stone-weierstrass-approximate-products/"));

@@ -41,12 +41,17 @@ class BlogSearchIndexTest < Minitest::Test
     end
   end
 
-  def test_promoted_post_has_one_published_search_record
+  def test_promoted_posts_have_one_published_search_record
     attention = @records.select { |post| post["url"].include?("token-sample-complexity-attention") }
     assert_equal 1, attention.size
     assert_equal "published", attention.first["status"]
     assert_equal "2026-10-16", attention.first["date"]
     assert_equal "/blog/2026/10/16/token-sample-complexity-attention/", attention.first["url"]
+    independence = @records.select { |post| post["url"].include?("when-independence-is-optimal") }
+    assert_equal 1, independence.size
+    assert_equal "published", independence.first["status"]
+    assert_equal "2026-10-17", independence.first["date"]
+    assert_equal "/blog/2026/10/17/when-independence-is-optimal/", independence.first["url"]
   end
 
   def test_missing_and_duplicate_keywords_fail

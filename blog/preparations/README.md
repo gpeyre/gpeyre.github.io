@@ -70,7 +70,7 @@ The preview index groups articles by subject, with no publication dates.
 | 13 | `composing-optimal-transport-maps.html` |
 | 19 | `wasserstein-distance-without-quantiles.html` |
 | 21 | `noncrossing-matchings-catalan.html` |
-| 23 | `when-independence-is-optimal.html` |
+| 23 | Published: `/blog/2026/10/17/when-independence-is-optimal/` |
 | 24 | `optimal-transport-convex-extension.html` |
 | 27 | `bernstein-polynomials-on-measures.html` |
 | 34 | `optimal-particles-versus-random-sampling.html` |
@@ -91,7 +91,12 @@ is loaded separately, as in the existing previews.
 
 The thirteen experiments cover the eleven supplied prototypes plus exact
 two-point illustrations of independent couplings and the convex extension.
-The Gaussian GW and divergence articles are proof-focused.
+The Gaussian GW and divergence articles are proof-focused. The independence
+article was published with the date 17 October 2026, without its numerical
+experimentation section or interactive figure. Its analytic two-point example
+is retained in the entropic-transport discussion. The former preview URL
+redirects to the published post; the standalone lab demo remains available to
+the other numerical authoring tools.
 
 `data.js` contains the supplied fixed-seed CLT profiles, energy trajectories,
 weak-transport reference, and independent SciPy fixtures. Only those three
