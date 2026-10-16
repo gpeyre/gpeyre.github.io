@@ -4,20 +4,25 @@ const assert=require("node:assert/strict"),path=require("node:path"),{pathToFile
 const {chromium}=require(process.env.BLOG_PLAYWRIGHT_PATH||"playwright");
 const base=process.env.BLOG_PREVIEW_URL||"http://127.0.0.1:4192";
 const shots=process.env.BLOG_SCREENSHOT_DIR||"/private/tmp";
-const slug="token-sample-complexity-attention.html";
+const slug="token-sample-complexity-attention",publishedPath="/blog/2026/10/16/"+slug+"/";
 (async()=>{
   const browser=await chromium.launch({headless:true,channel:"chrome"});
   try{
     const page=await browser.newPage({viewport:{width:1200,height:1000}}),errors=[];
     page.on("pageerror",e=>errors.push(e.message));
-    const response=await page.goto(base+"/blog/preparations/"+slug);
+    const response=await page.goto(base+publishedPath);
     assert.equal(response.status(),200);
+    assert.equal(await page.locator('link[rel="canonical"]').getAttribute("href"),"https://www.gpeyre.com"+publishedPath);
+    assert.equal(await page.locator('.blog-eyebrow time').getAttribute("datetime"),"2026-10-16");
+    assert.equal((await page.locator('.blog-eyebrow time').textContent()).trim(),"16 October 2026");
+    assert.equal(await page.locator(".draft-status").count(),0,"published article has no alpha-preview badge");
+    assert.ok(await page.locator('meta[name="robots"]').evaluateAll(nodes=>nodes.every(n=>!n.content.includes("noindex"))),"published article must be indexable");
     await page.waitForFunction(()=>window.MathJax?.isReady,{},{timeout:45000});
     await page.evaluate(()=>new Promise(resolve=>MathJax.Hub.Queue(resolve)));
     assert.ok(await page.evaluate(()=>MathJax.Hub.getAllJax().length>30));
     assert.equal(await page.locator(".MathJax_Error,.merror").count(),0);
+    assert.equal(await page.locator(".blog-prose table").count(),0,"absolute-value notation must not be parsed as a Markdown table");
     assert.ok(await page.locator("details.blog-proof").evaluateAll(nodes=>nodes.every(n=>!n.open)));
-    assert.equal(await page.locator('meta[name="robots"]').getAttribute("content"),"noindex,follow");
     const anchors=await page.locator('a[href^="#"]').evaluateAll(nodes=>nodes.map(n=>n.hash.slice(1)).filter(id=>!document.getElementById(id)));
     assert.deepEqual(anchors,[]);
     const iframe=page.locator("iframe.idea-experiment");await iframe.scrollIntoViewIfNeeded();
@@ -66,14 +71,28 @@ const slug="token-sample-complexity-attention.html";
     await page.screenshot({path:path.join(shots,"attention-post-math.png")});
     await page.goto(base+"/blog/preparations/?q=Boyer");
     await page.locator('[data-ready="true"]').waitFor();
-    assert.equal(await page.locator('.blog-search-result h3 a[href$="'+slug+'"]').count(),1);
+    const result=page.locator(".blog-search-result").filter({has:page.locator('h3 a[href$="'+publishedPath+'"]')});
+    assert.equal(await result.count(),1);
+    assert.equal((await result.locator(".blog-search-badge").textContent()).trim(),"Published");
+    assert.equal(await result.locator(".is-forthcoming").count(),0);
+    assert.equal(await result.locator("time").getAttribute("datetime"),"2026-10-16");
     await page.goto(base+"/blog/preparations/");
-    assert.equal(await page.locator('.draft-card[href="'+slug+'"]').count(),1);
+    assert.equal(await page.locator('.draft-card[href*="'+slug+'"]').count(),0,"published post is removed from forthcoming cards");
+    await page.goto(base+"/blog/");
+    assert.ok(await page.locator('a[href$="'+publishedPath+'"]').count()>0,"published post is in the blog archive");
+    for(const feed of ["rss.xml","atom.xml"]){
+      const response=await page.request.get(base+"/blog/"+feed);
+      assert.equal(response.status(),200);
+      assert.ok((await response.text()).includes("https://www.gpeyre.com"+publishedPath),"published post is included in "+feed);
+    }
+    await page.goto(base+"/blog/preparations/"+slug+".html");
+    await page.waitForURL(url=>url.pathname===publishedPath);
+    assert.equal(new URL(page.url()).origin,new URL(base).origin,"preview redirect stays on the current website");
     const local=await browser.newPage();
     await local.goto(pathToFileURL(path.resolve(__dirname,"../blog/preparations/assets/attention-sampling/index.html")).href);
     await local.locator('#results[aria-busy="false"]').waitFor();
     assert.deepEqual(await local.locator("#norms output").allTextContents(),initial);
     assert.deepEqual(errors,[]);
-    console.log("Attention post passed: math, folded proofs, resampling, both slider extremes, stale-request cancellation, numerical metrics, mobile layout, iframe height, local files, search and index links.");
+    console.log("Attention post passed: publication date, indexing, math, folded proofs, resampling, slider extremes, numerical metrics, mobile layout, iframe height, local files, published search/archive/feed links, and preview redirect.");
   }finally{await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});

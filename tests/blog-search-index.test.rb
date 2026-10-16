@@ -18,7 +18,12 @@ class BlogSearchIndexTest < Minitest::Test
     expected = Dir.glob("#{root}/blog/_posts/*.md").reject do |path|
       YAML.safe_load(File.read(path).split("---", 3)[1], permitted_classes: [Date, Time])["published"] == false
     end
-    expected += Dir.glob("#{root}/blog/preparations/*.html").reject { |path| File.basename(path) == "index.html" }
+    expected += Dir.glob("#{root}/blog/preparations/*.html").reject do |path|
+      source = File.read(path, encoding: "UTF-8")
+      matter = source.match(/\A---\s*\n(.*?)\n---\s*\n/m)
+      data = matter ? YAML.safe_load(matter[1], permitted_classes: [Date, Time]) : {}
+      File.basename(path) == "index.html" || data["redirect_to"]
+    end
     assert_equal expected.map { |path| path.delete_prefix(root + "/") }.sort, @records.map { |post| post["id"] }.sort
     assert_equal @records.size, @records.map { |post| post["url"] }.uniq.size
     index = File.read("#{root}/blog/preparations/index.html")
@@ -34,6 +39,14 @@ class BlogSearchIndexTest < Minitest::Test
         assert_equal post["date"], Date.iso8601(post["date"]).iso8601
       end
     end
+  end
+
+  def test_promoted_post_has_one_published_search_record
+    attention = @records.select { |post| post["url"].include?("token-sample-complexity-attention") }
+    assert_equal 1, attention.size
+    assert_equal "published", attention.first["status"]
+    assert_equal "2026-10-16", attention.first["date"]
+    assert_equal "/blog/2026/10/16/token-sample-complexity-attention/", attention.first["url"]
   end
 
   def test_missing_and_duplicate_keywords_fail

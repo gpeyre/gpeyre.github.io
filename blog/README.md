@@ -104,6 +104,19 @@ a proof opens. The disclosure controls also work without JavaScript.
 
 ## Interactive figures
 
+Published posts with a standalone embedded experiment can set
+`embedded_experiment: true` and use `iframe.idea-experiment` with a matching
+`data-experiment` topic. The shared height listener adapts the iframe to its
+contents. The attention sample-complexity post uses this mechanism; its
+experiment assets remain at `blog/preparations/assets/attention-sampling/`
+to preserve their existing URLs.
+
+When promoting a forthcoming preview to a dated post, its old HTML page may
+remain as a redirect with YAML `redirect_to` metadata, an explicit `permalink`
+preserving its `.html` URL, a canonical URL, a
+meta-refresh, and an ordinary fallback link. Search skips such redirect pages;
+remove their cards from the forthcoming archive and regenerate the catalogue.
+
 Add figure: pl, sinkhorn, gaussian, gaussian-flow, ode, diffusion, inverse,
 barycentric, or icnn to the front matter, then use:
 

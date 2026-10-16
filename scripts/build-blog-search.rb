@@ -53,6 +53,8 @@ module BlogSearchIndex
       next if File.basename(path) == "index.html"
       source = path.delete_prefix(ROOT + "/")
       html = File.read(path, encoding: "UTF-8")
+      matter = html.match(/\A---\s*\n(.*?)\n---\s*\n/m)
+      next if matter && YAML.safe_load(matter[1], permitted_classes: [Date, Time])["redirect_to"]
       title = html.match(/<h1\b[^>]*>(.*?)<\/h1>/mi)&.captures&.first
       raise "#{source}: missing article heading" unless title
       {

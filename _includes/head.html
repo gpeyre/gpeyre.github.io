@@ -44,6 +44,7 @@
     {% endif %}
     <script defer src="{{ '/js/blog-subscribe.js' | prepend: site.baseurl }}"></script>
     {% if page.proofs %}<script defer src="{{ '/js/blog-proofs.js' | prepend: site.baseurl }}"></script>{% endif %}
+    {% if page.embedded_experiment %}<script defer src="{{ '/blog/preparations/assets/idea-experiments.js' | relative_url }}"></script>{% endif %}
     {% if page.figure %}
     <script defer src="{{ '/js/blog-math.js' | prepend: site.baseurl }}"></script>
     {% if page.figure == 'diffusion' %}

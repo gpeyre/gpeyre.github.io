@@ -63,7 +63,7 @@ const slugs=["monge-gap-inversions","autonomous-wasserstein-statistics","gaussia
     if(process.env.BLOG_TEST_ONLY!=="experiments") {
       await page.goto(base+"/blog/preparations/");
       const links=await page.locator(".draft-card").evaluateAll(nodes=>nodes.map(n=>new URL(n.href).pathname));
-      assert.equal(links.length,23);assert.equal(new Set(links).size,23);
+      assert.equal(links.length,22);assert.equal(new Set(links).size,22);
       await page.screenshot({path:path.join(shots,"forthcoming-index.png"),fullPage:true});
       for(const slug of slugs.filter(slug=>!process.env.BLOG_START_AT||slugs.indexOf(slug)>=slugs.indexOf(process.env.BLOG_START_AT))) {
         const response=await page.goto(base+"/blog/preparations/"+slug+".html");

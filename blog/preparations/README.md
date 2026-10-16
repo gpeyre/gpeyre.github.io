@@ -21,11 +21,10 @@ updated catalogue. See `../README.md` for search authoring and verification.
 
 ## Attention token sample complexity
 
-`token-sample-complexity-attention.html` presents a fixed-head i.i.d. sampling
-model, the uniform-on-balls estimate of Bohbot–Letrouit–Peyré–Vialard (v3),
-and a separately derived one-dimensional Gaussian `L2(mu)` corollary. Its rate
-is an upper bound, not a sharp exponent or a direct restatement of the paper's
-moment theorem. Boursier and Boyer's similar concurrent work is acknowledged.
+The attention article was published on 16 October 2026. Its source is now
+`../_posts/2026-10-16-token-sample-complexity-attention.md`;
+`token-sample-complexity-attention.html` redirects to the published URL and is
+excluded from the forthcoming list and search catalogue.
 
 The embedded experiment in `assets/attention-sampling/` compares five Gaussian
 sample streams with the exact linear population attention. Counts are nested
