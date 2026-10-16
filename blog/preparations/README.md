@@ -19,6 +19,22 @@ After changing article metadata or adding a preview, run
 `ruby scripts/build-blog-search.rb` from the repository root and include the
 updated catalogue. See `../README.md` for search authoring and verification.
 
+## Attention token sample complexity
+
+`token-sample-complexity-attention.html` presents a fixed-head i.i.d. sampling
+model, the uniform-on-balls estimate of Bohbot–Letrouit–Peyré–Vialard (v3),
+and a separately derived one-dimensional Gaussian `L2(mu)` corollary. Its rate
+is an upper bound, not a sharp exponent or a direct restatement of the paper's
+moment theorem. Boursier and Boyer's similar concurrent work is acknowledged.
+
+The embedded experiment in `assets/attention-sampling/` compares five Gaussian
+sample streams with the exact linear population attention. Counts are nested
+within each stream, and the token-count control uses a logarithmic scale.
+Reported root-mean-square errors are finite-window Gaussian quadrature for
+individual contexts, not an expectation over contexts. Run
+`node tests/attention-sampling.test.js` and the browser checks in
+`tests/attention-sampling-browser.test.js` after changing it.
+
 ## OT4ML idea collection
 
 The fifteen selected topics in `../ideas/ot4ml-blog-post-ideas.tex` and its

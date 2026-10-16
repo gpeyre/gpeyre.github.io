@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <title>Finite-token Gaussian attention — numerical experiment</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <article aria-labelledby="title">
+    <p class="eyebrow">Numerical experiment · independent Gaussian tokens</p>
+    <h2 id="title">Five finite-token approximations to one straight line</h2>
+    <p class="intro">Each color uses its own i.i.d. sample of tokens <span class="math">Y<sub>i</sub> ∼ N(0, 1)</span>. Increase <span class="math">n</span> to extend the same five samples, or resample to start again.</p>
+    <p class="formula" aria-label="Empirical attention is the sum of Y i times exp of tau x Y i, divided by the sum of exp of tau x Y i. Population attention equals tau x."><span>T<sub>n</sub>(x) = <span class="fraction"><span>∑<sub>i=1</sub><sup>n</sup> Y<sub>i</sub> e<sup>τxY<sub>i</sub></sup></span><span>∑<sub>i=1</sub><sup>n</sup> e<sup>τxY<sub>i</sub></sup></span></span></span><span class="population-formula">T(x) = τx</span></p>
+    <div class="controls">
+      <label for="sample-size">Tokens in each draw <output id="sample-size-value" for="sample-size">256</output>
+        <input id="sample-size" type="range" min="3" max="13" step="1" value="8" aria-describedby="sample-help">
+        <span class="control-help" id="sample-help">8 to 8,192 · logarithmic steps</span>
+      </label>
+      <label for="strength">Attention strength τ <output id="strength-value" for="strength">1.00</output>
+        <input id="strength" type="range" min="0.25" max="2" step="0.05" value="1">
+        <span class="control-help">Stronger attention emphasizes rare tokens.</span>
+      </label>
+      <button id="resample" type="button">Resample all five</button>
+    </div>
+    <div class="legend" aria-label="Curve legend">
+      <span class="population">Population τx</span><span class="draw draw-0">Draw 1</span><span class="draw draw-1">Draw 2</span><span class="draw draw-2">Draw 3</span><span class="draw draw-3">Draw 4</span><span class="draw draw-4">Draw 5</span>
+    </div>
+    <div id="results" aria-busy="true">
+      <section class="plot" aria-labelledby="attention-title">
+        <h3 id="attention-title">Attention output</h3>
+        <canvas id="attention-plot" role="img" aria-label="Population attention and five finite-token approximations as functions of the query x.">The black line is population attention τx. The five colored curves are empirical attention from independent finite token samples.</canvas>
+        <p class="plot-caption">Faint bell: query density φ(x), on its own scale. Rug: tokens from draw 1 (only those in [−4, 4]).</p>
+      </section>
+      <section class="plot error-panel" aria-labelledby="error-title">
+        <h3 id="error-title">Where the query-weighted squared error comes from</h3>
+        <canvas id="error-plot" role="img" aria-label="Query-density-weighted squared errors for the five attention approximations.">The curves show φ(x) times the squared difference between empirical attention and τx.</canvas>
+        <p class="plot-caption">φ(x) |T<sub>n</sub>(x) − τx|². Large errors at rare queries receive less weight; area under each curve contributes to the squared norm below. The vertical scale adapts.</p>
+      </section>
+      <section class="metrics" aria-labelledby="norm-title">
+        <h3 id="norm-title">Query-weighted L² error, one value per draw</h3>
+        <div class="norms" id="norms">
+          <p class="draw-0"><span>Draw 1</span><output>—</output></p><p class="draw-1"><span>Draw 2</span><output>—</output></p><p class="draw-2"><span>Draw 3</span><output>—</output></p><p class="draw-3"><span>Draw 4</span><output>—</output></p><p class="draw-4"><span>Draw 5</span><output>—</output></p>
+        </div>
+        <p class="caveat">Finite-window quadrature: [∫<sub>−8</sub><sup>8</sup> |T<sub>n</sub>(x) − τx|² φ(x) dx]<sup>1/2</sup>, using composite Simpson quadrature with 256 intervals. These are five realized errors, <em>not</em> an expectation over token samples or a confidence bound.</p>
+      </section>
+    </div>
+    <p id="status" class="status" role="status" aria-live="polite">Computing five independent draws…</p>
+    <p class="caveat">Seeded Box–Muller sampling; no symmetric pairing, quantile placement, or fitted curves. Larger samples need not improve every query or every realized norm. <span id="seed-note"></span></p>
+    <noscript>This figure needs JavaScript. For Gaussian tokens, population attention is exactly T(x) = τx; finite-token attention remains between the smallest and largest sampled tokens.</noscript>
+  </article>
+</main>
+<script src="math.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
