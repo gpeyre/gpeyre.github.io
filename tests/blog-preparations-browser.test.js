@@ -5,7 +5,7 @@ const {chromium}=require(process.env.BLOG_PLAYWRIGHT_PATH||"playwright");
 const base=process.env.BLOG_PREVIEW_URL||"http://127.0.0.1:4189";
 const shots=process.env.BLOG_SCREENSHOT_DIR||"/private/tmp";
 const topics=["monge","moments","caps","clt","energy","composition","cdf","matchings","bernstein","quantization","weak","independence","envelope","gaussian","sgd"];
-const slugs=["monge-gap-inversions","autonomous-wasserstein-statistics","gaussian-gromov-wasserstein-counterexample","wasserstein-geodesics-density-caps","central-limit-wasserstein-constants","divergences-and-bregman-geometry","energy-distance-wasserstein-convexity","composing-optimal-transport-maps","wasserstein-distance-without-quantiles","noncrossing-matchings-catalan","optimal-transport-convex-extension","bernstein-polynomials-on-measures","optimal-particles-versus-random-sampling","weak-transport-and-convex-order","gaussian-sinkhorn-convergence","sgd-iterate-covariance","perspective-transform-on-measures"];
+const slugs=["monge-gap-inversions","autonomous-wasserstein-statistics","gaussian-gromov-wasserstein-counterexample","wasserstein-geodesics-density-caps","central-limit-wasserstein-constants","divergences-and-bregman-geometry","energy-distance-wasserstein-convexity","composing-optimal-transport-maps","wasserstein-distance-without-quantiles","noncrossing-matchings-catalan","optimal-transport-convex-extension","bernstein-polynomials-on-measures","optimal-particles-versus-random-sampling","weak-transport-and-convex-order","gaussian-sinkhorn-convergence","sgd-iterate-covariance","perspective-transform-on-measures","spectral-wasserstein-distances"];
 (async()=>{
   const browser=await chromium.launch({headless:true,channel:"chrome"});
   try {
@@ -63,7 +63,7 @@ const slugs=["monge-gap-inversions","autonomous-wasserstein-statistics","gaussia
     if(process.env.BLOG_TEST_ONLY!=="experiments") {
       await page.goto(base+"/blog/preparations/");
       const links=await page.locator(".draft-card").evaluateAll(nodes=>nodes.map(n=>new URL(n.href).pathname));
-      assert.equal(links.length,22);assert.equal(new Set(links).size,22);
+      assert.equal(links.length,23);assert.equal(new Set(links).size,23);
       await page.screenshot({path:path.join(shots,"forthcoming-index.png"),fullPage:true});
       for(const slug of slugs.filter(slug=>!process.env.BLOG_START_AT||slugs.indexOf(slug)>=slugs.indexOf(process.env.BLOG_START_AT))) {
         const response=await page.goto(base+"/blog/preparations/"+slug+".html");

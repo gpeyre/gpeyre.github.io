@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <title>Schatten spectral transport — interactive experiment</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <p class="eyebrow">Numerical experiment · the whole transport polytope</p>
+  <h2>Change the spectral gauge, change the transport</h2>
+  <p class="intro">Two blue points and two orange points, each of mass ½. Every admissible coupling has the form π(s) = ½ [s, 1 − s; 1 − s, s]. The figure minimizes γ<sub>p</sub>(S(s)) over the entire interval 0 ≤ s ≤ 1.</p>
+  <p class="formula"><span>γ<sub>p</sub>(S) = (λ<sub>1</sub><sup>p</sup> + λ<sub>2</sub><sup>p</sup>)<sup>1/p</sup></span><span>γ<sub>∞</sub>(S) = max(λ<sub>1</sub>, λ<sub>2</sub>)</span></p>
+  <div class="controls">
+    <label class="exponent" for="exponent">Schatten exponent p <output id="exponent-value" for="exponent">2.00</output>
+      <input id="exponent" type="range" min="0.5" max="8" step="0.025" value="2">
+      <span class="help">½ favors low rank · 1 is quadratic OT · ∞ balances the worst direction</span>
+    </label>
+    <label class="infinite"><input type="checkbox" id="infinite"> Use p = ∞</label>
+    <label for="time">Interpolation time t <output id="time-value" for="time">0.50</output>
+      <input id="time" type="range" min="0" max="1" step="0.01" value="0.5">
+      <span class="help">Each mass packet moves along its straight transport segment.</span>
+    </label>
+  </div>
+  <p id="regime" class="regime"></p>
+  <div class="top-plots">
+    <section class="panel" aria-labelledby="coupling-title">
+      <h3 id="coupling-title">Optimal coupling and its displacement interpolation</h3>
+      <canvas id="coupling-plot" role="img" aria-label="Source and target points, optimal transport edges, and intermediate transported particles."></canvas>
+      <p class="legend"><span class="source">Source</span><span class="target">Target</span><span class="moving">At time t</span></p>
+      <p class="caption">Edge thickness and particle area are proportional to transported mass.</p>
+    </section>
+    <section class="panel" aria-labelledby="covariance-title">
+      <h3 id="covariance-title">Displacement second moment S</h3>
+      <canvas id="covariance-plot" role="img" aria-label="Ellipse for the displacement second moment, and its two eigenvalues."></canvas>
+      <p class="caption">Ellipse semiaxes: √λ₁ and √λ₂. This is the uncentered second moment of displacement, not a centered covariance.</p>
+    </section>
+  </div>
+  <section class="panel cost-panel" aria-labelledby="cost-title">
+    <h3 id="cost-title">The complete optimization problem</h3>
+    <canvas id="cost-plot" role="img" aria-label="Spectral objective over all possible couplings, with its global minimum marked."></canvas>
+    <p class="caption">The black curve is γ<sub>p</sub>(S(s)); the orange dot is a global minimizer. The vertical scale adapts to p.</p>
+  </section>
+  <dl class="metrics">
+    <div><dt>Optimal s</dt><dd id="s-value">—</dd></div>
+    <div><dt>W<sub>γ</sub> = √γ<sub>p</sub>(S)</dt><dd id="distance-value">—</dd></div>
+    <div><dt>Eigenvalues λ₁, λ₂</dt><dd id="eigenvalue-value">—</dd></div>
+    <div><dt>Coupling π</dt><dd class="matrix" id="matrix-value">—</dd></div>
+  </dl>
+  <p id="status" class="status" role="status" aria-live="polite"></p>
+  <p class="caveat">Exactly two atoms per marginal makes the entire coupling polytope one dimensional. For p &gt; 1, a monotone derivative identifies the convex minimum. For ½ ≤ p &lt; 1, concavity implies that a global minimum is attained at an endpoint. No entropic regularization is used.</p>
+  <noscript>Enable JavaScript to change the exponent and see the exact two-by-two transport problem.</noscript>
+</main>
+<script src="core.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

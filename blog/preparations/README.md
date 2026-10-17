@@ -19,6 +19,25 @@ After changing article metadata or adding a preview, run
 `ruby scripts/build-blog-search.rb` from the repository root and include the
 updated catalogue. See `../README.md` for search authoring and verification.
 
+## Spectral Wasserstein distances
+
+`spectral-wasserstein-distances.html` presents the displacement second-moment
+definition, the cost-robust minimax reformulation, and a Benamou–Brenier proof
+using conditional Eulerian velocities. The paper's convex-gauge results are
+distinguished from the extension proved in the post: Schatten exponents
+`p >= 1/2` retain the metric and dynamic formula, whereas the convex robust
+formulation requires `p >= 1`. A three-measure example shows failure of the
+triangle inequality below `1/2`.
+
+`assets/spectral-transport/` solves the entire two-by-two coupling polytope,
+with an exponent slider, an operator-norm endpoint, displacement interpolation,
+and the uncentered second-moment ellipse. Concavity makes endpoint enumeration
+global below one; convex derivative bisection applies above one. The displayed
+tangent gap is a numerical estimate. Run `node tests/blog-spectral-transport.test.js`
+to verify covariance accumulation, optimization, derivatives, and mass conservation.
+`tests/blog-spectral-transport-browser.test.js` checks the embedded controls,
+zero-width lazy loading, and responsive sizing.
+
 ## Perspective transform
 
 `perspective-transform-on-measures.html` develops closed perspectives and their
