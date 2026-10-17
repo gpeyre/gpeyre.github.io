@@ -15,8 +15,8 @@ const shots=process.env.BLOG_SCREENSHOT_DIR||"/private/tmp";
       await page.locator('[data-blog-search][data-ready="true"]').waitFor();
       const input=page.getByLabel("Title, keyword, or topic"),status=page.locator("[data-search-status]"),cards=page.locator(".blog-search-result");
       const records=await page.evaluate(()=>window.BLOG_SEARCH_RECORDS);
-      assert.equal(records.length,48);
-      assert.match(await status.innerText(),/25 published articles · 23 forthcoming previews/);
+      assert.equal(records.length,49);
+      assert.match(await status.innerText(),/25 published articles · 24 forthcoming previews/);
       assert.equal(await page.locator("[data-blog-browse]").isVisible(),true);
       async function search(query){await input.fill(query);await page.locator("form[role=search]").evaluate(form=>form.requestSubmit());}
       await search("Sinkhorn");
@@ -34,7 +34,7 @@ const shots=process.env.BLOG_SCREENSHOT_DIR||"/private/tmp";
       assert.equal(await page.locator("[data-blog-browse]").isVisible(),true);
       assert.equal(await input.inputValue(),"");
       assert.equal(await input.evaluate(el=>el===document.activeElement),true);
-      for(const [query,title] of [["Dieuleveut","The covariance of SGD iterates"],["cappe","Tout comprendre"],["Fenchel Young","Inverse optimisation"],["ICNN","Convex neural networks"],["Sinkhorn gaussian","Sinkhorn on Gaussians"],["Boyer","How many tokens does attention need"]]){
+      for(const [query,title] of [["Dieuleveut","The covariance of SGD iterates"],["cappe","Tout comprendre"],["Fenchel Young","Inverse optimisation"],["ICNN","Convex neural networks"],["Sinkhorn gaussian","Sinkhorn on Gaussians"],["Boyer","How many tokens does attention need"],["heat JKO","The heat equation over quantiles"]]){
         await search(query);
         assert.match((await cards.allInnerTexts()).join(" "),new RegExp(title,"i"),query);
       }
@@ -78,7 +78,7 @@ const shots=process.env.BLOG_SCREENSHOT_DIR||"/private/tmp";
       await page.getByLabel("Published",{exact:true}).check();
       assert.equal(await cards.count(),25);
       await page.getByLabel("Forthcoming",{exact:true}).check();
-      assert.equal(await cards.count(),23);
+      assert.equal(await cards.count(),24);
       for(const record of records){
         const response=await page.request.get(base+record.url);
         assert.equal(response.status(),200,record.url);

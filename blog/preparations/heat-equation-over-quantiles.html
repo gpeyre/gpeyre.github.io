@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,follow">
+<meta name="keywords" content="heat equation, quantile function, inverse cumulative distribution, inverse CDF, one-dimensional optimal transport, monotone rearrangement, Wasserstein distance, W2, JKO scheme, Jordan Kinderlehrer Otto, Richard Jordan, David Kinderlehrer, Felix Otto, minimizing movements, implicit Euler, proximal step, Wasserstein gradient flow, Hilbert gradient flow, mass coordinates, Lagrangian coordinates, entropy, Shannon entropy, Boltzmann entropy, differential entropy, internal energy, nonlinear diffusion, porous medium equation, Gaussian mixture, Gaussian convolution, quantile trajectories, score function, Fisher information, entropy dissipation, Daniel Matthes, Horst Osberger, équation de la chaleur, fonction quantile">
+<meta name="description" content="Quantiles turn one-dimensional Wasserstein geometry into L2 geometry. The JKO entropy step then yields a nonlinear quantile formulation of heat, illustrated by a three-Gaussian mixture.">
+<title>The heat equation over quantiles — Alpha preview — Gabriel Peyré</title>
+<link rel="canonical" href="https://www.gpeyre.com/blog/preparations/heat-equation-over-quantiles.html">
+<link rel="stylesheet" href="assets/drafts.css">
+<script defer src="assets/drafts.js"></script>
+<script defer src="assets/idea-experiments.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+</head>
+<body>
+<header class="draft-header"><div class="wrap">
+<a class="draft-back" href="index.html">← Forthcoming posts</a>
+<p class="draft-status">Alpha preview · Work in progress</p>
+<p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
+<h1>The heat equation over quantiles</h1>
+<p class="subtitle">Follow the mass, rather than the density.</p>
+<p class="byline">Gabriel Peyré</p>
+</div></header>
+<main class="wrap"><article class="blog-prose">
+<p>The heat equation spreads a density through space. In one dimension, there is another way to watch it: follow the median, the first quartile, or any fixed fraction of the mass. These positions trace deterministic, ordered paths, even though heat can also be described by random Brownian motion.</p>
+<p>The Jordan–Kinderlehrer–Otto formulation makes this change of viewpoint particularly transparent. Heat is the Wasserstein gradient flow of negative entropy <a href="#ref-jko">[1]</a>. Quantiles turn the one-dimensional Wasserstein distance into an ordinary \(L^2\) distance. Put these two facts together, and the familiar linear heat equation becomes a nonlinear equation for a single increasing function:</p>
+\[
+ \partial_t q
+ =-\partial_s\!\left(\frac1{\partial_s q}\right)
+ =\frac{\partial_{ss}q}{(\partial_s q)^2}.
+\]
+<p>Let us derive this equation from the variational time step, explain its boundary behavior, and then watch it act on a mixture of three Gaussians.</p>
+
+<h2>Quantiles flatten one-dimensional transport</h2>
+<p>For a probability measure \(\alpha\in\mathcal P_2(\mathbb R)\), meaning that its second moment is finite, define its cumulative distribution and generalized quantile by</p>
+\[
+ F_\alpha(x)=\alpha(({-\infty},x]),
+ \qquad
+ q_\alpha(s)=\inf\{x:F_\alpha(x)\ge s\},
+ \quad 0\lt s\lt1.
+\]
+<p>The variable \(s\) labels a <em>fraction of mass</em>, not a spatial position. If \(S\) is uniform on \((0,1)\), then \(q_\alpha(S)\) has law \(\alpha\). In pushforward notation, \((q_\alpha)_\#ds=\alpha\): applying the map \(q_\alpha\) to uniform mass produces the desired distribution.</p>
+<p id="proposition-1"><strong>Proposition 1 (the quantile isometry).</strong> For any \(\alpha,\beta\in\mathcal P_2(\mathbb R)\),</p>
+\[
+ W_2(\alpha,\beta)^2
+ =\int_0^1|q_\alpha(s)-q_\beta(s)|^2\,ds.
+\]
+<p>Thus \(\mathcal P_2(\mathbb R)\) is isometric to the closed convex cone \(\mathcal C\subset L^2(0,1)\) of functions having a nondecreasing representative <a href="#ref-santambrogio">[2]</a>. Functions equal almost everywhere represent the same quantile.</p>
+<details class="blog-proof"><summary>Proof: sorted mass should be matched to sorted mass</summary><div class="blog-proof-body">
+<p>The coupling \((q_\alpha,q_\beta)_\#ds\) gives the displayed integral as an upper bound. To see optimality, first consider equally weighted finite point clouds. If \(x\le x'\) and \(y\le y'\), then</p>
+\[
+ |x-y'|^2+|x'-y|^2
+ -|x-y|^2-|x'-y'|^2
+ =2(x'-x)(y'-y)\ge0.
+\]
+<p>Uncrossing therefore makes the sorted assignment optimal. A coupling of equally weighted clouds is a convex combination of assignments, so splitting mass cannot do better. Approximating general quantiles in \(L^2\) by their averages on equal-length bins gives the same identity for arbitrary measures. Conversely, every nondecreasing \(L^2\) function is the quantile, up to null sets, of its pushforward of \(ds\). \(\square\)</p>
+</div></details>
+<p>For a smooth, strictly positive density \(\alpha=\rho\,dx\), differentiating \(F_\alpha(q_\alpha(s))=s\) gives the key identity</p>
+\[
+ \rho(q(s))\,q_s(s)=1.
+\]
+<p>A large spacing \(q_s\) means low density; a small spacing means high density.</p>
+
+<h2>The JKO step becomes a Hilbert-space proximal step</h2>
+<p>For an energy \(\mathcal E\) on measures and a time step \(\tau>0\), the JKO scheme chooses</p>
+\[
+ \alpha_{k+1}\in\operatorname*{argmin}_{\alpha\in\mathcal P_2(\mathbb R)}
+ \left\{\frac{W_2^2(\alpha,\alpha_k)}{2\tau}
+                  +\mathcal E(\alpha)\right\}.
+\]
+<p>The first term penalizes movement; the second rewards lower energy. This is the Wasserstein analogue of implicit Euler, developed in <a href="#ref-jko">[1]</a> and in the general theory of metric gradient flows <a href="#ref-ags">[3]</a>.</p>
+<p>Write \(\widetilde{\mathcal E}(q)=\mathcal E(q_\#ds)\). Proposition 1 makes the change of variables exact:</p>
+\[
+ q_{k+1}\in\operatorname*{argmin}_{q\in\mathcal C}
+ \left\{\frac{\|q-q_k\|_{L^2}^2}{2\tau}
+                   +\widetilde{\mathcal E}(q)\right\}.
+\]
+<p>There is no transport problem left inside the distance. We have an ordinary \(L^2\) variational step, with the monotonicity constraint that makes \(q\) a quantile. When the pulled-back energy is convex, this is convex optimization on a convex set.</p>
+
+<h2>From an internal energy to a quantile PDE</h2>
+<p>Consider an internal energy \(\mathcal E(\rho\,dx)=\int_{\mathbb R}U(\rho(x))\,dx\), with \(U(0)=0\) and \(U\in C^2((0,\infty))\). To compute its differential equation, assume a smooth, positive density and enough decay and integrability to justify the following operations. Set</p>
+\[
+ P(r)=rU'(r)-U(r).
+\]
+<p id="proposition-2"><strong>Proposition 2 (density and mass coordinates).</strong> In this smooth regime, the energy and its gradient flow can be written as</p>
+\[
+ \widetilde{\mathcal E}(q)
+ =\int_0^1q_s\,U(1/q_s)\,ds,
+ \qquad
+ q_t=-\partial_sP(1/q_s).
+\]
+<p>The corresponding density solves</p>
+\[
+ \rho_t=\partial_x\!\left(\rho\,\partial_xU'(\rho)\right)
+        =\partial_{xx}P(\rho).
+\]
+<details class="blog-proof"><summary>Proof: change variables, then integrate by parts</summary><div class="blog-proof-body">
+<p>Since \(x=q(s)\), \(dx=q_s\,ds\) and \(\rho(q(s))=1/q_s\), the energy formula follows. Put \(L(z)=zU(1/z)\); then \(L'(z)=-P(1/z)\). For a smooth variation \(\eta\) compactly supported in \((0,1)\),</p>
+\[
+ D\widetilde{\mathcal E}(q)[\eta]
+ =-\int_0^1P(1/q_s)\eta_s\,ds
+ =\int_0^1\partial_sP(1/q_s)\eta\,ds.
+\]
+<p>The negative \(L^2\) gradient is therefore \(-\partial_sP(1/q_s)\). Equivalently, define the velocity by \(v(q(s))=q_t(s)\). The chain rule gives</p>
+\[
+ \partial_sP(\rho(q(s)))
+ =U''(\rho(q(s)))\rho_x(q(s)),
+ \qquad v=-\partial_xU'(\rho).
+\]
+<p>Transporting the mass labels gives \(\rho_t+\partial_x(\rho v)=0\), hence the density equation. \(\square\)</p>
+</div></details>
+<p>If \(U\) is convex, then \(L''(z)=U''(1/z)/z^3\ge0\): the integrand in quantile coordinates is convex too. For example, \(U(r)=r^m/(m-1)\), \(m>1\), gives \(P(r)=r^m\), the porous-medium equation \(\rho_t=\partial_{xx}(\rho^m)\), and its mass-coordinate form \(q_t=-\partial_s(q_s^{-m})\).</p>
+<aside class="note"><p><strong>What is exact, and what is a smooth computation?</strong> The quantile JKO minimization on \(\mathcal C\) is an exact reformulation. The formulas involving \(q_s\) above describe its smooth, strictly increasing regime. For arbitrary measures, use the extended energy \(\mathcal E(q_\#ds)\), rather than assuming that a classical derivative alone captures the whole functional. Atoms, gaps in support, and singular parts require this distinction.</p></aside>
+
+<h2>Negative Shannon entropy gives heat</h2>
+<p>Take the Boltzmann entropy</p>
+\[
+ \mathcal H(\alpha)=\int_{\mathbb R}\rho\log\rho\,dx,
+ \qquad \alpha=\rho\,dx,
+\]
+<p>with value \(+\infty\) for measures without a density. This is the <em>negative</em> of differential Shannon entropy: minimizing \(\mathcal H\) favors spreading. We have \(U(r)=r\log r\), so \(P(r)=r\), and</p>
+\[
+ \widetilde{\mathcal H}(q)=-\int_0^1\log q_s\,ds.
+\]
+<p id="theorem-1"><strong>Theorem 1 (heat in quantile coordinates).</strong> For a smooth, positive heat solution with suitable decay, its quantile satisfies</p>
+\[
+ q_t=-\partial_s(1/q_s)=\frac{q_{ss}}{q_s^2}.
+\]
+<p>The corresponding smooth JKO step satisfies the implicit equation</p>
+\[
+ \frac{q_{k+1}-q_k}{\tau}
+ =-\partial_s\!\left(\frac1{\partial_s q_{k+1}}\right).
+\]
+<details class="blog-proof"><summary>Proof: the same variation, at the new time step</summary><div class="blog-proof-body">
+<p>Proposition 2 gives the continuous equation and \(\rho_t=\rho_{xx}\). For the discrete step, the first variation of the quadratic distance is \((q_{k+1}-q_k)/\tau\), while that of entropy is \(\partial_s(1/\partial_s q_{k+1})\). Their sum vanishes. Crucially, the right-hand side is evaluated at the <em>new</em> quantile, not the old one. \(\square\)</p>
+</div></details>
+<p>One can also check the equation directly: integrating \(\rho_t=\rho_{xx}\) from \(-\infty\) to \(x\) gives \(F_t=\rho_x\). Differentiating \(F(t,q(t,s))=s\) then gives</p>
+\[
+ q_t(t,s)=-\frac{\rho_x}{\rho}(t,q(t,s)).
+\]
+<p>The quantiles move with the negative <em>score</em> of the density. These deterministic paths never cross. They reproduce the same evolving laws as Brownian diffusion, but they are not Brownian sample paths.</p>
+<p>For a positive, full-support density with decaying tails, the natural endpoint behavior on the line is</p>
+\[
+ q(t,0+)=-\infty,\qquad q(t,1-)=+\infty,
+ \qquad 1/q_s\longrightarrow0.
+\]
+<p>This holds for heat at every positive time, in particular for the mixtures below. These are tail conditions, not finite Dirichlet values imposed at \(s=0,1\).</p>
+<p>Finally, the apparently nonlinear quantile equation retains a simple gradient-flow identity. With sufficient decay,</p>
+\[
+ \frac{d}{dt}\mathcal H(\alpha_t)
+ =-\int_0^1|q_t|^2\,ds
+ =-\int_{\mathbb R}\frac{|\rho_x|^2}{\rho}\,dx.
+\]
+<p>The squared \(L^2\) speed of the quantile is precisely the Fisher information of the density.</p>
+
+<h2>A Gaussian check: one JKO step is not one heat step</h2>
+<p>The exact heat solution is convolution with \(\mathcal N(0,2t)\). Thus, starting from \(\mathcal N(m,\sigma_0^2)\),</p>
+\[
+ q(t,s)=m+\sqrt{\sigma_0^2+2t}\,\Phi^{-1}(s),
+\]
+<p>where \(\Phi\) is the standard normal CDF. A finite JKO step is different.</p>
+<p id="proposition-3"><strong>Proposition 3 (the Gaussian JKO update).</strong> If \(\alpha_k=\mathcal N(m,\sigma_k^2)\), with \(\sigma_k>0\), the entropy JKO minimizer is Gaussian, with the same mean and standard deviation</p>
+\[
+ \sigma_{k+1}
+ =\frac{\sigma_k+\sqrt{\sigma_k^2+4\tau}}2.
+\]
+<details class="blog-proof"><summary>Proof: a global minimizer, not just a Gaussian ansatz</summary><div class="blog-proof-body">
+<p>Let a competing density have mean \(a\) and standard deviation \(b>0\). Cauchy–Schwarz applied to any coupling gives</p>
+\[
+ W_2^2(\alpha,\alpha_k)\ge(a-m)^2+(b-\sigma_k)^2.
+\]
+<p>Nonnegativity of its relative entropy with respect to \(\mathcal N(a,b^2)\) gives</p>
+\[
+ \mathcal H(\alpha)\ge-\tfrac12\log(2\pi e b^2).
+\]
+<p>Both bounds are attained simultaneously by \(\alpha=\mathcal N(a,b^2)\). The full optimization therefore reduces to \(a=m\) and</p>
+\[
+ \min_{b>0}\left\{\frac{(b-\sigma_k)^2}{2\tau}-\log b\right\}.
+\]
+<p>The strictly convex scalar objective has derivative \((b-\sigma_k)/\tau-1/b\). Its unique positive zero gives the formula. \(\square\)</p>
+</div></details>
+<p>In other words, JKO applies implicit Euler to \(\dot\sigma=1/\sigma\). The continuous solution has variance \(\sigma_0^2+2t\), but a single JKO step does <em>not</em> simply add \(2\tau\) to the variance. The two agree in the vanishing-step limit.</p>
+
+<h2>Numerical experimentation: follow the same mass over time</h2>
+<p>Start from three Gaussian components with unequal weights and widths. If their means, variances, and weights are \(m_j,\sigma_j^2,w_j\), the heat solution is exactly</p>
+\[
+ \rho_t(x)=\sum_{j=1}^3w_j\,
+ \frac{\exp\!\left(-\dfrac{(x-m_j)^2}{2(\sigma_j^2+2t)}\right)}
+      {\sqrt{2\pi(\sigma_j^2+2t)}}.
+\]
+<p>The initial-separation slider moves the component means from an overlapping mixture to three distinct modes. The point-count slider selects the mass levels \(s_i=(i+1/2)/n\), \(i=0,\ldots,n-1\). Play the flow or move time manually to compare the density, the quantile function, and the paths \(t\mapsto q(t,s_i)\).</p>
+<iframe class="idea-experiment" data-experiment="heat-quantiles" src="assets/heat-quantiles/index.html" title="Heat evolution of a three-Gaussian mixture: density, quantile function, and ordered mass trajectories" loading="lazy"></iframe>
+<p class="caption">The density is the analytic Gaussian-convolution solution; quantiles are obtained by numerical inversion of its CDF. No JKO time discretization or stochastic particle simulation is used. The finite time grid only draws the trajectories. Increasing \(n\) changes which quantiles are tracked, not the underlying heat flow; the endpoints \(s=0,1\), whose quantiles are infinite, are never sampled.</p>
+<p>This is also the starting point of genuinely Lagrangian numerical schemes: discretize the increasing map, rather than the Eulerian density, and inherit mass conservation from the parametrization. Variational convergence results and a broader overview can be found in Matthes–Osberger <a href="#ref-matthes">[4]</a> and Carrillo–Matthes–Wolfram <a href="#ref-carrillo">[5]</a>; for computational Wasserstein gradient flows more generally, see <a href="#ref-computational">[6]</a>.</p>
+
+<h2>References</h2>
+<ol class="references">
+<li id="ref-jko">Richard Jordan, David Kinderlehrer, and Felix Otto. <a href="https://doi.org/10.1137/S0036141096303359"><em>The Variational Formulation of the Fokker–Planck Equation</em></a>. SIAM Journal on Mathematical Analysis 29(1), 1–17, 1998.</li>
+<li id="ref-santambrogio">Filippo Santambrogio. <a href="https://link.springer.com/book/10.1007/978-3-319-20828-2"><em>Optimal Transport for Applied Mathematicians</em></a>. Birkhäuser, 2015.</li>
+<li id="ref-ags">Luigi Ambrosio, Nicola Gigli, and Giuseppe Savaré. <a href="https://link.springer.com/book/10.1007/978-3-7643-8722-8"><em>Gradient Flows in Metric Spaces and in the Space of Probability Measures</em></a>. Second edition, Birkhäuser, 2008.</li>
+<li id="ref-matthes">Daniel Matthes and Horst Osberger. <a href="https://arxiv.org/abs/1301.0747"><em>Convergence of a Variational Lagrangian Scheme for a Nonlinear Drift Diffusion Equation</em></a>. ESAIM: Mathematical Modelling and Numerical Analysis 48(3), 697–726, 2014.</li>
+<li id="ref-carrillo">José A. Carrillo, Daniel Matthes, and Marie-Therese Wolfram. <a href="https://arxiv.org/abs/2003.03803"><em>Lagrangian Schemes for Wasserstein Gradient Flows</em></a>. Handbook of Numerical Analysis 22, 271–311, 2021.</li>
+<li id="ref-computational">Gabriel Peyré and Marco Cuturi. <a href="https://arxiv.org/abs/1803.00567"><em>Computational Optimal Transport</em></a>. Foundations and Trends in Machine Learning 11(5–6), 355–607, 2019.</li>
+</ol>
+</article></main>
+<footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Published blog</a></div></footer>
+</body></html>

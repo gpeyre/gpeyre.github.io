@@ -19,6 +19,24 @@ After changing article metadata or adding a preview, run
 `ruby scripts/build-blog-search.rb` from the repository root and include the
 updated catalogue. See `../README.md` for search authoring and verification.
 
+## Heat equation over quantiles
+
+`heat-equation-over-quantiles.html` derives the one-dimensional quantile isometry,
+the exact JKO reformulation on the monotone cone in L2, and the smooth quantile
+PDE for internal energies. Negative Shannon entropy gives the heat equation;
+the Gaussian example distinguishes a finite JKO step from exact heat evolution.
+Numbered statements and folded proofs follow the shared mathematical style.
+
+`assets/heat-quantiles/` evaluates the analytic heat evolution of a three-Gaussian
+mixture and numerically inverts its CDF. Controls set 8–120 tracked mass ranks,
+the initial cluster separation, and time, with paused-by-default playback.
+The density, quantile graph, and noncrossing trajectories share rank colors.
+Changing the point count does not discretize or otherwise alter the underlying
+heat solution; neither infinite endpoint quantile is sampled. The experiment
+does not numerically solve the JKO scheme. Run `node tests/blog-heat-quantiles.test.js`
+and `tests/blog-heat-quantiles-browser.test.js` for CDF inversion, PDE consistency,
+Gaussian benchmarks, conservation laws, playback, and mobile layout.
+
 ## Spectral Wasserstein distances
 
 `spectral-wasserstein-distances.html` presents the displacement second-moment

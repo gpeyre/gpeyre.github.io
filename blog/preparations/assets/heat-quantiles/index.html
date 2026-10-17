@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <title>Heat flow in quantile coordinates — interactive experiment</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <p class="eyebrow">Numerical experiment · deterministic quantile trajectories</p>
+  <h2>Follow equal amounts of mass through the heat flow</h2>
+  <p class="intro">A mixture of three Gaussians diffuses. Each colored marker keeps the same cumulative mass rank s, so its position is q(s, t). These are deterministic transport paths, not Brownian sample paths.</p>
+  <div class="controls">
+    <label for="points">Tracked quantiles <output id="points-value" for="points">40</output>
+      <input id="points" type="range" min="8" max="120" step="1" value="40">
+      <span class="help">Ranks s = (i + ½)/n; changing n only changes the display.</span>
+    </label>
+    <label for="separation">Initial cluster separation a <output id="separation-value" for="separation">2.00</output>
+      <input id="separation" type="range" min="0.2" max="3.2" step="0.02" value="2">
+      <span class="help">Move from overlapping bumps to three distinct clusters.</span>
+    </label>
+    <label for="time">Heat time t <output id="time-value" for="time">0.00</output>
+      <input id="time" type="range" min="0" max="2" step="0.005" value="0">
+      <span class="help">Each component variance increases by 2t.</span>
+    </label>
+  </div>
+  <div class="playback">
+    <button id="play" type="button" aria-pressed="false">Play heat flow</button>
+    <button id="restart" type="button" class="secondary">Restart</button>
+    <p id="status" role="status" aria-live="polite">Paused at t = 0.00</p>
+  </div>
+  <section class="panel density-panel" aria-labelledby="density-title">
+    <div class="panel-heading"><h3 id="density-title">Density and equal-mass markers</h3><p class="legend"><span class="initial">Initial</span><span class="current">At time t</span></p></div>
+    <canvas id="density-plot" role="img" aria-label="Initial and evolving probability densities, with markers at the tracked quantiles."></canvas>
+    <p class="caption">Markers are not equally spaced in space: they crowd where the density is high. Color follows cumulative mass rank, from blue through teal to orange.</p>
+  </section>
+  <div class="lower-plots">
+    <section class="panel" aria-labelledby="quantile-title">
+      <h3 id="quantile-title">The quantile function q(s, t)</h3>
+      <canvas id="quantile-plot" role="img" aria-label="The evolving quantile function, with the initial quantile function in gray."></canvas>
+      <p class="caption">Horizontal axis: mass rank s. Vertical axis: position x. The curve stays increasing; the gray curve is q(s, 0).</p>
+    </section>
+    <section class="panel" aria-labelledby="trajectory-title">
+      <h3 id="trajectory-title">The paths t ↦ q(s, t)</h3>
+      <canvas id="trajectory-plot" role="img" aria-label="Time trajectories of the tracked quantiles, with a vertical cursor at the selected time."></canvas>
+      <p class="caption">Horizontal axis: heat time. Vertical axis: position x. Paths cannot cross, but they need not move outward at every instant.</p>
+    </section>
+  </div>
+  <dl class="metrics">
+    <div><dt>Total mass</dt><dd>1</dd></div>
+    <div><dt>Mean (conserved)</dt><dd id="mean-value">—</dd></div>
+    <div><dt>Variance</dt><dd id="variance-value">—</dd></div>
+    <div><dt>Variance increase</dt><dd id="increase-value">0.000</dd></div>
+  </dl>
+  <p class="method">Numerics: exact Gaussian convolution followed by numerical inversion of the mixture CDF. No time-discretized JKO scheme is used here. Curves show central quantiles only: the endpoint quantiles s = 0 and s = 1 are infinite.</p>
+  <noscript>Enable JavaScript to change the initial mixture, tracked quantiles, and heat time.</noscript>
+</main>
+<script src="core.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
