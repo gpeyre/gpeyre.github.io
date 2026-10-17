@@ -45,7 +45,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p>The Schatten family is especially transparent. If \(\lambda_1,\ldots,\lambda_d\) are the eigenvalues of \(S\succeq0\), define</p>
 \[
  \gamma_p(S)=\left(\sum_i\lambda_i^p\right)^{1/p},
- \qquad 0<p<\infty,
+ \qquad 0\lt p\lt \infty,
 \]
 \[
  \gamma_\infty(S)=\lambda_{\max}(S).
@@ -143,7 +143,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
                   \rho_0=\mu,\ \rho_1=\nu}}
  \mathcal E_\gamma(\rho,v).
 \]
-<p>Use narrowly continuous curves of probabilities and velocities with \(\int_0^1\int|v_t|^2\,d\rho_t\,dt<\infty\). This is Theorem 4.2 of the paper <a href="#ref-muon">[1]</a>, extending the classical formulation of Benamou and Brenier <a href="#ref-bb">[6]</a>. Here the energy has no factor \(1/2\), so its value is the squared distance.</p>
+<p>Use narrowly continuous curves of probabilities and velocities with \(\int_0^1\int|v_t|^2\,d\rho_t\,dt\lt \infty\). This is Theorem 4.2 of the paper <a href="#ref-muon">[1]</a>, extending the classical formulation of Benamou and Brenier <a href="#ref-bb">[6]</a>. Here the energy has no factor \(1/2\), so its value is the squared distance.</p>
 <details class="blog-proof"><summary>Proof: conditional Jensen in space, Jensen in time</summary><div class="blog-proof-body">
 <p><em>From a coupling to a flow.</em> Draw \((X,Y)\sim\pi\), put \(D=Y-X\), and move each pair along \(Z_t=X+tD\). Let \(\rho_t\) be the law of \(Z_t\). Its Eulerian velocity is</p>
 \[
@@ -178,8 +178,8 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p>Each integrand is a quadratic perspective. Taking their supremum gives a convex action in mass and momentum, while continuity becomes \(\partial_t\rho+\nabla\cdot m=0\), linear in the unknowns. The closed perspective extends the formula to measures; for singular \(Q\), the local vacuum cost is zero on \(\ker Q\) and infinite in the other directions. The full action still forces finite-energy momentum to be absolutely continuous with respect to mass, because \(\gamma\) bounds Euclidean kinetic energy from below.</p>
 
 <h2>Can the Schatten exponent be smaller than one?</h2>
-<p>Yes, with a precise change of scope. The paper uses matrix norms, hence \(p\ge1\). For \(0<p<1\), \(\gamma_p\) is a Schatten anti-norm on positive matrices: it is monotone and concave rather than convex <a href="#ref-antinorm">[8]</a>. The robust-cost theorem and convex coupling formulation above no longer apply. Nevertheless, the distance and dynamic statements extend further.</p>
-<p id="theorem-3"><strong>Theorem 3 (the half-Schatten threshold).</strong> Define \(\mathsf W_{\gamma_p}\) by the same static formula. For every \(p\in[1/2,\infty]\), it is a distance and satisfies the same Benamou–Brenier formula with action \(\mathcal E_{\gamma_p}\). For every \(0<p<1/2\), the triangle inequality can fail.</p>
+<p>Yes, with a precise change of scope. The paper uses matrix norms, hence \(p\ge1\). For \(0\lt p\lt 1\), \(\gamma_p\) is a Schatten anti-norm on positive matrices: it is monotone and concave rather than convex <a href="#ref-antinorm">[8]</a>. The robust-cost theorem and convex coupling formulation above no longer apply. Nevertheless, the distance and dynamic statements extend further.</p>
+<p id="theorem-3"><strong>Theorem 3 (the half-Schatten threshold).</strong> Define \(\mathsf W_{\gamma_p}\) by the same static formula. For every \(p\in[1/2,\infty]\), it is a distance and satisfies the same Benamou–Brenier formula with action \(\mathcal E_{\gamma_p}\). For every \(0\lt p\lt 1/2\), the triangle inequality can fail.</p>
 <details class="blog-proof"><summary>Proof: the square root lifts to a Schatten-2p norm</summary><div class="blog-proof-body">
 <p><em>The norm hidden inside the covariance.</em> For a square-integrable random vector \(Z\) on a probability space \(\Omega\), define</p>
 \[
@@ -218,7 +218,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 \[
  \mathsf W_{\gamma_p}(\mu_0,\mu_2)=2^{1/(2p)}.
 \]
-<p>The direct distance exceeds two exactly when \(p<1/2\), violating the triangle inequality. \(\square\)</p>
+<p>The direct distance exceeds two exactly when \(p\lt 1/2\), violating the triangle inequality. \(\square\)</p>
 </div></details>
 </div></details>
 <p>This extension does not restore convexity of the static coupling objective below one. A small example shows why. Transport the uniform pair \(\pm e_1\) to \(\pm e_2\). The two bijective matchings give</p>
@@ -226,7 +226,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
  S_\pm=\begin{pmatrix}1&\pm1\\\pm1&1\end{pmatrix},
  \qquad \gamma_p(S_\pm)=2.
 \]
-<p>Their equally weighted mixture gives \(I_2\), with \(\gamma_p(I_2)=2^{1/p}>2\) for \(p<1\). Hence no supremum of linear quadratic costs can represent this gauge there. A metric can survive even though its static optimization problem is nonconvex.</p>
+<p>Their equally weighted mixture gives \(I_2\), with \(\gamma_p(I_2)=2^{1/p}>2\) for \(p\lt 1\). Hence no supremum of linear quadratic costs can represent this gauge there. A metric can survive even though its static optimization problem is nonconvex.</p>
 
 <h2>Numerical experimentation: changing p changes the coupling</h2>
 <p>The example below uses two atoms per marginal, so the entire set of couplings can be displayed and optimized. This reveals a phenomenon that a search over matchings alone would miss: for \(p>1\), splitting mass can improve the spectral cost.</p>
@@ -246,7 +246,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 \]
 <p>Move \(p\) from \(1/2\) through \(1\) to the operator-norm endpoint. The figure minimizes \(\gamma_p(S(s))\), draws every positive coupling weight, and shows the ellipse and eigenvalues of the uncentered displacement matrix. The interpolation control moves each transported piece along its straight path.</p>
 <iframe class="idea-experiment" data-experiment="spectral-transport" title="Schatten-p spectral transport: optimal coupling, displacement matrix, and complete objective curve" src="assets/spectral-transport/index.html" loading="lazy"></iframe>
-<p class="caption">The full one-dimensional coupling problem is solved without entropy regularization. For \(p<1\), concavity makes one of the two endpoint matchings optimal. For \(p=1\), the objective is affine. For \(p>1\), the convex objective can have an interior minimizer; the figure solves it numerically and reports a tangent-gap estimate, computed in floating-point arithmetic. The plotted curve evaluates the actual spectral cost, without smoothing.</p>
+<p class="caption">The full one-dimensional coupling problem is solved without entropy regularization. For \(p\lt 1\), concavity makes one of the two endpoint matchings optimal. For \(p=1\), the objective is affine. For \(p>1\), the convex objective can have an interior minimizer; the figure solves it numerically and reports a tangent-gap estimate, computed in floating-point arithmetic. The plotted curve evaluates the actual spectral cost, without smoothing.</p>
 <p>At \(p=1\), the matching minimizes total squared displacement. For sufficiently large \(p>1\), the optimizer trades total energy for a smaller concentration in the dominant direction, and the plan becomes fractional. Below one, the preference reverses toward concentrated displacement spectra; in this example the preferred endpoint matching also changes as \(p\) varies. The slider stops at \(1/2\) because that is the sharp metric threshold proved above.</p>
 
 <h2>References</h2>
