@@ -1,75 +1,130 @@
 "use strict";
 const assert = require("node:assert/strict");
 const S = require("../blog/preparations/assets/spectral-transport/core.js");
-const close = (x, y, tolerance = 3e-11) => assert.ok(Math.abs(x - y) <= tolerance * Math.max(1, Math.abs(x), Math.abs(y)), x + " != " + y);
-
-// Direct coupling accumulation independently reconstructs the displayed second moment.
-for (const s of [0, .03, .2, .5, .87, 1]) {
-  const pi = S.coupling(s), q = [0, 0, 0];
-  pi.forEach(row => close(row.reduce((x, y) => x + y), .5));
-  for (let j = 0; j < 2; j++) close(pi[0][j] + pi[1][j], .5);
-  for (let i = 0; i < 2; i++) for (let j = 0; j < 2; j++) {
-    const d = S.source[i].map((x, k) => x - S.target[j][k]);
-    q[0] += pi[i][j] * d[0] ** 2; q[1] += pi[i][j] * d[0] * d[1]; q[2] += pi[i][j] * d[1] ** 2;
+const close = (x, y, tolerance = 3e-10) => assert.ok(Math.abs(x - y) <= tolerance * Math.max(1, Math.abs(x), Math.abs(y)), x + " != " + y);
+const dot = (a, b) => a[0] * b[0] + 2 * a[1] * b[1] + a[2] * b[2];
+function checkPlan(source, target, result) {
+  const n = source.length;
+  for (const row of result.plan) {
+    assert.ok(row.every(x => Number.isFinite(x) && x >= 0));
+    close(row.reduce((x, y) => x + y), 1 / n);
   }
-  S.covariance(s).forEach((v, k) => close(v, q[k]));
-  const eigen = S.eigenvalues(q);
-  assert.ok(eigen[0] >= eigen[1] && eigen[1] > 0);
-  close(eigen[0] + eigen[1], q[0] + q[2]);
-  close(eigen[0] * eigen[1], q[0] * q[2] - q[1] ** 2);
-  close(S.gamma(q, 1), q[0] + q[2]);
-  close(S.gamma(q, 2) ** 2, q[0] ** 2 + 2 * q[1] ** 2 + q[2] ** 2);
-  close(S.gamma(q, .5), q[0] + q[2] + 2 * Math.sqrt(q[0] * q[2] - q[1] ** 2));
-  close(S.gamma(q, Infinity), (q[0] + q[2] + Math.sqrt((q[0] - q[2]) ** 2 + 4 * q[1] ** 2)) / 2);
-}
-
-// The p=2 minimizer follows independently from a quadratic polynomial Tr Q(s)^2.
-const q0 = S.covariance(0), d = S.covariance(1).map((x, i) => x - q0[i]);
-const expectedP2 = -(q0[0] * d[0] + 2 * q0[1] * d[1] + q0[2] * d[2]) / (d[0] ** 2 + 2 * d[1] ** 2 + d[2] ** 2);
-close(S.optimize(2).s, expectedP2);
-assert.equal(S.optimize(1).s, 1);
-assert.equal(S.optimize(.5).s, 0);
-assert.equal(S.optimize(.75).s, 1);
-assert.ok(S.optimize(2).s > .61 && S.optimize(2).s < .62);
-assert.ok(S.optimize(Infinity).s > .56 && S.optimize(Infinity).s < .57);
-
-// For every displayed exponent: compare with the complete polytope sampled finely.
-for (const p of [.5, .525, .6, .75, .99, 1, 1.001, 1.025, 1.1, 1.5, 2, 4, 8, Infinity]) {
-  const result = S.optimize(p);
+  for (let j = 0; j < n; j++) close(result.plan.reduce((sum, row) => sum + row[j], 0), 1 / n);
+  S.planMoment(source, target, result.plan).forEach((v, k) => close(v, result.q[k]));
   close(result.distance ** 2, result.cost);
-  assert.ok(result.s >= 0 && result.s <= 1);
-  for (let k = 0; k <= 10000; k++) assert.ok(result.cost <= S.value(k / 10000, p) + 2e-10);
-  if (p > 1) assert.ok(result.gap < 1e-11);
-  for (let i = 0; i < 10; i++) {
-    const s = i / 10, t = (i + 1) / 10, middle = (s + t) / 2;
-    const residual = S.value(middle, p) - (S.value(s, p) + S.value(t, p)) / 2;
-    assert.ok(p < 1 ? residual >= -1e-11 : residual <= 1e-11);
+  close(result.eigenvalues[0] + result.eigenvalues[1], result.q[0] + result.q[2]);
+}
+function permutations(n) {
+  if (n === 1) return [[0]];
+  return permutations(n - 1).flatMap(rest => Array.from({ length: n }, (_, j) => [...rest.slice(0, j), n - 1, ...rest.slice(j)]));
+}
+function permutationPlan(permutation) {
+  return permutation.map(j => permutation.map((_, k) => Number(j === k) / permutation.length));
+}
+
+// The low-discrepancy clouds are deterministic and nested across slider values.
+const small = S.clouds(12), large = S.clouds(100);
+assert.deepEqual(small.source, large.source.slice(0, 12));
+assert.deepEqual(small.target, large.target.slice(0, 12));
+assert.deepEqual(S.clouds(48), S.clouds(48));
+assert.ok(new Set(large.source.map(x => x.join(","))).size === 100);
+
+// Independent brute force checks the Hungarian linear oracle, including signed costs.
+for (const n of [2, 3, 4, 5, 6]) {
+  const costs = Array.from({ length: n * n }, (_, i) => Math.sin(i * 1.79 + .7));
+  const value = pi => pi.reduce((sum, j, i) => sum + costs[i * n + j], 0);
+  close(value(S.assignment(costs, n)), Math.min(...permutations(n).map(value)));
+}
+
+// The original two-point geometry has a complete one-dimensional transport polytope.
+const source2 = [[1, 0], [-1, 0]], target2 = [[.25, 1.2], [.05, -.8]];
+const coupling2 = t => [[t / 2, (1 - t) / 2], [(1 - t) / 2, t / 2]];
+for (const p of [.5, .525, .75, .99, 1, 1.001, 1.5, 2, 4, 8, Infinity]) {
+  const r = S.solve(source2, target2, p, { tolerance: 1e-11, smoothing: 1e-8, maxIterations: 1000 });
+  checkPlan(source2, target2, r);
+  let exact = Infinity;
+  for (let k = 0; k <= 10000; k++) exact = Math.min(exact, S.gamma(S.planMoment(source2, target2, coupling2(k / 10000)), p));
+  assert.ok(r.cost <= exact + 2e-8, "two-point solution must agree with the complete polytope");
+  if (p >= 1) {
+    assert.ok(r.lowerBound <= exact + 1e-9);
+    assert.ok(r.gap < 2e-8);
+  } else {
+    assert.equal(r.certified, false);
+    assert.equal(r.gap, null);
+    assert.equal(r.lowerBound, null);
+    assert.equal(r.status, "multistart heuristic");
   }
 }
 
-// Independent central differences verify the spectral derivative used for optimization.
-for (const p of [1.01, 1.5, 2, 8, Infinity]) for (const s of [.05, .3, .65, .95]) {
-  const h = 1e-6;
-  close(S.derivative(s, p), (S.value(s + h, p) - S.value(s - h, p)) / (2 * h), 2e-7);
-}
-
-// The displayed interpolation conserves total mass and has the correct endpoint laws.
-for (const s of [0, .31, 1]) for (const t of [0, .4, 1]) {
-  const particles = S.interpolation(s, t);
-  close(particles.reduce((x, y) => x + y.mass, 0), 1);
-  const mean = [0, 0]; particles.forEach(({ mass, point }) => point.forEach((x, k) => { mean[k] += mass * x; }));
-  mean.forEach((x, k) => close(x, t * S.c[k]));
-  if (t === 0 || t === 1) for (let i = 0; i < 2; i++) {
-    const cloud = t ? S.target : S.source;
-    close(particles.filter(x => x.point.every((v, k) => v === cloud[i][k])).reduce((total, x) => total + x.mass, 0), .5);
+// Convex bounds and nonconvex multistart results versus every assignment for n=5.
+const tiny = S.clouds(5), allPlans = permutations(5).map(permutationPlan);
+for (const p of [.5, .75, 1, 1.5, 2, 8, Infinity]) {
+  const r = S.solve(tiny.source, tiny.target, p);
+  const bestAssignment = Math.min(...allPlans.map(plan => S.gamma(S.planMoment(tiny.source, tiny.target, plan), p)));
+  checkPlan(tiny.source, tiny.target, r);
+  if (p >= 1) {
+    assert.ok(r.lowerBound <= bestAssignment + 1e-10);
+    assert.ok(r.cost <= bestAssignment + r.gap + 1e-10);
+  } else {
+    // This data set is small enough to independently verify the heuristic's result.
+    // The application never extrapolates this check into a global guarantee.
+    close(r.cost, bestAssignment);
   }
 }
 
-// Homogeneity and extreme spectral scales are retained by the eigenvalue normalization.
-for (const p of [.5, 1, 2, 8, Infinity]) for (const factor of [1e-100, .01, 100, 1e100]) {
-  const q = [3 * factor, 0, factor];
-  close(S.gamma(q, p) / factor, S.gamma([3, 0, 1], p), 1e-10);
+// For convex p, the certificate brackets the global minimum, not just assignments.
+// Random feasible mixtures must therefore lie above the reported lower bound.
+for (const n of [12, 48, 100]) {
+  const { source, target } = S.clouds(n);
+  for (const p of [.5, .75, 1, 1.025, 1.5, 2, 8, Infinity]) {
+    const r = S.solve(source, target, p);
+    checkPlan(source, target, r);
+    if (p >= 1) {
+      assert.ok(r.certified && Number.isFinite(r.gap) && r.gap >= 0);
+      close(r.gap, r.cost - r.lowerBound);
+      assert.ok(r.gap <= .002 * Math.max(1, r.cost), "a useful numerical certificate is required");
+      if (p === 1) close(r.gap, 0);
+      if (p === Infinity) assert.ok(r.smoothingError > 0);
+      for (let k = 1; k <= 3; k++) {
+        const plan = source.map((_, i) => source.map((__, j) => .4 * Number(j === i) / n + .6 * Number(j === (i + k) % n) / n));
+        assert.ok(S.gamma(S.planMoment(source, target, plan), p) >= r.lowerBound - 1e-10);
+      }
+    }
+  }
 }
-assert.throws(() => S.covariance(-.1), RangeError);
+
+// The exponent changes the transport, not just the displayed norm of a fixed plan.
+const example = S.clouds(48), trace = S.solve(example.source, example.target, 1), balanced = S.solve(example.source, example.target, 2);
+assert.ok(balanced.q[2] > trace.q[2] + .08);
+assert.ok(Math.abs(balanced.q[1]) < Math.abs(trace.q[1]) - .04);
+assert.ok(S.gamma(balanced.q, 2) < S.gamma(trace.q, 2) - .01);
+assert.ok(balanced.supportSize > 1, "fractional spectral couplings must be permitted");
+
+// Interpolation preserves total mass, endpoint marginals, and the interpolated mean.
+for (const t of [0, .4, 1]) {
+  const particles = S.interpolation(example.source, example.target, balanced.plan, t);
+  close(particles.reduce((sum, item) => sum + item.mass, 0), 1);
+  for (let k = 0; k < 2; k++) {
+    const a = example.source.reduce((sum, x) => sum + x[k], 0) / 48;
+    const b = example.target.reduce((sum, x) => sum + x[k], 0) / 48;
+    close(particles.reduce((sum, item) => sum + item.mass * item.point[k], 0), (1 - t) * a + t * b);
+  }
+  if (t === 0 || t === 1) for (let i = 0; i < 48; i++) {
+    const field = t === 0 ? "source" : "target";
+    close(particles.filter(item => item[field] === i).reduce((sum, item) => sum + item.mass, 0), 1 / 48);
+  }
+}
+
+// Independent differences check packed spectral gradients, including infinity smoothing.
+const q = [.7, .15, .3], direction = [.2, -.1, -.07], h = 1e-6, smoothing = .002;
+for (const p of [.5, .75, 1, 1.5, 2, 8, Infinity]) {
+  const value = matrix => p === Infinity ? (matrix[0] + matrix[2] + Math.hypot(matrix[0] - matrix[2], 2 * matrix[1], smoothing)) / 2 : S.gamma(matrix, p);
+  close(dot(S.gradient(q, p, smoothing), direction),
+    (value(q.map((v, k) => v + h * direction[k])) - value(q.map((v, k) => v - h * direction[k]))) / (2 * h), 2e-7);
+}
+for (const p of [.5, 1, 2, 8, Infinity]) for (const factor of [1e-100, .01, 100, 1e100])
+  close(S.gamma([3 * factor, 0, factor], p) / factor, S.gamma([3, 0, 1], p), 1e-10);
+assert.throws(() => S.clouds(1), RangeError);
 assert.throws(() => S.gamma([1, 0, 1], 0), RangeError);
-console.log("Spectral transport: exact coupling, global optimization, derivatives, interpolation, and scale checks passed.");
+assert.throws(() => S.solve([[0, 0]], [[1, 1]], 2), RangeError);
+console.log("Spectral point-cloud transport: assignment oracle, feasible plans, convex certificates, nonconvex labels, interpolation, and gradients passed.");

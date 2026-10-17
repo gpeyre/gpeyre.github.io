@@ -29,12 +29,15 @@ distinguished from the extension proved in the post: Schatten exponents
 formulation requires `p >= 1`. A three-measure example shows failure of the
 triangle inequality below `1/2`.
 
-`assets/spectral-transport/` solves the entire two-by-two coupling polytope,
-with an exponent slider, an operator-norm endpoint, displacement interpolation,
-and the uncentered second-moment ellipse. Concavity makes endpoint enumeration
-global below one; convex derivative bisection applies above one. The displayed
-tangent gap is a numerical estimate. Run `node tests/blog-spectral-transport.test.js`
-to verify covariance accumulation, optimization, derivatives, and mass conservation.
+`assets/spectral-transport/` compares two intricate, uniformly weighted point
+clouds, with point-count and exponent sliders, an operator-norm endpoint,
+displacement interpolation, and the uncentered second-moment ellipse. A Hungarian
+assignment oracle supplies conditional-gradient steps for the convex cases.
+The infinity endpoint uses smooth spectral approximation with its error included
+in the reported numerical optimality bound. Below one, multistart search returns
+a feasible matching without claiming global optimality. No entropy is added.
+Run `node tests/blog-spectral-transport.test.js` to verify spectral calculations,
+optimization certificates, marginal constraints, and mass conservation.
 `tests/blog-spectral-transport-browser.test.js` checks the embedded controls,
 zero-width lazy loading, and responsive sizing.
 

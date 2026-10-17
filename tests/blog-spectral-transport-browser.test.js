@@ -32,23 +32,44 @@ const base=process.env.BLOG_PREVIEW_URL||"http://127.0.0.1:4192";
     await iframe.scrollIntoViewIfNeeded();
     await page.waitForFunction(()=>document.querySelector("iframe").dataset.ready==="true");
     const frame=await(await iframe.elementHandle()).contentFrame();
+    const ready=()=>frame.waitForFunction(()=>document.querySelector("#status")?.dataset.state==="ready");
+    await ready();
+    assert.equal(await frame.locator("#cost-plot").count(),0,"the complete-objective curve was removed");
+    assert.equal(await frame.getByText("The complete optimization problem",{exact:true}).count(),0);
+    async function control(id,value){
+      await frame.locator("#"+id).evaluate((node,input)=>{node.value=input;node.dispatchEvent(new Event("input",{bubbles:true}));},value);
+      await ready();
+    }
     async function exponent(p){
-      await frame.locator("#exponent").evaluate((node,value)=>{node.value=value;node.dispatchEvent(new Event("input",{bubbles:true}));},p);
+      await control("exponent",p);
       assert.ok(Number.isFinite(+(await frame.locator("#distance-value").textContent())));
     }
+    for(const n of [12,48,100]){
+      await control("points",n);
+      assert.equal(+(await frame.locator("#points-value").textContent()),n);
+      assert.ok(+(await frame.locator("#support-value").textContent())>=n,"the displayed coupling must represent the whole cloud");
+    }
+    await control("points",48);
     for(const p of [.5,.75,1,1.05,1.5,2,8]){
       await exponent(p);
-      const s=+(await frame.locator("#s-value").textContent());
-      assert.ok(s>=0&&s<=1);
-      if(p===.5)assert.equal(s,0);
-      if(p===1)assert.equal(s,1);
-      if(p===2)assert.ok(s>.61&&s<.62);
+      assert.ok(+(await frame.locator("#cost-value").textContent())>0);
+      const support=+(await frame.locator("#support-value").textContent());
+      if(p<=1)assert.equal(support,48,"matching cases have one edge per point");
+      else assert.ok(support>=48);
+      if(p<1)assert.match(await frame.locator("#status").textContent(),/local|candidate|not.*global/i);
     }
     await frame.locator("#infinite").check();
+    await ready();
     assert.equal(await frame.locator("#exponent").isDisabled(),true);
     assert.equal((await frame.locator("#exponent-value").textContent()).trim(),"∞");
     await frame.locator("#infinite").uncheck();
-    for(const t of [0,.5,1])await frame.locator("#time").evaluate((node,value)=>{node.value=value;node.dispatchEvent(new Event("input",{bubbles:true}));},t);
+    await ready();
+    const status=await frame.locator("#status").textContent();
+    for(const t of [0,.5,1]){
+      await control("time",t);
+      assert.equal(+(await frame.locator("#time-value").textContent()),t);
+      assert.equal(await frame.locator("#status").textContent(),status,"interpolation must not re-solve the coupling");
+    }
     // Reproduce an iframe whose script runs before it has a usable layout width.
     await iframe.evaluate(node=>node.style.width="0px");
     await frame.waitForFunction(()=>document.querySelector("canvas").clientWidth<80);
@@ -65,6 +86,6 @@ const base=process.env.BLOG_PREVIEW_URL||"http://127.0.0.1:4192";
       assert.ok(size.height>=size.content-2,"iframe clips the experiment");
     }
     assert.deepEqual(errors,[]);
-    console.log("Spectral figure passed: exponent regimes, infinity, interpolation, zero-width loading, responsive height, and mobile layout.");
+    console.log("Spectral clouds passed: point counts, exponent regimes, infinity, interpolation, removed cost plot, zero-width loading, and mobile layout.");
   }finally{await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});

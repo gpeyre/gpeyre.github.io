@@ -229,25 +229,20 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p>Their equally weighted mixture gives \(I_2\), with \(\gamma_p(I_2)=2^{1/p}>2\) for \(p\lt 1\). Hence no supremum of linear quadratic costs can represent this gauge there. A metric can survive even though its static optimization problem is nonconvex.</p>
 
 <h2>Numerical experimentation: changing p changes the coupling</h2>
-<p>The example below uses two atoms per marginal, so the entire set of couplings can be displayed and optimized. This reveals a phenomenon that a search over matchings alone would miss: for \(p>1\), splitting mass can improve the spectral cost.</p>
-<p>Let \(a=(1,0)\), \(b=(0.1,1)\), \(c=(0.15,0.2)\), and set</p>
+<p>How does the spectral gauge change transport between more intricate distributions? The figure below uses two point clouds with several clusters and curved structure. Change the number of points in each cloud, then move \(p\) from \(1/2\) through \(1\) to the operator-norm endpoint. The same clouds are kept when \(p\) changes, so the differences come from the transport geometry.</p>
+<p>For \(n\) points in each cloud, use the empirical measures</p>
 \[
- \mu=\tfrac12(\delta_a+\delta_{-a}),\qquad
- \nu=\tfrac12(\delta_{c+b}+\delta_{c-b}).
+ \mu_n=\frac1n\sum_{i=1}^n\delta_{x_i},\qquad
+ \nu_n=\frac1n\sum_{j=1}^n\delta_{y_j},
 \]
-<p>All couplings are parameterized by \(s\in[0,1]\):</p>
+<p>A coupling has nonnegative weights \(\pi_{ij}\), with every row and column summing to \(1/n\). Its displacement matrix is</p>
 \[
- \pi_s=\tfrac12\begin{pmatrix}s&1-s\\1-s&s\end{pmatrix}.
+ S_\pi=\sum_{i,j}\pi_{ij}(y_j-x_i)(y_j-x_i)^\top.
 \]
-<p>Their displacement matrix is explicitly</p>
-\[
- S(s)=cc^\top+s(a-b)(a-b)^\top
-                +(1-s)(a+b)(a+b)^\top.
-\]
-<p>Move \(p\) from \(1/2\) through \(1\) to the operator-norm endpoint. The figure minimizes \(\gamma_p(S(s))\), draws every positive coupling weight, and shows the ellipse and eigenvalues of the uncentered displacement matrix. The interpolation control moves each transported piece along its straight path.</p>
-<iframe class="idea-experiment" data-experiment="spectral-transport" title="Schatten-p spectral transport: optimal coupling, displacement matrix, and complete objective curve" src="assets/spectral-transport/index.html" loading="lazy"></iframe>
-<p class="caption">The full one-dimensional coupling problem is solved without entropy regularization. For \(p\lt 1\), concavity makes one of the two endpoint matchings optimal. For \(p=1\), the objective is affine. For \(p>1\), the convex objective can have an interior minimizer; the figure solves it numerically and reports a tangent-gap estimate, computed in floating-point arithmetic. The plotted curve evaluates the actual spectral cost, without smoothing.</p>
-<p>At \(p=1\), the matching minimizes total squared displacement. For sufficiently large \(p>1\), the optimizer trades total energy for a smaller concentration in the dominant direction, and the plan becomes fractional. Below one, the preference reverses toward concentrated displacement spectra; in this example the preferred endpoint matching also changes as \(p\) varies. The slider stops at \(1/2\) because that is the sharp metric threshold proved above.</p>
+<p>Edges show the computed coupling, with thickness indicating transported mass. Green particles follow the straight-segment interpolation. The ellipse summarizes the directions of displacement, not the shape of either marginal; its scale stays fixed when \(p\) changes.</p>
+<iframe class="idea-experiment" data-experiment="spectral-transport" title="Schatten-p transport between multi-cluster point clouds: coupling, interpolation, and displacement matrix" src="assets/spectral-transport/index.html" loading="lazy"></iframe>
+<p class="caption">No entropy regularization is used. At \(p=1\), a linear assignment gives quadratic optimal transport. For finite \(p>1\), conditional-gradient steps combine assignments and report a convex optimality-gap estimate. At \(p=\infty\), a smooth spectral approximation is used internally, with its approximation error included in the bound. All displayed costs evaluate the actual requested gauge.</p>
+<p>For \(p\lt 1\), concavity guarantees that some optimal plan is a matching, but finding the best one is a nonconvex problem. Here several initializations are refined and the best candidate is shown, without a global-optimality claim. Its displayed cost is an upper bound on the true optimum. Above one, mass splitting is allowed and can help balance the displacement spectrum. The slider stops at \(1/2\), the sharp metric threshold proved above.</p>
 
 <h2>References</h2>
 <ol class="references">
