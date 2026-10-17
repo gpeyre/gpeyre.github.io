@@ -3,20 +3,45 @@
 const assert = require("node:assert/strict");
 const { chromium } = require(process.env.BLOG_PLAYWRIGHT_PATH || "playwright");
 const base = process.env.BLOG_PREVIEW_URL || "http://127.0.0.1:4192";
+const publishedPath = "/blog/2026/10/18/heat-equation-over-quantiles/";
+const canonicalURL = "https://www.gpeyre.com" + publishedPath;
 (async () => {
   const browser = await chromium.launch({ headless: true, channel: "chrome" });
   try {
     const page = await browser.newPage({ viewport: { width: 1200, height: 1000 } }), errors = [];
     page.on("pageerror", error => errors.push(error.message));
-    await page.goto(base + "/blog/preparations/heat-equation-over-quantiles.html");
+    const oldResponse = await page.request.get(base + "/blog/preparations/heat-equation-over-quantiles.html");
+    assert.equal(oldResponse.status(), 200, "the old preview URL remains available");
+    const redirect = await page.evaluate(html => {
+      const doc = new DOMParser().parseFromString(html, "text/html");
+      return { refresh: doc.querySelector('meta[http-equiv="refresh"]')?.content,
+        canonical: doc.querySelector('link[rel="canonical"]')?.getAttribute("href"),
+        fallback: doc.querySelector("p a")?.getAttribute("href") };
+    }, await oldResponse.text());
+    assert.equal(redirect.refresh, "0; url=" + publishedPath);
+    assert.equal(redirect.canonical, canonicalURL);
+    assert.equal(redirect.fallback, publishedPath, "the old preview has a usable fallback link");
+    await page.goto(base + publishedPath);
+    assert.equal(await page.locator(".blog-eyebrow time").getAttribute("datetime"), "2026-10-18");
+    assert.equal(await page.locator('link[rel="canonical"]').getAttribute("href"), canonicalURL);
+    assert.equal(await page.locator("h1").innerText(), "The heat equation over quantiles");
+    assert.equal(await page.locator('meta[name="robots"][content*="noindex"]').count(), 0);
     await page.waitForFunction(() => window.MathJax?.isReady);
     await page.evaluate(() => new Promise(resolve => MathJax.Hub.Queue(resolve)));
     assert.equal(await page.locator(".MathJax_Error,.merror").count(), 0);
+    assert.ok(await page.evaluate(() => MathJax.Hub.getAllJax().length > 60), "the published article must retain its typeset equations");
     assert.ok(await page.locator("details.blog-proof").count() >= 4);
     assert.equal(await page.locator("details.blog-proof[open]").count(), 0, "proofs start folded");
     await page.locator("details.blog-proof").evaluateAll(nodes => nodes.forEach(node => node.open = true));
     await page.evaluate(() => new Promise(resolve => MathJax.Hub.Queue(resolve)));
     assert.equal(await page.locator(".MathJax_Error,.merror").count(), 0, "unfolded proofs render their maths");
+    assert.ok(await page.locator(".MathJax_SVG_Display").count() >= 20, "centered equations must remain display maths after Markdown conversion");
+    const rawText = await page.locator("article").evaluate(node => {
+      const copy = node.cloneNode(true);
+      copy.querySelectorAll("script,style,.MathJax_SVG,.MathJax_Preview,.MathJax_SVG_Display").forEach(item => item.remove());
+      return copy.textContent;
+    });
+    assert.doesNotMatch(rawText, /\\[()[\]]|\$\$/, "Markdown conversion must not leave raw math delimiters");
     await page.locator("details.blog-proof").evaluateAll(nodes => nodes.forEach(node => node.open = false));
     const iframe = page.locator("iframe.idea-experiment");
     await iframe.scrollIntoViewIfNeeded();
@@ -78,6 +103,6 @@ const base = process.env.BLOG_PREVIEW_URL || "http://127.0.0.1:4192";
       assert.ok(size.height >= size.content - 2, "iframe must not clip the experiment");
     }
     assert.deepEqual(errors, []);
-    console.log("Heat quantiles passed: playback, quantile ordering, exact-heat controls, marker-count invariance, zero-width iframe, and mobile layout.");
+    console.log("Heat quantiles passed: publication date, old-preview redirect, typeset mathematics, folded proofs, playback, quantile ordering, exact-heat controls, marker-count invariance, zero-width iframe, and mobile layout.");
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

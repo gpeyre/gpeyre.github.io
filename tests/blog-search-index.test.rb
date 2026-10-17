@@ -52,6 +52,11 @@ class BlogSearchIndexTest < Minitest::Test
     assert_equal "published", independence.first["status"]
     assert_equal "2026-10-17", independence.first["date"]
     assert_equal "/blog/2026/10/17/when-independence-is-optimal/", independence.first["url"]
+    heat = @records.select { |post| post["url"].include?("heat-equation-over-quantiles") }
+    assert_equal 1, heat.size
+    assert_equal "published", heat.first["status"]
+    assert_equal "2026-10-18", heat.first["date"]
+    assert_equal "/blog/2026/10/18/heat-equation-over-quantiles/", heat.first["url"]
   end
 
   def test_missing_and_duplicate_keywords_fail

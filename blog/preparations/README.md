@@ -21,11 +21,13 @@ updated catalogue. See `../README.md` for search authoring and verification.
 
 ## Heat equation over quantiles
 
-`heat-equation-over-quantiles.html` derives the one-dimensional quantile isometry,
-the exact JKO reformulation on the monotone cone in L2, and the smooth quantile
-PDE for internal energies. Negative Shannon entropy gives the heat equation;
-the Gaussian example distinguishes a finite JKO step from exact heat evolution.
-Numbered statements and folded proofs follow the shared mathematical style.
+The heat article was published with the date 18 October 2026. Its source is now
+`../_posts/2026-10-18-heat-equation-over-quantiles.md`; the former preview
+`heat-equation-over-quantiles.html` redirects to the published URL and is excluded
+from the forthcoming list and search catalogue. The article derives the quantile
+isometry, the exact JKO reformulation on the monotone cone in L2, and the smooth
+quantile PDE for internal energies. Its Gaussian example distinguishes a finite
+JKO step from exact heat evolution.
 
 `assets/heat-quantiles/` evaluates the analytic heat evolution of a three-Gaussian
 mixture and numerically inverts its CDF. Controls set 8–120 tracked mass ranks,
