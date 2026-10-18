@@ -41,6 +41,108 @@ catalogues, `node tests/blog-search-core.test.js` for matching/ranking, and
 `ruby tests/blog-search-index.test.rb /path/to/built/site` for metadata and
 link coverage. Browser checks live in `tests/blog-search-browser.test.js`.
 
+## Daily publication and Bluesky announcements
+
+The local Codex schedule targets 07:00 Europe/Paris. Keep it paused until the
+dedicated Bluesky Keychain connection and unattended permissions have been
+verified. The Mac must be awake and online with Codex running. Scheduled time
+is the start of the workflow, not a guarantee of an announcement at that minute.
+
+`announcement-queue.md` is the ordered editorial queue. Only an entry bearing
+`- [x] Ready to publish` is approved. Unchecked entries are never selected;
+an empty ready queue is a quiet no-op. Checkboxes approve the paired article
+and its quoted announcement. Keep each original preview URL in the queue;
+replace it with the final dated URL only in the outgoing message.
+
+`publication-log.json` is the durable retry journal. It contains version 1,
+timezone `Europe/Paris`, and a `publications` array. Before changing an article,
+record its `slug`, `title`, Paris-calendar `date`, canonical `url`, final
+`message`, `source_sha256`, and status `prepared`; initialize
+`publication_commit`, `bluesky_uri`, and `bluesky_cid` to null. Resume a pending
+entry before selecting another. Never change its original date on a retry,
+and never select a second article for a date already present in the journal.
+Also record the baseline `base_commit` and the exact planned relative `files`
+to change, so an interrupted run can be reconciled without claiming unrelated
+edits. The five allowed paths are the dated Markdown article, its old HTML
+preview redirect, `blog/preparations/index.html`, `js/blog-search-index.js`
+and `blog/publication-log.json`. After editing and checking the article, record
+`working_sha256`, a path-to-SHA-256 dictionary for the four content files
+(not the changing journal), before the publication commit. The source hash
+must match the original preview in `base_commit`.
+Do not run publication jobs concurrently.
+
+Before any publication change, acquire the shared lock with
+`python3 scripts/blog-bluesky.py lock`. Keep the returned nonsecret
+owner token for the entire run, including deployment and the final journal
+push. An existing `blog/.publication-run.lock` is a stop condition; never
+automatically steal or remove a stale lock. Release only your own lock using
+`python3 scripts/blog-bluesky.py unlock --token TOKEN` when the run has
+stopped. An interrupted run may leave a lock requiring explicit user-reviewed
+recovery. The connection-only check does not require this lock.
+
+Promote the selected HTML preview to a dated Markdown post, preserving content,
+numbered statements, folded proofs, and experiments. Preserve a redirect from
+the old preview; remove its forthcoming card and regenerate search. Use the
+established relative-url convention for embedded assets. Verify the Jekyll
+build, feeds, search, and the published page's mathematics and interactive
+figure before pushing. A substantive content problem is a reason to stop and
+ask, not permission to invent a new proof or rewrite an approved article.
+
+Inspect Git status first. Preserve all unrelated edits, including Finder files;
+never stage everything or discard changes. Stop if existing edits overlap the
+selected article, index, search catalogue, or journal, except for changes that
+can be verified as this same pending entry's own work using its baseline,
+recorded file list, source hash and publication commit. If attribution is
+uncertain, stop and ask instead of discarding or adopting edits. Commit only
+explicitly enumerated publication files. If local commits diverge from the remote, stop
+instead of rebasing or force-pushing. Record the publication's commit hash.
+
+Use `scripts/blog-publication-git.py` for unattended Git operations, not a
+general Git permission. Its `check` is read-only; `probe` also tests push access
+with a fixed dry run, without sending a commit. Publication mutations use
+`commit-publication`, `commit-log` and `push`, each with `--slug SLUG`,
+`--date YYYY-MM-DD` and the owning `--lock-token TOKEN`. The tool fixes the
+repository, remote and branch, verifies the approved journal and exact file
+manifest, and rejects unrelated commits, staged files and force-push options.
+
+The local command rules are in
+`/Users/gpeyre/.codex/rules/blog-publication.rules`. They permit only the
+absolute `/opt/homebrew/bin/python3` invocation of the dedicated Bluesky
+`check`/`announce` commands and the constrained Git helper. They do not permit
+arbitrary Python, Git or Keychain commands, and do not change the sandbox mode.
+Codex must be restarted after installing or changing these rules. Keep the
+schedule paused until a fresh session's noninteractive connection and Git dry
+run succeed; a successful one-off escalated check alone is insufficient.
+
+After pushing, wait for the matching GitHub Pages deployment and verify the
+actual article's canonical URL, title, and publication date. Then set its
+journal status to `published` with the 40-character `publication_commit`.
+The scoped Git helper's `deployment --commit SHA` reads only the public
+GitHub API for this repository. It requires the matching Pages workflow and
+its `deploy` job to succeed; it exits with status 2 while pending or failed.
+It never requests a GitHub token, starts a build or changes a deployment.
+The announcement helper independently checks the live page and readiness:
+
+```sh
+python3 scripts/blog-bluesky.py check
+python3 scripts/blog-bluesky.py announce --slug SLUG --date YYYY-MM-DD
+```
+
+The first command authenticates without posting. The second accepts only an
+approved, published journal entry. It uses a stable Bluesky record key and
+create-only semantics; identical retries succeed without another post, while
+conflicting content stops. It records `announced`, the public record URI and
+CID atomically. Save the updated journal in a separate exact-path Git commit
+and push, without selecting another article in the same run. If that final
+commit fails, preserve the journal and resume its synchronization next time.
+
+Credentials come only from the dedicated macOS Keychain item
+`codex-bluesky-blog`, account `gabrielpeyre.bsky.social`. Never put passwords or
+session tokens in the queue, journal, automation prompt, logs, or Git. A missing
+item, denied access, or network permission failure is a stop condition, not a
+reason to search for other credentials or weaken permissions. The queue and
+journal are excluded from the public website build.
+
 ## Subscribe
 
 The blog publishes RSS 2.0 at /blog/rss.xml and Atom 1.0 at /blog/atom.xml.

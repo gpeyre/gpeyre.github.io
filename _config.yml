@@ -16,7 +16,7 @@ paginate: 5
 # Keep deliberately future-dated posts visible when publishing them.
 future: true
 # Forthcoming articles are public static previews; exclude their authoring notes.
-exclude: ["node_modules", "blog/blog-todo.md", "blog/README.md", "blog/ideas", "blog/preparations/README.md", "tests", "scripts"]
+exclude: ["node_modules", "blog/blog-todo.md", "blog/README.md", "blog/announcement-queue.md", "blog/publication-log.json", "blog/.publication-run.lock", "blog/ideas", "blog/preparations/README.md", "tests", "scripts"]
 
 defaults:
   - scope:
