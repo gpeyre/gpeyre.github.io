@@ -5,12 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,follow">
   <meta name="keywords" content="optimal transport convex extension, Kantorovich transport, convex envelope, lower convex roof, joint convexity, separate convexity, weak lower semicontinuity, weak convergence, Dirac masses, coupling decomposition, barycentric representation, compact metric spaces, probability measures, finite-support approximation, marginal constraints, mixture convexity, variance concavity, transport cost versus distance, two-point transport, Kantorovich duality, supporting hyperplanes, affine minorants, dual potentials, linear programming, Giuseppe Savaré, Giacomo Enrico Sodini, Cédric Villani, Gabriel Peyré, extension convexe, enveloppe convexe, semi-continuité inférieure, décomposition convexe, dualité de Kantorovich">
-  <meta name="description" content="Kantorovich transport is the largest jointly convex lower-semicontinuous extension of a pointwise cost, with a short proof and a two-point envelope experiment.">
+  <meta name="description" content="Kantorovich transport is the largest jointly convex lower-semicontinuous extension of a pointwise cost, with a short proof and a complete two-point example.">
   <title>Optimal transport as a convex extension — Alpha preview — Gabriel Peyré</title>
   <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/optimal-transport-convex-extension.html">
   <link rel="stylesheet" href="assets/drafts.css">
   <script defer src="assets/drafts.js"></script>
-  <script defer src="assets/idea-experiments.js"></script>
   <script type="text/x-mathjax-config">
     MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});
   </script>
@@ -141,11 +140,6 @@
 <p>The extra term is nonnegative, proving concavity. On a fixed compact support, both \(x\) and \(|x|^2\) are bounded continuous test functions, so the mean and variance vary continuously under weak convergence. Subtracting the variance therefore preserves both convexity and lower semicontinuity of \(T_c\).</p>
 </div></details>
 <p>If one also wants nonnegative values, use \(\max(F_\varepsilon,0)\). The maximum of two convex lower-semicontinuous functions has the same properties, and the Dirac values remain unchanged because \(c\ge0\).</p>
-<figure>
-  <iframe class="idea-experiment" data-experiment="envelope" title="Two-point optimal transport as a convex envelope" src="assets/ot-lab/index.html?topic=envelope" loading="lazy"></iframe>
-  <figcaption>Move the two marginal probabilities across the square. The transport surface is \(|a-b|\); the section at the current \(b\) makes its kink visible. The comparison extension is \(\max(0,|a-b|-0.6[a(1-a)+b(1-b)])\). It is convex and agrees at all four Dirac corners, yet can be strictly smaller inside. Both formulas are evaluated exactly.</figcaption>
-</figure>
-
 <h2>Couplings as certificates of convex decomposition</h2>
 <p>Assign cost \(c(x,y)\) to the pairs \((\delta_x,\delta_y)\), and \(+\infty\) to every other pair of laws. Taking the convex lower-semicontinuous envelope of this function produces \(T_c\). On finite spaces, this is the familiar operation of taking the lower convex roof of finitely many points. On general compact spaces, weak limits complete that construction.</p>
 <p>The coupling is therefore more than an auxiliary variable introduced to relax a matching constraint. It is the certificate of a convex decomposition. Its marginal constraints say exactly that the decomposition averages to the two distributions we started with. This is one reason linear programming appears so naturally in optimal transport <a href="#ref-computational">[3]</a>.</p>

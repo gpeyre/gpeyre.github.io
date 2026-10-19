@@ -1666,7 +1666,7 @@ window.BLOG_SEARCH_RECORDS = [
     "status": "forthcoming",
     "date": null,
     "title": "Optimal transport as a convex extension",
-    "description": "Kantorovich transport is the largest jointly convex lower-semicontinuous extension of a pointwise cost, with a short proof and a two-point envelope experiment.",
+    "description": "Kantorovich transport is the largest jointly convex lower-semicontinuous extension of a pointwise cost, with a short proof and a complete two-point example.",
     "keywords": [
       "optimal transport convex extension",
       "Kantorovich transport",

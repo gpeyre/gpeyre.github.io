@@ -133,7 +133,10 @@ is loaded separately, as in the existing previews.
 
 The thirteen experiments cover the eleven supplied prototypes plus exact
 two-point illustrations of independent couplings and the convex extension.
-The Gaussian GW and divergence articles are proof-focused. The independence
+The Gaussian GW, divergence, and convex-extension articles are proof-focused.
+The convex-extension article retains its analytic two-point example but no
+longer embeds the numerical experiment; its standalone lab demo is retained.
+The independence
 article was published with the date 17 October 2026, without its numerical
 experimentation section or interactive figure. Its analytic two-point example
 is retained in the entropic-transport discussion. The former preview URL

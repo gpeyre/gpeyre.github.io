@@ -85,6 +85,10 @@ const slugs=["monge-gap-inversions","autonomous-wasserstein-statistics","gaussia
         assert.deepEqual(missing,[],slug+" has missing citation targets");
         assert.equal(await page.locator('meta[name="robots"]').getAttribute("content"),"noindex,follow");
         const frame=page.locator("iframe.idea-experiment");
+        if(slug==="optimal-transport-convex-extension") {
+          assert.equal(await frame.count(),0,"convex-extension article must not embed the numerical experiment");
+          assert.ok(!/experiment/i.test(await page.locator('meta[name="description"]').getAttribute("content")),"convex-extension description must not promise an experiment");
+        }
         if(await frame.count()) {
           await frame.scrollIntoViewIfNeeded();
           await page.waitForFunction(()=>document.querySelector("iframe.idea-experiment").dataset.ready==="true");
@@ -98,7 +102,7 @@ const slugs=["monge-gap-inversions","autonomous-wasserstein-statistics","gaussia
           await frame.scrollIntoViewIfNeeded();
           const dimensions=await frame.evaluate(el=>({height:el.clientHeight,content:el.contentDocument.querySelector("main").getBoundingClientRect().height}));
           assert.ok(dimensions.height>=dimensions.content-2,slug+" clips mobile experiment");
-          if(["weak-transport-and-convex-order","bernstein-polynomials-on-measures","optimal-transport-convex-extension"].includes(slug))await frame.screenshot({path:path.join(shots,"forthcoming-mobile-figure-"+slug+".png")});
+          if(["weak-transport-and-convex-order","bernstein-polynomials-on-measures"].includes(slug))await frame.screenshot({path:path.join(shots,"forthcoming-mobile-figure-"+slug+".png")});
         }
         await page.screenshot({path:path.join(shots,"forthcoming-mobile-"+slug+".png")});
         await page.setViewportSize({width:1200,height:1000});
