@@ -1,5 +1,32 @@
 {
   "version": 1,
   "timezone": "Europe/Paris",
-  "publications": []
+  "publications": [
+    {
+      "slug": "composing-optimal-transport-maps",
+      "title": "Two optimal transports need not compose optimally",
+      "date": "2026-10-19",
+      "url": "https://www.gpeyre.com/blog/2026/10/19/composing-optimal-transport-maps/",
+      "message": "If two maps are optimal transports, is their composition optimal? Not necessarily. A matrix example shows why monotonicity is weaker than being a convex gradient. https://www.gpeyre.com/blog/2026/10/19/composing-optimal-transport-maps/",
+      "status": "prepared",
+      "source_sha256": "e2ebe5ed602dbff94f6c2801a77c19c1581bd9d52ce312b707559f9ec928f194",
+      "base_commit": "65cb41899575790684ffce76fee064680bd54326",
+      "files": [
+        "blog/_posts/2026-10-19-composing-optimal-transport-maps.md",
+        "blog/preparations/composing-optimal-transport-maps.html",
+        "blog/preparations/index.html",
+        "blog/publication-log.json",
+        "js/blog-search-index.js"
+      ],
+      "working_sha256": {
+        "blog/_posts/2026-10-19-composing-optimal-transport-maps.md": "78b16af9e84f5c407a05d3414dc104e902ff1591cbb812c269b1d163762c8178",
+        "blog/preparations/composing-optimal-transport-maps.html": "a5a947e61492bc2c320502f30fdb37a5e2397b552a7e4c147e189bcd2838edda",
+        "blog/preparations/index.html": "50cd49024805a1accbe38b1d73c3d0b35e7080f0377a7cce6f7641ff92703298",
+        "js/blog-search-index.js": "539929cae147925386c2e4dad092cc67ca78ed3a431d53d1da4aae13489f87dd"
+      },
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null
+    }
+  ]
 }
