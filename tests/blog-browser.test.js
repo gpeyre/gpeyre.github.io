@@ -1,10 +1,14 @@
 /* Optional end-to-end QA: BLOG_PLAYWRIGHT_PATH=/path/to/playwright node tests/blog-browser.test.js */
 "use strict";
 const assert = require("node:assert/strict");
+const fs = require("node:fs"), path = require("node:path"), vm = require("node:vm");
 const { chromium } = require(process.env.BLOG_PLAYWRIGHT_PATH || "playwright");
 const base = process.env.BLOG_PREVIEW_URL || "http://127.0.0.1:4173";
 const screenshotDir = process.env.BLOG_SCREENSHOT_DIR || "/private/tmp";
 const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000) / 10000;
+const catalogue = { window: {} };
+vm.runInNewContext(fs.readFileSync(path.join(__dirname, "../js/blog-search-index.js"), "utf8"), catalogue);
+const publishedRecords = Array.from(catalogue.window.BLOG_SEARCH_RECORDS).filter(post => post.status === "published");
 
 (async () => {
     const browser = await chromium.launch({ headless: true, channel: "chrome" });
@@ -32,11 +36,12 @@ const logPointPosition = n => Math.round(Math.log(n / 10) / Math.log(40) * 10000
             assert.equal(feedResult.errors, 0, format + " must be valid XML");
             assert.equal(feedResult.entries, await page.locator(".blog-preview").count());
         }
-        assert.equal(await page.locator(".blog-preview").count(), 26);
+        assert.equal(await page.locator(".blog-preview").count(), publishedRecords.length);
         const dates = await page.locator(".blog-preview time").evaluateAll(nodes => nodes.map(n => n.dateTime));
         assert.deepEqual(dates, dates.slice().sort().reverse());
         const paths = await page.locator(".blog-preview h2 a").evaluateAll(nodes => nodes.map(n => new URL(n.href).pathname));
-        assert.equal(new Set(paths).size, 26);
+        assert.equal(new Set(paths).size, publishedRecords.length);
+        assert.deepEqual(paths.slice().sort(), publishedRecords.map(post => post.url).sort(), "The archive must include every published search destination");
         assert.ok(paths.includes("/blog/2026/10/18/heat-equation-over-quantiles/"));
         assert.ok(paths.includes("/blog/2026/10/17/when-independence-is-optimal/"));
         assert.ok(paths.includes("/blog/2026/10/16/token-sample-complexity-attention/"));

@@ -1,10 +1,15 @@
 /* BLOG_PREVIEW_URL=http://127.0.0.1:4191 BLOG_PLAYWRIGHT_PATH=/path/to/playwright node tests/blog-search-browser.test.js */
 "use strict";
-const assert=require("node:assert/strict"),path=require("node:path");
+const assert=require("node:assert/strict"),path=require("node:path"),fs=require("node:fs"),vm=require("node:vm");
 const {pathToFileURL}=require("node:url");
 const {chromium}=require(process.env.BLOG_PLAYWRIGHT_PATH||"playwright");
 const base=(process.env.BLOG_PREVIEW_URL||"http://127.0.0.1:4191").replace(/\/$/,"");
 const shots=process.env.BLOG_SCREENSHOT_DIR||"/private/tmp";
+const catalogue={window:{}};
+vm.runInNewContext(fs.readFileSync(path.join(__dirname,"../js/blog-search-index.js"),"utf8"),catalogue);
+const expectedRecords=Array.from(catalogue.window.BLOG_SEARCH_RECORDS);
+const publishedCount=expectedRecords.filter(post=>post.status==="published").length;
+const forthcomingCount=expectedRecords.filter(post=>post.status==="forthcoming").length;
 (async()=>{
   const browser=await chromium.launch({headless:true,channel:"chrome"});
   try {
@@ -15,8 +20,9 @@ const shots=process.env.BLOG_SCREENSHOT_DIR||"/private/tmp";
       await page.locator('[data-blog-search][data-ready="true"]').waitFor();
       const input=page.getByLabel("Title, keyword, or topic"),status=page.locator("[data-search-status]"),cards=page.locator(".blog-search-result");
       const records=await page.evaluate(()=>window.BLOG_SEARCH_RECORDS);
-      assert.equal(records.length,49);
-      assert.match(await status.innerText(),/26 published articles · 23 forthcoming previews/);
+      assert.equal(records.length,expectedRecords.length);
+      assert.deepEqual(records.map(post=>post.url).sort(),expectedRecords.map(post=>post.url).sort(),"The browser must load the current search catalogue");
+      assert.ok((await status.innerText()).includes(`${publishedCount} published articles · ${forthcomingCount} forthcoming previews`));
       assert.equal(await page.locator("[data-blog-browse]").isVisible(),true);
       async function search(query){await input.fill(query);await page.locator("form[role=search]").evaluate(form=>form.requestSubmit());}
       await search("Sinkhorn");
@@ -76,9 +82,9 @@ const shots=process.env.BLOG_SCREENSHOT_DIR||"/private/tmp";
       await page.setViewportSize({width:1200,height:1000});
       await page.getByRole("button",{name:"Clear",exact:true}).click();
       await page.getByLabel("Published",{exact:true}).check();
-      assert.equal(await cards.count(),26);
+      assert.equal(await cards.count(),publishedCount);
       await page.getByLabel("Forthcoming",{exact:true}).check();
-      assert.equal(await cards.count(),23);
+      assert.equal(await cards.count(),forthcomingCount);
       for(const record of records){
         const response=await page.request.get(base+record.url);
         assert.equal(response.status(),200,record.url);
