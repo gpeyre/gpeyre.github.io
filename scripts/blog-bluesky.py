@@ -312,6 +312,24 @@ def post_record(entry):
 
 
 def deterministic_rkey(slug, date):
+    """Use a stable, spec-valid TID while the journal enforces one post/day."""
+    canonical_url(slug, date)
+    day = datetime.date.fromisoformat(date)
+    microseconds = (day - datetime.date(1970, 1, 1)).days * 86_400_000_000
+    clock = int.from_bytes(hashlib.sha256(slug.encode("utf-8")).digest(), "big") & 1023
+    value = (microseconds << 10) | clock
+    if not 0 <= value < (1 << 63):
+        raise SafeError("The publication date is outside the supported TID range.")
+    alphabet = "234567abcdefghijklmnopqrstuvwxyz"
+    characters = []
+    for _ in range(13):
+        characters.append(alphabet[value & 31])
+        value >>= 5
+    return "".join(reversed(characters))
+
+
+def legacy_rkey(slug, date):
+    """Recognize an older custom key only to recover, never create, a record."""
     return "blog-{}-{}".format(date.replace("-", ""), hashlib.sha256(slug.encode("utf-8")).hexdigest()[:20])
 
 
@@ -363,7 +381,16 @@ def announce(slug, date, log_path=PUBLICATION_LOG, queue_path=ANNOUNCEMENT_QUEUE
     session = authenticate()
     rkey = deterministic_rkey(slug, date)
     expected = post_record(entry)
+    # A previous version used a generic record key instead of the post
+    # collection's required TID. Check both before writing: a legacy success
+    # must be reconciled rather than duplicated under the new key.
+    old_rkey = legacy_rkey(slug, date)
+    old_result = get_record(session["did"], old_rkey, session["token"])
     result = get_record(session["did"], rkey, session["token"])
+    if old_result is not None:
+        if result is not None:
+            raise SafeError("Both legacy and TID announcement records exist; stop for review without creating or overwriting anything.")
+        rkey, result = old_rkey, old_result
     if result is None:
         if entry["status"] == "announced":
             raise SafeError("The log says this article was announced, but the record is absent; no repost was attempted.")
@@ -372,11 +399,16 @@ def announce(slug, date, log_path=PUBLICATION_LOG, queue_path=ANNOUNCEMENT_QUEUE
                 "repo": session["did"], "collection": "app.bsky.feed.post", "rkey": rkey,
                 "record": expected, "swapRecord": None, "validate": True,
             }, token=session["token"])
-        except SafeError:
+        except SafeError as create_error:
             # A lost response can follow a successful creation. Re-read the one
             # deterministic key, never repeat an unconstrained create request.
             result = get_record(session["did"], rkey, session["token"])
             if result is None:
+                if isinstance(create_error, RemoteHTTPError):
+                    code = create_error.code
+                    if not isinstance(code, str) or not re.fullmatch(r"[A-Za-z][A-Za-z0-9]{0,63}", code):
+                        code = "Unspecified"
+                    raise SafeError("Bluesky did not create the announcement (HTTP {}, {}); retry safely.".format(create_error.status, code)) from None
                 raise SafeError("The create-only announcement could not be confirmed; retry safely.") from None
         else:
             result = get_record(session["did"], rkey, session["token"])

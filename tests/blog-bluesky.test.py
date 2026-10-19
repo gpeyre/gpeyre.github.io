@@ -2,6 +2,8 @@
 """Offline regression tests: no real Keychain access or network traffic."""
 
 import contextlib
+import datetime
+import hashlib
 import importlib.util
 import io
 import json
@@ -225,16 +227,19 @@ class BlueskyAnnouncementTests(unittest.TestCase):
         self.queue_path.write_text("# Queue\n\n## 1. Convexity & transport\n\n- [x] Ready to publish\n\n> " + self.message.replace(self.url, self.preview) + "\n", encoding="utf-8")
         self.session = {"handle": BLOG.ACCOUNT, "did": "did:plc:publictestidentity", "token": "secret-session-never-log"}
         self.rkey = BLOG.deterministic_rkey(self.slug, self.date)
+        self.legacy_rkey = BLOG.legacy_rkey(self.slug, self.date)
         self.record = BLOG.post_record(self.entry)
         self.stored = {"uri": "at://{}/app.bsky.feed.post/{}".format(self.session["did"], self.rkey), "cid": "bafyreivalidtestcid", "value": self.record}
+        self.legacy_stored = dict(self.stored, uri="at://{}/app.bsky.feed.post/{}".format(self.session["did"], self.legacy_rkey))
 
     def write_log(self):
         self.log_path.write_text(json.dumps(self.log, ensure_ascii=False), encoding="utf-8")
 
     def run_announcement(self, gets):
-        with patch.object(BLOG, "verify_live_page") as verify, patch.object(BLOG, "authenticate", return_value=self.session), patch.object(BLOG, "get_record", side_effect=gets), patch.object(BLOG, "request_json", return_value={"uri": self.stored["uri"], "cid": self.stored["cid"]}) as request:
+        with patch.object(BLOG, "verify_live_page") as verify, patch.object(BLOG, "authenticate", return_value=self.session), patch.object(BLOG, "get_record", side_effect=gets) as get, patch.object(BLOG, "request_json", return_value={"uri": self.stored["uri"], "cid": self.stored["cid"]}) as request:
             result = BLOG.announce(self.slug, self.date, self.log_path, self.queue_path)
         verify.assert_called_once()
+        self.assertEqual([call.args[1] for call in get.call_args_list[:2]], [self.legacy_rkey, self.rkey])
         return result, request
 
     def test_approval_is_explicit_and_must_precede_authentication(self):
@@ -284,14 +289,31 @@ class BlueskyAnnouncementTests(unittest.TestCase):
         self.assertNotEqual(self.rkey, BLOG.deterministic_rkey("another", self.date))
         self.assertNotEqual(self.rkey, BLOG.deterministic_rkey(self.slug, "2026-10-20"))
 
+    def test_rkey_is_a_valid_tid_with_exact_midnight_timestamp_and_slug_clock(self):
+        self.assertRegex(self.rkey, r"\A[234567abcdefghij][234567abcdefghijklmnopqrstuvwxyz]{12}\Z")
+        alphabet = "234567abcdefghijklmnopqrstuvwxyz"
+        value = 0
+        for character in self.rkey:
+            value = (value << 5) + alphabet.index(character)
+        expected_microseconds = (datetime.date(2026, 10, 19) - datetime.date(1970, 1, 1)).days * 86_400_000_000
+        self.assertEqual(value >> 10, expected_microseconds)
+        self.assertEqual(value & 1023, int.from_bytes(hashlib.sha256(self.slug.encode()).digest(), "big") & 1023)
+        self.assertLess(value, 1 << 63)
+
+    def test_tid_rejects_out_of_range_dates(self):
+        for date in ("1969-12-31", "2256-01-01", "9999-12-31"):
+            with self.assertRaises(BLOG.SafeError):
+                BLOG.deterministic_rkey(self.slug, date)
+
     def test_create_is_put_record_with_null_swap_then_confirmed(self):
-        result, request = self.run_announcement([None, self.stored])
+        result, request = self.run_announcement([None, None, self.stored])
         self.assertTrue(result.startswith("https://bsky.app/profile/" + BLOG.ACCOUNT))
         self.assertEqual(request.call_count, 1)
         self.assertEqual(request.call_args.args[:2], ("POST", "com.atproto.repo.putRecord"))
         payload = request.call_args.args[2]
         self.assertIn("swapRecord", payload)
         self.assertIsNone(payload["swapRecord"])
+        self.assertIs(payload["validate"], True)
         self.assertEqual(payload["rkey"], self.rkey)
         self.assertEqual(payload["record"]["text"], self.message)
         saved = json.loads(self.log_path.read_text())["publications"][0]
@@ -301,21 +323,58 @@ class BlueskyAnnouncementTests(unittest.TestCase):
         self.assertNotIn(self.session["token"], self.log_path.read_text())
 
     def test_existing_matching_record_deduplicates_without_put(self):
-        _, request = self.run_announcement([self.stored])
+        _, request = self.run_announcement([None, self.stored])
         request.assert_not_called()
+
+    def test_existing_matching_legacy_record_is_reconciled_without_new_tid_put(self):
+        result, request = self.run_announcement([self.legacy_stored, None])
+        request.assert_not_called()
+        self.assertTrue(result.endswith("/" + self.legacy_rkey))
+        saved = json.loads(self.log_path.read_text())["publications"][0]
+        self.assertEqual(saved["status"], "announced")
+        self.assertEqual(saved["bluesky_uri"], self.legacy_stored["uri"])
+
+    def test_completed_legacy_announcement_stays_deduplicated_after_migration(self):
+        self.entry.update(status="announced", bluesky_uri=self.legacy_stored["uri"], bluesky_cid=self.legacy_stored["cid"])
+        self.write_log()
+        _, request = self.run_announcement([self.legacy_stored, None])
+        request.assert_not_called()
+
+    def test_legacy_and_tid_records_both_existing_stop_without_write(self):
+        with patch.object(BLOG, "verify_live_page"), patch.object(BLOG, "authenticate", return_value=self.session), patch.object(BLOG, "get_record", side_effect=[self.legacy_stored, self.stored]), patch.object(BLOG, "request_json") as request:
+            with self.assertRaisesRegex(BLOG.SafeError, "Both legacy and TID"):
+                BLOG.announce(self.slug, self.date, self.log_path, self.queue_path)
+        request.assert_not_called()
+        self.assertEqual(json.loads(self.log_path.read_text())["publications"][0]["status"], "published")
 
     def test_existing_mismatched_record_never_overwritten(self):
         self.stored["value"] = dict(self.record, text="Another post")
-        with patch.object(BLOG, "verify_live_page"), patch.object(BLOG, "authenticate", return_value=self.session), patch.object(BLOG, "get_record", return_value=self.stored), patch.object(BLOG, "request_json") as request:
+        with patch.object(BLOG, "verify_live_page"), patch.object(BLOG, "authenticate", return_value=self.session), patch.object(BLOG, "get_record", side_effect=[None, self.stored]), patch.object(BLOG, "request_json") as request:
+            with self.assertRaises(BLOG.SafeError):
+                BLOG.announce(self.slug, self.date, self.log_path, self.queue_path)
+        request.assert_not_called()
+
+    def test_existing_mismatched_legacy_record_never_migrated_or_overwritten(self):
+        self.legacy_stored["value"] = dict(self.record, text="Another legacy post")
+        with patch.object(BLOG, "verify_live_page"), patch.object(BLOG, "authenticate", return_value=self.session), patch.object(BLOG, "get_record", side_effect=[self.legacy_stored, None]), patch.object(BLOG, "request_json") as request:
             with self.assertRaises(BLOG.SafeError):
                 BLOG.announce(self.slug, self.date, self.log_path, self.queue_path)
         request.assert_not_called()
 
     def test_lost_create_response_is_reconciled_without_second_put(self):
-        with patch.object(BLOG, "verify_live_page"), patch.object(BLOG, "authenticate", return_value=self.session), patch.object(BLOG, "get_record", side_effect=[None, self.stored]), patch.object(BLOG, "request_json", side_effect=BLOG.SafeError("network failure")) as request:
+        with patch.object(BLOG, "verify_live_page"), patch.object(BLOG, "authenticate", return_value=self.session), patch.object(BLOG, "get_record", side_effect=[None, None, self.stored]), patch.object(BLOG, "request_json", side_effect=BLOG.SafeError("network failure")) as request:
             BLOG.announce(self.slug, self.date, self.log_path, self.queue_path)
         self.assertEqual(request.call_count, 1)
         self.assertEqual(json.loads(self.log_path.read_text())["publications"][0]["status"], "announced")
+
+    def test_failed_create_reports_only_safe_http_machine_code(self):
+        for code, expected in (("InvalidRequest", "InvalidRequest"), ("unsafe " + self.session["token"], "Unspecified")):
+            with patch.object(BLOG, "verify_live_page"), patch.object(BLOG, "authenticate", return_value=self.session), patch.object(BLOG, "get_record", return_value=None), patch.object(BLOG, "request_json", side_effect=BLOG.RemoteHTTPError(400, code)) as request:
+                with self.assertRaises(BLOG.SafeError) as error:
+                    BLOG.announce(self.slug, self.date, self.log_path, self.queue_path)
+            self.assertEqual(str(error.exception), "Bluesky did not create the announcement (HTTP 400, {}); retry safely.".format(expected))
+            self.assertNotIn(self.session["token"], str(error.exception))
+            self.assertEqual(request.call_count, 1)
 
     def test_announced_but_missing_record_is_not_recreated(self):
         self.entry.update(status="announced", bluesky_uri=self.stored["uri"], bluesky_cid=self.stored["cid"])

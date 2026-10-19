@@ -129,9 +129,12 @@ python3 scripts/blog-bluesky.py announce --slug SLUG --date YYYY-MM-DD
 ```
 
 The first command authenticates without posting. The second accepts only an
-approved, published journal entry. It uses a stable Bluesky record key and
+approved, published journal entry. It uses a stable, schema-valid Bluesky TID
+record key derived from the publication date and slug, and
 create-only semantics; identical retries succeed without another post, while
-conflicting content stops. It records `announced`, the public record URI and
+conflicting content stops. Before creating a record, it checks both its legacy
+key and its TID key; a matching legacy record is reused, while simultaneous
+records stop for review. It records `announced`, the public record URI and
 CID atomically. Save the updated journal in a separate exact-path Git commit
 and push, without selecting another article in the same run. If that final
 commit fails, preserve the journal and resume its synchronization next time.
