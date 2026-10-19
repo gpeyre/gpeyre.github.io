@@ -8,7 +8,7 @@
       "date": "2026-10-19",
       "url": "https://www.gpeyre.com/blog/2026/10/19/composing-optimal-transport-maps/",
       "message": "If two maps are optimal transports, is their composition optimal? Not necessarily. A matrix example shows why monotonicity is weaker than being a convex gradient. https://www.gpeyre.com/blog/2026/10/19/composing-optimal-transport-maps/",
-      "status": "prepared",
+      "status": "announced",
       "source_sha256": "e2ebe5ed602dbff94f6c2801a77c19c1581bd9d52ce312b707559f9ec928f194",
       "base_commit": "65cb41899575790684ffce76fee064680bd54326",
       "files": [
@@ -24,9 +24,9 @@
         "blog/preparations/index.html": "50cd49024805a1accbe38b1d73c3d0b35e7080f0377a7cce6f7641ff92703298",
         "js/blog-search-index.js": "539929cae147925386c2e4dad092cc67ca78ed3a431d53d1da4aae13489f87dd"
       },
-      "publication_commit": null,
-      "bluesky_uri": null,
-      "bluesky_cid": null
+      "publication_commit": "1d544c5c3e7285636d76b83292441a9477921919",
+      "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3my6ssz6s22dh",
+      "bluesky_cid": "bafyreibmwebsjo2fyoidw4k6nqqxnvzxupduemhoaz5x4j2f2qddoljdaa"
     }
   ]
 }
