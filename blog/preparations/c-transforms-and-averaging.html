@@ -1,0 +1,117 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,follow">
+<meta name="description" content="From convex conjugacy to cost transforms: a short proof of double-transform closure, explicit failures of averaging for power costs, and the geometric exception of round spheres.">
+<meta name="keywords" content="c transform, cost transform, c concavity, c convexity, Kantorovich duality, transport potentials, Legendre transform, Fenchel conjugate, Fenchel Moreau theorem, concave envelope, quadratic optimal transport, infimal convolution, Lipschitz functions, metric costs, snowflake metric, power costs, averaging transport potentials, supporting cost profiles, double c transform, nonnegative cross curvature, Ma Trudinger Wang condition, round spheres, flat torus, Riemannian convex potential maps, Adrien Marie Legendre, Alessio Figalli, Young Heon Kim, Robert McCann, Samuel Cohen, Brandon Amos, Yaron Lipman, Gabriel Peyre, transformée de Legendre, potentiels de transport">
+<title>From Legendre transforms to transport potentials — Alpha preview — Gabriel Peyré</title>
+<link rel="canonical" href="https://www.gpeyre.com/blog/preparations/c-transforms-and-averaging.html"><link rel="stylesheet" href="assets/drafts.css"><script defer src="assets/drafts.js"></script><script defer src="assets/idea-experiments.js"></script>
+<script type="text/x-mathjax-config">MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+</head><body><header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>From Legendre transforms to transport potentials</h1><p class="subtitle">Which families of supporting shapes survive averaging?</p><p class="byline">Gabriel Peyré</p></div></header>
+<main class="wrap"><article class="blog-prose">
+<p>A convex function can be assembled from affine supporting functions. Optimal transport replaces affine supports by translated profiles of a cost. This seemingly modest change produces <em>cost-concave potentials</em>, the functions appearing in the Kantorovich dual problem <a href="#ref-book">[1]</a>, <a href="#ref-villani">[6]</a>.</p>
+<p>Here is a natural test of how different the new geometry is. If two functions are cost-concave, is their average still cost-concave? For quadratic cost in Euclidean space, yes. For most other power costs, no—even on an interval. Squared geodesic distance on a round sphere gives a surprising positive example. Throughout, “average” means an arithmetic average of <em>functions</em>, not a Wasserstein barycenter of measures.</p>
+<figure class="portrait-single"><img src="assets/transport-geometry/legendre-fourier-1820.jpg" width="691" height="563" alt="Watercolor caricatures of Adrien-Marie Legendre and Joseph Fourier by Julien-Léopold Boilly" loading="lazy"><figcaption>Adrien-Marie Legendre and Joseph Fourier, by Julien-Léopold Boilly, 1820. Bibliothèque de l’Institut de France; <a href="https://commons.wikimedia.org/wiki/File:Legendre_and_Fourier_(1820).jpg">source and public-domain record</a>. This is the historical Legendre portrait, not the frequently misidentified portrait of the politician Louis Legendre.</figcaption></figure>
+
+<h2>One inequality defines the transform</h2>
+<p>Let \(X,Y\) be compact spaces and \(c:X\times Y\to\mathbb R\) continuous. Initially take a finite continuous \(f\). A feasible dual pair satisfies \(f(x)+g(y)\le c(x,y)\). For fixed \(f\), its largest feasible partner is</p>
+\[
+ f^c(y)=\inf_{x\in X}\{c(x,y)-f(x)\}.
+\]
+<p>The reverse transform uses the transposed cost \(\bar c(y,x)=c(x,y)\):</p>
+\[
+ g^{\bar c}(x)=\inf_{y\in Y}\{c(x,y)-g(y)\}.
+\]
+<p>A function of the form \(g^{\bar c}\) is <em>c-concave</em>. It is a lower envelope of cost profiles. At a contact point, an individual profile touches it from above: this reverses the familiar picture of affine supports beneath a convex function.</p>
+<p id="proposition-1"><strong>Proposition 1 (closure by double transformation).</strong> The transform reverses order, and</p>
+\[
+ f^{c\bar c}\ge f,\qquad f^{c\bar c c}=f^c.
+\]
+<p>The double transform is the smallest c-concave majorant of \(f\). In particular, \(f\) is c-concave exactly when \(f=f^{c\bar c}\).</p>
+<details class="blog-proof"><summary>Proof: use feasibility twice</summary><div class="blog-proof-body">
+<p>Feasibility says \(f(x)\le c(x,y)-f^c(y)\) for every \(y\); take the infimum to get \(f\le f^{c\bar c}\). Applying the order-reversing transform gives \(f^c\ge f^{c\bar c c}\). Applying the same double-transform inequality to \(f^c\) gives the reverse inequality, hence the triple identity.</p>
+<p>Every transformed function is therefore fixed by double transformation. Finally, if a c-concave \(h\) majorizes \(f\), monotonicity of the double transform gives \(h=h^{c\bar c}\ge f^{c\bar c}\). \(\square\)</p>
+</div></details>
+
+<h2>Recovering ordinary conjugacy</h2>
+<p>On full dual Euclidean spaces, the convex conjugate is \(h^*(y)=\sup_x\{x\cdot y-h(x)\}\). Our infimum convention differs by signs. For the pairing cost \(c(x,y)=x\cdot y\),</p>
+\[
+ f^c(y)=-(-f)^*(-y),\qquad f^{c\bar c}=-(-f)^{**}.
+\]
+<p>Under the properness assumptions of Fenchel–Moreau biconjugacy, the last expression is the closed concave envelope above \(f\). One should not silently identify this infimum transform with the usual supremum Legendre transform <a href="#ref-rockafellar">[2]</a>.</p>
+<p>For the quadratic cost \(c(x,y)=\tfrac12|x-y|^2\) on \(\mathbb R^d\times\mathbb R^d\), let \(h(x)=\tfrac12|x|^2-f(x)\). Completing the square gives</p>
+\[
+ f^c(y)=\tfrac12|y|^2-h^*(y),\qquad
+ f^{c\bar c}(x)=\tfrac12|x|^2-h^{**}(x).
+\]
+<p>Thus, in the proper closed setting, c-concavity is exactly convexity of \(h\). If \(f_0,f_1\) are c-concave, then</p>
+\[
+ \tfrac12|x|^2-\bigl((1-t)f_0+tf_1\bigr)
+ =(1-t)h_0+th_1
+\]
+<p>is convex. This proves averaging stability. Restrictions on the target domain restrict the allowed supporting slopes; the full-space characterization cannot simply be reused with an arbitrary target subset.</p>
+
+<h2>A different positive example: metric costs</h2>
+<p id="proposition-2"><strong>Proposition 2 (metric potentials).</strong> On the same compact metric space \(X=Y\), with \(c=d\), c-concave functions are precisely the 1-Lipschitz functions. Consequently their convex combinations are c-concave.</p>
+<details class="blog-proof"><summary>Proof: the triangle inequality identifies the whole class</summary><div class="blog-proof-body">
+<p>Each profile \(x\mapsto d(x,y)-g(y)\) is 1-Lipschitz, and so is its finite lower envelope. Conversely, if \(f\) is 1-Lipschitz, then \(d(x,y)-f(x)\ge-f(y)\), with equality at \(x=y\). Hence \(f^d=-f\), and \(f^{dd}=f\). \(\square\)</p>
+</div></details>
+<p>For an arbitrary finite input, one can also write \(f^{dd}(x)=\sup_y\{f(y)-d(x,y)\}\): this is its smallest 1-Lipschitz majorant. In particular, \(|x-y|^p\) with \(0&lt;p\le1\) is a metric, so averaging is stable in that range too. Geodesic distance itself poses no curvature restriction; the subtlety starts when one <em>squares</em> it.</p>
+
+<h2>Two short counterexamples cover every other power</h2>
+<p id="theorem-1"><strong>Theorem 1 (power costs on an interval).</strong> Let \(X=Y=[-3,3]\) and \(c_p(x,y)=|x-y|^p\), with \(p&gt;0\). The class of c-concave functions is closed under arithmetic convex combinations if \(0&lt;p\le1\) or \(p=2\). For every other exponent, a mean of two individual cost profiles already fails to be c-concave.</p>
+<p>The metric argument proves the first range. For \(p=2\), the allowed centers form the convex interval \([-3,3]\). At each point an average of two supporting parabolas is itself a parabola, up to a constant, centered at the average of their centers; that center remains in the interval.</p>
+<details class="blog-proof"><summary>Proof of failure: a supporting profile has too little curvature</summary><div class="blog-proof-body">
+<p>Each \(f_i(x)=c_p(x,y_i)\) is c-concave: it has itself as a cost-profile support at every point. If their smooth average \(f\) were c-concave, compactness and continuity of \(f^c\) would provide a profile \(c_p(x,y_*)+a\) touching it from above at zero. Necessarily</p>
+\[
+ f'(0)=\partial_xc_p(0,y_*),\qquad
+ f''(0)\le\partial_{xx}c_p(0,y_*).
+\]
+<p><em>When \(p&gt;2\).</em> Choose \(f(x)=\tfrac12(|x-1|^p+|x+1|^p)\). Its zero derivative forces \(y_*=0\), but</p>
+\[
+ f''(0)=p(p-1)&gt;0=\partial_{xx}c_p(0,0),
+\]
+<p>a contradiction.</p>
+<p><em>When \(1&lt;p&lt;2\).</em> Choose \(f(x)=\tfrac12(|x+1|^p+|x+2|^p)\). The derivative fixes \(y_*=-r\), where</p>
+\[
+ r=\left(\frac{1+2^{p-1}}2\right)^{1/(p-1)}.
+\]
+<p>Since \((p-2)/(p-1)&lt;0\), strict convexity of this negative power and Jensen give</p>
+\[
+ \frac{1+2^{p-2}}2
+ &gt;\left(\frac{1+2^{p-1}}2\right)^{(p-2)/(p-1)}
+ =r^{p-2}.
+\]
+<p>After multiplication by \(p(p-1)\), this says the average has greater curvature than its only possible touching cost profile. Both profiles are smooth near zero because \(r\ne0\). Again there is a contradiction. \(\square\)</p>
+</div></details>
+
+<h2>Why the sphere is a genuine exception</h2>
+<p>For squared <em>intrinsic</em> geodesic distance on a round sphere, arithmetic combinations of finite c-concave functions are c-concave. The property extends to products of round spheres, including flat tori with their product metrics <a href="#ref-km">[3]</a>, <a href="#ref-rcpm">[4]</a>. Chordal distance from an ambient embedding is a different cost.</p>
+<p>The key ingredient is a supporting-profile inequality, not merely positive sectional curvature. Fix a contact point \(x_0\), interpolate shortest logarithms to two centers, and define</p>
+\[
+ y_t=\operatorname{Exp}_{x_0}\bigl((1-t)\operatorname{Log}_{x_0}y_0+t\operatorname{Log}_{x_0}y_1\bigr),
+ \qquad q_t(x)=c(x,y_t)-c(x_0,y_t).
+\]
+<p>On these spaces, with the cut-locus cases obtained by limits,</p>
+\[
+ q_t(x)\ge(1-t)q_0(x)+tq_1(x).
+\]
+<details class="blog-proof"><summary>How the supporting-profile inequality proves averaging stability</summary><div class="blog-proof-body">
+<p>If \(q_i(x)+f_i(x_0)\) supports \(f_i\) from above, then</p>
+\[
+ (1-t)f_0(x)+tf_1(x)
+ \le (1-t)f_0(x_0)+tf_1(x_0)+q_t(x).
+\]
+<p>Equality holds at \(x_0\). Thus the average has a cost-profile support at every point. Taking the lower envelope of all these supports recovers the average, proving c-concavity. The geometric inequality itself is the substantive theorem of Kim and McCann; it is not proved by this elementary envelope argument. \(\square\)</p>
+</div></details>
+<p>For smooth costs on bounded Euclidean domains, Figalli, Kim, and McCann characterize this convexity of the potential class by <em>nonnegative cross-curvature</em>, under bi-twist, nondegeneracy, and convexity of the cost-gradient images <a href="#ref-fkm">[5]</a>. This condition is stronger than weak Ma–Trudinger–Wang. It is precisely the kind of global hypothesis that the two elementary power-cost counterexamples warn us not to omit.</p>
+
+<h2>Numerical experimentation</h2>
+<p>The panels below compute the transform and double transform of an editable function. The presets are the two averages in Theorem 1; they are regenerated for the selected exponent. The orange curve lies above the input and coincides with it exactly when the finite-grid function is c-concave. Refine the target grid before interpreting a tiny gap as a continuum obstruction.</p>
+<figure><iframe class="idea-experiment" data-experiment="c-transform" title="Interactive cost transform and averaging experiment" src="assets/transport-geometry/c-transform.html" loading="lazy"></iframe><figcaption>Uniform grids on [−3,3], with 121–481 points. There is no entropic smoothing. Cost profiles in the background are selected supports of the computed double transform. Drag the input curve, or use the sample and height sliders for keyboard editing.</figcaption></figure>
+<h2>References</h2><ol class="references">
+<li id="ref-book">Gabriel Peyré. <a href="https://www.gpeyre.com/ot4ml/"><em>Optimal Transport for Machine Learners</em></a>. Book manuscript, 2025–2026.</li>
+<li id="ref-rockafellar">R. Tyrrell Rockafellar. <a href="https://doi.org/10.1515/9781400873173"><em>Convex Analysis</em></a>. Princeton University Press, 1970.</li>
+<li id="ref-km">Young-Heon Kim and Robert J. McCann. <a href="https://www.math.toronto.edu/mccann/papers/RiemSub.pdf"><em>Towards the smoothness of optimal maps on Riemannian submersions and Riemannian products (of round spheres in particular)</em></a>. Journal für die reine und angewandte Mathematik 664, 1–27, 2012.</li>
+<li id="ref-rcpm">Samuel Cohen, Brandon Amos, and Yaron Lipman. <a href="https://proceedings.mlr.press/v139/cohen21a.html"><em>Riemannian Convex Potential Maps</em></a>. ICML, PMLR 139, 2028–2038, 2021.</li>
+<li id="ref-fkm">Alessio Figalli, Young-Heon Kim, and Robert J. McCann. <a href="https://www.math.toronto.edu/mccann/papers/screening.pdf"><em>When is multidimensional screening a convex program?</em></a> Journal of Economic Theory 146(2), 454–478, 2011.</li>
+<li id="ref-villani">Cédric Villani. <a href="https://doi.org/10.1007/978-3-540-71050-9"><em>Optimal Transport: Old and New</em></a>. Springer, 2009.</li>
+</ol></article></main><footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Blog</a></div></footer></body></html>

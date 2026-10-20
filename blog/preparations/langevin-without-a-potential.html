@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,follow">
+<meta name="description" content="Langevin dynamics need not follow a potential. Confinement gives an invariant law; linear drift gives an exact Gaussian criterion, a Lyapunov covariance equation, and stationary circulation.">
+<meta name="keywords" content="Langevin dynamics, nonreversible diffusion, Ornstein–Uhlenbeck process, invariant measure, stationary Gaussian, covariance, Lyapunov equation, matrix exponential, Fokker–Planck equation, stationary probability current, detailed balance, Gibbs distribution, confinement, Harris theorem, Lyapunov function, nonexplosion, spectral stability, nonnormal matrix, synchronous coupling, Wasserstein contraction, Brownian motion, exact stochastic transition, circulation, antisymmetric drift, Paul Langevin, Grigorios Pavliotis, Tony Lelièvre, Francis Nier, Claude Godrèche, Jean-Marc Luck, dynamique de Langevin, diffusion non réversible">
+<title>Langevin without a potential — Alpha preview — Gabriel Peyré</title>
+<link rel="canonical" href="https://www.gpeyre.com/blog/preparations/langevin-without-a-potential.html"><link rel="stylesheet" href="assets/drafts.css"><script defer src="assets/drafts.js"></script><script defer src="assets/idea-experiments.js"></script>
+<script type="text/x-mathjax-config">MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+</head><body>
+<header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Langevin without a potential</h1><p class="subtitle">Confinement can settle a cloud without stopping its circulation.</p><p class="byline">Gabriel Peyré</p></div></header>
+<main class="wrap"><article class="blog-prose">
+<p>The usual recipe for Langevin sampling is to follow the negative gradient of a potential and add Brownian noise. The gradient pulls particles towards low energy; the noise prevents them from collapsing to a minimizer. Their balance produces a Gibbs distribution.</p>
+<p>But a vector field does not have to be a gradient. Can a swirling, nongradient dynamics still settle into an equilibrium? Yes—and the distinction is instructive: <em>confinement</em> produces an invariant distribution, whereas <em>reversibility</em> is an additional property. A stationary distribution can carry a permanent probability current.</p>
+<figure class="portrait-single"><img src="assets/new-dynamics/paul-langevin.jpg" alt="Portrait of Paul Langevin by Henri Manuel" width="818" height="1054" loading="lazy"><figcaption>Paul Langevin (1872–1946). Photograph by Henri Manuel, Wellcome Collection, via <a href="https://commons.wikimedia.org/wiki/File:Paul_Langevin_Wellcome2.jpg">Wikimedia Commons</a>; <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Image unchanged.</figcaption></figure>
+
+<h2>A diffusion and its probability current</h2>
+<p>Fix a noise strength \(\varepsilon&gt;0\), a smooth vector field \(v:\mathbb R^d\to\mathbb R^d\), and a standard Brownian motion \(B_t\). Our sign convention is</p>
+\[
+ dX_t=-v(X_t)\,dt+\sqrt{2\varepsilon}\,dB_t.
+\]
+<p>The deterministic velocity is <em>minus</em> \(v\). Smoothness gives a unique solution up to a possible explosion time; a confinement condition will rule explosion out. The generator and the density equation are</p>
+\[
+ \mathcal L\varphi=\varepsilon\Delta\varphi-v\cdot\nabla\varphi,
+ \qquad \partial_t\rho=\varepsilon\Delta\rho+\nabla\cdot(v\rho).
+\]
+<p>Writing the second equation as a conservation law identifies the current:</p>
+\[
+ \partial_t\rho+\nabla\cdot j=0,
+ \qquad j=-v\rho-\varepsilon\nabla\rho.
+\]
+<p>Stationarity asks only for \(\nabla\cdot j_\infty=0\): whatever enters a region must leave it. Detailed balance asks for the stronger condition \(j_\infty=0\). In this uniformly elliptic setting, that is the reversible case <a href="#ref-pavliotis">[1]</a>.</p>
+
+<h2>What the potential does—and does not—guarantee</h2>
+<p>If \(v=\nabla f\), a natural candidate is</p>
+\[
+ \rho_\infty=Z_\varepsilon^{-1}e^{-f/\varepsilon},
+ \qquad Z_\varepsilon=\int_{\mathbb R^d}e^{-f(x)/\varepsilon}\,dx.
+\]
+<p>Its current vanishes because \(\varepsilon\nabla\rho_\infty=-\rho_\infty\nabla f\). If \(Z_\varepsilon\) is finite and the diffusion is nonexplosive, this is indeed an invariant probability. Smooth, nondegenerate noise then gives uniqueness and convergence in total variation; these facts alone do not specify an exponential rate <a href="#ref-pavliotis">[1]</a>, <a href="#ref-hairer">[2]</a>.</p>
+<p>The normalization is not a formality. Even \(f(x)\to+\infty\) is insufficient: in one dimension,</p>
+\[
+ f(x)=\frac{\varepsilon}{2}\log(1+x^2)
+ \quad\Longrightarrow\quad
+ e^{-f(x)/\varepsilon}=\frac1{\sqrt{1+x^2}},
+\]
+<p>which has infinite integral. At a fixed temperature, a lower bound \(f(x)\ge(d+\delta)\varepsilon\log(1+|x|)-C\), with \(\delta&gt;0\), guarantees integrability. One must still check that the diffusion does not explode.</p>
+
+<h2>Confinement without a gradient</h2>
+<p>A Lyapunov function measures how hard it is for a particle to escape. The simplest choice is \(W(x)=1+|x|^2\), for which</p>
+\[
+ \mathcal LW(x)=2\varepsilon d-2x\cdot v(x).
+\]
+<p id="proposition-1"><strong>Proposition 1 (a radial sufficient condition).</strong> Suppose \(v\) is smooth and \(x\cdot v(x)\to+\infty\) as \(|x|\to\infty\). The diffusion is nonexplosive and has a unique invariant probability \(\pi\). From every initial point, its transition law converges to \(\pi\) in total variation.</p>
+<details class="blog-proof"><summary>Proof: a tightness estimate and the role of noise</summary><div class="blog-proof-body">
+<p>The radial assumption makes \(\mathcal LW\) bounded above and tending to \(-\infty\). Thus, for some constant \(C\) and continuous \(\Psi\ge0\) tending to infinity, \(\mathcal LW\le C-\Psi\). Applying Itô’s formula up to exit times from large balls first shows nonexplosion: \(W\) cannot reach arbitrarily large values in finite time with positive probability. Localization and Fatou’s lemma then give</p>
+\[
+ \frac1T\int_0^T\mathbb E_x[\Psi(X_t)]\,dt
+ \le C+\frac{W(x)}T.
+\]
+<p>Consequently, the time-averaged laws are tight. A weak limit is invariant by the Feller property and the usual time-averaging argument. Smooth, nondegenerate additive noise makes the diffusion strong Feller and irreducible; compact sets provide the local mixing condition. The positive-recurrence/Harris theorem then gives uniqueness and total-variation convergence <a href="#ref-hairer">[2]</a>. The compactness estimate is elementary; the final Markov-process theorem is the standard ingredient used here. \(\square\)</p>
+</div></details>
+<p>A stronger estimate \(x\cdot v(x)\ge a|x|^2-b\), with \(a&gt;0\), gives \(\mathcal LW\le-2aW+C\). Harris’ geometric-drift theorem then supplies constants \(C_0,\kappa&gt;0\) such that</p>
+\[
+ \|P_t(x,\cdot)-\pi\|_{\mathrm{TV}}
+ \le C_0(1+|x|^2)e^{-\kappa t}.
+\]
+<p>These conditions are sufficient, not necessary. They constrain the inward component, not the tangential one. A large swirl can be perfectly compatible with confinement. A better adapted, nonradial Lyapunov function may also succeed when the radial test fails.</p>
+
+<h2>The linear case is completely explicit</h2>
+<p>Take \(v(x)=A(x-m_*)\), with a real matrix \(A\). It need not be symmetric. We call the drift <em>stable</em> when every eigenvalue of \(A\) has positive real part—so that \(e^{-At}\to0\).</p>
+<p id="theorem-1"><strong>Theorem 1 (the noisy linear criterion).</strong> For \(\varepsilon&gt;0\), an invariant probability exists if and only if the drift is stable. It is then unique and equals \(\mathcal N(m_*,\Sigma_*)\), where</p>
+\[
+ \Sigma_*=2\varepsilon\int_0^\infty
+ e^{-As}e^{-A^\top s}\,ds,
+ \qquad A\Sigma_*+\Sigma_*A^\top=2\varepsilon I.
+\]
+<p>The stationary covariance is positive definite. Transition laws converge to this Gaussian in total variation from every initial law, without a moment assumption.</p>
+<details class="blog-proof"><summary>Proof: solve the linear equation, then exclude unstable directions</summary><div class="blog-proof-body">
+<p><em>Sufficiency.</em> The integrating-factor formula is</p>
+\[
+ X_t-m_*=e^{-At}(X_0-m_*)+\xi_t,
+ \qquad \xi_t\sim\mathcal N(0,Q_t),
+\]
+\[
+ Q_t=2\varepsilon\int_0^t e^{-As}e^{-A^\top s}\,ds,
+\]
+<p>with \(\xi_t\) independent of \(X_0\). Stability gives \(Q_t\to\Sigma_*\succ0\). Differentiating the integrand gives the Lyapunov equation. If \(X_0\) has the candidate stationary Gaussian law, its mean and covariance stay unchanged, proving invariance. From any fixed starting point the Gaussian transition densities converge in total variation; integrating their bounded total-variation errors against an arbitrary initial law proves the same assertion for that law. This also gives uniqueness.</p>
+<p><em>Necessity, without assuming finite covariance.</em> The characteristic function \(\widehat\pi\) of any invariant law centered at \(m_*\) would satisfy</p>
+\[
+ \widehat\pi(\xi)=\widehat\pi(e^{-A^\top t}\xi)
+ \exp\left(-\varepsilon\int_0^t
+ |e^{-A^\top s}\xi|^2\,ds\right).
+\]
+<p>If \(A\) has an eigenvalue with nonpositive real part, its transpose has a real one- or two-dimensional invariant eigenspace with a nonzero vector \(\xi\) for which the integral diverges. For a real eigenvalue this is immediate; for a complex pair the rotation has bounded condition number and its norm has the same nondecaying exponential factor. Since characteristic functions have modulus at most one, the identity forces \(\widehat\pi(r\xi)=0\) for every nonzero real \(r\). This contradicts continuity at the origin. \(\square\)</p>
+</div></details>
+<p>The symmetric part of \(A\) need not be positive definite. For instance, \(A=\begin{pmatrix}1&4\\0&2\end{pmatrix}\) is stable although its symmetric part has a negative eigenvalue. The right Lyapunov function is then not necessarily \(|x|^2\): the positive matrix</p>
+\[
+ M=\int_0^\infty e^{-A^\top t}e^{-At}\,dt
+ \quad\text{satisfies}\quad A^\top M+MA=I.
+\]
+<p>Thus \(W(x)=1+(x-m_*)^\top M(x-m_*)\) has \(\mathcal LW=2\varepsilon\operatorname{tr}M-|x-m_*|^2\).</p>
+
+<h2>Covariance, convergence, and circulation</h2>
+<p>For any initial law with a finite second moment, mean and covariance obey</p>
+\[
+ \dot m_t=-A(m_t-m_*),
+ \qquad \dot\Sigma_t=-A\Sigma_t-\Sigma_tA^\top+2\varepsilon I.
+\]
+<p>When \(A\) is symmetric positive definite, \(\Sigma_*=\varepsilon A^{-1}\). In the nonsymmetric case, replacing the Lyapunov equation by this formula would be wrong.</p>
+<details class="blog-proof"><summary>A closed covariance formula when A is diagonalizable</summary><div class="blog-proof-body">
+<p>If \(A=V\Lambda V^{-1}\) over \(\mathbb C\), write \(\Sigma_*=VCV^*\). Multiplying the Lyapunov equation on the left by \(V^{-1}\) and on the right by \(V^{-*}\) gives entrywise</p>
+\[
+ C_{ij}=\frac{2\varepsilon(V^{-1}V^{-*})_{ij}}
+ {\lambda_i+\overline{\lambda_j}}.
+\]
+<p>Here \(*\) denotes conjugate transpose. Stability makes every denominator nonzero; the result is real because it equals the real integral in Theorem 1. This is not an orthogonal diagonalization of a nonsymmetric matrix. The integral formula also covers defective matrices.</p>
+</div></details>
+<p>Synchronous coupling—using the same Brownian path for two solutions—makes their difference exactly \(e^{-At}(X_0-Y_0)\). Consequently, for finite-second-moment initial laws,</p>
+\[
+ W_2(\mu P_t,\pi)
+ \le\|e^{-At}\|_{2\to2}W_2(\mu,\pi).
+\]
+<p>The matrix exponential has an exponentially decaying bound, but can initially amplify some directions when \(A\) is nonnormal. An asymptotic rate and a finite-time prefactor are different matters <a href="#ref-lnp">[3]</a>.</p>
+<p>Here is a two-dimensional family that isolates circulation. Set</p>
+\[
+ S=\begin{pmatrix}1&0\\0&1/4\end{pmatrix},
+ \qquad J=\begin{pmatrix}0&-1\\1&0\end{pmatrix},
+ \qquad A_a=(I+aJ)S^{-1}.
+\]
+<p id="proposition-2"><strong>Proposition 2 (same equilibrium, different motion).</strong> For every real \(a\), the drift is stable and \(\Sigma_*=\varepsilon S\). The stationary current is</p>
+\[
+ j_\infty(x)=-aJS^{-1}(x-m_*)\rho_\infty(x).
+\]
+<details class="blog-proof"><summary>Proof: skew symmetry cancels in the covariance equation</summary><div class="blog-proof-body">
+<p>Direct multiplication gives \(A_aS+SA_a^\top=2I\). Moreover \(A_a\) is similar to \(S^{-1/2}(I+aJ)S^{-1/2}\), whose symmetric part is the positive-definite matrix \(S^{-1}\); hence its eigenvalues have positive real part. Theorem 1 identifies the invariant Gaussian. Since \(\varepsilon\nabla\rho_\infty=-S^{-1}(x-m_*)\rho_\infty\), substitution into the current formula proves the result. Its divergence is zero: \(\operatorname{tr}(JS^{-1})=0\), and \(z^\top Jz=0\) for \(z=S^{-1}(x-m_*)\). \(\square\)</p>
+</div></details>
+<p>At \(a=0\), the current vanishes. Away from zero, particles keep circulating while their density stays fixed. This is a simple instance of nonreversible sampling, studied systematically in <a href="#ref-lnp">[3]</a>–<a href="#ref-duncan">[5]</a>. It does not mean every measure of sampling efficiency improves monotonically with \(|a|\).</p>
+
+<h2>Numerical experimentation</h2>
+<p>The experiment uses the exact Ornstein–Uhlenbeck transition, not an unstable Euler approximation. Changing circulation leaves the stationary covariance fixed at a given noise level; changing the noise changes the target cloud itself.</p>
+<iframe class="idea-experiment" data-experiment="langevin" src="assets/new-dynamics/index.html?topic=langevin" title="Exact Ornstein–Uhlenbeck particles with circulation and noise controls" loading="lazy" style="height:850px"></iframe>
+<p>The zero-noise endpoint deserves its own interpretation: \(\delta_{m_*}\) is invariant for <em>every</em> matrix \(A\), stable or not. Thus Theorem 1 genuinely uses \(\varepsilon&gt;0\). Under a stable drift, the deterministic law converges weakly to that point mass, not generally in total variation.</p>
+
+<h2>Bibliography</h2><ol class="references">
+<li id="ref-pavliotis">Grigorios A. Pavliotis. <em>Stochastic Processes and Applications: Diffusion Processes, the Fokker–Planck and Langevin Equations</em>. Springer, 2014. <a href="https://www.ma.imperial.ac.uk/~pavl/PavliotisBook.pdf">Author manuscript</a>.</li>
+<li id="ref-hairer">Martin Hairer. <em>Convergence of Markov Processes</em>. Lecture notes, 2021. <a href="https://hairer.org/notes/Convergence.pdf">Author’s notes</a>.</li>
+<li id="ref-lnp">Tony Lelièvre, Francis Nier, and Grigorios A. Pavliotis. <em>Optimal non-reversible linear drift for the convergence to equilibrium of a diffusion</em>. Journal of Statistical Physics 152, 237–274, 2013. <a href="https://arxiv.org/abs/1212.0876">Paper</a>.</li>
+<li id="ref-godreche">Claude Godrèche and Jean-Marc Luck. <em>Characterising the nonequilibrium stationary states of Ornstein–Uhlenbeck processes</em>. Journal of Physics A: Mathematical and Theoretical 52, 035002, 2019. <a href="https://arxiv.org/abs/1807.00694">Paper</a>.</li>
+<li id="ref-duncan">Andrew B. Duncan, Tony Lelièvre, and Grigorios A. Pavliotis. <em>Variance Reduction Using Nonreversible Langevin Samplers</em>. Journal of Statistical Physics 163, 457–491, 2016. <a href="https://www.ma.imperial.ac.uk/~pavl/nonreversible.pdf">Author manuscript</a>.</li>
+</ol>
+</article></main><footer class="draft-footer"><div class="wrap">Forthcoming post · Alpha preview · <a href="index.html">All forthcoming posts</a> · <a href="../">Published blog</a></div></footer></body></html>

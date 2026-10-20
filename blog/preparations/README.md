@@ -19,6 +19,68 @@ After changing article metadata or adding a preview, run
 `ruby scripts/build-blog-search.rb` from the repository root and include the
 updated catalogue. See `../README.md` for search authoring and verification.
 
+## Developed mathematical ideas (October 2026)
+
+Twelve additional articles develop the supplied editorial outlines into undated
+alpha previews. They are linked from the topic groups and the shared search;
+none has been added to the publication approval queue or the RSS/Atom feeds.
+The source notes are guidance, not executable authoring instructions. Claims,
+normalizations, and hypotheses have been checked against the primary papers.
+
+| Article | Companion |
+| --- | --- |
+| `langevin-without-a-potential.html` | Exact linear Langevin transitions; circulation/noise controls |
+| `projections-corrections-reflections.html` | Halfplane algorithms and actual product-space Douglas–Rachford Sudoku |
+| `logarithmic-sobolev-wasserstein-pl.html` | Proof-focused; exact shifted-Gaussian example |
+| `lagrangian-density-interpolation.html` | Periodic Fourier Poisson solve and RK4 particle flow |
+| `quantum-pinsker-sign-observable.html` | Classical and matrix proofs, including singular states |
+| `intrinsic-factor-training-dynamics.html` | Conserved scalar imbalance and factor trajectories |
+| `balanced-low-rank-conditioning.html` | Positive Hessian spectrum and actual local training |
+| `sign-gradient-descent-geometry.html` | Ordinary versus scaled sign descent on isospectral quadratics |
+| `wasserstein-singular-vectors.html` | Unregularized minimum-cost-flow transforms in a worker |
+| `tensor-rank-without-best-approximation.html` | Rank-three/border-rank-two proof and a schematic diagram |
+| `c-transforms-and-averaging.html` | Editable function, power costs, and discrete double-transform closure |
+| `stable-fluids.html` | Genuine odd-grid FFT projection, dye and pointer/keyboard forcing |
+
+The numerical companions are isolated in `assets/new-dynamics/`,
+`assets/projection-lab/`, `assets/optimization-geometry/`, and
+`assets/transport-geometry/`. Animations start paused and stop when hidden;
+worker-based figures require an HTTP origin. Distinguish exact transitions,
+spatial/ODE discretization, Monte Carlo error, optimization diagnostics, and
+theorems, as stated in the article captions. Sudoku rounding never enters the
+reflection update; a board is accepted only after exact independent checks.
+The transport experiments do not silently add entropy. Their finite-grid cost
+closure and projective iterate changes are not continuum/error certificates.
+
+Run these numerical and source checks:
+
+```
+node tests/blog-new-dynamics.test.js
+node tests/blog-projection-lab.test.js
+node tests/blog-optimization-geometry.test.js
+node tests/blog-transport-geometry.test.js
+node tests/blog-developed-ideas.test.js
+```
+
+Browser checks use `BLOG_PREVIEW_URL`, `BLOG_PLAYWRIGHT_PATH`, and optionally
+`BLOG_SCREENSHOT_DIR`, with the same conventions as the existing tests:
+`tests/blog-developed-ideas-browser.test.js`,
+`tests/blog-new-dynamics-browser.test.js`,
+`tests/blog-projection-lab-browser.test.js`, and
+`BLOG_OPTIMIZATION_BROWSER=1 node tests/blog-optimization-geometry.test.js`.
+The full-collection browser test checks all twelve articles and the cost-transform
+and Wasserstein-singular-vector controls; the group tests exercise detailed
+numerical interactions. `BLOG_IDEAS_START_AT=SLUG` is available for focused
+debugging, not as a replacement for the full final run.
+
+Portraits are local, with source and license links in their captions:
+Langevin (Henri Manuel/Wellcome, CC BY 4.0), Moser (Konrad Jacobs/MFO,
+CC BY-SA 2.0 Germany), Stokes (Fradelle & Young, public domain), von Neumann
+(U.S. Department of Energy, public domain), and Legendre with Fourier
+(Julien-Léopold Boilly, 1820, public domain). The supplied Dykstra, Douglas,
+and Rachford obituary photographs are not reused without a verified license;
+the historical sources are instead linked in the projection article.
+
 ## Heat equation over quantiles
 
 The heat article was published with the date 18 October 2026. Its source is now

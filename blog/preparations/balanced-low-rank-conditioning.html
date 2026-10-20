@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,follow">
+<meta name="keywords" content="LoRA, low-rank adaptation, BaLoRA, balanced LoRA, matrix factorization, factor scaling, parameter invariance, Hessian conditioning, positive Hessian spectrum, local convergence, balanced factors, hyperbalanced manifold, singular value decomposition, SVD, low-rank optimization, redundant parameterization, quotient geometry, gradient descent, normal directions, symmetry directions, nonlinear least squares, linearization, spectral gap, Valérie Castin, Kimia Nadjahi, Pierre Ablin, Gabriel Peyré, conditionnement, équilibrage des facteurs">
+<meta name="description" content="An elementary Hessian calculation explains why balanced representations of the same low-rank matrix have optimal Euclidean local conditioning, with an interactive comparison of exact condition numbers and local training.">
+<title>One low-rank matrix, many optimization speeds — Alpha preview — Gabriel Peyré</title>
+<link rel="canonical" href="https://www.gpeyre.com/blog/preparations/balanced-low-rank-conditioning.html"><link rel="stylesheet" href="assets/drafts.css"><script defer src="assets/drafts.js"></script><script defer src="assets/idea-experiments.js"></script>
+<script type="text/x-mathjax-config">MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+</head><body>
+<header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>One low-rank matrix, many optimization speeds</h1><p class="subtitle">Balancing removes avoidable ill-conditioning from a redundant representation.</p><p class="byline">Gabriel Peyré</p></div></header>
+<main class="wrap"><article class="blog-prose">
+<p>Low-rank adaptation, or LoRA, trains a small matrix correction in factored form instead of updating every weight of a large model <a href="#ref-lora">[1]</a>. If this correction is \(AB\), replacing \((A,B)\) by \((sA,s^{-1}B)\) leaves it unchanged. The model is identical. Its Euclidean optimization geometry is not.</p>
+<p>Our work with Valérie Castin, Kimia Nadjahi, and Pierre Ablin <a href="#ref-balora">[2]</a> studies this redundancy through local conditioning and proposes a balancing method. Here is a particularly clean result: for exact low-rank matrix recovery, every balanced factorization has the best possible positive Hessian condition number. The proof needs only a Jacobian, a Sylvester operator, and two singular-value inequalities.</p>
+
+<h2>Remove symmetry directions before measuring conditioning</h2>
+<p>Fix a matrix \(Y\in\mathbb R^{n\times m}\) of rank \(r&lt;\min(n,m)\), and consider</p>
+\[
+ f(A,B)=\tfrac12\|AB-Y\|_F^2,
+ \qquad A\in\mathbb R^{n\times r},\quad B\in\mathbb R^{r\times m}.
+\]
+<p>We examine a minimizer satisfying \(AB=Y\); both factors necessarily have rank \(r\). For every invertible \(R\in\mathbb R^{r\times r}\), the pair \((AR,R^{-1}B)\) is another minimizer. Thus the Hessian has zero eigenvalues: moving along this factorization orbit changes the parameters without changing their product.</p>
+<p>The relevant Euclidean condition number uses the <em>positive</em> spectrum, not a ratio with a zero denominator:</p>
+\[
+ \kappa_+(H)=\frac{\lambda_{\max}(H)}{\lambda_{\min}^+(H)},
+ \qquad H=\nabla^2 f(A,B).
+\]
+<p>This is a local quantity at an exact solution. It controls the quadratic behavior transverse to the minimizer manifold; it is not a statement that the nonconvex loss is globally strongly convex. Quotient and manifold viewpoints provide a broader language for handling these symmetries <a href="#ref-boumal">[3]</a>.</p>
+
+<h2>Diagonalize the smaller operator</h2>
+<p>The differential of \((A,B)\mapsto AB\) is</p>
+\[
+ J(\Delta A,\Delta B)=\Delta A B+A\Delta B.
+\]
+<p>At an exact fit the residual vanishes, so the Hessian is simply \(H=J^*J\). Instead of writing its large block matrix, use the fact that \(J^*J\) and \(JJ^*\) have the same positive eigenvalues. The latter acts on a matrix \(E\) as</p>
+\[
+ JJ^*(E)=AA^\top E+E B^\top B.
+\]
+<p>Left and right multiplication are diagonal in eigenvector bases of the two Gram matrices. Their eigenvalues therefore add.</p>
+<p id="theorem-1"><strong>Theorem 1 (exact positive condition number).</strong> If \(AB=Y\) and \(r&lt;\min(n,m)\), then</p>
+\[
+ \kappa_+(H)=
+ \frac{\sigma_1(A)^2+\sigma_1(B)^2}
+ {\min\{\sigma_r(A)^2,\sigma_r(B)^2\}}.
+\]
+<details class="blog-proof"><summary>Proof: add the left and right eigenvalues</summary><div class="blog-proof-body">
+<p>Write \(\alpha_i=\sigma_i(A)^2\) and \(\beta_j=\sigma_j(B)^2\) for \(1\leq i,j\leq r\). The eigenvalues of \(AA^\top\) are the positive \(\alpha_i\)'s and \(n-r\) zeros; those of \(B^\top B\) are the positive \(\beta_j\)'s and \(m-r\) zeros. On each outer product of the corresponding eigenvectors, \(JJ^*\) acts by their sum.</p>
+<p>Its positive eigenvalues are therefore</p>
+\[
+ \alpha_i+\beta_j,\qquad \alpha_i,\qquad \beta_j.
+\]
+<p>The last two families occur because \(m-r&gt;0\) and \(n-r&gt;0\). The largest positive eigenvalue is \(\alpha_1+\beta_1\), and the smallest is \(\min(\alpha_r,\beta_r)\). These are also the extreme positive eigenvalues of \(H\). \(\square\)</p>
+</div></details>
+<aside class="note"><p><strong>Why the strict rank inequalities?</strong> If a factor has no ambient orthogonal complement, one of the standalone families \(\alpha_i\) or \(\beta_j\) disappears. The formula above, and hence the constant in the next theorem, should not be carried unchanged to the square full-rank case.</p></aside>
+
+<h2>Balance is optimally conditioned</h2>
+<p>A factorization is <em>balanced</em> when \(A^\top A=BB^\top\). It shares the scale of the product equally between the two factors.</p>
+<p id="theorem-2"><strong>Theorem 2 (balancing attains the optimum).</strong> Among all exact factorizations \(AB=Y\),</p>
+\[
+ \kappa_+(\nabla^2 f(A,B))\geq
+ 2\frac{\sigma_1(Y)}{\sigma_r(Y)}.
+\]
+<p>Every balanced factorization attains equality. In particular, if \(Y=P\Sigma Q^\top\) is a thin singular value decomposition,</p>
+\[
+ A=P\Sigma^{1/2},\qquad B=\Sigma^{1/2}Q^\top
+\]
+<p>is optimally conditioned. This is the exact-recovery case of Proposition 2.4 in <a href="#ref-balora">[2]</a>.</p>
+<details class="blog-proof"><summary>Proof: bound the numerator from below and the denominator from above</summary><div class="blog-proof-body">
+<p>Submultiplicativity of the operator norm gives \(\sigma_1(Y)\leq\sigma_1(A)\sigma_1(B)\). Thus</p>
+\[
+ \sigma_1(A)^2+\sigma_1(B)^2
+ \geq2\sigma_1(A)\sigma_1(B)\geq2\sigma_1(Y).
+\]
+<p>At the bottom of the nonzero spectrum, \(\sigma_r(Y)\geq\sigma_r(A)\sigma_r(B)\). To see this without a rectangular-matrix ambiguity, use thin QR decompositions \(A=U R_A\), \(B=R_B V^\top\), with \(U,V\) having orthonormal columns. The nonzero singular values of \(Y\) are those of the invertible square product \(R_A R_B\), whose smallest singular value is at least the product of the two smallest singular values. Consequently,</p>
+\[
+ \min\{\sigma_r(A)^2,\sigma_r(B)^2\}
+ \leq\sigma_r(A)\sigma_r(B)\leq\sigma_r(Y).
+\]
+<p>Insert these inequalities in Theorem 1. Finally, if \(C=A^\top A=BB^\top\), then \(A=U C^{1/2}\) and \(B=C^{1/2}V^\top\) for column-orthonormal \(U,V\). Hence \(Y=UCV^\top\), and the eigenvalues of \(C\) are exactly the positive singular values of \(Y\). Both inequalities become equalities. \(\square\)</p>
+</div></details>
+<p>The unavoidable part of conditioning is the singular-value spread of \(Y\). Imbalance adds an avoidable part. This distinguishes a difficulty of the represented problem from a difficulty introduced by its coordinates.</p>
+
+<h2>A one-parameter distortion of the same matrix</h2>
+<p>Keep the thin SVD of \(Y\) fixed and choose</p>
+\[
+ A_s=sP\Sigma^{1/2},\qquad B_s=s^{-1}\Sigma^{1/2}Q^\top,
+ \qquad s&gt;0.
+\]
+<p>The product is always \(Y\), whereas Theorem 1 gives</p>
+\[
+ \kappa_+(H_s)=\frac{\sigma_1(Y)}{\sigma_r(Y)}
+ \frac{s^2+s^{-2}}{\min(s^2,s^{-2})}.
+\]
+<p>The minimum is at \(s=1\), and the degradation grows as \(s^4\) or \(s^{-4}\). Even a moderate mismatch of scales can have a substantial effect on the local condition number.</p>
+
+<h2>Numerical experimentation</h2>
+<p>Use \(Y=\operatorname{diag}(4,1,0)\), represented by two rank-two factors. The left panel is the exact Hessian condition number. The right runs <em>actual</em> factor gradient descent near each minimizer, starting with the same tiny perturbation norm and comparing it with the Hessian linearization.</p>
+<figure><iframe class="idea-experiment" data-experiment="lowrank" src="assets/optimization-geometry/index.html?topic=lowrank" title="Interactive low-rank factor conditioning and local gradient descent" loading="lazy" style="width:100%;height:820px;border:0;"></iframe><figcaption>The learning rate is \(0.8/L_s\), where \(L_s\) is the largest Hessian eigenvalue at the corresponding exact factorization. Each factor-space perturbation has norm \(10^{-3}\); losses are normalized separately because the same parameter displacement need not induce the same initial prediction error. The dashed Hessian curves are local models, not global guarantees.</figcaption></figure>
+
+<h2>Balanced, hyperbalanced, and genuinely nonlinear</h2>
+<p>There is still a rotational freedom in a balanced factorization. Calling it <em>hyperbalanced</em> means that the common Gram matrix is diagonal, with its entries ordered. This chooses a canonical form of balance. It is not needed to minimize the Euclidean quantity in Theorem 2: <em>all</em> balanced factorizations already do that. It can matter for coordinate-dependent optimizers, whose geometry is not invariant under latent rotations; see <a href="sign-gradient-descent-geometry.html">Which condition number does sign gradient descent see?</a></p>
+<p>An SVD-based balancing map preserves the represented product. It should not be confused with a nearest-point Euclidean projection in factor space. The practical BaLoRA construction in <a href="#ref-balora">[2]</a> exploits small matrix decompositions to make this reparameterization efficient.</p>
+<p>For a nonlinear least-squares model \(\tfrac12\|h(AB)-y\|^2\) at an interpolating solution, the paper gives conditioning bounds involving the Jacobian of \(h\). These require the corresponding rank and nondegeneracy hypotheses. If exact interpolation fails, residual terms enter the Hessian. Neither case is covered by simply reusing \(H=J^*J\) above, and neither turns the local calculation into a universal convergence theorem for fine-tuning.</p>
+<p>Finally, gradient flow conserves latent imbalance, while finite-step gradient descent need not conserve it exactly <a href="#ref-du">[4]</a>. The companion post on <a href="intrinsic-factor-training-dynamics.html">intrinsic factor dynamics</a> explains the continuous-time reduction. Earlier analyses of factorization and implicit bias <a href="#ref-gunasekar">[5]</a>, as well as initialization-dependent LoRA dynamics <a href="#ref-init">[6]</a>, further illustrate why the representation at initialization is not an innocuous detail.</p>
+
+<h2>Bibliography</h2><ol class="references">
+<li id="ref-lora">Edward J. Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang, Lu Wang, and Weizhu Chen. <a href="https://arxiv.org/abs/2106.09685"><em>LoRA: low-rank adaptation of large language models.</em></a> ICLR, 2022.</li>
+<li id="ref-balora">Valérie Castin, Kimia Nadjahi, Pierre Ablin, and Gabriel Peyré. <a href="https://arxiv.org/abs/2605.31484"><em>Balanced LoRA: removing parameter invariance to accelerate convergence.</em></a> ICML, 2026.</li>
+<li id="ref-boumal">Nicolas Boumal. <a href="https://www.nicolasboumal.net/book/"><em>An introduction to optimization on smooth manifolds.</em></a> Cambridge University Press, 2023.</li>
+<li id="ref-du">Simon S. Du, Wei Hu, and Jason D. Lee. <a href="https://arxiv.org/abs/1806.00900"><em>Algorithmic regularization in learning deep homogeneous models: layers are automatically balanced.</em></a> NeurIPS, 2018.</li>
+<li id="ref-gunasekar">Suriya Gunasekar, Blake E. Woodworth, Srinadh Bhojanapalli, Behnam Neyshabur, and Nathan Srebro. <a href="https://arxiv.org/abs/1705.09280"><em>Implicit regularization in matrix factorization.</em></a> NeurIPS, 2017.</li>
+<li id="ref-init">Soufiane Hayou, Nikhil Ghosh, and Bin Yu. <a href="https://arxiv.org/abs/2406.08447"><em>The impact of initialization on LoRA finetuning dynamics.</em></a> NeurIPS, 2024.</li>
+</ol></article></main><footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Published blog</a></div></footer>
+</body></html>

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,follow">
+<meta name="keywords" content="tensor rank, CP rank, canonical polyadic decomposition, CANDECOMP, PARAFAC, border rank, low-rank approximation, best approximation, ill-posedness, nonclosed rank sets, tensor decomposition, order-three tensor, 2 by 2 by 2 tensor, W tensor, rank-one tensor, decomposable tensor, tensor product, outer product, Frobenius norm, Eckart–Young theorem, singular value decomposition, SVD, matrix slices, matrix pencil, secant variety, tangent vector, diverging components, Tucker rank, multilinear rank, Vin de Silva, Lek-Heng Lim, Tamara Kolda, Brett Bader, rang tensoriel">
+<meta name="description" content="A two-term tensor sequence converges to a tensor requiring three terms. An elementary slice-space proof explains border rank, diverging components, and the failure of best low-rank tensor approximation.">
+<title>When the best low-rank tensor approximation does not exist — Alpha preview — Gabriel Peyré</title><link rel="canonical" href="https://www.gpeyre.com/blog/preparations/tensor-rank-without-best-approximation.html"><link rel="stylesheet" href="assets/drafts.css"><script defer src="assets/drafts.js"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script></head>
+<body><header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>When the best low-rank tensor approximation does not exist</h1><p class="subtitle">Two terms can converge to something that needs three.</p><p class="byline">Gabriel Peyré</p></div></header><main class="wrap"><article class="blog-prose">
+<p>The singular value decomposition does more than give a convenient coordinate system for a matrix. Truncating it gives a <em>best</em> low-rank approximation: a minimizer really exists. It is tempting to expect a tensor version of this story, perhaps with a more complicated algorithm.</p>
+<p>But for tensors there is an obstruction before algorithms even enter the picture. The best approximation may not exist. Already for a \(2\times2\times2\) array, a sequence of tensors with two rank-one terms can approach a tensor that needs three. The approximation error tends to zero while the individual components blow up.</p>
+<p>This beautiful example is part of the systematic analysis of de Silva and Lim <a href="#ref-desilva">[1]</a>. We will prove it using only two matrix slices and a determinant.</p>
+
+<h2>What is the rank of a tensor?</h2>
+<p>An order-\(d\) tensor is an array \(T\in\mathbb R^{n_1\times\cdots\times n_d}\). The outer product of \(d\) vectors is the array</p>
+\[
+ (u^{(1)}\otimes\cdots\otimes u^{(d)})_{i_1,\ldots,i_d}
+ =u^{(1)}_{i_1}\cdots u^{(d)}_{i_d}.
+\]
+<p>When nonzero, such a tensor has rank one. For \(d=2\), this is just the matrix \(uv^\top\). The <em>CP rank</em>, for canonical polyadic rank, counts the smallest number of such terms:</p>
+\[
+ \operatorname{rank}_{\rm CP}(T)
+ =\min\left\{r:T=\sum_{\ell=1}^r
+ u_\ell^{(1)}\otimes\cdots\otimes u_\ell^{(d)}\right\}.
+\]
+<p>Set the rank of zero to zero. This agrees with matrix rank at order two. CP decompositions are also called CANDECOMP or PARAFAC; see Kolda and Bader <a href="#ref-kolda">[2]</a>.</p>
+<p>The set relevant for best approximation is the set of rank <em>at most</em> \(r\),</p>
+\[
+ \mathcal R_r=\{T:\operatorname{rank}_{\rm CP}(T)\le r\},\qquad
+ \inf_{S\in\mathcal R_r}\lVert T-S\rVert_F,
+\]
+<p>where \(\lVert T\rVert_F^2=\sum_{i_1,\ldots,i_d}|T_{i_1,\ldots,i_d}|^2\). In a finite-dimensional space, a nearest point exists in every nonempty closed set: restrict a minimizing sequence to a bounded ball and extract a convergent subsequence. Thus closedness is the first question to ask.</p>
+
+<h2>A derivative of rank-one tensors</h2>
+<p>Let \(e_1,e_2\) be the standard basis of \(\mathbb R^2\), and define</p>
+\[
+ W=e_2\otimes e_1\otimes e_1
+ +e_1\otimes e_2\otimes e_1
+ +e_1\otimes e_1\otimes e_2.
+\]
+<p>Its displayed expression has three terms. A two-term <em>approximation</em> is easy: for \(\varepsilon\ne0\), take</p>
+\[
+ T_\varepsilon=
+ \frac{(e_1+\varepsilon e_2)^{\otimes3}-e_1^{\otimes3}}{\varepsilon}.
+\]
+<p>Each numerator term is decomposable, so \(\operatorname{rank}_{\rm CP}(T_\varepsilon)\le2\). Expanding the product gives</p>
+\[
+ \begin{aligned}
+ T_\varepsilon-W
+ &=\varepsilon(e_2\otimes e_2\otimes e_1
+ +e_2\otimes e_1\otimes e_2+e_1\otimes e_2\otimes e_2)\\
+ &\quad+\varepsilon^2e_2^{\otimes3},
+ \end{aligned}
+\]
+\[
+ \lVert T_\varepsilon-W\rVert_F
+ =\sqrt{3\varepsilon^2+\varepsilon^4}\longrightarrow0.
+\]
+<p>It remains to prove that the limit cannot itself have two terms.</p>
+
+<p id="theorem-1"><strong>Theorem 1 (rank three, border rank two).</strong> The tensor \(W\) has CP rank three, but lies in the closure of \(\mathcal R_2\). Consequently,</p>
+\[
+ \inf_{S\in\mathcal R_2}\lVert W-S\rVert_F=0,
+ \qquad\text{and the infimum is not attained.}
+\]
+<details class="blog-proof"><summary>Proof: a two-dimensional slice space with only one rank-one direction</summary><div class="blog-proof-body">
+<p>Fixing the third index of \(W\) gives the matrix slices</p>
+\[
+ A=\begin{pmatrix}0&1\\1&0\end{pmatrix},\qquad
+ B=\begin{pmatrix}1&0\\0&0\end{pmatrix}.
+\]
+<p>They are linearly independent. If \(W=u_1\otimes v_1\otimes w_1+u_2\otimes v_2\otimes w_2\), both slices would lie in the span of the rank-one matrices \(u_1v_1^\top,u_2v_2^\top\). Independence of the slices forces these two matrices to be independent as well, and hence their span must be exactly \(\operatorname{span}\{A,B\}\).</p>
+<p>Yet every matrix in this slice space has the form</p>
+\[
+ aA+bB=\begin{pmatrix}b&a\\a&0\end{pmatrix},
+ \qquad \det(aA+bB)=-a^2.
+\]
+<p>A nonzero \(2\times2\) matrix has rank one precisely when its determinant vanishes. Here this requires \(a=0\): the only rank-one direction is the line through \(B\). The space cannot contain two independent rank-one matrices. This contradiction rules out a two-term decomposition. The three-term expression proves rank exactly three. The sequence above proves the approximation claim. \(\square\)</p>
+</div></details>
+<p>The <em>border rank</em> of a tensor is the smallest \(r\) such that it belongs to the closure of \(\mathcal R_r\). Thus border rank counts how many terms are sufficient with arbitrarily small error, whereas CP rank counts how many are needed exactly. For \(W\), these answers differ.</p>
+
+<h2>The cancellation is not a numerical accident</h2>
+<p>Consider the rank-one curve \(\gamma(t)=(e_1+te_2)^{\otimes3}\). Our tensor is \(W=\gamma'(0)\), and \(T_\varepsilon\) is its secant slope. A tangent direction to the rank-one cone can require three terms even though every secant slope uses two <a href="#ref-lim">[3]</a>.</p>
+<figure><svg viewBox="0 0 660 220" role="img" aria-labelledby="tensor-diagram-title" style="width:100%;height:auto"><title id="tensor-diagram-title">Secants to a rank-one curve approach a tangent; their difference quotient approaches W, which has rank three.</title><defs><marker id="tensor-arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="#087f8c"/></marker></defs><path d="M35 181 C120 177 220 150 340 48" fill="none" stroke="#bbcbd0" stroke-width="4"/><path d="M105 170 L309 72" fill="none" stroke="#d69757" stroke-width="3"/><path d="M105 170 L340 112" fill="none" stroke="#087f8c" stroke-width="3" marker-end="url(#tensor-arrow)"/><circle cx="105" cy="170" r="5" fill="#173543"/><circle cx="309" cy="72" r="5" fill="#d69757"/><text x="34" y="209" fill="#173543" font-size="15">γ(0)</text><text x="262" y="42" fill="#173543" font-size="15">γ(ε)</text><text x="390" y="88" fill="#173543" font-size="17">Secant slopes: rank ≤ 2</text><text x="390" y="121" fill="#087f8c" font-size="17">Tangent W: rank = 3</text><text x="390" y="158" fill="#62757d" font-size="14">Schematic, not an isometric plot</text></svg><figcaption>A derivative can be more expensive to represent exactly than the finite differences approaching it.</figcaption></figure>
+<p>The norms of the two components in \(T_\varepsilon\) are</p>
+\[
+ \frac{(1+\varepsilon^2)^{3/2}}{|\varepsilon|}
+ \quad\text{and}\quad\frac1{|\varepsilon|}.
+\]
+<p>They diverge, but their difference stays bounded. More generally, any sequence of two-term decompositions converging to \(W\) must have unbounded component norms along a subsequence. Otherwise normalize each component’s factors, absorb their norms into bounded scalar coefficients, and extract convergent subsequences. The limit would be a two-term decomposition of \(W\), which is impossible. This is a representational degeneracy, not a failure of a particular optimizer.</p>
+
+<h2>What remains closed?</h2>
+<p id="proposition-1"><strong>Proposition 1.</strong> The set \(\mathcal R_1\) is closed for tensors of any order. For matrices, every set \(\mathcal R_r\) is closed.</p>
+<details class="blog-proof"><summary>Proof: compact unit factors, or vanishing minors</summary><div class="blog-proof-body">
+<p>Write a convergent rank-at-most-one sequence as \(S_k=\lambda_k u_{1,k}\otimes\cdots\otimes u_{d,k}\), with unit factors. Zero terms cause no difficulty. Because \(\lVert S_k\rVert_F=|\lambda_k|\), the coefficients are bounded. Compactness of the unit spheres gives a subsequence on which all factors and the coefficient converge; its limit is again rank at most one.</p>
+<p>For a matrix, rank at most \(r\) is equivalent to all \((r+1)\times(r+1)\) minors vanishing. These polynomial equalities define a closed set. This is the existence property behind the best-approximation theorem of Eckart and Young <a href="#ref-eckart">[4]</a>. \(\square\)</p>
+</div></details>
+<p>Do not confuse rank <em>at most</em> one with rank <em>exactly</em> one: the latter is not closed even for matrices, since a nonzero rank-one matrix can tend to zero. Our example is more striking: the limit’s rank jumps <em>up</em>.</p>
+<p>The counterexample extends to larger dimensions by padding with zeros, and to higher orders by tensoring with fixed nonzero vectors. Both preserve its rank: coordinate projection or contraction back to the original tensor gives the reverse inequality. More generally, de Silva and Lim prove that, for real order-\(d\ge3\) tensors with all \(n_i\ge2\), \(\mathcal R_r\) is nonclosed whenever \(2\le r\le\min_i n_i\) <a href="#ref-desilva">[1, Theorem 4.10]</a>. No claim is made for every larger rank; eventually the rank bound includes the whole space.</p>
+<p>Finally, this obstruction is specific to CP rank. A Tucker or multilinear rank bound restricts the matrix rank of each unfolding and hence defines a closed set <a href="#ref-kolda">[2]</a>. Before designing a tensor analogue of the SVD, it matters which notion of rank we want to preserve.</p>
+<h2>Bibliography</h2><ol class="references">
+<li id="ref-desilva">Vin de Silva and Lek-Heng Lim. <em>Tensor rank and the ill-posedness of the best low-rank approximation problem</em>. SIAM Journal on Matrix Analysis and Applications 30(3), 1084–1127, 2008. <a href="https://arxiv.org/abs/math/0607647">Paper</a>.</li>
+<li id="ref-kolda">Tamara G. Kolda and Brett W. Bader. <em>Tensor Decompositions and Applications</em>. SIAM Review 51(3), 455–500, 2009. <a href="https://doi.org/10.1137/07070111X">Paper</a> · <a href="https://www.kolda.net/publication/koba09/">Author page</a>.</li>
+<li id="ref-lim">Lek-Heng Lim. <em>Tensors in computations</em>. Acta Numerica 30, 555–764, 2021. <a href="https://www.stat.uchicago.edu/~lekheng/work/tensors.pdf">Author PDF</a>.</li>
+<li id="ref-eckart">Carl Eckart and Gale Young. <em>The approximation of one matrix by another of lower rank</em>. Psychometrika 1, 211–218, 1936. <a href="https://doi.org/10.1007/BF02288367">Paper</a>.</li>
+</ol></article></main><footer class="draft-footer"><div class="wrap">Forthcoming post · Alpha preview · <a href="index.html">All forthcoming posts</a> · <a href="../">Published blog</a></div></footer></body></html>

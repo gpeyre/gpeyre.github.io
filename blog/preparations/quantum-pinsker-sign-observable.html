@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,follow">
+<meta name="keywords" content="Pinsker inequality, quantum Pinsker inequality, classical Pinsker, relative entropy, quantum relative entropy, Kullback–Leibler divergence, Umegaki entropy, density matrix, trace norm, trace distance, total variation, sign observable, positive eigenspace, quantum state discrimination, Helstrom measurement, logarithmic mean, matrix logarithm, Fréchet derivative, Cauchy–Schwarz inequality, entropy curvature, strong convexity, log-sum inequality, binary divergence, support condition, singular states, natural logarithms, John Watrous, Melchior Wirth, Fumio Hiai, Masanori Ohya, Makoto Tsukada, information quantique, inégalité de Pinsker">
+<meta name="description" content="A self-contained proof of classical and quantum Pinsker: reduce probabilities to a sign set, then test matrix entropy curvature against a sign observable. The sharp constant survives noncommutativity.">
+<title>Quantum Pinsker: a sign observable is enough — Alpha preview — Gabriel Peyré</title><link rel="canonical" href="https://www.gpeyre.com/blog/preparations/quantum-pinsker-sign-observable.html"><link rel="stylesheet" href="assets/drafts.css"><script defer src="assets/drafts.js"></script>
+<script type="text/x-mathjax-config">MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script></head>
+<body><header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Quantum Pinsker: a sign observable is enough</h1><p class="subtitle">One sign set, one matrix sign, and the same sharp constant.</p><p class="byline">Gabriel Peyré</p></div></header>
+<main class="wrap"><article class="blog-prose">
+<p>Relative entropy is asymmetric, can be infinite, and is not a distance. Nevertheless, a small relative entropy forces two probability distributions to be close in a very concrete sense: no event can have very different probabilities under the two laws. This is the content of Pinsker’s inequality.</p>
+<p>The same statement survives when probabilities become density matrices, even if the matrices do not commute. The proof below keeps the essential idea visible. In the classical case, collect all positive discrepancies into one event. In the quantum case, collect the positive eigenvalues of the discrepancy into one observable. A weighted Cauchy–Schwarz inequality then does the work.</p>
+<p>All logarithms are natural, and all matrices are finite-dimensional. The classical and quantum inequalities are standard; see Watrous <a href="#ref-watrous">[1]</a> and Wirth <a href="#ref-wirth">[2]</a>. The purpose here is a direct matrix-calculus proof, without assuming the quantum data-processing theorem.</p>
+
+<h2>First, two classical outcomes are enough</h2>
+<p>For probability vectors \(a,b\), define the relative entropy and the full \(\ell^1\) discrepancy by</p>
+\[
+ D(a\Vert b)=\sum_i a_i\log\frac{a_i}{b_i},\qquad
+ \lVert a-b\rVert_1=\sum_i|a_i-b_i|.
+\]
+<p>Use \(0\log(0/b)=0\), and set \(D=+\infty\) if some \(a_i>0=b_i\). The total variation distance is half the full norm: \(\operatorname{TV}(a,b)=\lVert a-b\rVert_1/2\).</p>
+<p id="theorem-1"><strong>Theorem 1 (classical Pinsker).</strong> For any probability vectors,</p>
+\[
+ D(a\Vert b)\ge\frac12\lVert a-b\rVert_1^2
+ =2\operatorname{TV}(a,b)^2.
+\]
+<details class="blog-proof"><summary>Proof: merge the positive and negative discrepancies</summary><div class="blog-proof-body">
+<p>Let \(A=\{i:a_i>b_i\}\), \(p=\sum_{i\in A}a_i\), and \(q=\sum_{i\in A}b_i\). Since the total signed discrepancy is zero,</p>
+\[
+ p-q=\frac12\lVert a-b\rVert_1.
+\]
+<p>Merging entries in \(A\) and in its complement cannot increase relative entropy:</p>
+\[
+ D(a\Vert b)\ge d(p\mid q),\qquad
+ d(p\mid q)=p\log\frac pq+(1-p)\log\frac{1-p}{1-q}.
+\]
+<details class="blog-proof"><summary>Lemma 1: the log-sum inequality behind this merging</summary><div class="blog-proof-body">
+<p>For \(u_i,v_i>0\), write \(U=\sum_i u_i\), \(V=\sum_i v_i\), and \(\phi(s)=s\log s\). Jensen’s inequality gives</p>
+\[
+ \sum_i u_i\log\frac{u_i}{v_i}
+ =V\sum_i\frac{v_i}{V}\phi\!\left(\frac{u_i}{v_i}\right)
+ \ge V\phi(U/V)=U\log(U/V).
+\]
+<p>Limits cover zero entries, with the stated infinite-value convention. Apply this once on each sign region. \(\square\)</p>
+</div></details>
+<p>For fixed \(0&lt;q&lt;1\), the function \(p\mapsto d(p\mid q)\) vanishes to first order at \(p=q\), and</p>
+\[
+ \partial_p^2d(p\mid q)=\frac1{p(1-p)}\ge4.
+\]
+<p>Integrating this curvature bound twice yields \(d(p\mid q)\ge2(p-q)^2\), proving the theorem. The boundary cases follow by limits or have infinite entropy. \(\square\)</p>
+</div></details>
+<p>The proof also works for probability measures. Take densities with respect to their sum and replace finite sums by integrals. The sign set remains the event that detects the full total variation discrepancy.</p>
+
+<h2>What replaces the sign set for matrices?</h2>
+<p>A <em>density matrix</em> is a positive semidefinite Hermitian matrix of trace one. Its eigenvalues are probabilities, but its eigenvectors also matter. For two such matrices, the Umegaki relative entropy <a href="#ref-umegaki">[3]</a> and the trace norm are</p>
+\[
+ D(\rho\Vert\sigma)=\operatorname{tr}\bigl(\rho(\log\rho-\log\sigma)\bigr),
+ \qquad \lVert X\rVert_1=\operatorname{tr}\sqrt{X^*X}.
+\]
+<p>The formula is interpreted on the support of \(\sigma\). If \(\operatorname{supp}\rho\not\subseteq\operatorname{supp}\sigma\), set \(D=+\infty\); use \(0\log0=0\) for zero eigenvalues. Commuting density matrices reduce to classical probability vectors in a common eigenbasis.</p>
+<p>Put \(\Delta=\rho-\sigma\), and let \(\Pi\) be the spectral projector onto the strictly positive eigenspace of \(\Delta\). The observable</p>
+\[
+ H=2\Pi-I
+ \quad\text{satisfies}\quad
+ H^2=I,\qquad \operatorname{tr}(\Delta H)=\lVert\Delta\rVert_1.
+\]
+<p>It assigns \(+1\) to positive discrepancies and \(−1\) to the remaining eigenspaces; zero discrepancies do not affect the trace. This is the matrix counterpart of choosing \(A\). The two-outcome measurement \((\Pi,I-\Pi)\) attains the full trace-distance discrepancy, a basic fact in quantum state discrimination <a href="#ref-watrous">[1]</a>.</p>
+
+<p id="theorem-2"><strong>Theorem 2 (quantum Pinsker).</strong> For any density matrices,</p>
+\[
+ D(\rho\Vert\sigma)\ge\frac12\lVert\rho-\sigma\rVert_1^2.
+\]
+<details class="blog-proof"><summary>Proof: entropy curvature tested against the sign observable</summary><div class="blog-proof-body">
+<p>First assume \(\rho,\sigma>0\). Interpolate linearly:</p>
+\[
+ M_t=\sigma+t\Delta,\qquad F(t)=D(M_t\Vert\sigma),\qquad 0\le t\le1.
+\]
+<p>We have \(F(0)=F'(0)=0\). It suffices to show \(F''(t)\ge\lVert\Delta\rVert_1^2\).</p>
+<p><em>Step 1: compute the curvature in the current eigenbasis.</em> Write \(M_t=\operatorname{diag}(\lambda_i)\) in an orthonormal eigenbasis. Then</p>
+\[
+ F''(t)=\sum_{i,j}L_{ij}|\Delta_{ij}|^2,
+ \qquad L_{ij}=\int_0^1\frac{du}{(1-u)\lambda_i+u\lambda_j}
+ \ge\frac{2}{\lambda_i+\lambda_j}.
+\]
+<p>The last bound is scalar Jensen for \(s\mapsto1/s\). The divided difference is \(L_{ij}=(\log\lambda_i-\log\lambda_j)/(\lambda_i-\lambda_j)\), with value \(1/\lambda_i\) when the eigenvalues coincide.</p>
+<details class="blog-proof"><summary>Lemma 2: differentiating the matrix logarithm, without differentiating eigenvectors</summary><div class="blog-proof-body">
+<p>The scalar resolvent integral, applied by the spectral theorem, gives</p>
+\[
+ \log M=\int_0^\infty\left(\frac{I}{1+s}-(M+sI)^{-1}\right)ds.
+\]
+<p>Differentiate using \(\mathrm D(A^{-1})[E]=-A^{-1}EA^{-1}\):</p>
+\[
+ \mathrm D\log_M[E]
+ =\int_0^\infty(M+sI)^{-1}E(M+sI)^{-1}ds.
+\]
+<p>Positive definiteness bounds the differentiated integrand near zero and makes it integrable at infinity. In the eigenbasis of \(M\), the \((i,j)\) entry is \(L_{ij}E_{ij}\). The diagonal entries also show \(\operatorname{tr}(M\,\mathrm D\log_M[E])=\operatorname{tr}E\). Thus differentiating \(\operatorname{tr}(M\log M)\) gives \(\operatorname{tr}(E(\log M+I))\). Since \(\operatorname{tr}\Delta=0\),</p>
+\[
+ F'(t)=\operatorname{tr}(\Delta(\log M_t-\log\sigma)),
+ \qquad F''(t)=\operatorname{tr}(\Delta\,\mathrm D\log_{M_t}[\Delta]),
+\]
+<p>which is the claimed formula. \(\square\)</p>
+</div></details>
+<p><em>Step 2: insert the sign observable.</em> Weighted Cauchy–Schwarz, in the same eigenbasis, gives</p>
+\[
+ \begin{aligned}
+ \lVert\Delta\rVert_1^2
+ &=\left|\sum_{i,j}\Delta_{ij}\overline{H_{ij}}\right|^2\\
+ &\le\left(\sum_{i,j}\frac{2|\Delta_{ij}|^2}{\lambda_i+\lambda_j}\right)
+ \left(\sum_{i,j}\frac{\lambda_i+\lambda_j}{2}|H_{ij}|^2\right)\\
+ &\le F''(t)\operatorname{tr}(M_tH^2)=F''(t).
+ \end{aligned}
+\]
+<p>The second factor equals \(\operatorname{tr}(M_tH^2)=1\): Hermitian symmetry equates the row and column sums, \(H^2=I\), and \(\operatorname{tr}M_t=1\). No commutation between \(H\) and \(M_t\) is required.</p>
+<p><em>Step 3: integrate twice.</em> Therefore</p>
+\[
+ D(\rho\Vert\sigma)=\int_0^1(1-t)F''(t)dt
+ \ge\frac12\lVert\Delta\rVert_1^2.
+\]
+<p><em>Singular states.</em> If the support condition fails, there is nothing to prove. Otherwise restrict everything to \(\operatorname{supp}\sigma\), where \(\sigma>0\). Apply the result to \(\rho_\eta=(1-\eta)\rho+\eta\sigma>0\), then let \(\eta\downarrow0\). Continuity of \(s\log s\) at zero, of the linear term involving \(\log\sigma\), and of the trace norm gives the stated result. \(\square\)</p>
+</div></details>
+
+<h2>Why the constant cannot improve</h2>
+<p>A noncommutative inequality must include commuting examples. Take</p>
+\[
+ \sigma=I/2,\qquad
+ \rho_\varepsilon=\operatorname{diag}(1/2+\varepsilon,1/2-\varepsilon).
+\]
+<p>As \(\varepsilon\to0\), \(D(\rho_\varepsilon\Vert\sigma)=2\varepsilon^2+O(\varepsilon^4)\), while \(\lVert\rho_\varepsilon-\sigma\rVert_1=2|\varepsilon|\). The ratio tends to \(1/2\), so the constant is sharp. With base-two logarithms it becomes \(1/(2\log2)\).</p>
+<p>The classical and quantum proofs have the same skeleton: entropy has enough curvature along the line connecting the two states, and a sign test measures the entire discrepancy. Quantum data processing gives another short route via the two-outcome measurement <a href="#ref-watrous">[1]</a>; the direct proof above makes the curvature responsible for the constant explicit. Early quantum forms appear in work of Hiai, Ohya, and Tsukada <a href="#ref-hiai">[4]</a>.</p>
+<h2>Bibliography</h2><ol class="references">
+<li id="ref-watrous">John Watrous. <em>The Theory of Quantum Information</em>. Cambridge University Press, 2018. <a href="https://cs.uwaterloo.ca/~watrous/TQI/">Open book</a> · <a href="https://cs.uwaterloo.ca/~watrous/TQI/TQI.5.pdf">Chapter 5</a>.</li>
+<li id="ref-wirth">Melchior Wirth. <em>Trace Inequalities and Quantum Entropies</em>. <a href="https://www.math.uni-leipzig.de/~wirth/notes_of_trace_inequalities.pdf">Lecture notes</a>.</li>
+<li id="ref-umegaki">Hisaharu Umegaki. <em>Conditional expectation in an operator algebra, IV (Entropy and information)</em>. Kōdai Mathematical Seminar Reports 14(2), 59–85, 1962. <a href="https://doi.org/10.2996/kmj/1138844604">Paper</a>.</li>
+<li id="ref-hiai">Fumio Hiai, Masanori Ohya, and Makoto Tsukada. <em>Sufficiency, KMS condition and relative entropy in von Neumann algebras</em>. Pacific Journal of Mathematics 96(1), 99–109, 1981. <a href="https://doi.org/10.2140/pjm.1981.96.99">Paper</a> · <a href="https://msp.org/pjm/1981/96-1/pjm-v96-n1-p08-s.pdf">PDF</a>.</li>
+</ol></article></main><footer class="draft-footer"><div class="wrap">Forthcoming post · Alpha preview · <a href="index.html">All forthcoming posts</a> · <a href="../">Published blog</a></div></footer></body></html>

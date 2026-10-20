@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,follow">
+<meta name="keywords" content="scaled sign gradient descent, sign-GD, signSGD, norm-steepest descent, optimization geometry, dual norm, squared norm dissipation, subdifferential, differential inclusion, l-infinity smoothness, Polyak–Łojasiewicz inequality, PL inequality, condition number, induced operator norm, quadratic optimization, isospectral matrices, coordinate dependence, orthogonal rotation, Hessian spectrum, linear convergence, greedy coordinate descent, unscaled sign descent, BaLoRA, Valérie Castin, Kimia Nadjahi, Pierre Ablin, Gabriel Peyré, descente de gradient signée, conditionnement">
+<meta name="description" content="Derive scaled sign descent from norm-steepest descent, prove its geometry-dependent convergence bound, and compare isospectral quadratics whose coordinate orientations give very different condition numbers.">
+<title>Which condition number does sign gradient descent see? — Alpha preview — Gabriel Peyré</title>
+<link rel="canonical" href="https://www.gpeyre.com/blog/preparations/sign-gradient-descent-geometry.html"><link rel="stylesheet" href="assets/drafts.css"><script defer src="assets/drafts.js"></script><script defer src="assets/idea-experiments.js"></script>
+<script type="text/x-mathjax-config">MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+</head><body>
+<header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Which condition number does sign gradient descent see?</h1><p class="subtitle">Choose a geometry first. Its conditioning follows—and need not be invariant under rotations.</p><p class="byline">Gabriel Peyré</p></div></header>
+<main class="wrap"><article class="blog-prose">
+<p>Rotating a quadratic preserves every eigenvalue of its Hessian. It also preserves the behavior of ordinary gradient descent, provided we rotate the initial point along with the objective. A coordinatewise optimizer can behave very differently: taking signs is not invariant under a rotation.</p>
+<p>How should we then measure conditioning? Not by switching arbitrarily to a different matrix norm. The clean route is to define steepest descent in a chosen vector norm, derive the two constants in its convergence theorem, and <em>then</em> take their ratio. This viewpoint is useful in our work on balanced low-rank adaptation <a href="#ref-balora">[1]</a>, and belongs to the broader study of optimization geometry <a href="#ref-geometry">[2]</a>.</p>
+
+<h2>A direction is not yet a speed</h2>
+<p>Fix \(1\leq p\leq\infty\), and let \(q\) be the dual exponent: \(1/p+1/q=1\). For a gradient covector \(g\), define</p>
+\[
+ d_p(g)\in\underset{v\in\mathbb R^d}{\operatorname{argmin}}
+ \left\{\langle g,v\rangle+\tfrac12\|v\|_p^2\right\}.
+\]
+<p>The squared-norm penalty chooses both direction and magnitude, a convenient formulation of norm-steepest descent <a href="#ref-boyd">[5]</a>. Equivalently,</p>
+\[
+ d_p(g)\in-\partial\!\left(\tfrac12\|\cdot\|_q^2\right)(g).
+\]
+<p>The subdifferential allows several choices when an endpoint norm is nonsmooth. Every choice has the same two fundamental properties:</p>
+\[
+ \langle g,d_p(g)\rangle=-\|g\|_q^2,
+ \qquad \|d_p(g)\|_p=\|g\|_q.
+\]
+<details class="blog-proof"><summary>Proof: Hölder's inequality, with equality at the optimum</summary><div class="blog-proof-body">
+<p>For \(a=\|v\|_p\), Hölder's inequality gives</p>
+\[
+ \langle g,v\rangle+\tfrac12\|v\|_p^2
+ \geq-a\|g\|_q+\tfrac12a^2
+ =\tfrac12(a-\|g\|_q)^2-\tfrac12\|g\|_q^2.
+\]
+<p>In finite dimension a norming direction attains equality in Hölder. The minimum is therefore \(-\|g\|_q^2/2\), attained precisely by descent directions with norm \(\|g\|_q\) and pairing \(-\|g\|_q^2\). This is also the equality condition in Fenchel duality for the conjugate pair of half-squared dual norms. \(\square\)</p>
+</div></details>
+<p>For \(1&lt;p&lt;\infty\), the direction is unique; if \(g\ne0\),</p>
+\[
+ (d_p(g))_i=-\|g\|_q^{2-q}|g_i|^{q-1}\operatorname{sign}(g_i),
+ \qquad d_p(0)=0.
+\]
+<p>Three geometries are particularly familiar:</p>
+<ul>
+<li>\(p=2\): \(d_2(g)=-g\), ordinary gradient descent.</li>
+<li>\(p=\infty\): choose \(d_\infty(g)=-\|g\|_1\operatorname{sign}(g)\), with \(\operatorname{sign}(0)=0\). This is <em>scaled sign descent</em>. At a zero gradient coordinate, any sign value in \([-1,1]\) is allowed by the minimization problem.</li>
+<li>\(p=1\): choose a coordinate \(i\) maximizing \(|g_i|\), and take \(d_1(g)=-\|g\|_\infty\operatorname{sign}(g_i)e_i\). This is a greedy coordinate step; convex combinations of tied maximizing choices are also valid.</li>
+</ul>
+<p>The associated iteration and flow are</p>
+\[
+ x_{k+1}=x_k+\eta d_p(\nabla f(x_k)),
+\]
+\[
+ \dot x(t)\in-\partial\!\left(\tfrac12\|\cdot\|_q^2\right)(\nabla f(x(t))).
+\]
+<p>At nonsmooth endpoint norms the flow is a differential inclusion. The following discrete argument works for any selected minimizing direction.</p>
+<aside class="note"><p><strong>Scaled is essential.</strong> The update here is \(x^+=x-\eta\|g\|_1\operatorname{sign}(g)\), not \(x^+=x-\eta\operatorname{sign}(g)\). The latter has a different speed and can oscillate with a fixed step even on a scalar quadratic. Work on signSGD, including stochastic and communication-efficient variants <a href="#ref-signsgd">[3]</a>, should not be read as a theorem about precisely the same algorithm without checking its scaling and assumptions.</p></aside>
+
+<h2>The convergence theorem determines the condition number</h2>
+<p>Assume that \(f\) has finite minimum \(f_*\) and satisfies</p>
+\[
+ f(x+v)\leq f(x)+\langle\nabla f(x),v\rangle+\tfrac L2\|v\|_p^2,
+\]
+\[
+ \tfrac12\|\nabla f(x)\|_q^2\geq\mu\bigl(f(x)-f_*\bigr),
+ \qquad L,\mu&gt;0.
+\]
+<p>The first is smoothness in the chosen norm. The second is its dual-norm Polyak–Łojasiewicz (P–L) inequality. It does not require convexity; in Euclidean geometry it is a standard route to linear convergence <a href="#ref-pl">[4]</a>.</p>
+<p id="theorem-1"><strong>Theorem 1 (norm-steepest descent).</strong> Suppose these assumptions hold on a region containing all iterates and their update segments. With \(E_k=f(x_k)-f_*\), the step \(\eta=1/L\) satisfies</p>
+\[
+ E_k\leq(1-1/\kappa_p)^k E_0,
+ \qquad \kappa_p=\frac L\mu.
+\]
+<p>For any absolutely continuous solution of the flow satisfying the chain rule on the same region,</p>
+\[
+ f(x(t))-f_*\leq e^{-2\mu t}\bigl(f(x(0))-f_*\bigr).
+\]
+<details class="blog-proof"><summary>Proof: substitute the two identities for the steepest direction</summary><div class="blog-proof-body">
+<p>Write \(g=\nabla f(x_k)\) and \(v=\eta d_p(g)\) in the smoothness bound:</p>
+\[
+ E_{k+1}\leq E_k-\eta(1-\eta L/2)\|g\|_q^2.
+\]
+<p>With \(\eta=1/L\), the P–L inequality gives \(E_{k+1}\leq(1-\mu/L)E_k\). Iterate. More generally, every \(0&lt;\eta&lt;2/L\) gives the factor \(1-2\eta\mu(1-\eta L/2)\). Along the flow, the chain rule gives \(E'(t)=-\|\nabla f(x(t))\|_q^2\leq-2\mu E(t)\); integrate this scalar inequality. \(\square\)</p>
+</div></details>
+<p>The constants are global when the assumptions are global, and local only when the assumptions and invariance of the neighborhood are local. A positive Hessian at an isolated minimizer yields nearby constants. With a manifold of minimizers, one needs an appropriate local P–L property—for example from a smooth Morse–Bott structure—not merely a list of positive eigenvalues with all zero directions ignored.</p>
+
+<h2>For a quadratic, which matrix norms appear?</h2>
+<p>Take \(f(x)=\tfrac12 x^\top Hx\), with \(H\succ0\). The sharp constants are</p>
+\[
+ L_p(H)=\sup_{u\ne0}\frac{u^\top Hu}{\|u\|_p^2},
+ \qquad
+ \mu_p(H)=\inf_{u\ne0}\frac{\|Hu\|_q^2}{u^\top Hu}.
+\]
+<p id="proposition-1"><strong>Proposition 1 (dual operator-norm formula).</strong> For an induced norm \(\|M\|_{a\to b}=\sup_{u\ne0}\|Mu\|_b/\|u\|_a\),</p>
+\[
+ L_p(H)=\|H\|_{p\to q},\qquad
+ \mu_p(H)^{-1}=\|H^{-1}\|_{q\to p}.
+\]
+<p>Consequently \(\kappa_p(H)=\|H\|_{p\to q}\|H^{-1}\|_{q\to p}\), <em>not</em> in general the same-norm product \(\|H\|_{p\to p}\|H^{-1}\|_{p\to p}\).</p>
+<details class="blog-proof"><summary>Proof: positive quadratic forms reduce the bilinear supremum</summary><div class="blog-proof-body">
+<p>By duality, \(\|H\|_{p\to q}\) is the supremum of \(v^\top Hu\) over \(\|u\|_p,\|v\|_p\leq1\). Cauchy–Schwarz for the positive form \(H\) gives</p>
+\[
+ |v^\top Hu|\leq\sqrt{(v^\top Hv)(u^\top Hu)}\leq L_p(H).
+\]
+<p>Taking \(u=v\) at a maximizing vector proves equality. Next set \(g=Hu\). Then</p>
+\[
+ \mu_p(H)^{-1}
+ =\sup_{g\ne0}\frac{g^\top H^{-1}g}{\|g\|_q^2}
+ =\|H^{-1}\|_{q\to p},
+\]
+<p>by the same argument with \(H^{-1}\) and the dual exponents exchanged. \(\square\)</p>
+</div></details>
+<p>For \(p=2\), this reduces to the familiar spectral condition number. For \(p=\infty\), two elementary finite-dimensional formulas are especially useful:</p>
+\[
+ L_\infty(H)=\max_{s\in\{-1,1\}^d}s^\top Hs,
+ \qquad \mu_\infty(H)^{-1}=\max_i(H^{-1})_{ii}.
+\]
+<p>The first maximum is over the vertices of the cube; the second is over the vertices \(\pm e_i\) of the \(\ell^1\) ball. A convex quadratic attains its maximum over a polytope at a vertex. This is where the coordinate axes enter.</p>
+
+<h2>A rotation changes the sign-descent condition number</h2>
+<p>Let \(d\) be even, \(0&lt;\varepsilon&lt;1\), and \(v=(1,\ldots,1)^\top/\sqrt d\). Compare</p>
+\[
+ H_{\mathrm{axis}}=\operatorname{diag}(\varepsilon,1,\ldots,1),
+ \qquad H_{\mathrm{spread}}=I-(1-\varepsilon)vv^\top.
+\]
+<p>Both have one eigenvalue \(\varepsilon\) and \(d-1\) eigenvalues equal to one: only the orientation of the soft direction differs.</p>
+<p id="proposition-2"><strong>Proposition 2 (same Euclidean, different sign conditioning).</strong> These matrices satisfy</p>
+\[
+ \kappa_2(H_{\mathrm{axis}})=\kappa_2(H_{\mathrm{spread}})=1/\varepsilon,
+\]
+\[
+ \kappa_\infty(H_{\mathrm{axis}})=\frac{d-1+\varepsilon}{\varepsilon},
+ \qquad
+ \kappa_\infty(H_{\mathrm{spread}})=\frac{1+(d-1)\varepsilon}{\varepsilon}.
+\]
+<details class="blog-proof"><summary>Proof: evaluate the cube and cross-polytope maxima</summary><div class="blog-proof-body">
+<p>For the diagonal matrix every cube vertex gives \(d-1+\varepsilon\), and the largest inverse diagonal entry is \(1/\varepsilon\). For the spread matrix,</p>
+\[
+ s^\top H_{\mathrm{spread}}s=d-(1-\varepsilon)(v^\top s)^2.
+\]
+<p>Because \(d\) is even, a sign vector with half positive and half negative coordinates has \(v^\top s=0\). Thus \(L_\infty=d\). The inverse is</p>
+\[
+ H_{\mathrm{spread}}^{-1}=I+(\varepsilon^{-1}-1)vv^\top,
+\]
+<p>whose diagonal entries all equal \((d-1+\varepsilon^{-1})/d\). Multiply by \(L_\infty=d\) to obtain the stated condition number. \(\square\)</p>
+</div></details>
+<p>At \(d=20\) and \(\varepsilon=0.01\), the Euclidean condition number is \(100\) for both, but the sign condition numbers are \(1901\) and \(119\). A rotated quadratic with the same spectrum can therefore have a substantially different worst-case guarantee for scaled sign descent.</p>
+
+<h2>Numerical experimentation</h2>
+<p>The experiment matches initial vectors by an orthogonal change of coordinates. Ordinary GD then has exactly the same loss in both problems, up to floating-point arithmetic. Scaled sign descent does not. Select soft, hard, or mixed initial directions to distinguish an actual trajectory from a worst-case upper bound.</p>
+<figure><iframe class="idea-experiment" data-experiment="sign" src="assets/optimization-geometry/index.html?topic=sign" title="Interactive isospectral quadratic comparison for ordinary and scaled sign gradient descent" loading="lazy" style="width:100%;height:850px;border:0;"></iframe><figcaption>Each method uses the geometry-specific step \(1/L_p\). Solid lines are computed losses; dashed lines are Theorem 1's upper bounds. The better condition number is not a promise that every individual run will be faster. No stochastic gradients or momentum are used.</figcaption></figure>
+
+<h2>Geometry before conditioning</h2>
+<p>There is no optimizer-independent condition number. The Euclidean spectrum is the correct answer for Euclidean steepest descent, but a coordinatewise method asks a different question. This is why the distinction between balanced and hyperbalanced representations in <a href="balanced-low-rank-conditioning.html">low-rank adaptation</a> becomes meaningful when the optimizer responds to coordinates <a href="#ref-balora">[1]</a>.</p>
+<p>Changing coordinates, changing the factorization, and changing the descent norm are three related but distinct operations. The companion post on <a href="intrinsic-factor-training-dynamics.html">intrinsic factor dynamics</a> describes how a redundant parameterization itself induces a non-Euclidean mobility. Here we fixed the represented quadratic and changed the optimizer's geometry.</p>
+
+<h2>Bibliography</h2><ol class="references">
+<li id="ref-balora">Valérie Castin, Kimia Nadjahi, Pierre Ablin, and Gabriel Peyré. <a href="https://arxiv.org/abs/2605.31484"><em>Balanced LoRA: removing parameter invariance to accelerate convergence.</em></a> ICML, 2026.</li>
+<li id="ref-geometry">Suriya Gunasekar, Jason D. Lee, Daniel Soudry, and Nathan Srebro. <a href="https://proceedings.mlr.press/v80/gunasekar18a.html"><em>Characterizing implicit bias in terms of optimization geometry.</em></a> ICML, 2018.</li>
+<li id="ref-signsgd">Jeremy Bernstein, Yu-Xiang Wang, Kamyar Azizzadenesheli, and Anima Anandkumar. <a href="https://arxiv.org/abs/1802.04434"><em>signSGD: compressed optimisation for non-convex problems.</em></a> ICML, 2018.</li>
+<li id="ref-pl">Hamed Karimi, Julie Nutini, and Mark Schmidt. <a href="https://arxiv.org/abs/1608.04636"><em>Linear convergence of gradient and proximal-gradient methods under the Polyak–Łojasiewicz condition.</em></a> ECML PKDD, 2016.</li>
+<li id="ref-boyd">Stephen Boyd and Lieven Vandenberghe. <a href="https://web.stanford.edu/~boyd/cvxbook/"><em>Convex optimization.</em></a> Cambridge University Press, 2004.</li>
+</ol></article></main><footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Published blog</a></div></footer>
+</body></html>

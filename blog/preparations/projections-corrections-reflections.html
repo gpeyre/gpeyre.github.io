@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,follow">
+<meta name="keywords" content="alternating projections, POCS, convex feasibility, best approximation, metric projection, Euclidean projection, Dykstra algorithm, correction vectors, Douglas–Rachford, reflected projections, reflection operator, averaged operator, nonexpansive map, Fejér monotonicity, fixed point, product-space reformulation, consensus constraint, Sudoku, one-hot encoding, nonconvex feasibility, constraint satisfaction, deterministic restarts, shadow sequence, halfplane counterexample, John von Neumann, Richard Dykstra, Jim Douglas, Henry Rachford, Boyle Dykstra, Jonathan Borwein, Matthew Tam, Francisco Aragón Artacho, projections alternées">
+<meta name="description" content="Alternating projections find feasibility; Dykstra finds the nearest point; Douglas–Rachford uses reflections. A halfplane counterexample and a genuine five-set Sudoku experiment make the distinctions visible.">
+<title>Projections, corrections, and reflections — Alpha preview — Gabriel Peyré</title><link rel="canonical" href="https://www.gpeyre.com/blog/preparations/projections-corrections-reflections.html"><link rel="stylesheet" href="assets/drafts.css"><script defer src="assets/drafts.js"></script><script defer src="assets/idea-experiments.js"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script></head>
+<body><header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Projections, corrections, and reflections</h1><p class="subtitle">Finding a feasible point is not the same as finding the nearest one.</p><p class="byline">Gabriel Peyré</p></div></header><main class="wrap"><article class="blog-prose">
+<p>Suppose a point must satisfy several constraints, and projecting onto each constraint separately is easy. Can we project onto their intersection by alternating these elementary operations? This is an attractive idea in imaging, statistics, optimization—and even Sudoku.</p>
+<p>The answer depends on what we mean by “project.” Reaching <em>some</em> feasible point and reaching the <em>nearest</em> feasible point are different tasks. A picture with two halfplanes is enough to separate them. It also introduces three beautiful algorithms: alternating projections, Dykstra’s corrections, and Douglas–Rachford reflections.</p>
+<p>We will first work with closed convex sets, where convergence is understood, then keep the same operations and venture into a nonconvex puzzle. In that second setting, a successful animation is an experiment, not a convergence theorem.</p>
+
+<h2>The geometry of a projection</h2>
+<p>For a nonempty closed convex set \(A\subset\mathbb R^d\), its Euclidean projection is the unique nearest point</p>
+\[
+ P_Az=\operatorname*{arg\,min}_{a\in A}\frac12\lVert z-a\rVert^2.
+\]
+<p>The displacement \(z-P_Az\) is normal to \(A\) at the projected point. The useful quantitative form is the following.</p>
+<p id="lemma-1"><strong>Lemma 1 (projection inequality).</strong> For every \(a\in A\),</p>
+\[
+ \lVert P_Az-a\rVert^2+\lVert z-P_Az\rVert^2
+ \le\lVert z-a\rVert^2.
+\]
+<details class="blog-proof"><summary>Proof: the first-order condition and one expansion</summary><div class="blog-proof-body">
+<p>Let \(p=P_Az\). The feasible segment \(p+t(a-p)\), \(0\le t\le1\), cannot decrease the squared distance at \(t=0\). Differentiating gives \(\langle z-p,a-p\rangle\le0\). Now expand:</p>
+\[
+ \begin{aligned}
+ \lVert z-a\rVert^2
+ &=\lVert z-p\rVert^2+\lVert p-a\rVert^2\\
+ &\quad+2\langle z-p,p-a\rangle.
+ \end{aligned}
+\]
+<p>The last term is nonnegative, proving the claim. \(\square\)</p>
+</div></details>
+<p>For two such sets \(A,B\) with \(A\cap B\ne\varnothing\), <em>feasibility</em> asks for any point in the intersection. <em>Best approximation</em> asks for the particular point \(P_{A\cap B}z_0\). The second problem remembers the starting point as an objective, not merely as an initialization.</p>
+
+<h2>Alternating projections forget the original objective</h2>
+<figure class="portrait-single"><img src="assets/projection-lab/von-neumann.jpg" width="510" height="700" loading="lazy" alt="Portrait of John von Neumann"><figcaption>John von Neumann. U.S. Department of Energy, public domain. <a href="https://www.siam.org/publications/siam-news/articles/siam-and-john-von-neumann/">Supplied image source</a> · <a href="https://commons.wikimedia.org/wiki/File:HD.3F.191_(11239892036).jpg">Public-domain provenance</a>.</figcaption></figure>
+<p>The simplest iteration is</p>
+\[
+ z_{k+1}=P_BP_Az_k.
+\]
+<p>This is alternating projection, often called POCS: projection onto convex sets. The subspace case is associated with von Neumann <a href="#ref-vonneumann">[1]</a>; the general feasibility theory is reviewed by Bauschke and Borwein <a href="#ref-pocs">[2]</a>.</p>
+<p id="theorem-1"><strong>Theorem 1 (finite-dimensional alternating projections).</strong> Under the convex assumptions above, \(z_k\) converges to a point of \(A\cap B\). This limit need not be \(P_{A\cap B}z_0\).</p>
+<details class="blog-proof"><summary>Proof of convergence: every projection spends squared distance</summary><div class="blog-proof-body">
+<p>Set \(y_k=P_Az_k\), and fix any \(a\in A\cap B\). Lemma 1 twice gives</p>
+\[
+ \lVert z_{k+1}-a\rVert^2
+ +\lVert z_k-y_k\rVert^2+\lVert y_k-z_{k+1}\rVert^2
+ \le\lVert z_k-a\rVert^2.
+\]
+<p>Thus \((z_k)\) is bounded, and summing shows that both projection displacements tend to zero. A convergent subsequence has a limit \(z_\star\in A\cap B\), by closedness. The displayed inequality also says that \(\lVert z_k-z_\star\rVert\) is nonincreasing; since it tends to zero along that subsequence, it tends to zero along the whole sequence. \(\square\)</p>
+</div></details>
+<p>If both sets are affine subspaces, the limit <em>is</em> the nearest point. Let \(L\) be the direction subspace of \(A\cap B\). Orthogonal projection onto either affine set preserves the component along \(L\), so the iterates remain in \(z_0+L^\perp\). Their feasible limit in this affine space is the unique nearest point. For general convex sets, that preservation property disappears.</p>
+
+<h3>A counterexample you can draw</h3>
+<p>Take</p>
+\[
+ A=\{(x,y):y\ge0\},\quad B=\{(x,y):y\ge x\},\quad z_0=(2,-1).
+\]
+<p>Alternating projections perform</p>
+\[
+ (2,-1)\xrightarrow{P_A}(2,0)\xrightarrow{P_B}(1,1).
+\]
+<p>The last point already belongs to the intersection, so the algorithm stops. Yet \(P_Bz_0=(1/2,1/2)\) also belongs to \(A\). Since it minimizes distance over all of \(B\), it is also the nearest point over the smaller set \(A\cap B\). The squared distances are \(5\) for the POCS limit and \(9/2\) for the true projection.</p>
+
+<h2>Dykstra: remember the normal displacements</h2>
+<p>Dykstra’s algorithm adds two correction vectors. Initialize \(z=z_0\) and \(p=q=0\), then repeat the following full cycle:</p>
+\[
+ \begin{aligned}
+ a&=z+p,& y&=P_Aa,&p&\leftarrow a-y,\\
+ b&=y+q,& z&\leftarrow P_Bb,&q&\leftarrow b-z.
+ \end{aligned}
+\]
+<p>The old displacement is added back before the next projection onto the same set. Unlike plain alternation, the algorithm retains the information needed to solve the original distance-minimization problem.</p>
+<details class="blog-proof"><summary>Why the corrections remember the starting point</summary><div class="blog-proof-body">
+<p>After each full cycle, a direct addition of the update formulas gives the invariant</p>
+\[
+ z+p+q=z_0.
+\]
+<p>The corrections are normal displacements for their respective sets: \(\langle p,a-y\rangle\le0\) for \(a\in A\), and \(\langle q,b-z\rangle\le0\) for \(b\in B\). If a full state is fixed, its two projected points coincide, \(y=z\). For any \(w\in A\cap B\), adding the two normal inequalities then gives</p>
+\[
+ \langle z_0-z,w-z\rangle
+ =\langle p+q,w-z\rangle\le0.
+\]
+<p>This is precisely the optimality condition for \(z=P_{A\cap B}z_0\). The correction invariant explains the objective being solved; the general convergence theorem below does not require the correction vectors themselves to converge.</p>
+</div></details>
+<p id="theorem-2"><strong>Theorem 2 (Dykstra’s best-approximation theorem).</strong> Under the same convex assumptions, the Dykstra iterates \(z\) converge to \(P_{A\cap B}z_0\) <a href="#ref-boyle">[4]</a>.</p>
+<p>Dykstra introduced the cone version in 1983 <a href="#ref-dykstra">[3]</a>, followed by the general closed-convex-set result of Boyle and Dykstra <a href="#ref-boyle">[4]</a>. A useful way to understand the corrections is as dual coordinates: minimize the squared distance subject to both constraints, and alternate dual updates while retaining each constraint’s previous contribution. Tibshirani gives this connection explicitly <a href="#ref-tibshirani">[5]</a>. In our halfplane example, the second full cycle reaches \((1/2,1/2)\).</p>
+<p>The original algorithm is not being replaced by a nearest-point shortcut in the experiment below: its correction vectors are updated at every cycle.</p>
+
+<h2>Douglas–Rachford: reflect, then average</h2>
+<p>Instead of correcting a projection, reflect across the set. Write \(R_A=2P_A-I\). Douglas–Rachford uses</p>
+\[
+ z_{k+1}=\frac12(I+R_BR_A)z_k
+ =z_k+P_B(2P_Az_k-z_k)-P_Az_k.
+\]
+<p>The auxiliary iterate \(z_k\) need not be feasible. The point of interest is its <em>shadow</em> \(P_Az_k\).</p>
+<p id="theorem-3"><strong>Theorem 3 (convex Douglas–Rachford).</strong> In finite dimensions, with \(A,B\) as above, the iterates converge to a fixed point of this operator and their shadows converge to a point of \(A\cap B\). This is not in general a best-approximation algorithm <a href="#ref-dr">[7]</a>.</p>
+<details class="blog-proof"><summary>Proof: the average of the identity and a nonexpansive map</summary><div class="blog-proof-body">
+<p>The projection optimality inequalities imply firm nonexpansiveness:</p>
+\[
+ \lVert P_Ax-P_Ay\rVert^2
+ \le\langle P_Ax-P_Ay,x-y\rangle.
+\]
+<p>Expanding the squared norm of the reflected difference therefore shows</p>
+\[
+ \lVert R_Ax-R_Ay\rVert^2
+ \le\lVert x-y\rVert^2.
+\]
+<p>The same holds for \(B\), so \(Q=R_BR_A\) is nonexpansive. If \(T=(I+Q)/2\) and \(Tw=w\), the parallelogram identity gives</p>
+\[
+ \lVert Tz-w\rVert^2+\lVert Tz-z\rVert^2
+ \le\lVert z-w\rVert^2.
+\]
+<p>Such a fixed point exists: every point of \(A\cap B\) is one. The same boundedness, vanishing-step, and subsequence argument as in Theorem 1 shows convergence to a fixed point \(z_\star\). Continuity of \(T\) identifies any cluster point as fixed. Finally, \(Tz_\star=z_\star\) implies</p>
+\[
+ P_B(2P_Az_\star-z_\star)=P_Az_\star.
+\]
+<p>The right side is in \(A\) and, by the left side, in \(B\). Continuity of projection proves shadow convergence. \(\square\)</p>
+</div></details>
+<p>The name comes from Douglas and Rachford’s 1956 heat-equation splitting method <a href="#ref-original-dr">[6]</a>. The reflection formula is its later feasibility incarnation. The history and modern combinatorial applications are discussed by Aragón Artacho, Borwein, and Tam <a href="#ref-dr">[7]</a>.</p>
+
+<h2>Sudoku: five easy projections in a larger space</h2>
+<p>Encode a \(9\times9\) board by a tensor \(X\in\mathbb R^{9\times9\times9}\): \(X_{ijk}=1\) means that cell \((i,j)\) contains digit \(k\). A valid board lies in five sets:</p>
+<ol><li>\(C_1\): for every cell, \((X_{ijk})_{k=1}^9\) is one-hot.</li><li>\(C_2\): for every row and digit, \((X_{ijk})_{j=1}^9\) is one-hot.</li><li>\(C_3\): for every column and digit, \((X_{ijk})_{i=1}^9\) is one-hot.</li><li>\(C_4\): for every block and digit, its nine cell entries are one-hot.</li><li>\(C_5\): every given clue cell is fixed to its prescribed one-hot vector; all other coordinates are free.</li></ol>
+<p>A one-hot vector is one of the nine standard basis vectors. Its nearest point to a score vector \(x\) is \(e_k\) for an index maximizing \(x_k\), because \(\lVert x-e_k\rVert^2=\lVert x\rVert^2+1-2x_k\). We choose the smallest index in a tie. Each group in a given constraint is disjoint from the others, so these groupwise choices give an exact Euclidean projection. Projection onto \(C_5\) simply overwrites the clue coordinates.</p>
+<p>The intersection encodes the puzzle exactly, but the first four sets are highly nonconvex. To reuse a two-set algorithm, lift to five copies:</p>
+\[
+ C=C_1\times\cdots\times C_5,\qquad
+ D=\{(X,X,X,X,X):X\in\mathbb R^{9\times9\times9}\}.
+\]
+<p>Projection onto \(C\) applies the five projections separately. Projection onto the diagonal \(D\) averages the five copies. We apply precisely the Douglas–Rachford formula above with \(A=C\), \(B=D\), as in the product-space approach of <a href="#ref-dr">[7]</a>. Theorem 3 no longer applies: the reflections of these nonconvex sets need not be nonexpansive.</p>
+
+<h3>Distinguish a displayed board from the real-valued state</h3>
+<p>Write the five components of the product shadow \(P_Cz_k\) as \(X_k^{(1)},\ldots,X_k^{(5)}\). Its average and cellwise rounded board are</p>
+\[
+ U_k=\frac15\sum_{s=1}^5X_k^{(s)},\qquad
+ d_k(i,j)=\operatorname*{arg\,max}_{1\le\ell\le9}(U_k)_{ij\ell}.
+\]
+<p>Ties choose the smallest digit, and clues are restored for display. The entries of \(U_k\) are <em>scores</em>, not probabilities. This rounding is a diagnostic only; it is never substituted back into the reflection update.</p>
+<p>For the 27 units (nine rows, nine columns, nine blocks), let \(n_{Q,\ell}\) count displayed occurrences of digit \(\ell\) in unit \(Q\). We track</p>
+\[
+ V_k=\sum_Q\sum_{\ell=1}^9|n_{Q,\ell}-1|,\qquad
+ r_k=\left(\sum_{s=1}^5\lVert X_k^{(s)}-U_k\rVert_F^2\right)^{1/2}.
+\]
+<p>The integer \(V_k\) describes the rounded board; \(r_k\) describes disagreement between unrounded shadows. We separately report the norm of the clue-coordinate mismatch of \(U_k\): restoring clues in the display must not hide a real-valued residual. A solution is accepted only after an independent exact check of every row, column, block, and clue. A valid rounded board can appear before the residual vanishes.</p>
+
+<h2>Numerical experimentation</h2>
+<iframe class="idea-experiment" data-experiment="projections" src="assets/projection-lab/index.html" title="Halfplane projections and product-space Douglas–Rachford Sudoku experiment" loading="lazy" style="width:100%;height:1800px;border:0"></iframe>
+<p>First compare the three trajectories on the halfplanes. Then advance Sudoku one iteration at a time, or play the reflections. Red marks unit conflicts; faint digits show ambiguous score choices. Both residual traces may jump, and the rounded board may get worse before getting better. Restarting the same seed reproduces the same experiment; changing the seed can change the outcome.</p>
+<p>No backtracking solver or stored solution drives the animation. The experiment stops after 5,000 iterations if it has not certified a solution. This is not a claim that a restart will always succeed. The contrast is the point: exact elementary projections give rigorous convex algorithms, but the same formulas become heuristics when the constraints are nonconvex.</p>
+
+<h2>Bibliography</h2><ol class="references">
+<li id="ref-vonneumann">John von Neumann. <em>Functional Operators, Volume II: The Geometry of Orthogonal Spaces</em>. Annals of Mathematics Studies 22, Princeton University Press, 1950. <a href="https://press.princeton.edu/books/paperback/9780691095790/functional-operators-volume-2">Book</a>.</li>
+<li id="ref-pocs">Heinz H. Bauschke and Jonathan M. Borwein. <em>On Projection Algorithms for Solving Convex Feasibility Problems</em>. SIAM Review 38(3), 367–426, 1996. <a href="https://doi.org/10.1137/S0036144593251710">Paper</a> · <a href="https://cmps-people.ok.ubc.ca/bauschke/Research/05.pdf">Author PDF</a>.</li>
+<li id="ref-dykstra">Richard L. Dykstra. <em>An Algorithm for Restricted Least Squares Regression</em>. Journal of the American Statistical Association 78(384), 837–842, 1983. <a href="https://doi.org/10.1080/01621459.1983.10477029">Paper</a>.</li>
+<li id="ref-boyle">James P. Boyle and Richard L. Dykstra. <em>A Method for Finding Projections onto the Intersection of Convex Sets in Hilbert Spaces</em>. Advances in Order Restricted Statistical Inference, Lecture Notes in Statistics 37, 28–47, 1986. <a href="https://doi.org/10.1007/978-1-4613-9940-7_3">Chapter</a>.</li>
+<li id="ref-tibshirani">Ryan J. Tibshirani. <em>Dykstra’s Algorithm, ADMM, and Coordinate Descent: Connections, Insights, and Extensions</em>. NeurIPS 2017. <a href="https://www.stat.cmu.edu/~ryantibs/papers/dykcd.pdf">Author PDF</a>.</li>
+<li id="ref-original-dr">Jim Douglas Jr. and Henry H. Rachford Jr. <em>On the numerical solution of heat conduction problems in two and three space variables</em>. Transactions of the American Mathematical Society 82, 421–439, 1956. <a href="https://doi.org/10.1090/S0002-9947-1956-0084194-4">Paper</a>.</li>
+<li id="ref-dr">Francisco J. Aragón Artacho, Jonathan M. Borwein, and Matthew K. Tam. <em>Recent Results on Douglas–Rachford Methods for Combinatorial Optimization Problems</em>. Journal of Optimization Theory and Applications 163, 1–30, 2014. <a href="https://arxiv.org/abs/1305.2657">Paper</a>.</li>
+</ol>
+</article></main><footer class="draft-footer"><div class="wrap">Forthcoming post · Alpha preview · <a href="index.html">All forthcoming posts</a> · <a href="../">Published blog</a></div></footer></body></html>
