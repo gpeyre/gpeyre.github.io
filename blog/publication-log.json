@@ -27,6 +27,32 @@
       "publication_commit": "1d544c5c3e7285636d76b83292441a9477921919",
       "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3my6ssz6s22dh",
       "bluesky_cid": "bafyreibmwebsjo2fyoidw4k6nqqxnvzxupduemhoaz5x4j2f2qddoljdaa"
+    },
+    {
+      "slug": "monge-gap-inversions",
+      "title": "The Monge gap: a penalty for inversions",
+      "date": "2026-10-20",
+      "url": "https://www.gpeyre.com/blog/2026/10/20/monge-gap-inversions/",
+      "message": "How far is a map from being optimal transport? On the line, the Monge gap is a weighted penalty for inversions. Sorting turns a transport problem into a convex regularizer. https://www.gpeyre.com/blog/2026/10/20/monge-gap-inversions/",
+      "status": "prepared",
+      "source_sha256": "ca689fe8e244ffc134549b5427e02209a5f5a7100b496e5da27df9331914c8ed",
+      "base_commit": "a3ea31bb73bce5b57250a04640d934903cf5778a",
+      "files": [
+        "blog/_posts/2026-10-20-monge-gap-inversions.md",
+        "blog/preparations/monge-gap-inversions.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "working_sha256": {
+        "blog/_posts/2026-10-20-monge-gap-inversions.md": "a9c4d1232d0d5c67fc6e7d165a2c75f2526655856665804489e2f767a7934690",
+        "blog/preparations/monge-gap-inversions.html": "3a3e031ae31d2b83be6127028fc1cdc6182e9345eae56f36c1935b119adebca8",
+        "blog/preparations/index.html": "dd3f9a4755047ddae5c28f899b396e26b949b60b493d243d70ddaee4b2bf3bdc",
+        "js/blog-search-index.js": "d41f98112e4aeb05b9dafcccea1b292cbdd13ec066eed451f0faba0a36319070"
+      },
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null
     }
   ]
 }
