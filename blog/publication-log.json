@@ -34,7 +34,7 @@
       "date": "2026-10-20",
       "url": "https://www.gpeyre.com/blog/2026/10/20/monge-gap-inversions/",
       "message": "How far is a map from being optimal transport? On the line, the Monge gap is a weighted penalty for inversions. Sorting turns a transport problem into a convex regularizer. https://www.gpeyre.com/blog/2026/10/20/monge-gap-inversions/",
-      "status": "prepared",
+      "status": "announced",
       "source_sha256": "ca689fe8e244ffc134549b5427e02209a5f5a7100b496e5da27df9331914c8ed",
       "base_commit": "a3ea31bb73bce5b57250a04640d934903cf5778a",
       "files": [
@@ -50,9 +50,9 @@
         "blog/preparations/index.html": "dd3f9a4755047ddae5c28f899b396e26b949b60b493d243d70ddaee4b2bf3bdc",
         "js/blog-search-index.js": "d41f98112e4aeb05b9dafcccea1b292cbdd13ec066eed451f0faba0a36319070"
       },
-      "publication_commit": null,
-      "bluesky_uri": null,
-      "bluesky_cid": null
+      "publication_commit": "fb52d09207d11b4bf495f9c539b47f5dd25b67ff",
+      "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3mybdbwnk22he",
+      "bluesky_cid": "bafyreib7rdgqoijnzlusq6erbxzizv4zxwm3trcge4s5qlqpr53qst4kn4"
     }
   ]
 }
