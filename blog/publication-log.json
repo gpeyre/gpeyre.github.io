@@ -60,7 +60,7 @@
       "date": "2026-10-21",
       "url": "https://www.gpeyre.com/blog/2026/10/21/energy-distance-wasserstein-convexity/",
       "message": "Ordering can reveal hidden convexity. Energy distance is Wasserstein convex on the line—but not in the plane. Quantiles explain why, and a counterexample shows what fails. https://www.gpeyre.com/blog/2026/10/21/energy-distance-wasserstein-convexity/",
-      "status": "prepared",
+      "status": "announced",
       "source_sha256": "f365d7114297802f5920ec93f82fdd30d85dd6703ab3aca92112b40515acbe44",
       "base_commit": "fa44cf91725e29acb5e7c03ed4ccdfb80d93ae34",
       "files": [
@@ -76,9 +76,9 @@
         "blog/preparations/index.html": "26defa09c1fe82382f3c1a285dde8b2cad86e501fe0a960c0f5cb7348cfe6ac9",
         "js/blog-search-index.js": "c99b75353f17c831305194684829bc605184bdeff40ef2a32557c74217f0c544"
       },
-      "publication_commit": null,
-      "bluesky_uri": null,
-      "bluesky_cid": null
+      "publication_commit": "fe0195488ded5d70a82d772c72eaafaaae2307f6",
+      "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3mydtqu4c22ng",
+      "bluesky_cid": "bafyreiflhz33wovhfgy4qtfh76pxx5m7cxwjwcr2q767ep3bp3cpwaj6ka"
     }
   ]
 }
