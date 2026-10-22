@@ -1,16 +1,18 @@
-# Forthcoming posts: randomized announcement queue
+# Blog publication and announcement queue
 
-Prepared on 18 October 2026. This is a snapshot of the 23 current forthcoming posts, shuffled once into the order below.
+Last reconciled on 22 October 2026. All current forthcoming posts are included below. The original queue order is preserved; newer previews are appended. Published entries remain in the list with their publication date and final article link.
 
-Each block quote is a complete draft announcement, with the post URL appended. Every message is at most 280 Unicode graphemes, including the full URL.
+To approve a forthcoming article and its quoted announcement, change its exact checkbox to `- [x] Ready to publish`. Leave it unchecked while it is still under review. Existing approvals are preserved; newly added entries are unchecked. Published entries are already processed and will not be published again; `publication-log.json` is the authoritative record.
 
-The URLs currently point to the public alpha previews. Keep these original URLs in this queue; replace the URL only in the outgoing announcement with its final dated URL and check the length again. Dates have deliberately not been assigned.
+Each block quote is a complete draft announcement, including its original preview URL. Keep that URL unchanged in this queue; only the outgoing message uses the final dated canonical URL. Messages fit 280 Unicode graphemes with either address. Only explicitly approved, unprocessed entries may be selected by the daily automation.
 
-This is an unpublished planning file. To approve an entry, change its checkbox below to `[x]`. Only entries explicitly marked ready may be published; inclusion in this list is not approval. The scheduler is kept paused until the Bluesky connection and permissions have been verified.
+This is an unpublished editorial planning file, excluded from the website build. Add new forthcoming articles here with an unchecked readiness box and a short announcement when preparing them.
 
 ## 1. Two optimal transports need not compose optimally
 
 - [x] Ready to publish
+
+Published: 2026-10-19 · [Read post](https://www.gpeyre.com/blog/2026/10/19/composing-optimal-transport-maps/)
 
 > If two maps are optimal transports, is their composition optimal? Not necessarily. A matrix example shows why monotonicity is weaker than being a convex gradient. https://www.gpeyre.com/blog/preparations/composing-optimal-transport-maps.html
 
@@ -18,17 +20,23 @@ This is an unpublished planning file. To approve an entry, change its checkbox b
 
 - [x] Ready to publish
 
+Published: 2026-10-20 · [Read post](https://www.gpeyre.com/blog/2026/10/20/monge-gap-inversions/)
+
 > How far is a map from being optimal transport? On the line, the Monge gap is a weighted penalty for inversions. Sorting turns a transport problem into a convex regularizer. https://www.gpeyre.com/blog/preparations/monge-gap-inversions.html
 
 ## 3. Energy distance: convexity hidden in the ordering
 
 - [x] Ready to publish
 
+Published: 2026-10-21 · [Read post](https://www.gpeyre.com/blog/2026/10/21/energy-distance-wasserstein-convexity/)
+
 > Ordering can reveal hidden convexity. Energy distance is Wasserstein convex on the line—but not in the plane. Quantiles explain why, and a counterexample shows what fails. https://www.gpeyre.com/blog/preparations/energy-distance-wasserstein-convexity.html
 
 ## 4. Konno’s quadratic relaxation: two copies, the same minimum
 
 - [x] Ready to publish
+
+Published: 2026-10-22 · [Read post](https://www.gpeyre.com/blog/2026/10/22/konno-quadratic-relaxation/)
 
 > Can duplicating a variable simplify quadratic optimization without changing its minimum? Konno’s relaxation does, under a curvature condition. One identity explains why. https://www.gpeyre.com/blog/preparations/konno-quadratic-relaxation.html
 
@@ -145,3 +153,75 @@ This is an unpublished planning file. To approve an entry, change its checkbox b
 - [ ] Ready to publish
 
 > Can one statistic evolve on its own while the whole distribution moves? A geometric criterion gives exact moment closure for a class of Wasserstein gradient flows. https://www.gpeyre.com/blog/preparations/autonomous-wasserstein-statistics.html
+
+## 24. One low-rank matrix, many optimization speeds
+
+- [ ] Ready to publish
+
+> The same low-rank matrix can train at different speeds depending on its factors. A short Hessian calculation shows why balancing gives optimal Euclidean local conditioning. https://www.gpeyre.com/blog/preparations/balanced-low-rank-conditioning.html
+
+## 25. From Legendre transforms to transport potentials
+
+- [ ] Ready to publish
+
+> Are averages of transport potentials still transport potentials? Quadratic costs say yes; most other power costs say no. Cost transforms and supporting shapes explain the difference. https://www.gpeyre.com/blog/preparations/c-transforms-and-averaging.html
+
+## 26. Intrinsic dynamics of factor training
+
+- [ ] Ready to publish
+
+> Can a factored matrix evolve on its own during training? A conserved imbalance supplies the missing information, giving a closed gradient-flow equation for the represented model. https://www.gpeyre.com/blog/preparations/intrinsic-factor-training-dynamics.html
+
+## 27. Interpolating measures by a Lagrangian flow
+
+- [ ] Ready to publish
+
+> Can a density cross-fade be realized by moving particles? Moser’s construction does it for smooth positive densities: solve a Poisson equation, divide by density, then follow the flow. https://www.gpeyre.com/blog/preparations/lagrangian-density-interpolation.html
+
+## 28. Langevin without a potential
+
+- [ ] Ready to publish
+
+> Langevin dynamics need not follow a potential. A stable linear drift has a Gaussian equilibrium that can keep circulating. Its covariance follows from a Lyapunov equation. https://www.gpeyre.com/blog/preparations/langevin-without-a-potential.html
+
+## 29. Logarithmic Sobolev is a Wasserstein P–L inequality
+
+- [ ] Ready to publish
+
+> Logarithmic Sobolev is a Polyak–Łojasiewicz inequality for entropy in Wasserstein geometry. A finite-length argument turns entropy decay into convergence of distributions. https://www.gpeyre.com/blog/preparations/logarithmic-sobolev-wasserstein-pl.html
+
+## 30. Projections, corrections, and reflections
+
+- [ ] Ready to publish
+
+> Alternating projections find a feasible point, not necessarily the nearest one. Dykstra adds corrections; Douglas–Rachford uses reflections. Explore the geometry—and a Sudoku experiment. https://www.gpeyre.com/blog/preparations/projections-corrections-reflections.html
+
+## 31. Quantum Pinsker: a sign observable is enough
+
+- [ ] Ready to publish
+
+> How does entropy control the distance between quantum states? A direct proof of quantum Pinsker tests entropy curvature against a sign observable. The sharp constant survives noncommutativity. https://www.gpeyre.com/blog/preparations/quantum-pinsker-sign-observable.html
+
+## 32. Which condition number does sign gradient descent see?
+
+- [ ] Ready to publish
+
+> Rotating a quadratic preserves its eigenvalues but can change how sign descent behaves. Norm-steepest descent reveals the relevant condition number—and why coordinate geometry matters. https://www.gpeyre.com/blog/preparations/sign-gradient-descent-geometry.html
+
+## 33. Stable fluids in four steps
+
+- [ ] Ready to publish
+
+> A smoke simulation from four operations: add forces, trace particles backwards, diffuse, then project away compression. Fourier geometry explains the pressure step in Stam’s Stable Fluids. https://www.gpeyre.com/blog/preparations/stable-fluids.html
+
+## 34. When the best low-rank tensor approximation does not exist
+
+- [ ] Ready to publish
+
+> For tensors, a best low-rank approximation may not exist. Two rank-one terms can converge to a tensor that needs three. Two matrix slices and a determinant give an elementary proof. https://www.gpeyre.com/blog/preparations/tensor-rank-without-best-approximation.html
+
+## 35. Wasserstein singular vectors: a distance that defines itself
+
+- [ ] Ready to publish
+
+> How can transport compare histograms with no given ground geometry? Wasserstein singular vectors learn sample and feature distances from each other. A fixed-point argument closes the loop. https://www.gpeyre.com/blog/preparations/wasserstein-singular-vectors.html

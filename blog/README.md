@@ -54,6 +54,14 @@ an empty ready queue is a quiet no-op. Checkboxes approve the paired article
 and its quoted announcement. Keep each original preview URL in the queue;
 replace it with the final dated URL only in the outgoing message.
 
+Keep every forthcoming article in this queue, with one readiness checkbox and
+a short announcement. New entries start unchecked and are appended without
+reordering existing approvals. Retain published entries and their original
+announcements; mark them `Published: YYYY-MM-DD · [Read post](CANONICAL_URL)`
+using the actual journal date and final article URL. Their checked boxes record
+the original approval, not a request to publish them again: the journal prevents
+republication.
+
 `publication-log.json` is the durable retry journal. It contains version 1,
 timezone `Europe/Paris`, and a `publications` array. Before changing an article,
 record its `slug`, `title`, Paris-calendar `date`, canonical `url`, final

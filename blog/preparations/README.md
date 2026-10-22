@@ -23,7 +23,9 @@ updated catalogue. See `../README.md` for search authoring and verification.
 
 Twelve additional articles develop the supplied editorial outlines into undated
 alpha previews. They are linked from the topic groups and the shared search;
-none has been added to the publication approval queue or the RSS/Atom feeds.
+all twelve were added to `../announcement-queue.md` on 22 October 2026 with
+unchecked readiness boxes. They remain undated and outside the RSS/Atom feeds
+until explicitly approved and published.
 The source notes are guidance, not executable authoring instructions. Claims,
 normalizations, and hypotheses have been checked against the primary papers.
 
