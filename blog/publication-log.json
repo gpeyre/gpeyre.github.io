@@ -79,6 +79,32 @@
       "publication_commit": "fe0195488ded5d70a82d772c72eaafaaae2307f6",
       "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3mydtqu4c22ng",
       "bluesky_cid": "bafyreiflhz33wovhfgy4qtfh76pxx5m7cxwjwcr2q767ep3bp3cpwaj6ka"
+    },
+    {
+      "slug": "konno-quadratic-relaxation",
+      "title": "Konno’s quadratic relaxation: two copies, the same minimum",
+      "date": "2026-10-22",
+      "url": "https://www.gpeyre.com/blog/2026/10/22/konno-quadratic-relaxation/",
+      "message": "Can duplicating a variable simplify quadratic optimization without changing its minimum? Konno’s relaxation does, under a curvature condition. One identity explains why. https://www.gpeyre.com/blog/2026/10/22/konno-quadratic-relaxation/",
+      "status": "prepared",
+      "source_sha256": "75a7002566d848e8a4ea2d3d9253d2ae867daed2ba35db478672ad9c222a1d50",
+      "base_commit": "b69482b84a9214f3dccd072d6a408ad0923d3781",
+      "files": [
+        "blog/_posts/2026-10-22-konno-quadratic-relaxation.md",
+        "blog/preparations/konno-quadratic-relaxation.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "working_sha256": {
+        "blog/_posts/2026-10-22-konno-quadratic-relaxation.md": "57fece69c6bf37220f3ae1c8ae54edd8cdac3ceeec6c928633e38a1f2ef57fe9",
+        "blog/preparations/konno-quadratic-relaxation.html": "16df83d4f4bd130f06d7cb5df6fdc81cc00a33dd5923d3dbab0f1b6e9764888d",
+        "blog/preparations/index.html": "1221717203f6a33cf238a19d3b0f89e64b1722d93654cad2002e7d9b5000e311",
+        "js/blog-search-index.js": "b653edc808f1d9d1fb9e47db7291fc31e842e9ab34afb556f67f2b7f46f28550"
+      },
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null
     }
   ]
 }
