@@ -1,156 +1,17 @@
+---
+permalink: /blog/preparations/gaussian-gromov-wasserstein-counterexample.html
+redirect_to: /blog/2026/10/23/gaussian-gromov-wasserstein-counterexample/
+---
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex,follow">
-<meta name="keywords" content="Gromov–Wasserstein distance, GW, Gaussian marginals, non-Gaussian optimal coupling, Gaussian-constrained transport, squared-distance distortion, radial coupling, nonlinear dependence, cross-covariance, mixed fourth moments, Gaussian fourth-moment identity, chi-squared distributions, quantile coupling, radius fluctuations, high-dimensional probability, central limit theorem, Wasserstein convergence, correlation versus independence, positive semidefinite block matrices, unequal dimensions, optimality counterexample, Antoine Salmona, Julie Delon, Agnès Desolneux, Facundo Mémoli, Gabriel Peyré, transport de Gromov–Wasserstein, couplage gaussien, couplage radial, moments d'ordre quatre, dépendance non linéaire">
-<meta name="description" content="A rigorous counterexample shows that Gaussian marginals need not admit a jointly Gaussian optimizer for squared-distance Gromov–Wasserstein transport.">
-<title>Gaussians are not closed for Gromov–Wasserstein — Alpha preview — Gabriel Peyré</title>
-<link rel="canonical" href="https://www.gpeyre.com/blog/preparations/gaussian-gromov-wasserstein-counterexample.html">
-<link rel="stylesheet" href="assets/drafts.css">
-<script defer src="assets/drafts.js"></script>
-<script defer src="assets/idea-experiments.js"></script>
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});
-</script>
-<script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="refresh" content="0; url={{ page.redirect_to | relative_url }}">
+  <link rel="canonical" href="{{ page.redirect_to | absolute_url }}">
+  <title>Gaussians are not closed for Gromov–Wasserstein — Gabriel Peyré</title>
 </head>
 <body>
-<header class="draft-header"><div class="wrap">
-<a class="draft-back" href="index.html">← Forthcoming posts</a>
-<p class="draft-status">Alpha preview · Work in progress</p>
-<p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
-<h1>Gaussians are not closed for Gromov–Wasserstein</h1>
-<p class="subtitle">A radial coupling reveals a failure of Gaussian optimality for Gromov–Wasserstein transport.</p>
-<p class="byline">Gabriel Peyré</p>
-</div></header>
-<main class="wrap"><article class="blog-prose">
-<p>Gaussians are wonderfully cooperative in quadratic optimal transport: when the source is nondegenerate, an affine map solves the transport problem, and the answer can be expressed using means and covariance matrices. It is tempting to carry this intuition into Gromov–Wasserstein transport, where the task is to match <em>relations between pairs of points</em>.</p>
-<p>That intuition has a limit. A pair of Gaussian marginals need not admit a jointly Gaussian optimal coupling. The example below makes the obstruction explicit: linear correlation has a bounded budget, while correlating the <em>radii</em> can exploit fluctuations that grow with dimension.</p>
-<p>The construction is recorded in <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.13.3.34">Proposition 13.34 of <em>Optimal Transport for Machine Learners</em></a> <a href="#ref-book">[1]</a>. The Gaussian-constrained problem and the question of unrestricted optimality are studied by Antoine Salmona, Julie Delon, and Agnès Desolneux <a href="#ref-gaussian">[2]</a>. We will prove the strict separation directly, without claiming a formula for the unrestricted optimizer.</p>
-
-<h2>Match internal geometry, not coordinates</h2>
-<p>Ordinary transport needs a cost comparing a point \(x\) in one space with a point \(y\) in another. Gromov–Wasserstein transport instead compares how two points relate <em>within</em> each space <a href="#ref-memoli">[3]</a>. This makes it natural when the spaces have different dimensions.</p>
-<p>Take</p>
-\[
- \alpha=\mathcal N(0,1)\quad\text{on }\mathbb R,
- \qquad \beta_n=\mathcal N(0,I_n)\quad\text{on }\mathbb R^n.
-\]
-<p>Let \((X,Y)\) and \((X',Y')\) be independent samples from a coupling \(\pi\in\Pi(\alpha,\beta_n)\). We minimize the distortion</p>
-\[
- \mathcal Q(\pi)
- =\mathbb E\left[
-       \bigl(|X-X'|^2-|Y-Y'|^2\bigr)^2
-       \right].
-\]
-<div class="note"><p>The inner dissimilarities are <em>squared</em> Euclidean distances, and the outside loss is also a square. There is no prefactor \(1/2\). Using ordinary distances inside the square, or replacing them by inner products, gives a different problem.</p></div>
-<p>Every admissible coupling has finite objective, by the Gaussian fourth moments. An optimizer exists: the set of couplings is weakly compact, and the nonnegative continuous integrand makes the objective lower semicontinuous under convergence of \(\pi\otimes\pi\).</p>
-
-<h2>The mixed fourth moment is decisive</h2>
-<p>Write \(k=\mathbb E[YX]\in\mathbb R^n\) for the vector of cross-correlations, and define the score</p>
-\[
- \mathcal G(\pi)=\mathbb E[X^2|Y|^2]+2|k|^2.
-\]
-<p id="lemma-1"><strong>Lemma 1 (a moment reduction).</strong> Every coupling with these marginals satisfies</p>
-\[
- \mathcal Q(\pi)=4n^2+4n+12-4\mathcal G(\pi).
-\]
-<p>Among all jointly Gaussian couplings, including degenerate ones,</p>
-\[
- \max\mathcal G=n+4,\qquad
- \min\mathcal Q=4n^2-4.
-\]
-<details class="blog-proof"><summary>Proof: expand the square and use Gaussian fourth moments</summary><div class="blog-proof-body">
-<p>The marginal terms are fixed:</p>
-\[
- \mathbb E|X-X'|^4=12,\qquad
- \mathbb E|Y-Y'|^4=4n(n+2).
-\]
-<p>Expanding the cross term and using independence of the primed and unprimed pairs gives</p>
-\[
- \mathbb E[(X-X')^2|Y-Y'|^2]
- =2\mathbb E[X^2|Y|^2]+2n+4|k|^2.
-\]
-<p>Substitution proves the first identity. If the joint law is Gaussian, its block covariance is positive semidefinite:</p>
-\[
- \begin{pmatrix}1&k^\top\\ k&I_n\end{pmatrix}\succeq0,
- \qquad\text{hence }|k|^2\le1.
-\]
-<p>The Gaussian fourth-moment identity gives \(\mathbb E[X^2Y_j^2]=1+2k_j^2\). Therefore \(\mathcal G=n+4|k|^2\le n+4\). Taking \(X=Y_1\) attains equality. \(\square\)</p>
-</div></details>
-<p>This calculation identifies the possible escape route. In a jointly Gaussian law, the mixed fourth moment is tied to \(k\). For a general coupling, it is an independent source of improvement. We will set \(k=0\) and make the fourth moment large enough to compensate.</p>
-
-<h2>A radial coupling that beats the whole Gaussian class</h2>
-<p>Let \(F_j\) denote the CDF of the chi-squared law with \(j\) degrees of freedom, and write \(q_j=F_j^{-1}\) for its quantile. Draw \(Y\sim\mathcal N(0,I_n)\) and put</p>
-\[
- R=|Y|^2,\qquad
- U=F_n(R),\qquad A=q_1(U).
-\]
-<p>The variable \(U\) is uniform on \((0,1)\), so \(A\) has the same law as a squared standard normal. Choose an independent fair sign \(\varepsilon\in\{-1,1\}\), and set \(X=\varepsilon\sqrt A\). Then \(X\sim\mathcal N(0,1)\). The sign guarantees \(\mathbb E[YX]=0\), while \(X^2=A\) is an increasing function of \(|Y|^2\): large radii are matched with large magnitudes.</p>
-<p id="theorem-1"><strong>Theorem 1 (failure of Gaussian optimality).</strong> For all sufficiently large \(n\), the radial coupling above satisfies</p>
-\[
- \mathcal Q(\pi_{\mathrm{rad}})&lt;4n^2-4.
-\]
-<p>Consequently, no jointly Gaussian coupling is an optimizer of the unrestricted problem in these dimensions.</p>
-<details class="blog-proof"><summary>Proof: radius fluctuations grow like the square root of dimension</summary><div class="blog-proof-body">
-<p>Since \(k=0\), the radial score is</p>
-\[
- \mathcal G(\pi_{\mathrm{rad}})
- =\int_0^1q_1(u)q_n(u)\,du.
-\]
-<p>The central limit theorem applied to the sum of \(n\) squared standard normals gives</p>
-\[
- \frac{R-n}{\sqrt{2n}}\ \Longrightarrow\ \mathcal N(0,1).
-\]
-<p>The standardized variables also have second moment exactly one, matching the limit. Weak convergence plus convergence of second moments is convergence in \(W_2\). In one dimension, \(W_2\) is the \(L^2\) distance between quantiles <a href="#ref-computational">[4]</a>. Writing \(\Phi\) for the standard normal CDF, we obtain</p>
-\[
- \frac{q_n-n}{\sqrt{2n}}
- \longrightarrow\Phi^{-1}
- \quad\text{in }L^2(0,1).
-\]
-<p>As \(q_1\in L^2(0,1)\), with mean \(1\) and squared norm \(3\), Cauchy–Schwarz yields</p>
-\[
- \begin{aligned}
- \mathcal G(\pi_{\mathrm{rad}})
- &=n+\sqrt{2n}\,(c+o(1)),\\
- c&=\int_0^1q_1(u)\Phi^{-1}(u)\,du&gt;0.
- \end{aligned}
-\]
-<details class="blog-proof"><summary>Why is the constant strictly positive?</summary><div class="blog-proof-body">
-<p>For independent uniforms \(U,V\), the mean of \(\Phi^{-1}(U)\) is zero and the mean of \(q_1(U)\) is one. Expanding therefore gives</p>
-\[
- 2c=\mathbb E\!\left[
- (q_1(U)-q_1(V))
- (\Phi^{-1}(U)-\Phi^{-1}(V))\right].
-\]
-<p>Both quantile functions are strictly increasing. The integrand is strictly positive whenever \(U\ne V\), and it is integrable by Cauchy–Schwarz. Hence \(c&gt;0\).</p>
-</div></details>
-<p>The positive term \(\sqrt{2n}(c+o(1))\) eventually exceeds \(4\). Thus \(\mathcal G(\pi_{\mathrm{rad}})&gt;n+4\), and Lemma 1 gives the strict improvement in distortion. \(\square\)</p>
-</div></details>
-
-<h2>How can zero correlation win?</h2>
-<p>In the Gaussian class, all dependence is encoded by the cross-correlation vector, and its squared norm cannot exceed one. The largest available improvement in \(\mathcal G\) beyond the independent value \(n\) is exactly \(4\).</p>
-<p>The radial construction uses another kind of dependence. The radius squared of an \(n\)-dimensional Gaussian has standard deviation \(\sqrt{2n}\). Aligning those fluctuations with the nonconstant variable \(X^2\) produces an improvement of order \(\sqrt n\). The signs erase every linear correlation but preserve the correlation of magnitudes.</p>
-<p>In particular, this coupling is not jointly Gaussian. A jointly Gaussian pair with zero cross-covariance would be independent, whereas here \(X^2\) is determined by \(|Y|^2\). Marginal Gaussianity says nothing comparable about their joint nonlinear dependence.</p>
-
-<h2>What the example does—and does not—settle</h2>
-<p>The theorem uses unequal dimensions and only proves failure for sufficiently large \(n\). It does not identify the smallest failing dimension, and the radial competitor need not be the global optimizer. A single better feasible coupling is enough to rule out an entire proposed optimizer class.</p>
-<p>For a particular dimension, the same competitor gives a concrete one-dimensional test:</p>
-\[
- \int_0^1 q_1(u)\bigl(q_n(u)-n\bigr)\,du&gt;4.
-\]
-<p>This inequality, if established, certifies failure of Gaussian optimality at that \(n\). It is stronger evidence than finding one non-Gaussian coupling better than one arbitrarily chosen Gaussian coupling: the benchmark \(n+4\) is the optimum over the <em>entire</em> jointly Gaussian class. The asymptotic proof avoids relying on numerical quadrature of the unbounded quantiles near \(u=1\).</p>
-<p>It also does not contradict the exact Gaussian-constrained formulas or the special unrestricted Gaussian-optimality cases in <a href="#ref-gaussian">[2]</a>. Nor does it concern inner-product GW, where the objective has a different dependence on moments. The useful lesson is to keep the optimization domain visible: restricting to Gaussian couplings can give an elegant, computable surrogate without solving the unrestricted problem.</p>
-
-<h2>References</h2>
-<ol class="references">
-<li id="ref-book">Gabriel Peyré. <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.13.3.34"><em>Optimal Transport for Machine Learners</em>, Proposition 13.34</a>. Book manuscript.</li>
-<li id="ref-gaussian">Julie Delon, Agnès Desolneux, and Antoine Salmona. <a href="https://doi.org/10.1017/jpr.2022.16"><em>Gromov–Wasserstein Distances between Gaussian Distributions</em></a>. Journal of Applied Probability 59(4), 1178–1198, 2022. <a href="https://arxiv.org/abs/2104.07970">Preprint</a>.</li>
-<li id="ref-memoli">Facundo Mémoli. <a href="https://doi.org/10.1007/s10208-011-9093-5"><em>Gromov–Wasserstein Distances and the Metric Approach to Object Matching</em></a>. Foundations of Computational Mathematics 11, 417–487, 2011.</li>
-<li id="ref-computational">Gabriel Peyré and Marco Cuturi. <a href="https://arxiv.org/abs/1803.00567"><em>Computational Optimal Transport</em></a>. Foundations and Trends in Machine Learning 11(5–6), 355–607, 2019.</li>
-</ol>
-</article></main>
-<footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Blog</a></div></footer>
+  <p>This article has been published. <a href="{{ page.redirect_to | relative_url }}">Read “Gaussians are not closed for Gromov–Wasserstein”</a>.</p>
 </body>
 </html>

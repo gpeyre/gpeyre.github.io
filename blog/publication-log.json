@@ -105,6 +105,32 @@
       "publication_commit": "6c5a987e19c077fd32a4d24de664b0d97fd3cf57",
       "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3myge7rl222x2",
       "bluesky_cid": "bafyreifncsyiagw6udwerkwvjnh3pwghefrtdgfnt7yzc5qlcv56larwsi"
+    },
+    {
+      "slug": "gaussian-gromov-wasserstein-counterexample",
+      "title": "Gaussians are not closed for Gromov–Wasserstein",
+      "date": "2026-10-23",
+      "url": "https://www.gpeyre.com/blog/2026/10/23/gaussian-gromov-wasserstein-counterexample/",
+      "message": "Gaussian marginals need not have a jointly Gaussian optimizer for squared-distance Gromov–Wasserstein. A radial coupling gives a concrete counterexample. https://www.gpeyre.com/blog/2026/10/23/gaussian-gromov-wasserstein-counterexample/",
+      "status": "prepared",
+      "source_sha256": "c7df21826032cada6f60cc35ecd8d0940cbb4c0f98fae0d369b8ed786554fa7e",
+      "base_commit": "7f6138cc401b398af56a4d384ce5ce8fd61b4c93",
+      "files": [
+        "blog/_posts/2026-10-23-gaussian-gromov-wasserstein-counterexample.md",
+        "blog/preparations/gaussian-gromov-wasserstein-counterexample.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "working_sha256": {
+        "blog/_posts/2026-10-23-gaussian-gromov-wasserstein-counterexample.md": "7ad74b35e62f1e3cf810afb30abaa1917443a6790be86729c1481aa6ce15def2",
+        "blog/preparations/gaussian-gromov-wasserstein-counterexample.html": "ef89105e0daf1609104396ce702d911caff0ad3a5295197de882e8ba83900ec0",
+        "blog/preparations/index.html": "03d81dc09479427c21aa324d04faaa1d4fc751301362aa01b1d55ceb2928a1ac",
+        "js/blog-search-index.js": "4ebc654686ea3d944ba59137c7eb3493e3a2c6a165a191b9573658d9d7e151f5"
+      },
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null
     }
   ]
 }
