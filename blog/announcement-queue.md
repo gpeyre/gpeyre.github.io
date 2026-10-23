@@ -1,6 +1,6 @@
 # Blog publication and announcement queue
 
-Last reconciled on 23 October 2026. All 30 forthcoming posts are included below, with the five explicitly approved posts first. Published entries are kept separately in [published.md](published.md), with their dates and final article links. `publication-log.json` remains the authoritative retry and deduplication record.
+Last reconciled on 23 October 2026. All 31 forthcoming posts are included below, with the five explicitly approved posts first. Published entries are kept separately in [published.md](published.md), with their dates and final article links. `publication-log.json` remains the authoritative retry and deduplication record.
 
 To approve an article and its quoted announcement, change its exact checkbox to `- [x] Ready to publish`. Existing approvals are preserved; no unchecked entry has been approved on your behalf. The unchecked entries after the approved group remain under review.
 
@@ -232,7 +232,15 @@ Topic: OT / Wasserstein geometry
 
 > Are averages of transport potentials still transport potentials? Quadratic costs say yes; most other power costs say no. Cost transforms and supporting shapes explain the difference. https://www.gpeyre.com/blog/preparations/c-transforms-and-averaging.html
 
-## 29. Logarithmic Sobolev is a Wasserstein P–L inequality
+## 29. From MLP universality to ConvNet Universality
+
+Topic: Other topics
+
+- [ ] Ready to publish
+
+> Why are ConvNets universal for translation-equivariant maps? Approximate one coordinate by an MLP, then share it across space. An accumulator trades width for depth. https://www.gpeyre.com/blog/preparations/mlp-to-convnet-universality.html
+
+## 30. Logarithmic Sobolev is a Wasserstein P–L inequality
 
 Topic: OT / Wasserstein geometry
 
@@ -240,7 +248,7 @@ Topic: OT / Wasserstein geometry
 
 > Logarithmic Sobolev is a Polyak–Łojasiewicz inequality for entropy in Wasserstein geometry. A finite-length argument turns entropy decay into convergence of distributions. https://www.gpeyre.com/blog/preparations/logarithmic-sobolev-wasserstein-pl.html
 
-## 30. Wasserstein singular vectors: a distance that defines itself
+## 31. Wasserstein singular vectors: a distance that defines itself
 
 Topic: OT / Wasserstein geometry
 
