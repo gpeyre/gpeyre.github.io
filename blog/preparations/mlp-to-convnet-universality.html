@@ -184,14 +184,31 @@
 <p>For a compact set \(K\) that is not shift invariant, replace it by the compact orbit \(K^{\mathrm{orb}}=\bigcup_s\tau_sK\), provided the target is defined and equivariant there. In particular, any globally continuous equivariant map can be approximated on any compact set. Our use of the coordinate maximum norm avoids a dimension factor; a Euclidean error bound follows from \(\|z\|_2\le\sqrt d\|z\|_\infty\).</p>
 <p>This is a basic instance of the correspondence developed by Petersen and Voigtlaender, which also transfers approximation rates between fully connected networks and convolutional networks <a href="#ref-petersen">[6]</a>. Group-equivariant approximation has a wider setting, including the work of Yarotsky <a href="#ref-yarotsky">[7]</a>.</p>
 
-<h2>Can depth replace width?</h2>
-<p>Yes. With skip connections, the shallow sum can simply be evaluated one term at a time. Keep two signal channels: the original input \(x\), and an accumulator \(s\). A block computes one nonlinear feature and adds it to \(s\):</p>
+<h2 id="trading-width-for-depth">Trading width for depth</h2>
+<p>A shallow network computes all its features in parallel and then sums them. A deep network can evaluate the same sum sequentially: compute one feature, add its contribution to a running total, and move on to the next. The key is to retain both the original input and the partial sum. This gives an explicit conversion from width to depth, with <em>no extra approximation error</em>.</p>
+
+<h3>First, an MLP as an accumulator</h3>
+<p>For the scalar MLP \(f_n(x)=\sum_{i=1}^n a_i\sigma(\langle w_i,x\rangle+b_i)\), initialize \(s_0=0\) and apply</p>
+\[
+  (x,s_{i-1})\longmapsto
+  \bigl(x,s_{i-1}+a_i\sigma(\langle w_i,x\rangle+b_i)\bigr).
+\]
+<p>After \(n\) residual blocks, \(s_n=f_n(x)\). Instead of \(n\) parallel nonlinear units, each block needs only one; the carried state consists of the \(d\) input coordinates and one scalar accumulator. Thus the state width is \(d+1\), independent of the desired accuracy, while the number of blocks grows with \(n\). Keeping the input is essential: the next feature depends on \(x\), not just on the previous partial sum.</p>
+
+<h3>Then, the same construction with convolution</h3>
+<p>For a deep ConvNet, a channel is an entire signal in \(\mathbb R^d\). A general convolutional layer from \(r\) channels to \(r'\) channels has the form</p>
+\[
+  z'_a=\sigma\!\left(\sum_{b=1}^{r}W_{ab}*z_b+c_a\mathbf1\right),
+  \qquad 1\le a\le r',
+\]
+<p>where the \(W_{ab}\) are circular filters. Linear output layers omit \(\sigma\); a residual block adds its output to a carried state. All these operations are equivariant.</p>
+<p>Now keep two signal channels: the original input \(x\), and an accumulator \(s\). For the full shallow architecture, including arbitrary output filters \(v_i\), use the blocks</p>
 \[
   B_i(x,s)=
-  \bigl(x,\ s+a_i\sigma(u_i*x+b_i\mathbf1)\bigr).
+  \bigl(x,\ s+\sigma(u_i*x+b_i\mathbf1)*v_i\bigr).
 \]
-<p>All coefficients may vary from block to block. These are equivariant residual blocks: their correction is zero in the input channel and one filtered nonlinear feature in the accumulator channel. There is no activation after the residual addition, so the signed input and accumulator are preserved.</p>
-<p id="proposition-3"><strong>Proposition 3 (constant width, growing depth).</strong> The two-channel residual networks obtained by composing these blocks, initialized at \((x,0)\) and read out through the second channel, are universal in the uniform sense of Theorem 2.</p>
+<p>Each residual branch computes one nonlinear feature, convolves it with \(v_i\), and adds the result to the second channel. The correction to the first channel is zero. There is no activation after the addition, so signed values survive. Filters and biases may differ between blocks: this is a fixed-width construction, not a claim about sharing the same parameters across depth.</p>
+<p id="proposition-3"><strong>Proposition 3 (exact width–depth conversion).</strong> Every width-\(n\) two-layer ConvNet above is exactly represented by \(n\) such residual blocks, initialized at \((x,0)\), with two persistent channels and one nonlinear feature per residual branch. Consequently, allowing arbitrary depth with this fixed channel budget gives uniform universality as in Theorem 2.</p>
 
 <details class="blog-proof">
 <summary>Proof of Proposition 3: accumulate the shallow network exactly</summary>
@@ -199,13 +216,14 @@
 <p>Induction gives the state after \(k\) blocks:</p>
 \[
   (x,s_k),\qquad
-  s_k=\sum_{i=1}^k a_i\sigma(u_i*x+b_i\mathbf1).
+  s_k=\sum_{i=1}^k\sigma(u_i*x+b_i\mathbf1)*v_i.
 \]
-<p>After \(n\) blocks, the accumulator equals the shallow approximation from Theorem 2, with no additional approximation error. There are always two persistent signal channels and one nonlinear feature in each residual branch. Depth grows with the required number of terms. \(\square\)</p>
+<p>For \(k=n\), this is exactly \(F_n(x)\). Choose the shallow approximant supplied by Theorem 2 and replace it by this deep realization; its uniform error is unchanged. \(\square\)</p>
 </div>
 </details>
 
-<p>For ReLU, skip connections are convenient but not essential: a standard feedforward ConvNet with at most five hidden channels can perform the same computation.</p>
+<h3>Removing the skip connections</h3>
+<p>For ReLU, skip connections are convenient but not essential. A standard feedforward ConvNet with at most five hidden channels can perform the same computation. The trick is to store a signed quantity as the difference of its positive and negative parts: both parts pass through ReLU unchanged.</p>
 <details class="blog-proof">
 <summary>A five-channel ReLU realization without skip connections</summary>
 <div class="blog-proof-body">
@@ -216,13 +234,27 @@
 \]
 <p>The next layer carries \(x^+,x^-\) and replaces the accumulator channels by</p>
 \[
-  \widetilde s^+=(s^+-s^-+a_i h)_+,
+  \widetilde s^+=(s^+-s^-+v_i*h)_+,
   \qquad
-  \widetilde s^-=(-s^++s^--a_i h)_+.
+  \widetilde s^-=(-s^++s^--v_i*h)_+.
 \]
-<p>Their difference is exactly \(s+a_i h\). Initialize with \(x^+=(x)_+\), \(x^-=(-x)_+\), and \(s^+=s^-=0\). Repeat this pair of layers for every term; a final linear layer outputs \(s^+-s^-\). All operations are affine convolutions followed by ReLU, except the final linear readout. The width bound is independent of the approximation tolerance and of \(d\); each channel still has \(d\) spatial entries. This bound is a simple construction, not an optimal-width claim. \(\square\)</p>
+<p>Their difference is exactly \(s+v_i*h\). One initial layer creates \(x^+=(x)_+\), \(x^-=(-x)_+\), and \(s^+=s^-=0\). Repeat this pair of layers for each of the \(n\) terms, then use a linear readout \(s^+-s^-\). This gives \(2n+1\) ReLU hidden layers, each with at most five channels, followed by the final linear layer. Every operation is a convolutional layer of the form defined above. \(\square\)</p>
 </div>
 </details>
+
+<p>The counts for these explicit realizations are:</p>
+<div class="equation-scroll" role="region" aria-label="Width and depth comparison" tabindex="0">
+<table>
+  <caption>Three ways to evaluate the same shallow ReLU ConvNet</caption>
+  <thead><tr><th scope="col">Architecture</th><th scope="col">Channel budget</th><th scope="col">Depth</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">Shallow</th><td>\(n\) hidden channels</td><td>One hidden layer</td></tr>
+    <tr><th scope="row">Residual</th><td>Two state channels; one feature per branch</td><td>\(n\) blocks, each with two convolutional stages</td></tr>
+    <tr><th scope="row">Plain feedforward</th><td>At most five hidden channels</td><td>\(2n+1\) hidden layers</td></tr>
+  </tbody>
+</table>
+</div>
+<p>The final linear readout is not counted as a hidden layer. These are sufficient widths, not optimal-width claims. The channel bounds for the two deep constructions are independent of the approximation tolerance and of \(d\); each channel still contains \(d\) spatial values. The conversion retains full-support filters and does not reduce the order of the parameter count. It exchanges parallel computation for sequential computation, without asserting that training the resulting deep network will be easier.</p>
 
 <h2>What about small filters?</h2>
 <p>Our short proofs allow filters with full circular support. Width counts channels, not spatial positions or filter coefficients. With small filters and fixed depth, the receptive field may exclude part of the input; such a network cannot approximate every equivariant map. For instance, changing a coordinate outside that receptive field leaves its output at the origin unchanged, whereas the target \(F(x)_j=\sum_k x_k\) changes.</p>
