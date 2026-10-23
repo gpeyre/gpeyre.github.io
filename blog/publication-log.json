@@ -112,7 +112,7 @@
       "date": "2026-10-23",
       "url": "https://www.gpeyre.com/blog/2026/10/23/gaussian-gromov-wasserstein-counterexample/",
       "message": "Gaussian marginals need not have a jointly Gaussian optimizer for squared-distance Gromov–Wasserstein. A radial coupling gives a concrete counterexample. https://www.gpeyre.com/blog/2026/10/23/gaussian-gromov-wasserstein-counterexample/",
-      "status": "prepared",
+      "status": "announced",
       "source_sha256": "c7df21826032cada6f60cc35ecd8d0940cbb4c0f98fae0d369b8ed786554fa7e",
       "base_commit": "7f6138cc401b398af56a4d384ce5ce8fd61b4c93",
       "files": [
@@ -128,9 +128,9 @@
         "blog/preparations/index.html": "03d81dc09479427c21aa324d04faaa1d4fc751301362aa01b1d55ceb2928a1ac",
         "js/blog-search-index.js": "4ebc654686ea3d944ba59137c7eb3493e3a2c6a165a191b9573658d9d7e151f5"
       },
-      "publication_commit": null,
-      "bluesky_uri": null,
-      "bluesky_cid": null
+      "publication_commit": "2f863614af8eda6753f755e1e5db883650aecc18",
+      "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3myiuoozs22ds",
+      "bluesky_cid": "bafyreieaacorq3bid4car43f7ioh2bfuh3r7vg3rjr4nnzk7rt2hp2b7yi"
     }
   ]
 }
