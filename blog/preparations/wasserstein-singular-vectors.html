@@ -5,6 +5,16 @@
 <title>Wasserstein singular vectors: a distance that defines itself — Alpha preview — Gabriel Peyré</title>
 <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/wasserstein-singular-vectors.html"><link rel="stylesheet" href="assets/drafts.css"><script defer src="assets/drafts.js"></script><script defer src="assets/idea-experiments.js"></script>
 <script type="text/x-mathjax-config">MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+
+<!-- Generated numerical summary image: start -->
+<meta property="og:image" content="https://www.gpeyre.com/blog/imgs/summaries/wasserstein-singular-vectors.jpg">
+<meta property="og:image:alt" content="Input translated histograms, the learned circular feature geometry, and feature/sample cost matrices after sixteen exact transport-transform cycles.">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="430">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.gpeyre.com/blog/imgs/summaries/wasserstein-singular-vectors.jpg">
+<meta name="twitter:image:alt" content="Input translated histograms, the learned circular feature geometry, and feature/sample cost matrices after sixteen exact transport-transform cycles.">
+<!-- Generated numerical summary image: end -->
 </head><body><header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Wasserstein singular vectors: a distance that defines itself</h1><p class="subtitle">Sample geometry and feature geometry can be learned from each other.</p><p class="byline">Gabriel Peyré</p></div></header>
 <main class="wrap"><article class="blog-prose">
 <p>Two histograms can have almost disjoint supports and still describe nearly the same object: imagine translating a narrow bump by one pixel. Optimal transport recognizes this—provided we already know which bins are close. But what if the bins are genes, words, or abstract features, with no obvious geometry?</p>

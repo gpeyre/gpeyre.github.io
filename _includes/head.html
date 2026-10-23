@@ -25,6 +25,16 @@
     <title>{% if page.title %}{{ page.title }} - {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
 
     <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
+    {% assign summary_image = site.data.blog_summary_images.images[page.slug] %}
+    {% if page.blog and summary_image %}
+    <meta property="og:image" content="{{ summary_image.path | absolute_url | escape }}">
+    <meta property="og:image:alt" content="{{ summary_image.alt | escape }}">
+    <meta property="og:image:width" content="{{ summary_image.width }}">
+    <meta property="og:image:height" content="{{ summary_image.height }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="{{ summary_image.path | absolute_url | escape }}">
+    <meta name="twitter:image:alt" content="{{ summary_image.alt | escape }}">
+    {% endif %}
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ "/img/favicon.png" | prepend: site.baseurl }}">

@@ -54,13 +54,51 @@ an empty ready queue is a quiet no-op. Checkboxes approve the paired article
 and its quoted announcement. Keep each original preview URL in the queue;
 replace it with the final dated URL only in the outgoing message.
 
+### Illustrated editorial queue
+
+Open `blog/announcement-queue.html` locally for an illustrated, searchable review
+page with topic/readiness filters and copyable announcements. It is a generated
+snapshot, not a second source of approvals. The HTML page, its editor assets,
+the Markdown queue, archive and journal are excluded from the public build;
+the forthcoming articles themselves remain public previews.
+
+Use **Open current Markdown** before editing if the queue has changed elsewhere.
+Readiness boxes are drafts until saved to the original
+`blog/announcement-queue.md`. Supported browsers can save to that explicitly
+selected file; otherwise use **Download Markdown** and replace the original
+yourself. The editor rejects unexpected file formats and concurrent source
+changes, and preserves article order and announcement wording. Then ask Codex
+to review, commit and push the saved changes before the next scheduled run:
+unsaved boxes have no effect, and an uncommitted queue can stop publication.
+
+Run `ruby scripts/build-blog-queue.rb` after changing the queue or illustrations;
+use `--check` to detect a stale HTML snapshot. Regression checks are
+`ruby tests/blog-queue-generator.test.rb` and
+`node tests/blog-queue-browser.test.js` (set `BLOG_PLAYWRIGHT_PATH` if needed).
+The browser tests use mocked file access, not the real approval file.
+
+### Queue order and publication safeguards
+
 Keep every forthcoming article in this queue, with one readiness checkbox and
-a short announcement. New entries start unchecked and are appended without
-reordering existing approvals. Retain published entries and their original
-announcements; mark them `Published: YYYY-MM-DD · [Read post](CANONICAL_URL)`
-using the actual journal date and final article URL. Their checked boxes record
-the original approval, not a request to publish them again: the journal prevents
-republication.
+a short announcement. New entries start unchecked. Put approved entries first,
+alternating OT/Wasserstein geometry and other topics where the approved pool
+allows it; never approve an article merely to fill a topic slot. Keep relative
+order within each topic where possible. Clearly distinguish transport-related
+constructions, such as Moser’s interpolation, from optimal transport itself.
+
+Move fully announced entries to `published.md`, retaining the original title,
+checked approval, quoted preview URL and
+`Published: YYYY-MM-DD · [Read post](CANONICAL_URL)` line. Use the actual journal
+date and canonical URL. Keep pending work in the active queue until the final
+announcement journal commit has been pushed. Archive reconciliation is separate
+from the five-file publication commit; do not expand that manifest.
+An archived approval is accepted by the helpers only for an already-announced
+journal entry with its recorded Bluesky identifiers; it cannot approve a new
+publication. Both editorial files are excluded from the website build.
+
+Run `ruby tests/blog-editorial-queue.test.rb` after reconciling the list. It
+checks coverage, readiness boxes, approved-first ordering, best-effort topic
+alternation, archive dates and announcements, and private build exclusions.
 
 `publication-log.json` is the durable retry journal. It contains version 1,
 timezone `Europe/Paris`, and a `publications` array. Before changing an article,
@@ -151,8 +189,51 @@ Credentials come only from the dedicated macOS Keychain item
 `codex-bluesky-blog`, account `gabrielpeyre.bsky.social`. Never put passwords or
 session tokens in the queue, journal, automation prompt, logs, or Git. A missing
 item, denied access, or network permission failure is a stop condition, not a
-reason to search for other credentials or weaken permissions. The queue and
+reason to search for other credentials or weaken permissions. The active queue, published archive and
 journal are excluded from the public website build.
+
+## Numerical summary images
+
+Every article with a numerical experiment has a real capture of that experiment
+(currently 35 images across published and forthcoming posts). The JPEGs in
+`blog/imgs/summaries/` illustrate archive cards, the local editorial queue, and
+article social-sharing metadata. Theory-only articles do not get invented plots.
+Each image has descriptive alt text, its experiment URL and control settings,
+encoded dimensions, and a SHA-256 digest in `blog/summary-images.json`.
+
+The three `scripts/blog-summary-capture-*.cjs` tools reproduce the captures
+from a built site served locally, using Playwright and Chrome. Their default
+preview address is `http://127.0.0.1:4197`; native captures accept
+`BLOG_PREVIEW_URL`, OT captures accept `BLOG_CAPTURE_BASE`, and modern captures
+accept `--base`. All accept `BLOG_PLAYWRIGHT_PATH`. Native/modern captures can
+select one article with `--only SLUG`; OT captures take slug arguments.
+They choose documented control states, wait for numerical results, and adjust
+layout for legibility without replacing the underlying computations. Generated
+manifest fragments in `/private/tmp` must be reconciled into the main manifest
+with actual JPEG dimensions and fresh digests after a recapture.
+`scripts/blog-summary-jpeg.cjs` strips application/comment metadata without
+changing the encoded image pixels.
+
+Run `ruby scripts/build-blog-summary-images.rb` after updating images or adding
+an experiment. It checks exact experiment coverage, image bytes, dimensions,
+digests and provenance, then generates `_data/blog_summary_images.json`,
+forthcoming-card thumbnails, and preview social metadata. Published cards and
+article metadata read the same catalogue through Liquid. Follow with
+`ruby scripts/build-blog-queue.rb`. Both generators offer `--check`.
+Run `ruby tests/blog-summary-images.test.rb` and
+`node tests/blog-summary-jpeg.test.js` for offline regression checks.
+
+Future Bluesky announcements attach the matching verified image, with alt text,
+without changing the approved announcement or its final dated URL. The helper
+accepts only local, metadata-free JPEG/PNG files under the summary-image
+directory, no larger than 1 MB; it verifies uploaded bytes and uses the same
+create-only deduplication as text posts. Completed text-only announcements stay
+text-only: images are not added retroactively. A completed image announcement
+records immutable `announcement_image` metadata in the journal. Prepare and
+commit image assets as editorial work before publication; this does not add
+paths to the daily workflow's fixed five-file manifest. Offline safety checks
+are `python3 tests/blog-bluesky.test.py` and
+`python3 tests/blog-publication-git.test.py`.
 
 ## Subscribe
 

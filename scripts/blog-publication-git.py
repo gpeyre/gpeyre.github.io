@@ -205,13 +205,46 @@ def verify_lock(token):
         raise SafeError("The publication lock could not be verified; leave it untouched.") from None
 
 
+def announcement_image(entry):
+    """Permit only the nonsecret fingerprint of one confirmed image embed."""
+    if "announcement_image" not in entry:
+        return None
+    image = entry["announcement_image"]
+    fields = {"path", "alt", "width", "height", "sha256", "mime_type", "size"}
+    if (entry.get("status") != "announced" or not isinstance(entry.get("publication_commit"), str)
+            or not re.fullmatch(r"[0-9a-f]{40}", entry["publication_commit"])
+            or not isinstance(entry.get("bluesky_uri"), str)
+            or not re.fullmatch(r"at://did:[a-z0-9]+:[A-Za-z0-9._:%-]+/app\.bsky\.feed\.post/[A-Za-z0-9._~-]+", entry["bluesky_uri"])
+            or not isinstance(entry.get("bluesky_cid"), str) or not re.fullmatch(r"[A-Za-z0-9]+", entry["bluesky_cid"])
+            or not isinstance(image, dict) or set(image) != fields):
+        raise SafeError("Image metadata requires an exact confirmed announcement record.")
+    path, alt = image["path"], image["alt"]
+    if (not isinstance(path, str) or not re.fullmatch(r"/blog/imgs/summaries/" + re.escape(entry["slug"]) + r"\.(jpg|png)", path)
+            or image["mime_type"] != ("image/png" if path.endswith(".png") else "image/jpeg")
+            or not isinstance(alt, str) or not alt.strip() or len(alt) > 1000
+            or any(ord(character) < 32 for character in alt)):
+        raise SafeError("The announcement image path, MIME type or alternative text is invalid.")
+    if (any(type(image[field]) is not int or not 1 <= image[field] <= 4096 for field in ("width", "height"))
+            or image["width"] * image["height"] > 16_000_000
+            or type(image["size"]) is not int or not 0 < image["size"] <= 1_000_000):
+        raise SafeError("The announcement image dimensions or byte size is invalid.")
+    digest(image["sha256"])
+    return image
+
+
 def load_entry(slug, date):
     url, files = canonical(slug, date), manifest(slug, date)
     try:
         log = json.loads(regular_file(LOG_PATH))
         queue = regular_file("blog/announcement-queue.md").decode("utf-8")
-    except (ValueError, UnicodeError):
-        raise SafeError("The publication journal or approval queue has an invalid format.") from None
+        try:
+            (ROOT / "blog/published.md").lstat()
+        except FileNotFoundError:
+            archive = ""
+        else:
+            archive = regular_file("blog/published.md").decode("utf-8")
+    except (OSError, ValueError, UnicodeError):
+        raise SafeError("The publication journal, approval queue or archive has an invalid format.") from None
     if not isinstance(log, dict) or log.get("version") != 1 or log.get("timezone") != "Europe/Paris" or not isinstance(log.get("publications"), list):
         raise SafeError("The publication journal format is unsupported.")
     matches = [entry for entry in log["publications"] if isinstance(entry, dict) and entry.get("slug") == slug]
@@ -232,13 +265,28 @@ def load_entry(slug, date):
         raise SafeError("The journal must fingerprint the four exact publication content files.")
     for fingerprint in fingerprints.values():
         digest(fingerprint)
+    announcement_image(entry)
     preview = "https://www.gpeyre.com/blog/preparations/{}.html".format(slug)
-    blocks = [block for block in re.split(r"(?m)^## ", queue)[1:]
-              if any(quote.endswith(" " + preview) for quote in re.findall(r"(?m)^> (.+)$", block))]
-    if (len(blocks) != 1 or not re.fullmatch(r"\d+\. " + re.escape(entry["title"]), blocks[0].splitlines()[0])
-            or not re.search(r"(?m)^- \[x\] Ready to publish\s*$", blocks[0])):
+    matches = [(block, archived) for text, archived in ((queue, False), (archive, True))
+               for block in re.split(r"(?m)^## ", text)[1:]
+               if any(preview in quote for quote in re.findall(r"(?m)^> (.+)$", block))]
+    if len(matches) != 1:
+        raise SafeError("Exactly one matching queue or completed archive entry is required.")
+    block, archived = matches[0]
+    if archived:
+        # Only the already-announced entry may use its historical approval for
+        # journal synchronization. All source, commit and ancestry guards below
+        # still apply; the archive cannot authorize a new publication.
+        if (entry["status"] != "announced" or not isinstance(entry.get("publication_commit"), str)
+                or not re.fullmatch(r"[0-9a-f]{40}", entry["publication_commit"])
+                or not isinstance(entry.get("bluesky_uri"), str) or not entry["bluesky_uri"]
+                or not isinstance(entry.get("bluesky_cid"), str) or not entry["bluesky_cid"]
+                or re.findall(r"(?m)^Published: (.+)$", block) != [date + " · [Read post](" + url + ")"]):
+            raise SafeError("An archived approval may only reconcile its exact completed announcement.")
+    if (not re.fullmatch(r"\d+\. " + re.escape(entry["title"]), block.splitlines()[0])
+            or re.findall(r"(?m)^- \[([^\]]*)\] Ready to publish\s*$", block) != ["x"]):
         raise SafeError("This publication has not been explicitly approved in the queue.")
-    quotes = re.findall(r"(?m)^> (.+)$", blocks[0])
+    quotes = re.findall(r"(?m)^> (.+)$", block)
     if len(quotes) != 1 or not quotes[0].endswith(" " + preview) or entry.get("message") != quotes[0][:-len(preview)] + url:
         raise SafeError("The journal message differs from the explicitly approved announcement.")
     return entry
@@ -314,8 +362,15 @@ def verify_journal_transition(entry, publication_commit=None):
     try:
         current = json.loads(regular_file(LOG_PATH))
         baseline = json.loads(git(["show", "{}:{}".format(entry["base_commit"], LOG_PATH)]))
+        image = announcement_image(entry)
+        if image is not None and publication_commit is None:
+            raise SafeError("Image metadata may only be added after a confirmed announcement, not while preparing publication.")
         initial_entry = dict(entry)
         initial_entry.update(status="prepared", publication_commit=None, bluesky_uri=None, bluesky_cid=None)
+        if image is not None:
+            # It is computed by the announcement helper after successful
+            # create-only reconciliation, not part of the prepared journal.
+            initial_entry.pop("announcement_image")
         expected_initial = dict(baseline)
         expected_initial["publications"] = [*baseline["publications"], initial_entry]
         if publication_commit is None:
@@ -333,6 +388,8 @@ def verify_journal_transition(entry, publication_commit=None):
         original = matching[0]
         for field in ("status", "publication_commit", "bluesky_uri", "bluesky_cid"):
             original[field] = entry.get(field)
+        if image is not None:
+            original["announcement_image"] = image
         if expected != current:
             raise SafeError("The publication journal has unrelated or unattributed edits; preserve them and stop.")
     except SafeError:

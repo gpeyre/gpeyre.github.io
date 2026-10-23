@@ -1229,7 +1229,7 @@ window.BLOG_SEARCH_RECORDS = [
     "url": "/blog/preparations/balanced-low-rank-conditioning.html",
     "status": "forthcoming",
     "date": null,
-    "title": "One low-rank matrix, many optimization speeds",
+    "title": "Optimal conditioning of low-rank adaptation",
     "description": "An elementary Hessian calculation explains why balanced representations of the same low-rank matrix have optimal Euclidean local conditioning, with an interactive comparison of exact condition numbers and local training.",
     "keywords": [
       "LoRA",
@@ -1312,7 +1312,7 @@ window.BLOG_SEARCH_RECORDS = [
     "url": "/blog/preparations/c-transforms-and-averaging.html",
     "status": "forthcoming",
     "date": null,
-    "title": "From Legendre transforms to transport potentials",
+    "title": "c-transform as a generalized Legendre transform",
     "description": "From convex conjugacy to cost transforms: a short proof of double-transform closure, explicit failures of averaging for power costs, and the geometric exception of round spheres.",
     "keywords": [
       "c transform",
@@ -1531,7 +1531,7 @@ window.BLOG_SEARCH_RECORDS = [
     "url": "/blog/preparations/gaussian-gromov-wasserstein-counterexample.html",
     "status": "forthcoming",
     "date": null,
-    "title": "Gaussian marginals, non-Gaussian optimal transport",
+    "title": "Gaussians are not closed for Gromov–Wasserstein",
     "description": "A rigorous counterexample shows that Gaussian marginals need not admit a jointly Gaussian optimizer for squared-distance Gromov–Wasserstein transport.",
     "keywords": [
       "Gromov–Wasserstein distance",
@@ -1661,7 +1661,7 @@ window.BLOG_SEARCH_RECORDS = [
     "url": "/blog/preparations/intrinsic-factor-training-dynamics.html",
     "status": "forthcoming",
     "date": null,
-    "title": "Intrinsic dynamics of factor training",
+    "title": "Intrinsic dynamics of overparameterized dynamics",
     "description": "Conserved imbalance closes the gradient-flow dynamics of a factored matrix: a scalar warmup, balanced and relaxed-balanced formulas, and an interactive comparison of invariant factor trajectories.",
     "keywords": [
       "intrinsic training dynamics",
@@ -1823,7 +1823,7 @@ window.BLOG_SEARCH_RECORDS = [
     "url": "/blog/preparations/noncrossing-matchings-catalan.html",
     "status": "forthcoming",
     "date": null,
-    "title": "Removing crossings still leaves exponentially many matchings",
+    "title": "Optimal Planar Matching and Crossings",
     "description": "Why Euclidean optimal matchings do not cross, why Catalan many candidates remain, and how exact uniform sampling differs from local improvement.",
     "keywords": [
       "noncrossing matchings",
@@ -1910,7 +1910,7 @@ window.BLOG_SEARCH_RECORDS = [
     "url": "/blog/preparations/optimal-transport-convex-extension.html",
     "status": "forthcoming",
     "date": null,
-    "title": "Optimal transport as a convex extension",
+    "title": "An Axiomatic Definition of the Wasserstein Distance",
     "description": "Kantorovich transport is the largest jointly convex lower-semicontinuous extension of a pointwise cost, with a short proof and a complete two-point example.",
     "keywords": [
       "optimal transport convex extension",
@@ -2002,7 +2002,7 @@ window.BLOG_SEARCH_RECORDS = [
     "url": "/blog/preparations/projections-corrections-reflections.html",
     "status": "forthcoming",
     "date": null,
-    "title": "Projections, corrections, and reflections",
+    "title": "Iterative projections: Dykstra and Douglas–Rachford",
     "description": "Alternating projections find feasibility; Dykstra finds the nearest point; Douglas–Rachford uses reflections. A halfplane counterexample and a genuine five-set Sudoku experiment make the distinctions visible.",
     "keywords": [
       "alternating projections",
@@ -2045,7 +2045,7 @@ window.BLOG_SEARCH_RECORDS = [
     "url": "/blog/preparations/quantum-pinsker-sign-observable.html",
     "status": "forthcoming",
     "date": null,
-    "title": "Quantum Pinsker: a sign observable is enough",
+    "title": "From Classical to Quantum Pinsker Inequality",
     "description": "A self-contained proof of classical and quantum Pinsker: reduce probabilities to a sign set, then test matrix entropy curvature against a sign observable. The sharp constant survives noncommutativity.",
     "keywords": [
       "Pinsker inequality",
@@ -2133,7 +2133,7 @@ window.BLOG_SEARCH_RECORDS = [
     "url": "/blog/preparations/sign-gradient-descent-geometry.html",
     "status": "forthcoming",
     "date": null,
-    "title": "Which condition number does sign gradient descent see?",
+    "title": "Conditioning of Non-Euclidean Gradient Descent",
     "description": "Derive scaled sign descent from norm-steepest descent, prove its geometry-dependent convergence bound, and compare isospectral quadratics whose coordinate orientations give very different condition numbers.",
     "keywords": [
       "scaled sign gradient descent",
@@ -2221,7 +2221,7 @@ window.BLOG_SEARCH_RECORDS = [
     "url": "/blog/preparations/stable-fluids.html",
     "status": "forthcoming",
     "date": null,
-    "title": "Stable fluids in four steps",
+    "title": "Stable fluids",
     "description": "Stam’s Stable Fluids combines semi-Lagrangian advection, implicit diffusion, and an orthogonal incompressibility projection. Derive its Fourier solver and stir a periodic fluid interactively.",
     "keywords": [
       "Stable Fluids",

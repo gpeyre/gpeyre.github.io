@@ -7,6 +7,7 @@ responses and exception details are deliberately never printed.
 """
 
 import argparse
+import base64
 import datetime
 import hashlib
 import html.parser
@@ -16,12 +17,14 @@ import pathlib
 import re
 import secrets
 import stat
+import struct
 import subprocess
 import sys
 import tempfile
 import urllib.error
 import urllib.parse
 import urllib.request
+import zlib
 
 
 ACCOUNT = "gabrielpeyre.bsky.social"
@@ -32,6 +35,8 @@ MAX_RESPONSE_BYTES = 1_048_576
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 PUBLICATION_LOG = ROOT / "blog" / "publication-log.json"
 ANNOUNCEMENT_QUEUE = ROOT / "blog" / "announcement-queue.md"
+SUMMARY_IMAGES = ROOT / "blog" / "summary-images.json"
+MAX_IMAGE_BYTES = 1_000_000  # Deliberately stricter than Bluesky's current limit.
 RUN_LOCK = ROOT / "blog" / ".publication-run.lock"
 
 
@@ -133,14 +138,23 @@ def read_password():
     raise SafeError("The dedicated Bluesky Keychain item was not found.")
 
 
-def request_json(method, endpoint, payload=None, token=None):
+def request_json(method, endpoint, payload=None, token=None, *, image_bytes=None, image_type=None):
     """Call a fixed official XRPC endpoint, refusing redirects and unsafe logs."""
     if not re.fullmatch(r"[A-Za-z0-9.]+(?:\?[^\s]*)?", endpoint):
         raise SafeError("The Bluesky request is invalid.")
-    data = None if payload is None else json.dumps(payload).encode("utf-8")
+    if image_bytes is not None:
+        if (method != "POST" or endpoint != "com.atproto.repo.uploadBlob" or payload is not None
+                or not isinstance(image_bytes, bytes) or not 0 < len(image_bytes) <= MAX_IMAGE_BYTES
+                or image_type not in ("image/jpeg", "image/png")):
+            raise SafeError("The Bluesky image upload is invalid.")
+        data = image_bytes
+    else:
+        if image_type is not None:
+            raise SafeError("The Bluesky image upload is invalid.")
+        data = None if payload is None else json.dumps(payload).encode("utf-8")
     headers = {"Accept": "application/json", "User-Agent": "gpeyre-blog-announcer/1"}
     if data is not None:
-        headers["Content-Type"] = "application/json"
+        headers["Content-Type"] = image_type if image_bytes is not None else "application/json"
     if token is not None:
         headers["Authorization"] = "Bearer " + token
     request = urllib.request.Request(XRPC_ROOT + endpoint, data=data, headers=headers, method=method)
@@ -196,14 +210,201 @@ def canonical_url(slug, date):
     return "https://www.gpeyre.com/blog/{}/{}/".format(date.replace("-", "/"), slug)
 
 
-def load_announcement(slug, date, log_path=PUBLICATION_LOG, queue_path=ANNOUNCEMENT_QUEUE):
+def read_summary_file(relative, limit, *, missing_ok=False):
+    """Read only regular repository files, never following any symlink."""
+    descriptor = None
+    try:
+        descriptor = os.open(ROOT, os.O_RDONLY | os.O_DIRECTORY)
+        parts = pathlib.PurePosixPath(relative).parts
+        if not parts or any(part in ("", ".", "..", "/") for part in parts):
+            raise SafeError("The summary image path is invalid.")
+        for part in parts[:-1]:
+            child = os.open(part, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=descriptor)
+            os.close(descriptor)
+            descriptor = child
+        try:
+            child = os.open(parts[-1], os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=descriptor)
+        except FileNotFoundError:
+            if missing_ok:
+                return None
+            raise
+        with os.fdopen(child, "rb") as stream:
+            info = os.fstat(stream.fileno())
+            if not stat.S_ISREG(info.st_mode) or not 0 < info.st_size <= limit:
+                raise SafeError("The summary image or manifest is not a bounded ordinary file.")
+            data = stream.read(limit + 1)
+            if len(data) != info.st_size:
+                raise SafeError("The summary image or manifest changed while being read.")
+            return data
+    except SafeError:
+        raise
+    except OSError:
+        raise SafeError("The summary image or manifest could not be read safely.") from None
+    finally:
+        if descriptor is not None:
+            os.close(descriptor)
+
+
+def image_dimensions(data, mime_type):
+    """Check PNG/JPEG structure and dimensions without executing a decoder.
+
+    Generated experiment captures contain no EXIF or textual metadata. Refuse
+    those fields instead of risking an accidental private-metadata upload.
+    """
+    invalid = "The summary image has an invalid or unsupported media structure."
+    if mime_type == "image/png":
+        if data[:8] != b"\x89PNG\r\n\x1a\n":
+            raise SafeError(invalid)
+        offset, dimensions, saw_pixels, ended = 8, None, False, False
+        while offset + 12 <= len(data):
+            size = int.from_bytes(data[offset:offset + 4], "big")
+            kind = data[offset + 4:offset + 8]
+            end = offset + 12 + size
+            if end > len(data) or not re.fullmatch(b"[A-Za-z]{4}", kind):
+                raise SafeError(invalid)
+            content = data[offset + 8:offset + 8 + size]
+            checksum = int.from_bytes(data[offset + 8 + size:end], "big")
+            if zlib.crc32(kind + content) & 0xffffffff != checksum:
+                raise SafeError(invalid)
+            if kind in (b"eXIf", b"tEXt", b"zTXt", b"iTXt"):
+                raise SafeError("The summary image contains metadata; regenerate a metadata-free capture.")
+            if offset == 8:
+                if kind != b"IHDR" or size != 13:
+                    raise SafeError(invalid)
+                width, height, depth, color, compression, filtering, interlace = struct.unpack(">IIBBBBB", content)
+                if compression or filtering or interlace not in (0, 1) or depth not in (1, 2, 4, 8, 16) or color not in (0, 2, 3, 4, 6):
+                    raise SafeError(invalid)
+                dimensions = width, height
+            elif kind == b"IHDR":
+                raise SafeError(invalid)
+            if kind == b"IDAT":
+                saw_pixels = saw_pixels or bool(size)
+            if kind == b"IEND":
+                ended = size == 0 and end == len(data)
+                break
+            offset = end
+        if not dimensions or not saw_pixels or not ended:
+            raise SafeError(invalid)
+        return dimensions
+    if mime_type != "image/jpeg" or data[:2] != b"\xff\xd8" or data[-2:] != b"\xff\xd9":
+        raise SafeError(invalid)
+    offset, dimensions = 2, None
+    while offset < len(data) - 2:
+        if data[offset] != 0xff:
+            raise SafeError(invalid)
+        while offset < len(data) and data[offset] == 0xff:
+            offset += 1
+        if offset >= len(data):
+            raise SafeError(invalid)
+        marker = data[offset]
+        offset += 1
+        if marker in (0x00, 0xd8, 0xd9) or 0xd0 <= marker <= 0xd7 or offset + 2 > len(data):
+            raise SafeError(invalid)
+        size = int.from_bytes(data[offset:offset + 2], "big")
+        end = offset + size
+        if size < 2 or end > len(data) - 2:
+            raise SafeError(invalid)
+        if marker == 0xfe or 0xe1 <= marker <= 0xed or marker == 0xef:
+            raise SafeError("The summary image contains metadata; regenerate a metadata-free capture.")
+        if marker in (0xc0, 0xc1, 0xc2):
+            if size < 8 or dimensions is not None:
+                raise SafeError(invalid)
+            height, width = struct.unpack(">HH", data[offset + 3:offset + 7])
+            components = data[offset + 7]
+            if data[offset + 2] != 8 or components not in (1, 3, 4) or size != 8 + 3 * components:
+                raise SafeError(invalid)
+            dimensions = width, height
+        if marker == 0xda:
+            if dimensions is None or end >= len(data) - 2:
+                raise SafeError(invalid)
+            return dimensions
+        offset = end
+    raise SafeError(invalid)
+
+
+def load_summary_image(entry):
+    """Derive an exact, content-addressed embed before any credential access.
+
+    Completed pre-image announcements remain text-only. For new announcements,
+    a local raw SHA-256 CID fixes the expected blob *without* uploading it, so
+    retries check existing records before making any media or record write.
+    ATProto's blob format: https://atproto.com/specs/blob
+    """
+    recorded = entry.get("announcement_image")
+    if entry["status"] == "announced" and recorded is None:
+        return None
+    try:
+        relative_manifest = SUMMARY_IMAGES.relative_to(ROOT).as_posix()
+    except ValueError:
+        raise SafeError("The summary image manifest must stay inside the repository.") from None
+    raw = read_summary_file(relative_manifest, MAX_RESPONSE_BYTES, missing_ok=True)
+    if raw is None:
+        if recorded is not None:
+            raise SafeError("The completed announcement's image manifest is missing.")
+        return None
+    try:
+        manifest = json.loads(raw)
+    except (ValueError, UnicodeError):
+        raise SafeError("The summary image manifest is invalid.") from None
+    if not isinstance(manifest, dict) or manifest.get("version") != 1 or not isinstance(manifest.get("images"), dict):
+        raise SafeError("The summary image manifest has an unsupported format.")
+    specification = manifest["images"].get(entry["slug"])
+    if specification is None:
+        if recorded is not None:
+            raise SafeError("The completed announcement's image is missing from the manifest.")
+        return None
+    if not isinstance(specification, dict):
+        raise SafeError("The summary image specification is invalid.")
+    path, alt = specification.get("path"), specification.get("alt")
+    if (not isinstance(path, str) or not re.fullmatch(r"/blog/imgs/summaries/" + re.escape(entry["slug"]) + r"\.(jpg|png)", path)
+            or not isinstance(alt, str) or not alt.strip() or len(alt) > 1000
+            or any(ord(character) < 32 for character in alt)):
+        raise SafeError("The summary image path or alternative text is invalid.")
+    width, height = specification.get("width"), specification.get("height")
+    if any(type(value) is not int or not 1 <= value <= 4096 for value in (width, height)) or width * height > 16_000_000:
+        raise SafeError("The summary image dimensions are invalid.")
+    data = read_summary_file(path[1:], MAX_IMAGE_BYTES)
+    mime_type = "image/png" if path.endswith(".png") else "image/jpeg"
+    if image_dimensions(data, mime_type) != (width, height):
+        raise SafeError("The summary image dimensions differ from its manifest.")
+    digest = hashlib.sha256(data).digest()
+    # CIDv1 (1), raw codec (0x55), sha2-256 (0x12), 32-byte digest (0x20).
+    cid = "b" + base64.b32encode(b"\x01\x55\x12\x20" + digest).decode("ascii").lower().rstrip("=")
+    metadata = {"path": path, "alt": alt, "width": width, "height": height,
+                "sha256": digest.hex(), "mime_type": mime_type, "size": len(data)}
+    if recorded is not None and recorded != metadata:
+        raise SafeError("The announcement's saved image or alternative text has changed; stop for review.")
+    blob = {"$type": "blob", "ref": {"$link": cid}, "mimeType": mime_type, "size": len(data)}
+    embed = {"$type": "app.bsky.embed.images", "images": [
+        {"alt": alt, "image": blob, "aspectRatio": {"width": width, "height": height}}]}
+    return {"data": data, "metadata": metadata, "embed": embed}
+
+
+def upload_summary_image(image, token):
+    """Official raw-byte upload, accepting only the already-derived blob."""
+    result = request_json("POST", "com.atproto.repo.uploadBlob", token=token,
+                          image_bytes=image["data"], image_type=image["metadata"]["mime_type"])
+    if result.get("blob") != image["embed"]["images"][0]["image"]:
+        raise SafeError("Bluesky returned image metadata different from the validated local capture.")
+
+
+def load_announcement(slug, date, log_path=PUBLICATION_LOG, queue_path=ANNOUNCEMENT_QUEUE, archive_path=None):
     """Demand explicit readiness and exact agreement with the publication log."""
     url = canonical_url(slug, date)
+    archive_path = pathlib.Path(archive_path) if archive_path is not None else pathlib.Path(queue_path).with_name("published.md")
     try:
         log = json.loads(pathlib.Path(log_path).read_text(encoding="utf-8"))
         queue = pathlib.Path(queue_path).read_text(encoding="utf-8")
+        try:
+            archive_mode = archive_path.lstat().st_mode
+        except FileNotFoundError:
+            archive = ""
+        else:
+            if not stat.S_ISREG(archive_mode):
+                raise SafeError("The publication archive must be an ordinary file.")
+            archive = archive_path.read_text(encoding="utf-8")
     except (OSError, ValueError, UnicodeError):
-        raise SafeError("The publication log or approved queue could not be read.") from None
+        raise SafeError("The publication log, approved queue or archive could not be read.") from None
     if not isinstance(log, dict) or log.get("version") != 1 or log.get("timezone") != "Europe/Paris" or not isinstance(log.get("publications"), list):
         raise SafeError("The publication log has an unsupported format.")
     matches = [entry for entry in log["publications"] if isinstance(entry, dict) and entry.get("slug") == slug]
@@ -224,23 +425,26 @@ def load_announcement(slug, date, log_path=PUBLICATION_LOG, queue_path=ANNOUNCEM
     message = entry.get("message")
     if not isinstance(message, str) or not message.endswith(" " + url) or len(message) > 280 or any(character in message for character in "\r\n"):
         raise SafeError("The approved message must end with the dated URL and fit within 280 characters.")
-    blocks = re.split(r"(?m)^## ", queue)[1:]
     preview = "https://www.gpeyre.com/blog/preparations/{}.html".format(slug)
-    queue_matches = []
-    for block in blocks:
-        quotes = re.findall(r"(?m)^> (.+)$", block)
-        for quote in quotes:
-            if quote.endswith(" " + preview):
-                queue_matches.append((block, quote))
-    if len(queue_matches) != 1:
-        raise SafeError("Exactly one matching approved queue entry is required.")
-    block, quote = queue_matches[0]
+    matches = [(block, archived) for text, archived in ((queue, False), (archive, True))
+               for block in re.split(r"(?m)^## ", text)[1:]
+               if any(preview in quote for quote in re.findall(r"(?m)^> (.+)$", block))]
+    if len(matches) != 1:
+        raise SafeError("Exactly one matching approved queue or completed archive entry is required.")
+    block, archived = matches[0]
+    if archived:
+        # The archive records completed approvals; it never authorizes a first
+        # announcement, even if an article has already reached `published`.
+        if (entry["status"] != "announced" or not entry.get("bluesky_uri") or not entry.get("bluesky_cid")
+                or re.findall(r"(?m)^Published: (.+)$", block) != [date + " · [Read post](" + url + ")"]):
+            raise SafeError("An archived approval may only reconcile its exact completed announcement.")
     title_line = block.splitlines()[0]
     if not re.fullmatch(r"\d+\. " + re.escape(entry["title"]), title_line):
         raise SafeError("The queue title differs from the published article.")
-    if not re.search(r"(?m)^- \[x\] Ready to publish\s*$", block):
+    if re.findall(r"(?m)^- \[([^\]]*)\] Ready to publish\s*$", block) != ["x"]:
         raise SafeError("This article has not been explicitly marked ready to publish.")
-    if quote[:-len(preview)] + url != message:
+    quotes = re.findall(r"(?m)^> (.+)$", block)
+    if len(quotes) != 1 or not quotes[0].endswith(" " + preview) or quotes[0][:-len(preview)] + url != message:
         raise SafeError("The logged message differs from the explicitly approved queue message.")
     return log, entry
 
@@ -299,16 +503,19 @@ def verify_live_page(entry):
         raise SafeError("The live page does not match the approved article's title, date, and canonical URL.")
 
 
-def post_record(entry):
+def post_record(entry, image=None):
     message, url = entry["message"], entry["url"]
     start = len(message[:-len(url)].encode("utf-8"))
-    return {
+    record = {
         "$type": "app.bsky.feed.post",
         "text": message,
         "facets": [{"index": {"byteStart": start, "byteEnd": len(message.encode("utf-8"))},
                     "features": [{"$type": "app.bsky.richtext.facet#link", "uri": url}]}],
         "createdAt": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z"),
     }
+    if image is not None:
+        record["embed"] = image["embed"]
+    return record
 
 
 def deterministic_rkey(slug, date):
@@ -347,13 +554,14 @@ def validate_record(result, expected, did, rkey):
     value = result.get("value")
     uri, cid = result.get("uri"), result.get("cid")
     if (not isinstance(value, dict) or value.get("$type") != expected["$type"] or value.get("text") != expected["text"]
-            or value.get("facets") != expected["facets"] or uri != "at://{}/app.bsky.feed.post/{}".format(did, rkey)
+            or value.get("facets") != expected["facets"] or value.get("embed") != expected.get("embed")
+            or uri != "at://{}/app.bsky.feed.post/{}".format(did, rkey)
             or not isinstance(cid, str) or not re.fullmatch(r"[A-Za-z0-9]+", cid)):
         raise SafeError("The deterministic Bluesky record already exists with unexpected content; no overwrite was attempted.")
     return uri, cid
 
 
-def save_announcement(log, entry, uri, cid, log_path):
+def save_announcement(log, entry, uri, cid, log_path, image=None):
     # Preserve concurrent edits to the queue/log instead of overwriting them.
     path = pathlib.Path(log_path)
     try:
@@ -361,6 +569,8 @@ def save_announcement(log, entry, uri, cid, log_path):
         if current != log:
             raise SafeError("The publication log changed; retry to reconcile the already-created announcement.")
         entry.update(status="announced", bluesky_uri=uri, bluesky_cid=cid)
+        if image is not None:
+            entry["announcement_image"] = image["metadata"]
         with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent, prefix=".publication-log-", suffix=".tmp", delete=False) as temporary:
             temporary_name = temporary.name
             json.dump(log, temporary, ensure_ascii=False, indent=2)
@@ -374,13 +584,14 @@ def save_announcement(log, entry, uri, cid, log_path):
         raise SafeError("The announcement exists, but its public status could not be saved; retry safely.") from None
 
 
-def announce(slug, date, log_path=PUBLICATION_LOG, queue_path=ANNOUNCEMENT_QUEUE):
-    log, entry = load_announcement(slug, date, log_path, queue_path)
+def announce(slug, date, log_path=PUBLICATION_LOG, queue_path=ANNOUNCEMENT_QUEUE, archive_path=None):
+    log, entry = load_announcement(slug, date, log_path, queue_path, archive_path)
+    image = load_summary_image(entry)
     verify_live_page(entry)
     # Do not request Keychain access before the publication/readiness checks pass.
     session = authenticate()
     rkey = deterministic_rkey(slug, date)
-    expected = post_record(entry)
+    expected = post_record(entry, image)
     # A previous version used a generic record key instead of the post
     # collection's required TID. Check both before writing: a legacy success
     # must be reconciled rather than duplicated under the new key.
@@ -394,6 +605,8 @@ def announce(slug, date, log_path=PUBLICATION_LOG, queue_path=ANNOUNCEMENT_QUEUE
     if result is None:
         if entry["status"] == "announced":
             raise SafeError("The log says this article was announced, but the record is absent; no repost was attempted.")
+        if image is not None:
+            upload_summary_image(image, session["token"])
         try:
             request_json("POST", "com.atproto.repo.putRecord", {
                 "repo": session["did"], "collection": "app.bsky.feed.post", "rkey": rkey,
@@ -417,7 +630,7 @@ def announce(slug, date, log_path=PUBLICATION_LOG, queue_path=ANNOUNCEMENT_QUEUE
     uri, cid = validate_record(result, expected, session["did"], rkey)
     if entry["status"] == "announced" and (entry["bluesky_uri"] != uri or entry["bluesky_cid"] != cid):
         raise SafeError("The Bluesky record no longer matches the completed announcement log.")
-    save_announcement(log, entry, uri, cid, log_path)
+    save_announcement(log, entry, uri, cid, log_path, image)
     return "https://bsky.app/profile/{}/post/{}".format(session["handle"], rkey)
 
 

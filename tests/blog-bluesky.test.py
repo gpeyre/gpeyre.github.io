@@ -2,6 +2,7 @@
 """Offline regression tests: no real Keychain access or network traffic."""
 
 import contextlib
+import base64
 import datetime
 import hashlib
 import importlib.util
@@ -9,11 +10,13 @@ import io
 import json
 import pathlib
 import stat
+import struct
 import subprocess
 import sys
 import tempfile
 import unittest
 import urllib.error
+import zlib
 from unittest.mock import Mock, patch
 
 
@@ -22,6 +25,173 @@ SCRIPT = pathlib.Path(__file__).resolve().parents[1] / "scripts" / "blog-bluesky
 SPEC = importlib.util.spec_from_file_location("blog_bluesky", SCRIPT)
 BLOG = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(BLOG)
+
+
+def png_chunk(kind, data):
+    return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data) & 0xffffffff)
+
+
+def png_image(width=3, height=2, metadata=False):
+    data = b"\x89PNG\r\n\x1a\n" + png_chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0))
+    if metadata:
+        data += png_chunk(b"tEXt", b"Private\x00Do not upload")
+    return data + png_chunk(b"IDAT", zlib.compress((b"\0" + b"\x22\x44\x66" * width) * height)) + png_chunk(b"IEND", b"")
+
+
+class SummaryImageTests(unittest.TestCase):
+    def setUp(self):
+        self.temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temporary.cleanup)
+        self.root = pathlib.Path(self.temporary.name)
+        self.folder = self.root / "blog" / "imgs" / "summaries"
+        self.folder.mkdir(parents=True)
+        self.manifest = self.root / "blog" / "summary-images.json"
+        self.patches = (patch.object(BLOG, "ROOT", self.root), patch.object(BLOG, "SUMMARY_IMAGES", self.manifest),
+                        patch.object(BLOG.subprocess, "run", side_effect=AssertionError("Unexpected subprocess")),
+                        patch.object(BLOG.urllib.request, "build_opener", side_effect=AssertionError("Unexpected network")))
+        for mocked in self.patches:
+            mocked.start()
+            self.addCleanup(mocked.stop)
+        self.entry = {"slug": "test-image", "status": "published"}
+        self.specification = {"path": "/blog/imgs/summaries/test-image.png", "alt": "Blue and orange Gaussian ellipses.",
+                              "width": 3, "height": 2, "source": "/blog/preparations/test-image.html#experiment"}
+        self.file = self.folder / "test-image.png"
+        self.file.write_bytes(png_image())
+        self.write_manifest()
+
+    def write_manifest(self):
+        self.manifest.write_text(json.dumps({"version": 1, "images": {"test-image": self.specification}}))
+
+    def test_valid_png_creates_deterministic_raw_cid_embed_without_network(self):
+        image = BLOG.load_summary_image(self.entry)
+        self.assertEqual(image["metadata"]["sha256"], hashlib.sha256(self.file.read_bytes()).hexdigest())
+        blob = image["embed"]["images"][0]["image"]
+        self.assertRegex(blob["ref"]["$link"], r"\Abafkrei[a-z2-7]{52}\Z")
+        encoded = blob["ref"]["$link"][1:]
+        decoded = base64.b32decode(encoded.upper() + "=" * ((-len(encoded)) % 8))
+        self.assertEqual(decoded[:4], bytes([1, 0x55, 0x12, 32]))
+        self.assertEqual(decoded[4:], hashlib.sha256(self.file.read_bytes()).digest())
+        self.assertEqual(blob["mimeType"], "image/png")
+        self.assertEqual(blob["size"], self.file.stat().st_size)
+        self.assertEqual(image["embed"]["images"][0]["aspectRatio"], {"width": 3, "height": 2})
+        self.assertEqual(BLOG.load_summary_image(self.entry), image)
+
+    def test_no_manifest_or_no_matching_image_keeps_new_posts_text_only(self):
+        self.manifest.unlink()
+        self.assertIsNone(BLOG.load_summary_image(self.entry))
+        self.manifest.write_text('{"version":1,"images":{}}')
+        self.assertIsNone(BLOG.load_summary_image(self.entry))
+
+    def test_completed_legacy_text_only_post_does_not_read_new_manifest(self):
+        self.entry["status"] = "announced"
+        with patch.object(BLOG, "read_summary_file", side_effect=AssertionError("Legacy post must remain unchanged")):
+            self.assertIsNone(BLOG.load_summary_image(self.entry))
+
+    def test_completed_image_metadata_must_stay_exact(self):
+        self.entry["announcement_image"] = BLOG.load_summary_image(self.entry)["metadata"]
+        self.entry["status"] = "announced"
+        self.assertIsNotNone(BLOG.load_summary_image(self.entry))
+        self.specification["alt"] = "Changed alternative text."
+        self.write_manifest()
+        with self.assertRaisesRegex(BLOG.SafeError, "has changed"):
+            BLOG.load_summary_image(self.entry)
+
+    def test_completed_image_cannot_silently_disappear(self):
+        self.entry["announcement_image"] = BLOG.load_summary_image(self.entry)["metadata"]
+        self.entry["status"] = "announced"
+        self.manifest.unlink()
+        with self.assertRaises(BLOG.SafeError):
+            BLOG.load_summary_image(self.entry)
+        self.manifest.write_text('{"version":1,"images":{}}')
+        with self.assertRaises(BLOG.SafeError):
+            BLOG.load_summary_image(self.entry)
+
+    def test_manifest_requires_supported_structure(self):
+        for text in ("not JSON", "null", '{"version":2,"images":{}}', '{"version":1,"images":[]}',
+                     '{"version":1,"images":{"test-image":[]}}'):
+            with self.subTest(text=text):
+                self.manifest.write_text(text)
+                with self.assertRaises(BLOG.SafeError):
+                    BLOG.load_summary_image(self.entry)
+
+    def test_path_is_exact_slug_under_fixed_subtree_not_arbitrary_file(self):
+        for path in ("/blog/imgs/summaries/../private.png", "/etc/passwd", "/blog/imgs/summaries/other.png",
+                     "/blog/imgs/summaries/test-image.svg", "https://example.org/test-image.png", "blog/imgs/summaries/test-image.png"):
+            with self.subTest(path=path):
+                self.specification["path"] = path
+                self.write_manifest()
+                with self.assertRaises(BLOG.SafeError):
+                    BLOG.load_summary_image(self.entry)
+
+    def test_symlink_manifest_image_and_parent_are_refused(self):
+        self.manifest.unlink()
+        target = self.root / "manifest.json"
+        target.write_text('{"version":1,"images":{}}')
+        self.manifest.symlink_to(target)
+        with self.assertRaises(BLOG.SafeError):
+            BLOG.load_summary_image(self.entry)
+        self.manifest.unlink()
+        self.write_manifest()
+        self.file.unlink()
+        target = self.root / "capture.png"
+        target.write_bytes(png_image())
+        self.file.symlink_to(target)
+        with self.assertRaises(BLOG.SafeError):
+            BLOG.load_summary_image(self.entry)
+        self.file.unlink()
+        self.folder.rmdir()
+        self.folder.symlink_to(self.root, target_is_directory=True)
+        with self.assertRaises(BLOG.SafeError):
+            BLOG.load_summary_image(self.entry)
+
+    def test_nonregular_and_oversized_files_are_refused(self):
+        self.file.unlink()
+        self.file.mkdir()
+        with self.assertRaises(BLOG.SafeError):
+            BLOG.load_summary_image(self.entry)
+        self.file.rmdir()
+        self.file.write_bytes(b"x" * (BLOG.MAX_IMAGE_BYTES + 1))
+        with self.assertRaises(BLOG.SafeError):
+            BLOG.load_summary_image(self.entry)
+
+    def test_empty_or_control_alt_and_bad_dimensions_are_refused(self):
+        for field, value in (("alt", ""), ("alt", " "), ("alt", "Secret\ntext"), ("alt", "x" * 1001),
+                             ("width", True), ("width", 0), ("width", 4097), ("width", 4), ("height", "2")):
+            with self.subTest(field=field, value=value):
+                previous = self.specification[field]
+                self.specification[field] = value
+                self.write_manifest()
+                with self.assertRaises(BLOG.SafeError):
+                    BLOG.load_summary_image(self.entry)
+                self.specification[field] = previous
+
+    def test_png_crc_truncation_signature_and_private_metadata_are_refused(self):
+        valid = png_image()
+        for data in (b"not an image", valid[:-1], valid[:33] + b"bad" + valid[36:], png_image(metadata=True)):
+            with self.subTest(data=data[:24]):
+                self.file.write_bytes(data)
+                with self.assertRaises(BLOG.SafeError):
+                    BLOG.load_summary_image(self.entry)
+
+    def test_jpeg_dimensions_and_private_metadata(self):
+        frame = b"\xff\xc0\x00\x11\x08\x00\x02\x00\x03\x03\x01\x11\x00\x02\x11\x00\x03\x11\x00"
+        scan = b"\xff\xda\x00\x0c\x03\x01\x00\x02\x11\x03\x11\x00\x3f\x00\x11\xff\xd9"
+        valid = b"\xff\xd8" + frame + scan
+        self.assertEqual(BLOG.image_dimensions(valid, "image/jpeg"), (3, 2))
+        for bad in (valid[:-1], b"\xff\xd8\xff\xe1\x00\x08Exif\x00\x00" + frame + scan, b"\xff\xd8" + scan):
+            with self.assertRaises(BLOG.SafeError):
+                BLOG.image_dimensions(bad, "image/jpeg")
+
+    def test_official_upload_response_must_match_content_addressed_blob(self):
+        image = BLOG.load_summary_image(self.entry)
+        blob = image["embed"]["images"][0]["image"]
+        with patch.object(BLOG, "request_json", return_value={"blob": blob}) as request:
+            BLOG.upload_summary_image(image, "secret-session")
+        request.assert_called_once_with("POST", "com.atproto.repo.uploadBlob", token="secret-session",
+                                        image_bytes=image["data"], image_type="image/png")
+        with patch.object(BLOG, "request_json", return_value={"blob": dict(blob, size=1)}):
+            with self.assertRaises(BLOG.SafeError):
+                BLOG.upload_summary_image(image, "secret-session")
 
 
 class PublicationRunLockTests(unittest.TestCase):
@@ -185,6 +355,31 @@ class BlueskyCheckTests(unittest.TestCase):
         self.assertEqual(request.full_url, "https://bsky.social/xrpc/com.atproto.server.createSession")
         self.assertEqual(opener.open.call_args.kwargs["timeout"], BLOG.NETWORK_TIMEOUT)
 
+    def test_blob_request_sends_binary_not_json_to_only_the_fixed_official_endpoint(self):
+        response = Mock()
+        response.read.return_value = b'{"blob":{}}'
+        response.__enter__ = Mock(return_value=response)
+        response.__exit__ = Mock(return_value=False)
+        opener = Mock()
+        opener.open.return_value = response
+        data = png_image()
+        with patch.object(BLOG.urllib.request, "build_opener", return_value=opener):
+            BLOG.request_json("POST", "com.atproto.repo.uploadBlob", token=self.token, image_bytes=data, image_type="image/png")
+        request = opener.open.call_args.args[0]
+        self.assertEqual(request.full_url, "https://bsky.social/xrpc/com.atproto.repo.uploadBlob")
+        self.assertEqual(request.data, data)
+        self.assertEqual(request.get_header("Content-type"), "image/png")
+        self.assertEqual(request.get_header("Authorization"), "Bearer " + self.token)
+        for method, endpoint, payload, binary, mime in (
+                ("GET", "com.atproto.repo.uploadBlob", None, data, "image/png"),
+                ("POST", "com.atproto.repo.putRecord", None, data, "image/png"),
+                ("POST", "com.atproto.repo.uploadBlob", {}, data, "image/png"),
+                ("POST", "com.atproto.repo.uploadBlob", None, data, "image/svg+xml"),
+                ("POST", "com.atproto.repo.uploadBlob", None, b"", "image/png"),
+                ("POST", "com.atproto.repo.uploadBlob", None, b"x" * (BLOG.MAX_IMAGE_BYTES + 1), "image/png")):
+            with self.subTest(method=method, endpoint=endpoint, mime=mime), self.assertRaises(BLOG.SafeError):
+                BLOG.request_json(method, endpoint, payload, image_bytes=binary, image_type=mime)
+
     def test_refuses_redirect(self):
         with self.assertRaises(BLOG.SafeError):
             BLOG.NoRedirect().redirect_request(None, None, 302, "redirect", {}, "https://example.org")
@@ -211,8 +406,16 @@ class BlueskyAnnouncementTests(unittest.TestCase):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)
         self.path = pathlib.Path(self.temporary.name)
+        self.root_patch = patch.object(BLOG, "ROOT", self.path)
+        self.manifest_patch = patch.object(BLOG, "SUMMARY_IMAGES", self.path / "blog" / "summary-images.json")
+        self.root_patch.start()
+        self.manifest_patch.start()
+        self.addCleanup(self.root_patch.stop)
+        self.addCleanup(self.manifest_patch.stop)
+        (self.path / "blog").mkdir()
         self.log_path = self.path / "publication-log.json"
         self.queue_path = self.path / "announcement-queue.md"
+        self.archive_path = self.path / "published.md"
         self.slug, self.date = "test-convexity", "2026-10-19"
         self.url = BLOG.canonical_url(self.slug, self.date)
         self.preview = "https://www.gpeyre.com/blog/preparations/test-convexity.html"
@@ -235,6 +438,16 @@ class BlueskyAnnouncementTests(unittest.TestCase):
     def write_log(self):
         self.log_path.write_text(json.dumps(self.log, ensure_ascii=False), encoding="utf-8")
 
+    def mark_announced(self):
+        self.entry.update(status="announced", bluesky_uri=self.stored["uri"], bluesky_cid=self.stored["cid"])
+        self.write_log()
+
+    def move_to_archive(self):
+        block = self.queue_path.read_text(encoding="utf-8")
+        block = block.replace("\n> ", "\nPublished: " + self.date + " · [Read post](" + self.url + ")\n\n> ")
+        self.archive_path.write_text(block, encoding="utf-8")
+        self.queue_path.write_text("# Queue\n", encoding="utf-8")
+
     def run_announcement(self, gets):
         with patch.object(BLOG, "verify_live_page") as verify, patch.object(BLOG, "authenticate", return_value=self.session), patch.object(BLOG, "get_record", side_effect=gets) as get, patch.object(BLOG, "request_json", return_value={"uri": self.stored["uri"], "cid": self.stored["cid"]}) as request:
             result = BLOG.announce(self.slug, self.date, self.log_path, self.queue_path)
@@ -254,6 +467,144 @@ class BlueskyAnnouncementTests(unittest.TestCase):
         self.write_log()
         with self.assertRaises(BLOG.SafeError):
             BLOG.load_announcement(self.slug, self.date, self.log_path, self.queue_path)
+
+    def test_completed_archived_approval_is_loaded_and_deduplicated_without_put(self):
+        self.mark_announced()
+        self.move_to_archive()
+        _, loaded = BLOG.load_announcement(self.slug, self.date, self.log_path, self.queue_path)
+        self.assertEqual(loaded, self.entry)
+        result, request = self.run_announcement([None, self.stored])
+        request.assert_not_called()
+        self.assertTrue(result.endswith("/" + self.rkey))
+
+    def test_completed_archived_legacy_approval_stays_deduplicated(self):
+        self.entry.update(status="announced", bluesky_uri=self.legacy_stored["uri"], bluesky_cid=self.legacy_stored["cid"])
+        self.write_log()
+        self.move_to_archive()
+        result, request = self.run_announcement([self.legacy_stored, None])
+        request.assert_not_called()
+        self.assertTrue(result.endswith("/" + self.legacy_rkey))
+
+    def test_archive_cannot_authorize_a_pending_first_announcement(self):
+        self.move_to_archive()
+        with patch.object(BLOG, "authenticate") as authenticate:
+            for status in ("prepared", "published"):
+                with self.subTest(status=status):
+                    self.entry["status"] = status
+                    self.write_log()
+                    with self.assertRaises(BLOG.SafeError):
+                        BLOG.announce(self.slug, self.date, self.log_path, self.queue_path)
+        authenticate.assert_not_called()
+
+    def test_archive_without_journal_entry_cannot_authorize_anything(self):
+        self.move_to_archive()
+        self.log["publications"] = []
+        self.write_log()
+        with patch.object(BLOG, "authenticate") as authenticate:
+            with self.assertRaises(BLOG.SafeError):
+                BLOG.announce(self.slug, self.date, self.log_path, self.queue_path)
+        authenticate.assert_not_called()
+
+    def test_unchecked_archived_approval_is_rejected_before_authentication(self):
+        self.mark_announced()
+        self.move_to_archive()
+        self.archive_path.write_text(self.archive_path.read_text().replace("[x]", "[ ]"))
+        with patch.object(BLOG, "authenticate") as authenticate:
+            with self.assertRaises(BLOG.SafeError):
+                BLOG.announce(self.slug, self.date, self.log_path, self.queue_path)
+        authenticate.assert_not_called()
+
+    def test_duplicate_or_conflicting_active_and_archived_approvals_are_rejected(self):
+        self.mark_announced()
+        active = self.queue_path.read_text()
+        self.move_to_archive()
+        for content in (active, active.replace("Peyré’s", "Conflicting")):
+            with self.subTest(conflicting=content != active):
+                self.queue_path.write_text(content)
+                with self.assertRaises(BLOG.SafeError):
+                    BLOG.load_announcement(self.slug, self.date, self.log_path, self.queue_path)
+
+    def test_duplicate_archived_blocks_are_rejected(self):
+        self.mark_announced()
+        self.move_to_archive()
+        self.archive_path.write_text(self.archive_path.read_text() * 2)
+        with self.assertRaises(BLOG.SafeError):
+            BLOG.load_announcement(self.slug, self.date, self.log_path, self.queue_path)
+
+    def test_archive_marker_title_and_message_must_match_completed_journal(self):
+        self.mark_announced()
+        self.move_to_archive()
+        original = self.archive_path.read_text()
+        variants = (
+            original.replace("Published: " + self.date, "Published: 2026-10-20"),
+            original.replace("[Read post](" + self.url + ")", "[Read post](" + self.preview + ")"),
+            original.replace("## 1. Convexity & transport", "## 1. Another title"),
+            original.replace("Peyré’s convexity example.", "Another announcement."),
+            original.replace("Published: ", "Publication date: "),
+        )
+        for variant in variants:
+            with self.subTest(variant=variant):
+                self.archive_path.write_text(variant)
+                with self.assertRaises(BLOG.SafeError):
+                    BLOG.load_announcement(self.slug, self.date, self.log_path, self.queue_path)
+
+    def test_archived_completion_requires_record_identifiers(self):
+        self.mark_announced()
+        self.move_to_archive()
+        for field in ("bluesky_uri", "bluesky_cid"):
+            original = self.entry[field]
+            self.entry[field] = ""
+            self.write_log()
+            with self.subTest(field=field), self.assertRaises(BLOG.SafeError):
+                BLOG.load_announcement(self.slug, self.date, self.log_path, self.queue_path)
+            self.entry[field] = original
+
+    def test_archived_missing_record_is_never_recreated(self):
+        self.mark_announced()
+        self.move_to_archive()
+        with patch.object(BLOG, "verify_live_page"), patch.object(BLOG, "authenticate", return_value=self.session), patch.object(BLOG, "get_record", return_value=None), patch.object(BLOG, "request_json") as request:
+            with self.assertRaises(BLOG.SafeError):
+                BLOG.announce(self.slug, self.date, self.log_path, self.queue_path)
+        request.assert_not_called()
+
+    def test_archive_cannot_adopt_a_different_record_cid(self):
+        self.mark_announced()
+        self.move_to_archive()
+        changed = dict(self.stored, cid="bafyothercid")
+        with patch.object(BLOG, "verify_live_page"), patch.object(BLOG, "authenticate", return_value=self.session), patch.object(BLOG, "get_record", side_effect=[None, changed]), patch.object(BLOG, "request_json") as request:
+            with self.assertRaises(BLOG.SafeError):
+                BLOG.announce(self.slug, self.date, self.log_path, self.queue_path)
+        request.assert_not_called()
+
+    def test_pending_active_approval_is_not_blocked_by_unrelated_archive_entry(self):
+        self.archive_path.write_text("## 1. Another article\n\n- [x] Ready to publish\n\n> Other. https://www.gpeyre.com/blog/preparations/other.html\n")
+        _, request = self.run_announcement([None, None, self.stored])
+        self.assertEqual(request.call_count, 1)
+
+    def test_archive_override_is_available_for_offline_fixture_only(self):
+        self.mark_announced()
+        self.move_to_archive()
+        override = self.path / "fixture-archive.md"
+        self.archive_path.rename(override)
+        _, loaded = BLOG.load_announcement(self.slug, self.date, self.log_path, self.queue_path, override)
+        self.assertEqual(loaded, self.entry)
+
+    def test_archive_symlink_is_not_followed(self):
+        target = self.path / "other.md"
+        target.write_text("preserve this")
+        self.archive_path.symlink_to(target)
+        with self.assertRaises(BLOG.SafeError):
+            BLOG.load_announcement(self.slug, self.date, self.log_path, self.queue_path)
+        self.assertEqual(target.read_text(), "preserve this")
+
+    def test_multiple_readiness_markers_and_multiple_quotes_are_rejected(self):
+        original = self.queue_path.read_text()
+        variants = (original.replace("- [x] Ready to publish", "- [x] Ready to publish\n- [ ] Ready to publish"), original + "> Extra announcement\n")
+        for variant in variants:
+            with self.subTest(variant=variant):
+                self.queue_path.write_text(variant)
+                with self.assertRaises(BLOG.SafeError):
+                    BLOG.load_announcement(self.slug, self.date, self.log_path, self.queue_path)
 
     def test_canonical_message_and_queue_must_agree(self):
         self.entry["message"] = "Unapproved message " + self.url
@@ -325,6 +676,118 @@ class BlueskyAnnouncementTests(unittest.TestCase):
     def test_existing_matching_record_deduplicates_without_put(self):
         _, request = self.run_announcement([None, self.stored])
         request.assert_not_called()
+
+    def configure_image(self):
+        directory = self.path / "blog" / "imgs" / "summaries"
+        directory.mkdir(parents=True, exist_ok=True)
+        (directory / (self.slug + ".png")).write_bytes(png_image())
+        specification = {"path": "/blog/imgs/summaries/" + self.slug + ".png", "alt": "Orange and blue transport experiment.",
+                         "width": 3, "height": 2, "source": "/blog/preparations/" + self.slug + ".html"}
+        (self.path / "blog" / "summary-images.json").write_text(json.dumps({"version": 1, "images": {self.slug: specification}}))
+        image = BLOG.load_summary_image(self.entry)
+        self.record = BLOG.post_record(self.entry, image)
+        self.stored["value"] = self.record
+        return image
+
+    def test_new_image_post_uploads_once_after_absence_checks_and_saves_metadata(self):
+        image = self.configure_image()
+        blob = image["embed"]["images"][0]["image"]
+        with patch.object(BLOG, "verify_live_page"), patch.object(BLOG, "authenticate", return_value=self.session), \
+                patch.object(BLOG, "get_record", side_effect=[None, None, self.stored]) as get, \
+                patch.object(BLOG, "request_json", side_effect=[{"blob": blob}, {}]) as request:
+            BLOG.announce(self.slug, self.date, self.log_path, self.queue_path)
+        self.assertEqual([call.args[1] for call in request.call_args_list], ["com.atproto.repo.uploadBlob", "com.atproto.repo.putRecord"])
+        self.assertEqual(get.call_count, 3)
+        posted = request.call_args_list[1].args[2]["record"]
+        self.assertEqual(posted["text"], self.message)
+        self.assertEqual(posted["facets"], self.record["facets"])
+        self.assertEqual(posted["embed"], image["embed"])
+        saved = json.loads(self.log_path.read_text())["publications"][0]
+        self.assertEqual(saved["announcement_image"], image["metadata"])
+        self.assertEqual(saved["status"], "announced")
+
+    def test_existing_image_record_reconciles_without_upload_or_put(self):
+        image = self.configure_image()
+        _, request = self.run_announcement([None, self.stored])
+        request.assert_not_called()
+        saved = json.loads(self.log_path.read_text())["publications"][0]
+        self.assertEqual(saved["announcement_image"], image["metadata"])
+
+    def test_old_completed_text_only_record_stays_unchanged_after_thumbnail_added(self):
+        self.mark_announced()
+        self.configure_image()
+        self.stored["value"] = BLOG.post_record(self.entry)
+        _, request = self.run_announcement([None, self.stored])
+        request.assert_not_called()
+        self.assertNotIn("announcement_image", json.loads(self.log_path.read_text())["publications"][0])
+
+    def test_existing_image_with_changed_alt_blob_or_aspect_ratio_never_reuploads(self):
+        self.configure_image()
+        original = json.loads(json.dumps(self.stored))
+        for field in ("alt", "image", "aspectRatio"):
+            self.stored = json.loads(json.dumps(original))
+            self.stored["value"]["embed"]["images"][0][field] = "conflict"
+            with self.subTest(field=field), patch.object(BLOG, "verify_live_page"), \
+                    patch.object(BLOG, "authenticate", return_value=self.session), \
+                    patch.object(BLOG, "get_record", side_effect=[None, self.stored]), \
+                    patch.object(BLOG, "request_json") as request:
+                with self.assertRaises(BLOG.SafeError):
+                    BLOG.announce(self.slug, self.date, self.log_path, self.queue_path)
+            request.assert_not_called()
+        self.assertEqual(json.loads(self.log_path.read_text())["publications"][0]["status"], "published")
+
+    def test_completed_image_is_deduplicated_with_frozen_metadata_and_no_write(self):
+        image = self.configure_image()
+        self.entry["announcement_image"] = image["metadata"]
+        self.mark_announced()
+        _, request = self.run_announcement([None, self.stored])
+        request.assert_not_called()
+
+    def test_manifest_change_after_unlogged_image_creation_stops_without_duplicate(self):
+        self.configure_image()
+        manifest_path = self.path / "blog" / "summary-images.json"
+        manifest = json.loads(manifest_path.read_text())
+        manifest["images"][self.slug]["alt"] = "A newly edited caption."
+        manifest_path.write_text(json.dumps(manifest))
+        with patch.object(BLOG, "verify_live_page"), patch.object(BLOG, "authenticate", return_value=self.session), \
+                patch.object(BLOG, "get_record", side_effect=[None, self.stored]), \
+                patch.object(BLOG, "request_json") as request:
+            with self.assertRaises(BLOG.SafeError):
+                BLOG.announce(self.slug, self.date, self.log_path, self.queue_path)
+        request.assert_not_called()
+
+    def test_image_lost_create_response_reconciles_with_one_upload_and_one_put(self):
+        image = self.configure_image()
+        blob = image["embed"]["images"][0]["image"]
+        with patch.object(BLOG, "verify_live_page"), patch.object(BLOG, "authenticate", return_value=self.session), \
+                patch.object(BLOG, "get_record", side_effect=[None, None, self.stored]), \
+                patch.object(BLOG, "request_json", side_effect=[{"blob": blob}, BLOG.SafeError("Lost response")]) as request:
+            BLOG.announce(self.slug, self.date, self.log_path, self.queue_path)
+        self.assertEqual(request.call_count, 2)
+        saved = json.loads(self.log_path.read_text())["publications"][0]
+        self.assertEqual(saved["announcement_image"], image["metadata"])
+        self.assertEqual(saved["status"], "announced")
+
+    def test_bad_summary_image_stops_before_keychain_access(self):
+        self.configure_image()
+        (self.path / "blog" / "imgs" / "summaries" / (self.slug + ".png")).write_bytes(b"not image")
+        with patch.object(BLOG, "authenticate") as authenticate:
+            with self.assertRaises(BLOG.SafeError):
+                BLOG.announce(self.slug, self.date, self.log_path, self.queue_path)
+        authenticate.assert_not_called()
+
+    def test_upload_mismatch_or_failure_cannot_create_post_or_change_journal(self):
+        self.configure_image()
+        original = self.log_path.read_bytes()
+        for response in ({"blob": {"unexpected": "blob"}}, BLOG.SafeError("Upload failed")):
+            with self.subTest(response=response), patch.object(BLOG, "verify_live_page"), \
+                    patch.object(BLOG, "authenticate", return_value=self.session), \
+                    patch.object(BLOG, "get_record", return_value=None), \
+                    patch.object(BLOG, "request_json", side_effect=[response]) as request:
+                with self.assertRaises(BLOG.SafeError):
+                    BLOG.announce(self.slug, self.date, self.log_path, self.queue_path)
+            self.assertEqual(request.call_count, 1)
+            self.assertEqual(self.log_path.read_bytes(), original)
 
     def test_existing_matching_legacy_record_is_reconciled_without_new_tid_put(self):
         result, request = self.run_announcement([self.legacy_stored, None])

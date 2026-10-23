@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex,follow">
   <meta name="keywords" content="noncrossing matchings, Catalan numbers, bipartite perfect matching, Euclidean assignment, discrete optimal transport, uncrossing argument, convex polygon, alternating colored vertices, generating functions, Stirling asymptotics, dynamic programming, Hungarian algorithm, uniform combinatorial sampling, recursive sampling, rejection sampling, pair swaps, local minima, three-cycle trap, global optimization, Metropolis–Hastings algorithm, detailed balance, Boltzmann distribution, Markov chain, simulated annealing, Richard Stanley, Harold Kuhn, Keith Hastings, Gabriel Peyré, appariements sans croisement, nombres de Catalan, problème d'affectation, échantillonnage uniforme, programmation dynamique">
   <meta name="description" content="Why Euclidean optimal matchings do not cross, why Catalan many candidates remain, and how exact uniform sampling differs from local improvement.">
-  <title>Removing crossings still leaves exponentially many matchings — Alpha preview — Gabriel Peyré</title>
+  <title>Optimal Planar Matching and Crossings — Alpha preview — Gabriel Peyré</title>
   <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/noncrossing-matchings-catalan.html">
   <link rel="stylesheet" href="assets/drafts.css">
   <script defer src="assets/drafts.js"></script>
@@ -15,13 +15,23 @@
     MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+
+<!-- Generated numerical summary image: start -->
+<meta property="og:image" content="https://www.gpeyre.com/blog/imgs/summaries/noncrossing-matchings-catalan.jpg">
+<meta property="og:image:alt" content="A noncrossing red-blue matching and the changing costs of one hundred uniformly sampled noncrossing matchings.">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.gpeyre.com/blog/imgs/summaries/noncrossing-matchings-catalan.jpg">
+<meta name="twitter:image:alt" content="A noncrossing red-blue matching and the changing costs of one hundred uniformly sampled noncrossing matchings.">
+<!-- Generated numerical summary image: end -->
 </head>
 <body>
 <header class="draft-header"><div class="wrap">
   <a class="draft-back" href="index.html">← Forthcoming posts</a>
   <p class="draft-status">Alpha preview · Work in progress</p>
   <p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
-  <h1>Removing crossings still leaves exponentially many matchings</h1>
+  <h1>Optimal Planar Matching and Crossings</h1>
   <p class="subtitle">A geometric optimality condition leads straight to the Catalan numbers.</p>
   <p class="byline">Gabriel Peyré</p>
 </div></header>
@@ -137,7 +147,11 @@
   2+2\sin(11\pi/24),\qquad
   3+2\sin(5\pi/24).
 \]
-<p>All are larger. For the first, use \(2[\sin(5\pi/24)-\sin(\pi/8)]&lt;\pi/6&lt;1\); the other two comparisons are immediate. The starting matching is therefore a strict local minimum even among <em>all</em> pair swaps, while a better noncrossing matching exists. A simultaneous three-cycle of destinations is needed to pass directly to that better matching.</p>
+<p>All are larger. For the first, use</p>
+\[
+2[\sin(5\pi/24)-\sin(\pi/8)]&lt;\pi/6&lt;1
+\]
+<p>The other two comparisons are immediate. The starting matching is therefore a strict local minimum even among <em>all</em> pair swaps, while a better noncrossing matching exists. A simultaneous three-cycle of destinations is needed to pass directly to that better matching.</p>
 </div></details>
 <p>One can also turn exploration into a Metropolis sampler. At temperature \(\tau&gt;0\), accept a symmetric proposal with probability \(\min(1,e^{-\Delta E/\tau})\). The corresponding equilibrium weights are proportional to \(e^{-E/\tau}\), as in the Markov-chain methodology of <a href="#ref-hastings">[4]</a>.</p>
 <details class="blog-proof">

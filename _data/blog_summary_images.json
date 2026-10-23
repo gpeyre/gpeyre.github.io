@@ -1,0 +1,583 @@
+{
+  "version": 1,
+  "images": {
+    "autonomous-wasserstein-statistics": {
+      "path": "/blog/imgs/summaries/autonomous-wasserstein-statistics.jpg",
+      "alt": "Two different particle clouds approach the unit circle while their common signed-distance moment follows the same exponential decay.",
+      "width": 1200,
+      "height": 450,
+      "source": "/blog/preparations/assets/ot-lab/index.html?topic=moments",
+      "settings": {
+        "title": "Different clouds, one autonomous moment",
+        "status": "cloud A moment 0.04037930 | cloud B moment 0.04037930 | exact ODE 0.04037930 | difference 4.9e-17",
+        "controls": [
+          {
+            "label": "Time: 1.6",
+            "value": "1.6"
+          }
+        ],
+        "count": 3,
+        "finite": true,
+        "marks": 170
+      },
+      "sha256": "979ea4cd93952c9e6d277762b0b8b812271b19d80566b8f482bd91d7621f5ff2"
+    },
+    "balanced-low-rank-conditioning": {
+      "path": "/blog/imgs/summaries/balanced-low-rank-conditioning.jpg",
+      "alt": "Exact Hessian condition number versus factor scale and local gradient-descent losses for balanced and unbalanced factorizations.",
+      "width": 1200,
+      "height": 566,
+      "source": "/blog/preparations/assets/optimization-geometry/index.html?topic=lowrank",
+      "settings": {
+        "factor_scale": 2,
+        "iterations": 1800
+      },
+      "sha256": "9c7f9d0e0e2caf516b8a008e02d58c78f8b2a6245f6d3a7444073c080f1d3839"
+    },
+    "barycentric-projection-map": {
+      "path": "/blog/imgs/summaries/barycentric-projection-map.jpg",
+      "alt": "A many-to-many entropic transport coupling from twelve blue points to 240 orange points appears in gray; black arrows end at conditional barycenters.",
+      "width": 1200,
+      "height": 701,
+      "source": "/blog/2026/10/10/barycentric-projection-map/",
+      "settings": {
+        "source": 12,
+        "target": 240,
+        "motion": 35,
+        "epsilon": 0.2
+      },
+      "sha256": "80fc0f9c4140f7918b29b1b0ae0a264a921425aaec8c0aa5e9f1e21101270469"
+    },
+    "bernstein-polynomials-on-measures": {
+      "path": "/blog/imgs/summaries/bernstein-polynomials-on-measures.jpg",
+      "alt": "The Bernstein particle polynomial smooths the corner of the absolute-value functional of a two-point probability law.",
+      "width": 1200,
+      "height": 630,
+      "source": "/blog/preparations/assets/ot-lab/index.html?topic=bernstein",
+      "settings": {
+        "title": "Bernstein polynomials of a probability law",
+        "status": "order 10 | grid supremum error 0.123047",
+        "controls": [
+          {
+            "label": "Polynomial order n: 10",
+            "value": "10"
+          }
+        ],
+        "count": 1,
+        "finite": true,
+        "marks": 8
+      },
+      "sha256": "75b56efacee661383f8b6f1646eaaab65116e7f73d347aca9505c19823551057"
+    },
+    "c-transforms-and-averaging": {
+      "path": "/blog/imgs/summaries/c-transforms-and-averaging.jpg",
+      "alt": "Averaged cost profiles, their cost transform, and the nonzero gap to the double transform for a cubic cost.",
+      "width": 1200,
+      "height": 467,
+      "source": "/blog/preparations/assets/transport-geometry/c-transform.html",
+      "settings": {
+        "p": 3,
+        "grid_points": 241,
+        "preset": "symmetric"
+      },
+      "sha256": "ef3bc1c25443eeba29b2b11d766aad8a7d0c8a6b8865e7770dd1f7a188710cb0"
+    },
+    "central-limit-wasserstein-constants": {
+      "path": "/blog/imgs/summaries/central-limit-wasserstein-constants.jpg",
+      "alt": "Exact Wasserstein central-limit errors and rescaled CDF errors for symmetric Bernoulli and uniform random variables.",
+      "width": 1200,
+      "height": 630,
+      "source": "/blog/preparations/assets/ot-lab/index.html?topic=clt",
+      "settings": {
+        "title": "Same Gaussian limit, different powers of n",
+        "status": "n = 64 | Bernoulli √n W₁ = 0.500556 → 0.5 | uniform n W₁ = 0.0758599 → 0.0755007 | dashed curves: leading asymptotics; dots: selected n",
+        "controls": [
+          {
+            "label": "Number of summands n: 64",
+            "value": "4"
+          }
+        ],
+        "count": 2,
+        "finite": true,
+        "marks": 20
+      },
+      "sha256": "a0bf6fd4272ee20ffaab46ea75f655e5bed8210129ebf2ecb7b2ebe1a64b25e5"
+    },
+    "composing-optimal-transport-maps": {
+      "path": "/blog/imgs/summaries/composing-optimal-transport-maps.jpg",
+      "alt": "Two Gaussian optimal transport maps composed together, the direct Brenier map, and their exact excess-cost comparison.",
+      "width": 1200,
+      "height": 450,
+      "source": "/blog/preparations/assets/ot-lab/index.html?topic=composition",
+      "settings": {
+        "title": "Two optimal steps need not compose optimally",
+        "status": "skew defect 1.329 | exact Gaussian composition cost 18.42 | exact optimal cost 18.28 | excess 0.1385",
+        "controls": [
+          {
+            "label": "Eigenbasis angle (degrees): 35",
+            "value": "35"
+          }
+        ],
+        "count": 3,
+        "finite": true,
+        "marks": 224
+      },
+      "sha256": "1138eb3edf3f83412a1dbcbc328d64d6566f86182030e12772edb9da5cd6a889"
+    },
+    "convex-max-softmax-approximation": {
+      "path": "/blog/imgs/summaries/convex-max-softmax-approximation.jpg",
+      "alt": "Independently Adam-trained convex max-affine and smooth log-sum-exp approximation surfaces, shown with identical lighting and height scales.",
+      "width": 1200,
+      "height": 604,
+      "source": "/blog/preparations/convex-max-softmax-approximation.html",
+      "settings": {
+        "width": 6,
+        "temperature": "automatic",
+        "optimizer": "Adam, 2000 steps"
+      },
+      "sha256": "a3f0a7eb7884a4322862c44f76d5d538d66d1b9aa1e7f8be945145a2bcab0030"
+    },
+    "diffusion-versus-optimal-transport": {
+      "path": "/blog/imgs/summaries/diffusion-versus-optimal-transport.jpg",
+      "alt": "The same Gaussian particles move to three clusters along curved deterministic diffusion paths and straight optimal-transport paths, colored by destination.",
+      "width": 1200,
+      "height": 638,
+      "source": "/blog/2026/06/15/diffusion-versus-optimal-transport/",
+      "settings": {
+        "time": 0.7,
+        "sigma": 0.12
+      },
+      "sha256": "b7a54fef29344bfa96d751daefdef6ce58c8ac0a9dc5cde4d9c245a033677025"
+    },
+    "energy-distance-wasserstein-convexity": {
+      "path": "/blog/imgs/summaries/energy-distance-wasserstein-convexity.jpg",
+      "alt": "Energy-distance flow at an intermediate time: one-dimensional quantiles, planar particle trajectories, and decreasing normalized energies.",
+      "width": 1200,
+      "height": 450,
+      "source": "/blog/preparations/assets/ot-lab/index.html?topic=energy",
+      "settings": {
+        "title": "Energy-distance flows in 1D and 2D",
+        "status": "1D time 3.360, energy 0.02204 | 2D time 10.08, mollified energy 0.001080 | energy plot: normalized experiment time, teal 1D / blue 2D",
+        "controls": [
+          {
+            "label": "Time frame: 42",
+            "value": "42"
+          }
+        ],
+        "count": 3,
+        "finite": true,
+        "marks": 365
+      },
+      "sha256": "ef99759f855e0d3a73fe67d1ab09ff0706f45203d1cc795f2622a14145fe5647"
+    },
+    "gaussian-preserving-wasserstein-flows": {
+      "path": "/blog/imgs/summaries/gaussian-preserving-wasserstein-flows.jpg",
+      "alt": "A Gaussian covariance ellipse relaxes toward an anisotropic Gaussian target under the exact Wasserstein KL gradient flow; faint ellipses show earlier states.",
+      "width": 1200,
+      "height": 904,
+      "source": "/blog/2026/09/15/gaussian-preserving-wasserstein-flows/",
+      "settings": {
+        "angle": 110,
+        "anisotropy": 3.5,
+        "time": 0.9
+      },
+      "sha256": "6da5e358126beb942aab4a9ca5e78fb0ca875272295f4788d72d3fbc90b93f45"
+    },
+    "gaussian-sinkhorn-convergence": {
+      "path": "/blog/imgs/summaries/gaussian-sinkhorn-convergence.jpg",
+      "alt": "Gaussian Sinkhorn coupling ellipses, exact error decay, and the number of cycles required as temperature decreases.",
+      "width": 1200,
+      "height": 450,
+      "source": "/blog/preparations/assets/ot-lab/index.html?topic=gaussian",
+      "settings": {
+        "title": "Sinkhorn on centered Gaussians",
+        "status": "ε 0.1585 | asymptotic covariance factor q 0.728587 | asymptotic dual-gap factor q² 0.530839 | Var(X) 1.29788 → 1 | relative conditional-variance error 0.150 | 44 cycles for a 10⁶-fold cross-ratio reduction",
+        "controls": [
+          {
+            "label": "Temperature ε (log scale): 0.158",
+            "value": "-0.8"
+          },
+          {
+            "label": "Full cycles k: 5 / 44",
+            "value": "5"
+          }
+        ],
+        "count": 3,
+        "finite": true,
+        "marks": 23
+      },
+      "sha256": "e1ac7876a7361ab65886b724e363df0b164a89f48ffa1f7cf3386b88a9cd55d9"
+    },
+    "heat-equation-over-quantiles": {
+      "path": "/blog/imgs/summaries/heat-equation-over-quantiles.jpg",
+      "alt": "A three-Gaussian mixture diffuses under heat: density markers, increasing quantile functions and noncrossing quantile trajectories share mass-rank colors.",
+      "width": 1200,
+      "height": 776,
+      "source": "/blog/preparations/assets/heat-quantiles/index.html",
+      "settings": {
+        "points": 40,
+        "separation": 2.5,
+        "time": 0.45
+      },
+      "sha256": "362f0862bfec06c2bc6494ef7fb76e4b8c22c9c1452063d7e52271b32dd808c7"
+    },
+    "icnn-universality-and-depth": {
+      "path": "/blog/imgs/summaries/icnn-universality-and-depth.jpg",
+      "alt": "Signed approximation-error heatmaps for fitted convex ReLU networks with one and two hidden layers, with target crease lines and the flat-triangle obstruction.",
+      "width": 1200,
+      "height": 829,
+      "source": "/blog/2026/10/15/icnn-universality-and-depth/",
+      "settings": {
+        "width": 6
+      },
+      "sha256": "595171cf2e0bee3b52520166334e2c2ac01bb0777f2c92a7de433dff19a48f49"
+    },
+    "intrinsic-factor-training-dynamics": {
+      "path": "/blog/imgs/summaries/intrinsic-factor-training-dynamics.jpg",
+      "alt": "Factor-space paths along conserved-imbalance hyperbolas and the product evolution at three different imbalances.",
+      "width": 1200,
+      "height": 566,
+      "source": "/blog/preparations/assets/optimization-geometry/index.html?topic=intrinsic",
+      "settings": {
+        "time": 1.7,
+        "largest_imbalance": 2,
+        "initial_product": 0.06
+      },
+      "sha256": "aea2d4ecef55d4b4dd2a09c0fcbeff19314154c6599edd7370c500d479a1e8fd"
+    },
+    "inverse-optimisation-gap-loss": {
+      "path": "/blog/imgs/summaries/inverse-optimisation-gap-loss.jpg",
+      "alt": "Two separated Gaussian-mixture point clouds with optimal pairings, beside convex inverse-transport gap-loss curves for increasing sample counts.",
+      "width": 1200,
+      "height": 619,
+      "source": "/blog/2026/10/03/inverse-optimisation-gap-loss/",
+      "settings": {
+        "points": 0.6241963505817849,
+        "theta": 0.4
+      },
+      "sha256": "fcfa27308e1d1a434d41e18a4f420c66cc06b5aece93158c782e04c2e4feb809"
+    },
+    "kl-barycenters-of-gaussians": {
+      "path": "/blog/imgs/summaries/kl-barycenters-of-gaussians.jpg",
+      "alt": "Two Gaussian covariance ellipses and their reverse-KL barycenter, whose mean and precision interpolate the inputs.",
+      "width": 1200,
+      "height": 864,
+      "source": "/blog/2026/07/13/kl-barycenters-of-gaussians/",
+      "settings": {
+        "weight": 0.5,
+        "angle": 115
+      },
+      "sha256": "5d7188f44894eb57a99636a05e09e74368b96df87968b638612dbf409ac0bac6"
+    },
+    "lagrangian-density-interpolation": {
+      "path": "/blog/imgs/summaries/lagrangian-density-interpolation.jpg",
+      "alt": "Moser interpolation halfway between multimodal periodic densities: transported particles alongside speed and flux directions.",
+      "width": 1200,
+      "height": 572,
+      "source": "/blog/preparations/assets/new-dynamics/index.html?topic=moser",
+      "settings": {
+        "time": 0.5,
+        "particles": 420,
+        "uniform_background": 0.14
+      },
+      "sha256": "898407d3da310150cbd79d4a76b8a05f8f5f9d49197e2efbab92d88add2c79ce"
+    },
+    "langevin-without-a-potential": {
+      "path": "/blog/imgs/summaries/langevin-without-a-potential.jpg",
+      "alt": "Circulating Ornstein–Uhlenbeck particles approaching the stationary Gaussian ellipse, with drift arrows and recent particle trails.",
+      "width": 1200,
+      "height": 687,
+      "source": "/blog/preparations/assets/new-dynamics/index.html?topic=langevin",
+      "settings": {
+        "time": 1.4,
+        "particles": 180,
+        "circulation": 1.4,
+        "noise": 0.55
+      },
+      "sha256": "1464b803a3b943f53ff4a061b9cef2d18c7b2fd6910a94f44619e9f76d8d07a9"
+    },
+    "monge-gap-inversions": {
+      "path": "/blog/imgs/summaries/monge-gap-inversions.jpg",
+      "alt": "A kernel regression fit penalized by the Monge gap, with noisy observations and its sorted evaluations.",
+      "width": 1200,
+      "height": 630,
+      "source": "/blog/preparations/assets/ot-lab/index.html?topic=monge",
+      "settings": {
+        "title": "Inversions as a convex regression penalty",
+        "status": "gamma 0.6310 | exact Monge gap 0.01584 | cost-difference check 3.5e-18 | smooth objective error bound ≤ 1.00e-12 | Newton steps 6",
+        "controls": [
+          {
+            "label": "Penalty exponent (gamma = 10^value): -0.2",
+            "value": "-0.2"
+          }
+        ],
+        "count": 1,
+        "finite": true,
+        "marks": 32
+      },
+      "sha256": "f5fb1a9d74fde579d4d07e5340e542a4acc24f8737a0bce2556c25faa67c41ee"
+    },
+    "noncrossing-matchings-catalan": {
+      "path": "/blog/imgs/summaries/noncrossing-matchings-catalan.jpg",
+      "alt": "A noncrossing red-blue matching and the changing costs of one hundred uniformly sampled noncrossing matchings.",
+      "width": 1200,
+      "height": 630,
+      "source": "/blog/preparations/assets/ot-lab/index.html?topic=matchings",
+      "settings": {
+        "title": "A noncrossing matching is not an optimality certificate",
+        "status": "Catalan count 16 796 | current 0.8432 | best visited 0.6302 | global optimum 0.4037 | proper crossings none",
+        "controls": [
+          {
+            "label": "Pairs: 10",
+            "value": "10"
+          }
+        ],
+        "count": 2,
+        "finite": true,
+        "marks": 38
+      },
+      "sha256": "816d3cb4ee75e6376a43717ff1a805e31ad9d60c65bbffd13320ced8e05a1e71"
+    },
+    "optimal-particles-versus-random-sampling": {
+      "path": "/blog/imgs/summaries/optimal-particles-versus-random-sampling.jpg",
+      "alt": "Empirical CDFs of random and optimally placed particles, compared with their exact Wasserstein error rates.",
+      "width": 1200,
+      "height": 630,
+      "source": "/blog/preparations/assets/ot-lab/index.html?topic=quantization",
+      "settings": {
+        "title": "Deliberate placement versus random placement",
+        "status": "random realization 0.006453 | random expectation 0.009259 | optimal 0.0002572 | seed 34 | right: lines are exact rates, blue dot is one realization",
+        "controls": [
+          {
+            "label": "Particle count n: 18",
+            "value": "18"
+          }
+        ],
+        "count": 2,
+        "finite": true,
+        "marks": 17
+      },
+      "sha256": "db56e4f52b53be08b58a4fecc8b5dfce985b5dcad3d015f699ca439bf2daa239"
+    },
+    "perron-frobenius-and-sinkhorn": {
+      "path": "/blog/imgs/summaries/perron-frobenius-and-sinkhorn.jpg",
+      "alt": "Successive red-to-blue curved triangular images of positive scaling vectors under normalized Sinkhorn updates, at regularization 0.22 and eight iterations.",
+      "width": 1114,
+      "height": 535,
+      "source": "/blog/2026/07/30/perron-frobenius-and-sinkhorn/",
+      "settings": {
+        "epsilon": 0.22,
+        "iteration": 8
+      },
+      "sha256": "b50d6ab7b5298b17e447f079c5a41f0880664e2fba779d09113aac61651f1aa1"
+    },
+    "polyak-lojasiewicz-gradient-flows": {
+      "path": "/blog/imgs/summaries/polyak-lojasiewicz-gradient-flows.jpg",
+      "alt": "Gradient-flow particles descend a curved banana-shaped valley toward a parabolic set of minimizers, with energy contours and trajectories.",
+      "width": 1200,
+      "height": 824,
+      "source": "/blog/2026/08/14/polyak-lojasiewicz-gradient-flows/",
+      "settings": {
+        "bend": 1.4,
+        "time": 1.1
+      },
+      "sha256": "1b5396c319db743c2d58a98a867b20a544efca44338878cc1c53639b8d22dae7"
+    },
+    "projections-corrections-reflections": {
+      "path": "/blog/imgs/summaries/projections-corrections-reflections.jpg",
+      "alt": "A Sudoku solved by product-space Douglas–Rachford reflections: teal clues and the verified completed grid, beside the violation and unrounded-residual histories.",
+      "width": 1200,
+      "height": 587,
+      "source": "/blog/preparations/assets/projection-lab/index.html",
+      "settings": {
+        "puzzle": 0,
+        "seed": 1,
+        "stop": "first independently checked valid Sudoku",
+        "iteration": 57,
+        "solved": true,
+        "violations": 0,
+        "consensus_residual": 2.264586705047253,
+        "clue_residual": 0
+      },
+      "sha256": "27852dfc639584ada2dc886922841fa155849d40b6a6cf60f1cba4f0c0f49608"
+    },
+    "sgd-iterate-covariance": {
+      "path": "/blog/imgs/summaries/sgd-iterate-covariance.jpg",
+      "alt": "Exact covariance ellipses and transient and stationary variance curves for constant-step least-squares SGD.",
+      "width": 1200,
+      "height": 450,
+      "source": "/blog/preparations/assets/ot-lab/index.html?topic=sgd",
+      "settings": {
+        "title": "The covariance of constant-step SGD",
+        "status": "η 0.1527 | t = kη 1.527 | λ₂ 0.143 | stationary variances / η (1.901, 1.381) | first-order relative error 0.416 | second-order relative error 0.192",
+        "controls": [
+          {
+            "label": "Safe step fraction ηR: 0.48",
+            "value": "0.48"
+          },
+          {
+            "label": "Curvature ratio κ: 7",
+            "value": "7"
+          },
+          {
+            "label": "Iteration k: 10 / 92",
+            "value": "10"
+          }
+        ],
+        "count": 3,
+        "finite": true,
+        "marks": 32
+      },
+      "sha256": "b49161c94f0313cead33e542d561fed5870813e94dc7924a1a5bdf57eb9dd604"
+    },
+    "sign-gradient-descent-geometry": {
+      "path": "/blog/imgs/summaries/sign-gradient-descent-geometry.jpg",
+      "alt": "Ordinary and scaled sign-gradient descent losses for two isospectral quadratics, with the soft eigendirection aligned or spread across coordinates.",
+      "width": 1200,
+      "height": 566,
+      "source": "/blog/preparations/assets/optimization-geometry/index.html?topic=sign",
+      "settings": {
+        "iterations": 1200,
+        "initial_direction": "mixed"
+      },
+      "sha256": "0b4ce0a1c8cf6ae33f79ca5a5d48b3bcc4e380ad256d5bd3a5a015f32ffe0c31"
+    },
+    "spectral-wasserstein-distances": {
+      "path": "/blog/imgs/summaries/spectral-wasserstein-distances.jpg",
+      "alt": "Spectral Wasserstein coupling between two irregular point clouds and the ellipse of their displacement second moment for Schatten exponent two.",
+      "width": 1200,
+      "height": 568,
+      "source": "/blog/preparations/assets/spectral-transport/index.html",
+      "settings": {
+        "points": 48,
+        "p": 2,
+        "time": 0.5
+      },
+      "sha256": "6bca2ff3a0ddcee1d70f18b72ca9fa02d7dc1f6e581005824698f373839eec1f"
+    },
+    "stable-fluids": {
+      "path": "/blog/imgs/summaries/stable-fluids.jpg",
+      "alt": "A stirred periodic Stable Fluids simulation: transported teal dye beside the velocity field and signed vorticity.",
+      "width": 1200,
+      "height": 572,
+      "source": "/blog/preparations/assets/new-dynamics/index.html?topic=fluids",
+      "settings": {
+        "steps": 18,
+        "time_step": 0.035,
+        "viscosity": 0.0008,
+        "dye_diffusivity": 0.00015,
+        "stirring": "four deterministic pointer-drag passes"
+      },
+      "sha256": "52ae06fd3e7450d5297b5053291378eb702997add013c1e79f1e739a4d995286"
+    },
+    "straight-flows-and-euler-error": {
+      "path": "/blog/imgs/summaries/straight-flows-and-euler-error.jpg",
+      "alt": "A curved exact flow in teal and its orange Euler polygon, showing the accumulated discretization error with eight steps.",
+      "width": 1200,
+      "height": 785,
+      "source": "/blog/2026/04/16/straight-flows-and-euler-error/",
+      "settings": {
+        "bend": 0.9,
+        "steps": 8,
+        "time": 1
+      },
+      "sha256": "7b65a297da6f2958f011e91fa3a1cbdad098394bef6d446764277cf5184fae72"
+    },
+    "token-sample-complexity-attention": {
+      "path": "/blog/imgs/summaries/token-sample-complexity-attention.jpg",
+      "alt": "Five empirical attention curves from 128 Gaussian tokens depart from the exact straight population map, beside their query-weighted squared errors.",
+      "width": 1200,
+      "height": 545,
+      "source": "/blog/preparations/assets/attention-sampling/index.html",
+      "settings": {
+        "sample-size": 7,
+        "strength": 1.4
+      },
+      "sha256": "e3b79a690811ccad42734bcdcf40a36a1707c5b66730262b9ff991938b9910e5"
+    },
+    "wasserstein-distance-without-quantiles": {
+      "path": "/blog/imgs/summaries/wasserstein-distance-without-quantiles.jpg",
+      "alt": "Cumulative distributions, the CDF-only Wasserstein integrand, and its quadrature convergence.",
+      "width": 1200,
+      "height": 450,
+      "source": "/blog/preparations/assets/ot-lab/index.html?topic=cdf",
+      "settings": {
+        "title": "A CDF-only formula for W2 squared",
+        "status": "CDF quadrature 0.013662724 | exact 0.013678360 | absolute error 0.0000156 | 5050 integration cells; heatmap resolution capped at 80 per axis",
+        "controls": [
+          {
+            "label": "Quadrature cells per axis: 100",
+            "value": "100"
+          }
+        ],
+        "count": 3,
+        "finite": true,
+        "marks": 3262
+      },
+      "sha256": "37574eea839a8cc3d08a9ec5c4da147db7beeb620ccc6efe65629df7812a715f"
+    },
+    "wasserstein-geodesics-density-caps": {
+      "path": "/blog/imgs/summaries/wasserstein-geodesics-density-caps.jpg",
+      "alt": "Densities and quantile derivatives along a Wasserstein geodesic remain within the endpoint density cap.",
+      "width": 1200,
+      "height": 630,
+      "source": "/blog/preparations/assets/ot-lab/index.html?topic=caps",
+      "settings": {
+        "title": "A constant density cap survives a Wasserstein geodesic",
+        "status": "cap 3.5714 | exact intermediate peak 1.4045 | minimum quantile derivative 0.71200 >= 0.28000 | total mass 1",
+        "controls": [
+          {
+            "label": "Geodesic time: 0.3",
+            "value": "0.3"
+          },
+          {
+            "label": "Quantile modulation a: 0.72",
+            "value": "0.72"
+          }
+        ],
+        "count": 2,
+        "finite": true,
+        "marks": 20
+      },
+      "sha256": "881f089267890fbd5e5fb176acd4b862203392fb3e27a51f15176b811142299e"
+    },
+    "wasserstein-singular-vectors": {
+      "path": "/blog/imgs/summaries/wasserstein-singular-vectors.jpg",
+      "alt": "Input translated histograms, the learned circular feature geometry, and feature/sample cost matrices after sixteen exact transport-transform cycles.",
+      "width": 1200,
+      "height": 430,
+      "source": "/blog/preparations/assets/transport-geometry/wasserstein-vectors.html",
+      "settings": {
+        "family": "periodic translations",
+        "cycles": 16,
+        "regularization": 0.1
+      },
+      "sha256": "cf81e40d543f0d8cc08d5699ad1e9d4a793b42012e8ba5a5794621a7b1e6d8d2"
+    },
+    "weak-transport-and-convex-order": {
+      "path": "/blog/imgs/summaries/weak-transport-and-convex-order.jpg",
+      "alt": "A quadratic optimal-transport coupling, its barycentric projection, and the conditional means of a weak-transport solution.",
+      "width": 1200,
+      "height": 450,
+      "source": "/blog/preparations/assets/ot-lab/index.html?topic=weak",
+      "settings": {
+        "title": "Weak transport and conditional means",
+        "status": "OT 0.4512 | weak 0.09252 | weak gap 5.90e-9 | RMS endpoint error ≤ 0.0000768 | mass residual 2.0e-15 | mean lower bound 0.0881",
+        "controls": [
+          {
+            "label": "Source points: 7",
+            "value": "7"
+          },
+          {
+            "label": "Target points: 19",
+            "value": "19"
+          }
+        ],
+        "count": 3,
+        "finite": true,
+        "marks": 117
+      },
+      "sha256": "b75982f731be263d0619d4b27aeb6013c7d16b481a0ec7b9944080ab870496e7"
+    }
+  }
+}

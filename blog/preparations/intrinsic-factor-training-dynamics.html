@@ -3,13 +3,23 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,follow">
 <meta name="keywords" content="intrinsic training dynamics, matrix factorization, linear neural networks, overparameterization, gradient flow, conserved quantities, conservation laws, balancedness, relaxed balancedness, isotropic imbalance, latent Gram matrix, positive semidefinite square root, fixed-rank manifold, orthogonal projector, mobility operator, Riemannian gradient flow, initialization dependence, factor rescaling, implicit bias, scalar factor model, invariant hyperbolas, autonomous dynamics, Sibylle Marcotte, Rémi Gribonval, Gabriel Peyré, LoRA, entraînement intrinsèque, équilibrage">
 <meta name="description" content="Conserved imbalance closes the gradient-flow dynamics of a factored matrix: a scalar warmup, balanced and relaxed-balanced formulas, and an interactive comparison of invariant factor trajectories.">
-<title>Intrinsic dynamics of factor training — Alpha preview — Gabriel Peyré</title>
+<title>Intrinsic dynamics of overparameterized dynamics — Alpha preview — Gabriel Peyré</title>
 <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/intrinsic-factor-training-dynamics.html">
 <link rel="stylesheet" href="assets/drafts.css"><script defer src="assets/drafts.js"></script><script defer src="assets/idea-experiments.js"></script>
 <script type="text/x-mathjax-config">MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});</script>
 <script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+
+<!-- Generated numerical summary image: start -->
+<meta property="og:image" content="https://www.gpeyre.com/blog/imgs/summaries/intrinsic-factor-training-dynamics.jpg">
+<meta property="og:image:alt" content="Factor-space paths along conserved-imbalance hyperbolas and the product evolution at three different imbalances.">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="566">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.gpeyre.com/blog/imgs/summaries/intrinsic-factor-training-dynamics.jpg">
+<meta name="twitter:image:alt" content="Factor-space paths along conserved-imbalance hyperbolas and the product evolution at three different imbalances.">
+<!-- Generated numerical summary image: end -->
 </head><body>
-<header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Intrinsic dynamics of factor training</h1><p class="subtitle">The represented matrix is not the whole state—unless a conservation law supplies the missing information.</p><p class="byline">Gabriel Peyré</p></div></header>
+<header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Intrinsic dynamics of overparameterized dynamics</h1><p class="subtitle">The represented matrix is not the whole state—unless a conservation law supplies the missing information.</p><p class="byline">Gabriel Peyré</p></div></header>
 <main class="wrap"><article class="blog-prose">
 <p>A matrix can have many factorizations. Multiplying one factor by a scalar and dividing the other by the same scalar changes neither the matrix nor its predictions. But Euclidean gradient descent sees the factors, not just their product: two representations of the same model can start moving at different speeds.</p>
 <p>Can we nevertheless describe training directly in the space of represented models? In our work with <a href="https://arxiv.org/abs/2508.07370">Sibylle Marcotte and Rémi Gribonval</a> <a href="#ref-intrinsic">[1]</a>, we study when such an <em>intrinsic dynamics</em> exists. The key is to keep the right conserved information from initialization. A two-factor linear model makes the idea completely explicit.</p>

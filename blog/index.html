@@ -27,13 +27,15 @@ permalink: /blog/
     {% assign blog_posts = site.categories.blog | sort: 'date' | reverse %}
     <div class="blog-archive-heading"><h2>Recent posts</h2><span>{{ blog_posts.size }} posts &middot; Newest first</span></div>
     {% for post in blog_posts %}
+    {% assign summary_image = site.data.blog_summary_images.images[post.slug] %}
     <article class="blog-preview"{% if post.lang %} lang="{{ post.lang }}"{% endif %}>
         <div class="blog-preview-meta">
             <time datetime="{{ post.date | date: '%Y-%m-%d' }}">{{ post.date | date: '%-d %b %Y' }}</time>
             <span>{{ post.topic | escape }}</span>
-            {% if post.figure %}<span class="blog-interactive-label">Interactive</span>{% endif %}
+            {% if post.figure or post.embedded_experiment %}<span class="blog-interactive-label">Interactive</span>{% endif %}
         </div>
         <div class="blog-preview-body">
+            {% if summary_image %}<a class="blog-preview-image" href="{{ post.url | prepend: site.baseurl }}" tabindex="-1" aria-hidden="true"><img src="{{ summary_image.path | relative_url }}" alt="" width="{{ summary_image.width }}" height="{{ summary_image.height }}" loading="lazy" decoding="async"></a>{% endif %}
             <h2><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title | escape }}</a></h2>
             <p class="sr-only">{{ post.description | escape }}</p>
             <div class="blog-preview-excerpt blog-prose" aria-hidden="true" inert>{{ post.excerpt }}</div>

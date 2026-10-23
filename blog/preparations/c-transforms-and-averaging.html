@@ -2,10 +2,20 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,follow">
 <meta name="description" content="From convex conjugacy to cost transforms: a short proof of double-transform closure, explicit failures of averaging for power costs, and the geometric exception of round spheres.">
 <meta name="keywords" content="c transform, cost transform, c concavity, c convexity, Kantorovich duality, transport potentials, Legendre transform, Fenchel conjugate, Fenchel Moreau theorem, concave envelope, quadratic optimal transport, infimal convolution, Lipschitz functions, metric costs, snowflake metric, power costs, averaging transport potentials, supporting cost profiles, double c transform, nonnegative cross curvature, Ma Trudinger Wang condition, round spheres, flat torus, Riemannian convex potential maps, Adrien Marie Legendre, Alessio Figalli, Young Heon Kim, Robert McCann, Samuel Cohen, Brandon Amos, Yaron Lipman, Gabriel Peyre, transformée de Legendre, potentiels de transport">
-<title>From Legendre transforms to transport potentials — Alpha preview — Gabriel Peyré</title>
+<title>c-transform as a generalized Legendre transform — Alpha preview — Gabriel Peyré</title>
 <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/c-transforms-and-averaging.html"><link rel="stylesheet" href="assets/drafts.css"><script defer src="assets/drafts.js"></script><script defer src="assets/idea-experiments.js"></script>
 <script type="text/x-mathjax-config">MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
-</head><body><header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>From Legendre transforms to transport potentials</h1><p class="subtitle">Which families of supporting shapes survive averaging?</p><p class="byline">Gabriel Peyré</p></div></header>
+
+<!-- Generated numerical summary image: start -->
+<meta property="og:image" content="https://www.gpeyre.com/blog/imgs/summaries/c-transforms-and-averaging.jpg">
+<meta property="og:image:alt" content="Averaged cost profiles, their cost transform, and the nonzero gap to the double transform for a cubic cost.">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="467">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.gpeyre.com/blog/imgs/summaries/c-transforms-and-averaging.jpg">
+<meta name="twitter:image:alt" content="Averaged cost profiles, their cost transform, and the nonzero gap to the double transform for a cubic cost.">
+<!-- Generated numerical summary image: end -->
+</head><body><header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>c-transform as a generalized Legendre transform</h1><p class="subtitle">Which families of supporting shapes survive averaging?</p><p class="byline">Gabriel Peyré</p></div></header>
 <main class="wrap"><article class="blog-prose">
 <p>A convex function can be assembled from affine supporting functions. Optimal transport replaces affine supports by translated profiles of a cost. This seemingly modest change produces <em>cost-concave potentials</em>, the functions appearing in the Kantorovich dual problem <a href="#ref-book">[1]</a>, <a href="#ref-villani">[6]</a>.</p>
 <p>Here is a natural test of how different the new geometry is. If two functions are cost-concave, is their average still cost-concave? For quadratic cost in Euclidean space, yes. For most other power costs, no—even on an interval. Squared geodesic distance on a round sphere gives a surprising positive example. Throughout, “average” means an arithmetic average of <em>functions</em>, not a Wasserstein barycenter of measures.</p>

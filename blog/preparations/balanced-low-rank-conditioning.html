@@ -3,11 +3,21 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,follow">
 <meta name="keywords" content="LoRA, low-rank adaptation, BaLoRA, balanced LoRA, matrix factorization, factor scaling, parameter invariance, Hessian conditioning, positive Hessian spectrum, local convergence, balanced factors, hyperbalanced manifold, singular value decomposition, SVD, low-rank optimization, redundant parameterization, quotient geometry, gradient descent, normal directions, symmetry directions, nonlinear least squares, linearization, spectral gap, Valérie Castin, Kimia Nadjahi, Pierre Ablin, Gabriel Peyré, conditionnement, équilibrage des facteurs">
 <meta name="description" content="An elementary Hessian calculation explains why balanced representations of the same low-rank matrix have optimal Euclidean local conditioning, with an interactive comparison of exact condition numbers and local training.">
-<title>One low-rank matrix, many optimization speeds — Alpha preview — Gabriel Peyré</title>
+<title>Optimal conditioning of low-rank adaptation — Alpha preview — Gabriel Peyré</title>
 <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/balanced-low-rank-conditioning.html"><link rel="stylesheet" href="assets/drafts.css"><script defer src="assets/drafts.js"></script><script defer src="assets/idea-experiments.js"></script>
 <script type="text/x-mathjax-config">MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+
+<!-- Generated numerical summary image: start -->
+<meta property="og:image" content="https://www.gpeyre.com/blog/imgs/summaries/balanced-low-rank-conditioning.jpg">
+<meta property="og:image:alt" content="Exact Hessian condition number versus factor scale and local gradient-descent losses for balanced and unbalanced factorizations.">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="566">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.gpeyre.com/blog/imgs/summaries/balanced-low-rank-conditioning.jpg">
+<meta name="twitter:image:alt" content="Exact Hessian condition number versus factor scale and local gradient-descent losses for balanced and unbalanced factorizations.">
+<!-- Generated numerical summary image: end -->
 </head><body>
-<header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>One low-rank matrix, many optimization speeds</h1><p class="subtitle">Balancing removes avoidable ill-conditioning from a redundant representation.</p><p class="byline">Gabriel Peyré</p></div></header>
+<header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Optimal conditioning of low-rank adaptation</h1><p class="subtitle">Balancing removes avoidable ill-conditioning from a redundant representation.</p><p class="byline">Gabriel Peyré</p></div></header>
 <main class="wrap"><article class="blog-prose">
 <p>Low-rank adaptation, or LoRA, trains a small matrix correction in factored form instead of updating every weight of a large model <a href="#ref-lora">[1]</a>. If this correction is \(AB\), replacing \((A,B)\) by \((sA,s^{-1}B)\) leaves it unchanged. The model is identical. Its Euclidean optimization geometry is not.</p>
 <p>Our work with Valérie Castin, Kimia Nadjahi, and Pierre Ablin <a href="#ref-balora">[2]</a> studies this redundancy through local conditioning and proposes a balancing method. Here is a particularly clean result: for exact low-rank matrix recovery, every balanced factorization has the best possible positive Hessian condition number. The proof needs only a Jacobian, a Sylvester operator, and two singular-value inequalities.</p>

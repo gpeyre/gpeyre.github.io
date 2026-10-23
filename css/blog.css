@@ -55,6 +55,8 @@
 .blog-preview h2 { font-size: clamp(24px, 3vw, 30px); font-weight: 700; line-height: 1.3; margin: 0 0 18px; letter-spacing: -.6px; }
 .blog-preview h2 a { color: #253039; }
 .blog-preview h2 a:hover { color: #00778b; text-decoration: none; }
+.blog-preview-image { display: block; margin: 0 0 22px; border: 1px solid #e3e6e4; border-radius: 7px; overflow: hidden; background: #f6f9f8; }
+.blog-preview-image img { display: block; width: 100%; height: auto; }
 .blog-preview-excerpt { max-height: 170px; overflow: hidden; -webkit-mask-image: linear-gradient(#000 45%, transparent 100%); mask-image: linear-gradient(#000 45%, transparent 100%); pointer-events: none; }
 .blog-preview-excerpt.blog-prose { font-size: 17px; }
 .blog-preview-excerpt.blog-prose p { margin: 0 0 18px; }
