@@ -1,6 +1,6 @@
 # Blog publication and announcement queue
 
-Last reconciled on 22 October 2026. All 31 forthcoming posts are included below, with the six explicitly approved posts first. Published entries are kept separately in [published.md](published.md), with their dates and final article links. `publication-log.json` remains the authoritative retry and deduplication record.
+Last reconciled on 23 October 2026. All 30 forthcoming posts are included below, with the five explicitly approved posts first. Published entries are kept separately in [published.md](published.md), with their dates and final article links. `publication-log.json` remains the authoritative retry and deduplication record.
 
 To approve an article and its quoted announcement, change its exact checkbox to `- [x] Ready to publish`. Existing approvals are preserved; no unchecked entry has been approved on your behalf. The unchecked entries after the approved group remain under review.
 
@@ -8,15 +8,7 @@ The order alternates OT/Wasserstein geometry and other topics where the availabl
 
 Each block quote retains its original preview URL. Only the outgoing announcement replaces it with the final dated canonical URL. Messages fit 280 Unicode graphemes with either address. This is an unpublished editorial file, excluded from the website build. Add every new forthcoming article with an unchecked readiness box and a short announcement.
 
-## 1. Gaussians are not closed for Gromov–Wasserstein
-
-Topic: OT / Wasserstein geometry
-
-- [x] Ready to publish
-
-> Gaussian marginals need not have a jointly Gaussian optimizer for squared-distance Gromov–Wasserstein. A radial coupling gives a concrete counterexample. https://www.gpeyre.com/blog/preparations/gaussian-gromov-wasserstein-counterexample.html
-
-## 2. Convex approximation with max and softmax layers
+## 1. Convex approximation with max and softmax layers
 
 Topic: Other topics
 
@@ -24,7 +16,7 @@ Topic: Other topics
 
 > How do max and softmax layers approximate convex functions? Supporting planes give a constructive proof, error bounds, and a tradeoff between neuron count and temperature. https://www.gpeyre.com/blog/preparations/convex-max-softmax-approximation.html
 
-## 3. Interpolating measures by a Lagrangian flow
+## 2. Interpolating measures by a Lagrangian flow
 
 Topic: Transport geometry (not generally optimal transport)
 
@@ -32,7 +24,7 @@ Topic: Transport geometry (not generally optimal transport)
 
 > Can a density cross-fade be realized by moving particles? Moser’s construction does it for smooth positive densities: solve a Poisson equation, divide by density, then follow the flow. https://www.gpeyre.com/blog/preparations/lagrangian-density-interpolation.html
 
-## 4. DC programming and Toland duality
+## 3. DC programming and Toland duality
 
 Topic: Other topics
 
@@ -40,7 +32,7 @@ Topic: Other topics
 
 > A nonconvex problem can sometimes have a convex dual. Toland duality explains how, and also yields the DC algorithm. A simple example shows why this can be useful. https://www.gpeyre.com/blog/preparations/dc-programming-toland-duality.html
 
-## 5. Langevin without a potential
+## 4. Langevin without a potential
 
 Topic: Other topics
 
@@ -48,7 +40,7 @@ Topic: Other topics
 
 > Langevin dynamics need not follow a potential. A stable linear drift has a Gaussian equilibrium that can keep circulating. Its covariance follows from a Lyapunov equation. https://www.gpeyre.com/blog/preparations/langevin-without-a-potential.html
 
-## 6. Stable fluids
+## 5. Stable fluids
 
 Topic: Other topics
 
@@ -56,7 +48,7 @@ Topic: Other topics
 
 > A smoke simulation from four operations: add forces, trace particles backwards, diffuse, then project away compression. Fourier geometry explains the pressure step in Stam’s Stable Fluids. https://www.gpeyre.com/blog/preparations/stable-fluids.html
 
-## 7. An Axiomatic Definition of the Wasserstein Distance
+## 6. An Axiomatic Definition of the Wasserstein Distance
 
 Topic: OT / Wasserstein geometry
 
@@ -64,7 +56,7 @@ Topic: OT / Wasserstein geometry
 
 > On compact spaces, Kantorovich transport is the largest jointly convex, lower-semicontinuous extension of a continuous pointwise cost to measures. A short geometric proof. https://www.gpeyre.com/blog/preparations/optimal-transport-convex-extension.html
 
-## 8. In-context composition
+## 7. In-context composition
 
 Topic: Other topics
 
@@ -72,7 +64,7 @@ Topic: Other topics
 
 > A transformer layer moves a token and its context together. Our in-context composition becomes ordinary composition on a lifted space—a bridge to advection and particle dynamics. https://www.gpeyre.com/blog/preparations/in-context-composition.html
 
-## 9. Optimal Planar Matching and Crossings
+## 8. Optimal Planar Matching and Crossings
 
 Topic: OT / Wasserstein geometry
 
@@ -80,7 +72,7 @@ Topic: OT / Wasserstein geometry
 
 > Optimal Euclidean matchings cannot cross. But removing crossings still leaves exponentially many candidates! Catalan numbers explain why uncrossing alone does not solve the problem. https://www.gpeyre.com/blog/preparations/noncrossing-matchings-catalan.html
 
-## 10. Bernstein polynomials on probability measures
+## 9. Bernstein polynomials on probability measures
 
 Topic: Other topics
 
@@ -88,7 +80,7 @@ Topic: Other topics
 
 > Sample, evaluate, average: a Bernstein polynomial on measures. On a compact space, this gives universal approximation, with rates that reveal the role of dimension. https://www.gpeyre.com/blog/preparations/bernstein-polynomials-on-measures.html
 
-## 11. Weak transport and mean-preserving spreads
+## 10. Weak transport and mean-preserving spreads
 
 Topic: OT / Wasserstein geometry
 
@@ -96,7 +88,7 @@ Topic: OT / Wasserstein geometry
 
 > What if transport only paid for moving conditional means? Weak transport becomes a Wasserstein projection under convex order: first move the means, then spread mass for free. https://www.gpeyre.com/blog/preparations/weak-transport-and-convex-order.html
 
-## 12. Polynomials of probability measures
+## 11. Polynomials of probability measures
 
 Topic: Other topics
 
@@ -104,7 +96,7 @@ Topic: Other topics
 
 > Polynomials of probability measures? Products of expectations form an algebra. Stone–Weierstrass gives universal approximation of continuous functionals of measures on a compact domain. https://www.gpeyre.com/blog/preparations/wasserstein-polynomials.html
 
-## 13. Why optimal transport respects a density cap
+## 12. Why optimal transport respects a density cap
 
 Topic: OT / Wasserstein geometry
 
@@ -112,7 +104,7 @@ Topic: OT / Wasserstein geometry
 
 > Can optimal transport create overcrowding? In a convex Euclidean domain, a common constant cap on endpoint densities survives the whole quadratic Wasserstein geodesic. https://www.gpeyre.com/blog/preparations/wasserstein-geodesics-density-caps.html
 
-## 14. The covariance of SGD iterates
+## 13. The covariance of SGD iterates
 
 Topic: Other topics
 
@@ -120,7 +112,7 @@ Topic: Other topics
 
 > In least squares with constant noise variance, fixed-step SGD has an isotropic stationary covariance to first order. An exact recursion reveals fourth-moment corrections and relaxation times. https://www.gpeyre.com/blog/preparations/sgd-iterate-covariance.html
 
-## 15. The perspective transform: convexity on measures
+## 14. The perspective transform: convexity on measures
 
 Topic: OT / Wasserstein geometry
 
@@ -128,7 +120,7 @@ Topic: OT / Wasserstein geometry
 
 > A small convexity trick connects f-divergences and dynamic optimal transport: the perspective transform. It turns density ratios into convex functionals of mass and momentum. https://www.gpeyre.com/blog/preparations/perspective-transform-on-measures.html
 
-## 16. Why KL belongs to two divergence families
+## 15. Why KL belongs to two divergence families
 
 Topic: Other topics
 
@@ -136,7 +128,7 @@ Topic: Other topics
 
 > KL compares density ratios and gaps above entropy tangent planes. Under smoothness assumptions, it is the only measure-level divergence in both families, up to scale. https://www.gpeyre.com/blog/preparations/divergences-and-bregman-geometry.html
 
-## 17. Sinkhorn on Gaussians: an exact convergence rate
+## 16. Sinkhorn on Gaussians: an exact convergence rate
 
 Topic: OT / Wasserstein geometry
 
@@ -144,7 +136,7 @@ Topic: OT / Wasserstein geometry
 
 > Why does Sinkhorn slow down as regularization decreases? For centered 1D Gaussians, a covariance recursion gives an exact convergence rate and explains the low-temperature regime. https://www.gpeyre.com/blog/preparations/gaussian-sinkhorn-convergence.html
 
-## 18. Optimal conditioning of low-rank adaptation
+## 17. Optimal conditioning of low-rank adaptation
 
 Topic: Other topics
 
@@ -152,7 +144,7 @@ Topic: Other topics
 
 > The same low-rank matrix can train at different speeds depending on its factors. A short Hessian calculation shows why balancing gives optimal Euclidean local conditioning. https://www.gpeyre.com/blog/preparations/balanced-low-rank-conditioning.html
 
-## 19. Wasserstein distance without quantiles
+## 18. Wasserstein distance without quantiles
 
 Topic: OT / Wasserstein geometry
 
@@ -160,7 +152,7 @@ Topic: OT / Wasserstein geometry
 
 > Can we compute 1D quadratic Wasserstein distance without inverting CDFs? A triangle-area identity gives a formula directly in terms of the CDFs, with a geometric proof. https://www.gpeyre.com/blog/preparations/wasserstein-distance-without-quantiles.html
 
-## 20. Intrinsic dynamics of overparameterized dynamics
+## 19. Intrinsic dynamics of overparameterized dynamics
 
 Topic: Other topics
 
@@ -168,7 +160,7 @@ Topic: Other topics
 
 > Can a factored matrix evolve on its own during training? A conserved imbalance supplies the missing information, giving a closed gradient-flow equation for the represented model. https://www.gpeyre.com/blog/preparations/intrinsic-factor-training-dynamics.html
 
-## 21. Carefully placed particles versus random samples
+## 20. Carefully placed particles versus random samples
 
 Topic: OT / Wasserstein geometry
 
@@ -176,7 +168,7 @@ Topic: OT / Wasserstein geometry
 
 > For a uniform law on an interval, optimal particles have squared W2 error of order 1/n², versus order 1/n in expectation for random samples. Quantile-bin averages show how to choose the points. https://www.gpeyre.com/blog/preparations/optimal-particles-versus-random-sampling.html
 
-## 22. Iterative projections: Dykstra and Douglas–Rachford
+## 21. Iterative projections: Dykstra and Douglas–Rachford
 
 Topic: Other topics
 
@@ -184,7 +176,7 @@ Topic: Other topics
 
 > Alternating projections find a feasible point, not necessarily the nearest one. Dykstra adds corrections; Douglas–Rachford uses reflections. Explore the geometry—and a Sudoku experiment. https://www.gpeyre.com/blog/preparations/projections-corrections-reflections.html
 
-## 23. Two symmetric central limit theorems, two rates
+## 22. Two symmetric central limit theorems, two rates
 
 Topic: OT / Wasserstein geometry
 
@@ -192,7 +184,7 @@ Topic: OT / Wasserstein geometry
 
 > Two symmetric distributions, two central-limit rates: coin flips converge like 1/√n, continuous uniforms like 1/n in W1. The difference is the lattice. https://www.gpeyre.com/blog/preparations/central-limit-wasserstein-constants.html
 
-## 24. From Classical to Quantum Pinsker Inequality
+## 23. From Classical to Quantum Pinsker Inequality
 
 Topic: Other topics
 
@@ -200,7 +192,7 @@ Topic: Other topics
 
 > How does entropy control the distance between quantum states? A direct proof of quantum Pinsker tests entropy curvature against a sign observable. The sharp constant survives noncommutativity. https://www.gpeyre.com/blog/preparations/quantum-pinsker-sign-observable.html
 
-## 25. Spectral Wasserstein distances
+## 24. Spectral Wasserstein distances
 
 Topic: OT / Wasserstein geometry
 
@@ -208,7 +200,7 @@ Topic: OT / Wasserstein geometry
 
 > Wasserstein transport measures how far mass moves. Spectral Wasserstein distances also track its directions. A robust-cost interpretation, a dynamic formulation, and a Schatten-p experiment. https://www.gpeyre.com/blog/preparations/spectral-wasserstein-distances.html
 
-## 26. Conditioning of Non-Euclidean Gradient Descent
+## 25. Conditioning of Non-Euclidean Gradient Descent
 
 Topic: Other topics
 
@@ -216,7 +208,7 @@ Topic: Other topics
 
 > Rotating a quadratic preserves its eigenvalues but can change how sign descent behaves. Norm-steepest descent reveals the relevant condition number—and why coordinate geometry matters. https://www.gpeyre.com/blog/preparations/sign-gradient-descent-geometry.html
 
-## 27. Which statistics evolve on their own?
+## 26. Which statistics evolve on their own?
 
 Topic: OT / Wasserstein geometry
 
@@ -224,7 +216,7 @@ Topic: OT / Wasserstein geometry
 
 > Can one statistic evolve on its own while the whole distribution moves? A geometric criterion gives exact moment closure for a class of Wasserstein gradient flows. https://www.gpeyre.com/blog/preparations/autonomous-wasserstein-statistics.html
 
-## 28. When the best low-rank tensor approximation does not exist
+## 27. When the best low-rank tensor approximation does not exist
 
 Topic: Other topics
 
@@ -232,7 +224,7 @@ Topic: Other topics
 
 > For tensors, a best low-rank approximation may not exist. Two rank-one terms can converge to a tensor that needs three. Two matrix slices and a determinant give an elementary proof. https://www.gpeyre.com/blog/preparations/tensor-rank-without-best-approximation.html
 
-## 29. c-transform as a generalized Legendre transform
+## 28. c-transform as a generalized Legendre transform
 
 Topic: OT / Wasserstein geometry
 
@@ -240,7 +232,7 @@ Topic: OT / Wasserstein geometry
 
 > Are averages of transport potentials still transport potentials? Quadratic costs say yes; most other power costs say no. Cost transforms and supporting shapes explain the difference. https://www.gpeyre.com/blog/preparations/c-transforms-and-averaging.html
 
-## 30. Logarithmic Sobolev is a Wasserstein P–L inequality
+## 29. Logarithmic Sobolev is a Wasserstein P–L inequality
 
 Topic: OT / Wasserstein geometry
 
@@ -248,7 +240,7 @@ Topic: OT / Wasserstein geometry
 
 > Logarithmic Sobolev is a Polyak–Łojasiewicz inequality for entropy in Wasserstein geometry. A finite-length argument turns entropy decay into convergence of distributions. https://www.gpeyre.com/blog/preparations/logarithmic-sobolev-wasserstein-pl.html
 
-## 31. Wasserstein singular vectors: a distance that defines itself
+## 30. Wasserstein singular vectors: a distance that defines itself
 
 Topic: OT / Wasserstein geometry
 

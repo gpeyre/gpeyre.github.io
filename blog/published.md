@@ -33,3 +33,13 @@ Published: 2026-10-21 · [Read post](https://www.gpeyre.com/blog/2026/10/21/ener
 Published: 2026-10-22 · [Read post](https://www.gpeyre.com/blog/2026/10/22/konno-quadratic-relaxation/)
 
 > Can duplicating a variable simplify quadratic optimization without changing its minimum? Konno’s relaxation does, under a curvature condition. One identity explains why. https://www.gpeyre.com/blog/preparations/konno-quadratic-relaxation.html
+
+## 5. Gaussians are not closed for Gromov–Wasserstein
+
+Topic: OT / Wasserstein geometry
+
+- [x] Ready to publish
+
+Published: 2026-10-23 · [Read post](https://www.gpeyre.com/blog/2026/10/23/gaussian-gromov-wasserstein-counterexample/)
+
+> Gaussian marginals need not have a jointly Gaussian optimizer for squared-distance Gromov–Wasserstein. A radial coupling gives a concrete counterexample. https://www.gpeyre.com/blog/preparations/gaussian-gromov-wasserstein-counterexample.html
