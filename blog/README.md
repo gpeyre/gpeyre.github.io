@@ -195,7 +195,7 @@ journal are excluded from the public website build.
 ## Numerical summary images
 
 Every article with a numerical experiment has a real capture of that experiment
-(currently 35 images across published and forthcoming posts). The JPEGs in
+(currently 36 images across published and forthcoming posts). The JPEGs in
 `blog/imgs/summaries/` illustrate archive cards, the local editorial queue, and
 article social-sharing metadata. Theory-only articles do not get invented plots.
 Each image has descriptive alt text, its experiment URL and control settings,

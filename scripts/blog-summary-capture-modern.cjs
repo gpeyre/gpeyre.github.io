@@ -7,6 +7,7 @@ const jobs = [
   {slug:"balanced-low-rank-conditioning",source:"blog/preparations/assets/optimization-geometry/index.html?topic=lowrank",alt:"Exact Hessian condition number versus factor scale and local gradient-descent losses for balanced and unbalanced factorizations.",settings:{factor_scale:2,iterations:1800}},
   {slug:"c-transforms-and-averaging",source:"blog/preparations/assets/transport-geometry/c-transform.html",alt:"Averaged cost profiles, their cost transform, and the nonzero gap to the double transform for a cubic cost.",settings:{p:3,grid_points:241,preset:"symmetric"}},
   {slug:"convex-max-softmax-approximation",source:"blog/preparations/convex-max-softmax-approximation.html",alt:"Independently Adam-trained convex max-affine and smooth log-sum-exp approximation surfaces, shown with identical lighting and height scales.",settings:{width:6,temperature:"automatic",optimizer:"Adam, 2000 steps"}},
+  {slug:"hump-algebra",source:"blog/preparations/assets/hump-algebra/index.html",alt:"Contour plots of two five-bump Gaussian mixtures and their product, with separate labelled color scales showing the product's narrower overlapping peaks.",settings:{bumps:5,phase:.18,separate_scales:true,grid:181,paused:true}},
   {slug:"intrinsic-factor-training-dynamics",source:"blog/preparations/assets/optimization-geometry/index.html?topic=intrinsic",alt:"Factor-space paths along conserved-imbalance hyperbolas and the product evolution at three different imbalances.",settings:{time:1.7,largest_imbalance:2,initial_product:.06}},
   {slug:"lagrangian-density-interpolation",source:"blog/preparations/assets/new-dynamics/index.html?topic=moser",alt:"Moser interpolation halfway between multimodal periodic densities: transported particles alongside speed and flux directions.",settings:{time:.5,particles:420,uniform_background:.14}},
   {slug:"langevin-without-a-potential",source:"blog/preparations/assets/new-dynamics/index.html?topic=langevin",alt:"Circulating Ornstein–Uhlenbeck particles approaching the stationary Gaussian ellipse, with drift arrows and recent particle trails.",settings:{time:1.4,particles:180,circulation:1.4,noise:.55}},
@@ -39,6 +40,14 @@ async function capture(page,job,output,base="http://127.0.0.1:4197/") {
     await page.waitForFunction(()=>document.querySelector("#max-experiment")?.dataset.trainingState==="ready",{},{timeout:180000});
     await frame(page,["#max-surfaces .panel-grid"],"#summary-capture .plot-surface{aspect-ratio:1.08!important}");
     await range(page,"max-azimuth",-45);await range(page,"max-elevation",30);
+  } else if(job.slug==="hump-algebra"){
+    await page.waitForFunction(()=>window.HumpAlgebraApp);
+    await range(page,"bumps",job.settings.bumps);
+    await range(page,"phase",job.settings.phase);
+    await page.locator("#separate-scales").setChecked(job.settings.separate_scales);
+    await frame(page,["#landscapes","#scale-note"],"#summary-capture .landscapes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}#summary-capture .panel-note{display:block!important}");
+    const state=await page.evaluate(()=>HumpAlgebraApp.getState());
+    if(state.playing||state.productTerms!==25||state.residual>1e-12)throw Error("Invalid Gaussian product capture state");
   } else if(job.slug==="wasserstein-singular-vectors"){
     await page.waitForFunction(()=>document.querySelector("#status")?.textContent.startsWith("16 cycles computed"),{},{timeout:180000});
     await frame(page,[".panels"],"#summary-capture .panels{grid-template-columns:repeat(4,1fr)!important;align-items:start}#summary-capture .panel{padding:8px!important}#summary-capture canvas{aspect-ratio:1!important}#summary-capture h2{font-size:14px!important}");

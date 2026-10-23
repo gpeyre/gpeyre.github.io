@@ -221,6 +221,21 @@
       },
       "sha256": "362f0862bfec06c2bc6494ef7fb76e4b8c22c9c1452063d7e52271b32dd808c7"
     },
+    "hump-algebra": {
+      "path": "/blog/imgs/summaries/hump-algebra.jpg",
+      "alt": "Contour plots of two five-bump Gaussian mixtures and their product, with separate labelled color scales showing the product's narrower overlapping peaks.",
+      "width": 1200,
+      "height": 546,
+      "source": "/blog/preparations/assets/hump-algebra/index.html",
+      "settings": {
+        "bumps": 5,
+        "phase": 0.18,
+        "separate_scales": true,
+        "grid": 181,
+        "paused": true
+      },
+      "sha256": "43b056899a77cf822a62c14677bfd086ff1a9a1c448bb621d225944969721ae9"
+    },
     "icnn-universality-and-depth": {
       "path": "/blog/imgs/summaries/icnn-universality-and-depth.jpg",
       "alt": "Signed approximation-error heatmaps for fitted convex ReLU networks with one and two hidden layers, with target crease lines and the flat-triangle obstruction.",

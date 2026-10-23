@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <title>Multiplying Gaussian humps — interactive experiment</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <p class="eyebrow">Numerical experimentation · an exact product identity</p>
+  <h2>Two landscapes, one product</h2>
+  <p class="intro">Move the Gaussian bumps and watch their overlap. Multiplication sharpens the peaks and suppresses bumps whose centers are far apart.</p>
+  <div class="controls">
+    <label for="bumps">Bumps in each mixture <output id="bumps-value" for="bumps">5</output>
+      <input id="bumps" type="range" min="1" max="12" step="1" value="5">
+      <span class="help">n bumps in each factor give n² terms in the product.</span>
+    </label>
+    <label for="phase">Move the bumps <output id="phase-value" for="phase">0.18</output>
+      <input id="phase" type="range" min="0" max="1" step="0.002" value="0.18">
+      <span class="help">A smooth loop; widths and coefficients stay fixed.</span>
+    </label>
+  </div>
+  <div class="playback">
+    <button id="play" type="button" aria-pressed="false">Animate bumps</button>
+    <label class="scale-choice"><input id="separate-scales" type="checkbox" checked> Scale each colorbar to its own sampled maximum</label>
+    <span id="status" role="status" aria-live="polite">Paused</span>
+  </div>
+  <div id="landscapes" class="landscapes">
+    <section class="panel" aria-labelledby="first-title">
+      <div class="heading"><h3 id="first-title">First mixture <i>f</i></h3><span id="first-terms">5 humps</span></div>
+      <canvas id="first-plot" role="img" aria-label="Filled contour plot of the first Gaussian mixture."></canvas>
+      <p class="panel-note">Sampled max <output id="first-max">—</output></p>
+    </section>
+    <section class="panel" aria-labelledby="second-title">
+      <div class="heading"><h3 id="second-title">Second mixture <i>g</i></h3><span id="second-terms">5 humps</span></div>
+      <canvas id="second-plot" role="img" aria-label="Filled contour plot of the second Gaussian mixture."></canvas>
+      <p class="panel-note">Sampled max <output id="second-max">—</output></p>
+    </section>
+    <section class="panel product" aria-labelledby="product-title">
+      <div class="heading"><h3 id="product-title">Their product <i>fg</i></h3><span id="product-terms">25 humps</span></div>
+      <canvas id="product-plot" role="img" aria-label="Filled contour plot of the pointwise product of both Gaussian mixtures."></canvas>
+      <p class="panel-note">Sampled max <output id="product-max">—</output></p>
+    </section>
+  </div>
+  <p id="scale-note" class="scale-note">Each colorbar has its own scale; compare its numbers to see the product’s smaller amplitude.</p>
+  <dl class="metrics">
+    <div><dt>Terms in the exact product</dt><dd id="term-count">25</dd></div>
+    <div><dt>Sum of product coefficients</dt><dd id="weight-sum">—</dd></div>
+    <div><dt>Identity residual (sampled)</dt><dd id="residual">—</dd></div>
+  </dl>
+  <p class="method">The humps are exp(−|x − a|²/(2s²)), with height one before multiplication by their coefficient. Positive coefficients sum to one in each factor; these are not probability-density normalizations. Every panel uses the same square [−2.5, 2.5]² with equal axis scales. Smooth colors sample a 181 × 181 grid; contours occur at 20%, 40%, 60%, and 80% of the displayed colorbar. The residual compares the n²-term Gaussian expansion with pointwise multiplication on a separate 17 × 17 grid.</p>
+  <noscript>Enable JavaScript to move the Gaussian humps and change their number.</noscript>
+</main>
+<script src="core.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

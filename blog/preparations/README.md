@@ -19,6 +19,25 @@ After changing article metadata or adding a preview, run
 `ruby scripts/build-blog-search.rb` from the repository root and include the
 updated catalogue. See `../README.md` for search authoring and verification.
 
+## The hump algebra
+
+`hump-algebra.html` develops Meyer's signed, peak-normalized, isotropic Gaussian
+atomic space. It distinguishes its Banach completion from uniform closure and
+from completion under finite exact coefficient representations. The elementary
+product and quotient-space proofs are self-contained; the equivalence with the
+homogeneous Besov space is a cited characterization, with an explicit difference
+norm and an optional wavelet formula.
+
+`assets/hump-algebra/` displays two positive Gaussian mixtures and their product.
+Motion and bump-count sliders evaluate analytic functions on a 181-by-181 grid;
+the independent product-expansion check uses a 17-by-17 grid. Separate colour
+ranges are explicitly labelled and can be replaced by a shared raw scale.
+Playback starts paused. Run `node tests/blog-hump-algebra.test.js` for the exact
+Gaussian identities, periodic motion, and field checks. Reproduce its summary
+image with `scripts/blog-summary-capture-modern.cjs --only hump-algebra`.
+The unmodified Yves Meyer portrait is by Philippe Binant, CC BY-SA 4.0, with
+source and license links in the article.
+
 ## Developed mathematical ideas (October 2026)
 
 Twelve additional articles develop the supplied editorial outlines into undated

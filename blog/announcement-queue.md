@@ -1,6 +1,6 @@
 # Blog publication and announcement queue
 
-Last reconciled on 23 October 2026. All 31 forthcoming posts are included below, with the five explicitly approved posts first. Published entries are kept separately in [published.md](published.md), with their dates and final article links. `publication-log.json` remains the authoritative retry and deduplication record.
+Last reconciled on 23 October 2026. All 32 forthcoming posts are included below, with the five explicitly approved posts first. Published entries are kept separately in [published.md](published.md), with their dates and final article links. `publication-log.json` remains the authoritative retry and deduplication record.
 
 To approve an article and its quoted announcement, change its exact checkbox to `- [x] Ready to publish`. Existing approvals are preserved; no unchecked entry has been approved on your behalf. The unchecked entries after the approved group remain under review.
 
@@ -248,7 +248,15 @@ Topic: OT / Wasserstein geometry
 
 > Logarithmic Sobolev is a Polyak–Łojasiewicz inequality for entropy in Wasserstein geometry. A finite-length argument turns entropy decay into convergence of distributions. https://www.gpeyre.com/blog/preparations/logarithmic-sobolev-wasserstein-pl.html
 
-## 31. Wasserstein singular vectors: a distance that defines itself
+## 31. The hump algebra of Yves Meyer
+
+Topic: Other topics
+
+- [ ] Ready to publish
+
+> The product of two Gaussian bumps is another bump. Yves Meyer turned this identity into a Banach algebra, whose atomic norm is equivalent to a Besov norm. Explore moving mixtures and their products. https://www.gpeyre.com/blog/preparations/hump-algebra.html
+
+## 32. Wasserstein singular vectors: a distance that defines itself
 
 Topic: OT / Wasserstein geometry
 
