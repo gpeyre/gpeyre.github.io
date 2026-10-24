@@ -138,7 +138,7 @@
       "date": "2026-10-24",
       "url": "https://www.gpeyre.com/blog/2026/10/24/convex-max-softmax-approximation/",
       "message": "How do max and softmax layers approximate convex functions? Supporting planes give a constructive proof, error bounds, and a tradeoff between neuron count and temperature. https://www.gpeyre.com/blog/2026/10/24/convex-max-softmax-approximation/",
-      "status": "prepared",
+      "status": "announced",
       "source_sha256": "77ecd13b2c49169b6d0883d5231bfc9701e0d6c3f147e82caa2310a7dd46f51a",
       "base_commit": "49a1430dd0a4cb66bfdbfc84be0ce2115ec7307f",
       "files": [
@@ -154,9 +154,18 @@
         "blog/preparations/index.html": "6e4fc86fe0f118d7110988a95a1270d9872aa9c223cd085678417bffff2d1f0a",
         "js/blog-search-index.js": "f0840a84a02db11e44b1b08e9892b9e903914b3bf12804a5f185b5bbdc3e14fa"
       },
-      "publication_commit": null,
-      "bluesky_uri": null,
-      "bluesky_cid": null
+      "publication_commit": "2ffa59ce0a6138448c2c92bfb55afccee8991311",
+      "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3mylf5mik226n",
+      "bluesky_cid": "bafyreie5fo4oltu3ckfo4wz427branogw3jjf2ayxqa47u7mthtlhrlhj4",
+      "announcement_image": {
+        "path": "/blog/imgs/summaries/convex-max-softmax-approximation.jpg",
+        "alt": "Independently Adam-trained convex max-affine and smooth log-sum-exp approximation surfaces, shown with identical lighting and height scales.",
+        "width": 1200,
+        "height": 604,
+        "sha256": "a3f0a7eb7884a4322862c44f76d5d538d66d1b9aa1e7f8be945145a2bcab0030",
+        "mime_type": "image/jpeg",
+        "size": 44903
+      }
     }
   ]
 }
