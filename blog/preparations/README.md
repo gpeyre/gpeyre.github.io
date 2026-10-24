@@ -19,6 +19,11 @@ After changing article metadata or adding a preview, run
 `ruby scripts/build-blog-search.rb` from the repository root and include the
 updated catalogue. See `../README.md` for search authoring and verification.
 
+New standalone articles must include the shared analytics loader
+`../../js/site-analytics.js` with `defer` and link to `/privacy/` in their footer.
+It counts only top-level visits on the production domain, not local tests or
+embedded experiments. See the audience-measurement section in `../README.md`.
+
 ## The hump algebra
 
 `hump-algebra.html` develops Meyer's signed, peak-normalized, isotropic Gaussian

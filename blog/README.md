@@ -9,6 +9,29 @@ linked from the archive. They are standalone HTML pages, visibly marked as work
 in progress, without dates or feed entries. Their README is excluded from the
 website build; the preview pages and assets are included.
 
+## Audience measurement
+
+The public site uses GoatCounter at `https://gpeyre.goatcounter.com/`.
+`_includes/head.html` loads `js/site-analytics.js` for Jekyll pages. Standalone
+forthcoming HTML pages and their index must include
+`<script defer src="../../js/site-analytics.js"></script>` and a footer link to
+`/privacy/`. Do not add analytics to embedded experiment pages or redirect stubs;
+published posts inherit it from the shared layout without a second include.
+
+The loader allows only `gpeyre.com` and `www.gpeyre.com`, skips frames, redirects
+and editorial paths, and respects DNT, GPC and the `goatcounter-ignore` local
+storage flag. It sends only the pathname (normalizing `/index.html` to `/`),
+page title and external referring origin; it excludes search queries and
+fragments and disables automatic click events. The old Google Analytics tracker
+has been removed. Audience statistics begin when this integration is deployed;
+they cannot reconstruct earlier visits. Dashboard settings remain under the
+account owner's control; leave individual page-view storage disabled unless the
+privacy notice is reviewed. This is not a legal certification of compliance.
+
+Run `node tests/site-analytics.test.js` for offline tracking/privacy guards and
+`ruby tests/site-analytics-build.test.rb /path/to/built/site` for coverage of the
+shared layout and all forthcoming pages. Tests must not send real page views.
+
 ## Search published and forthcoming posts
 
 Both `/blog/` and `/blog/preparations/` offer the same local search, with
