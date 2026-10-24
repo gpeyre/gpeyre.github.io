@@ -131,6 +131,32 @@
       "publication_commit": "2f863614af8eda6753f755e1e5db883650aecc18",
       "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3myiuoozs22ds",
       "bluesky_cid": "bafyreieaacorq3bid4car43f7ioh2bfuh3r7vg3rjr4nnzk7rt2hp2b7yi"
+    },
+    {
+      "slug": "convex-max-softmax-approximation",
+      "title": "Convex approximation with max and softmax layers",
+      "date": "2026-10-24",
+      "url": "https://www.gpeyre.com/blog/2026/10/24/convex-max-softmax-approximation/",
+      "message": "How do max and softmax layers approximate convex functions? Supporting planes give a constructive proof, error bounds, and a tradeoff between neuron count and temperature. https://www.gpeyre.com/blog/2026/10/24/convex-max-softmax-approximation/",
+      "status": "prepared",
+      "source_sha256": "77ecd13b2c49169b6d0883d5231bfc9701e0d6c3f147e82caa2310a7dd46f51a",
+      "base_commit": "49a1430dd0a4cb66bfdbfc84be0ce2115ec7307f",
+      "files": [
+        "blog/_posts/2026-10-24-convex-max-softmax-approximation.md",
+        "blog/preparations/convex-max-softmax-approximation.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "working_sha256": {
+        "blog/_posts/2026-10-24-convex-max-softmax-approximation.md": "a3d28d0f7cf374c5f00a40e48ec4c7ad5ed2012c9301c4780e29052ff2f79528",
+        "blog/preparations/convex-max-softmax-approximation.html": "a75792069cc0e2aefa095b25f75eee6b07663d09d387026a38e2e728c6d4b745",
+        "blog/preparations/index.html": "6e4fc86fe0f118d7110988a95a1270d9872aa9c223cd085678417bffff2d1f0a",
+        "js/blog-search-index.js": "f0840a84a02db11e44b1b08e9892b9e903914b3bf12804a5f185b5bbdc3e14fa"
+      },
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null
     }
   ]
 }
