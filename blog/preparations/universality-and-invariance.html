@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <meta name="keywords" content="universality, invariance, relative universality, graph neural networks, GNN, message passing, MPNN, convolutional graph networks, graph isomorphism, permutation invariance, permutation equivariance, marked graphs, node features, adjacency matrices, Weisfeiler-Leman, 1-WL, color refinement, multiset aggregation, sum pooling, common kernel, fiber relation, separation power, expressivity, Stone-Weierstrass theorem, approximate algebra, uniform approximation, feature concatenation, neural readout, ReLU interpolation, Waïss Azizian, Marc Lelarge, Floris Geerts, Juan Reutter, Nicolas Keriven, Gabriel Peyré, approximation universelle, invariance par permutation">
+  <meta name="description" content="Two questions for invariant neural networks: which inputs can they distinguish, and can they approximate every continuous function of those distinctions? A precise answer for message-passing GNNs, using 1-WL, feature concatenation, and Stone–Weierstrass.">
+  <title>Universality and invariance — Alpha preview — Gabriel Peyré</title>
+  <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/universality-and-invariance.html">
+  <link rel="stylesheet" href="assets/drafts.css">
+  <script defer src="assets/drafts.js"></script>
+  <script defer src="../../js/site-analytics.js"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+</head>
+<body>
+<header class="draft-header"><div class="wrap">
+  <a class="draft-back" href="index.html">← Forthcoming posts</a>
+  <p class="draft-status">Alpha preview · Work in progress</p>
+  <p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
+  <h1>Universality and invariance</h1>
+  <p class="subtitle">First ask what a network can distinguish. Then ask what it can do with that information.</p>
+  <p class="byline">Gabriel Peyré</p>
+</div></header>
+<main class="wrap"><article class="blog-prose">
+<p>A molecule does not change when we renumber its atoms. A network predicting a molecular property should therefore ignore this numbering. Building invariance into an architecture is natural—but it raises a second question: does the architecture forget <em>only</em> the numbering, or does it also erase distinctions that matter?</p>
+<p>Graph neural networks make this distinction particularly clear. Ordinary message passing cannot distinguish certain nonisomorphic graphs, however wide or deep the network becomes. Yet, with sufficiently flexible nonlinearities, it can approximate every continuous function that respects these additional identifications. This is a form of <em>relative universality</em>: universality relative to the information the architecture retains.</p>
+<p>There are two separate tasks. <em>Separation</em> identifies the pairs of inputs that every network confuses. <em>Approximation</em> asks whether the networks can express every continuous function of the distinctions that remain. The bridge is surprisingly simple: concatenate features, then apply a nonlinear readout. Waïss Azizian and Marc Lelarge formalized this mechanism for invariant and equivariant networks <a href="#ref-azizian">[4]</a>; Geerts and Reutter developed a broader account for GNNs <a href="#ref-geerts">[5]</a>. Let us work through a concrete version, including the proofs.</p>
+
+<h2>The kernel: what the whole family cannot see</h2>
+<p>Let \(\Omega\) be a compact metric space of inputs, and let \(\mathcal F\subset C(\Omega,\mathbb R)\) be a family of continuous scalar models. For a map \(f\), define its <em>fiber relation</em> by</p>
+\[
+  \ker(f)=\{(x,y):f(x)=f(y)\}.
+\]
+<p>The common kernel of the family is</p>
+\[
+  \operatorname{Ker}(\mathcal F)
+  =\bigcap_{f\in\mathcal F}\ker(f).
+\]
+<p>This is an equivalence relation, not a linear nullspace or a reproducing kernel. Two inputs are equivalent precisely when <em>no choice of network parameters or allowed architecture distinguishes them</em>. A smaller kernel means more separation power.</p>
+<p>For any equivalence relation \(R\) on \(\Omega\), write</p>
+\[
+  \mathcal H_R
+  =\{g\in C(\Omega,\mathbb R):(x,y)\in R\Rightarrow g(x)=g(y)\}.
+\]
+<p>Every uniform limit of models is constant on their common fibers. Thus, with closure taken in the uniform norm,</p>
+\[
+  \overline{\mathcal F}\subseteq\mathcal H_{\operatorname{Ker}(\mathcal F)}.
+\]
+<p>This is already an approximation obstruction: if all networks agree at \(x\) and \(y\), then every \(f\in\mathcal F\) satisfies</p>
+\[
+  \|g-f\|_\infty\ge\tfrac12|g(x)-g(y)|.
+\]
+<p>But the reverse inclusion is not automatic. Affine functions on \([0,1]\) distinguish every pair of points, while they cannot uniformly approximate \(x^2\). Knowing all distinctions is not the same as being able to combine them nonlinearly.</p>
+<details class="blog-proof">
+<summary>Proof: the affine approximation error is exactly 1/8</summary>
+<div class="blog-proof-body">
+<p>For \(e(x)=x^2-(ax+b)\), the second difference gives</p>
+\[
+  \tfrac12=e(0)-2e(1/2)+e(1)\le4\|e\|_\infty.
+\]
+<p>The affine map \(x\mapsto x-1/8\) attains the bound. Thus the common kernel is the diagonal, but the approximation error remains \(1/8\). \(\square\)</p>
+</div></details>
+
+<h2>Graphs with marks, and the invariance we want</h2>
+<p>Fix a maximum number of vertices \(N\) and a nonempty compact set of marks \(K\subset\mathbb R^p\). An input graph \(G=(A,X)\) with \(n\le N\) vertices consists of a symmetric adjacency matrix \(A\in\{0,1\}^{n\times n}\) with zero diagonal, and a matrix \(X\in K^n\) whose rows \(x_i\) are vertex features. These could encode atom types or continuous measurements. Edges here are unweighted; we do not add vertex identifiers.</p>
+<p>Let \(\mathcal A_n\) be the finite set of these adjacency matrices. Our input space is</p>
+\[
+  \Omega_N=\bigsqcup_{n=1}^N(\mathcal A_n\times K^n).
+\]
+<p>Use the discrete topology for adjacency matrices, the usual topology for marks, and the disjoint-union topology across graph sizes. This is compact. Continuity means continuity in the marks on each fixed graph; this post makes no claim about uniform approximation over graphs of unbounded size.</p>
+<p>A scalar graph function should be <em>permutation invariant</em>:</p>
+\[
+  f(PAP^\top,PX)=f(A,X)
+\]
+<p>for every permutation matrix \(P\). A vertex-valued map should instead be <em>equivariant</em>: relabeling the input relabels its output rows. These are symmetry requirements, not yet definitions of a particular neural architecture.</p>
+
+<h2>A precise convolutional GNN family</h2>
+<p>We use a sum-message-passing network, a simple convolutional GNN in the framework of Gilmer and coauthors <a href="#ref-gilmer">[1]</a>. Start with \(h_i^0=x_i\), then repeat, for \(\ell=0,\ldots,L-1\),</p>
+\[
+  s_i^\ell=\sum_{j=1}^n A_{ij}V_\ell(h_j^\ell),
+  \qquad
+  h_i^{\ell+1}=U_\ell(h_i^\ell,s_i^\ell).
+\]
+<p>The same maps are used at every vertex. The sum gathers messages from its neighbors; the update combines this neighborhood information with the vertex's own state. After \(L\) rounds, pool and read out:</p>
+\[
+  \phi(G)=\sum_{i=1}^n\rho(h_i^L)\in\mathbb R^q,
+  \qquad f(G)=m(\phi(G)).
+\]
+<p>Every \(U_\ell,V_\ell,\rho,m\) is a finite ReLU MLP with biases and a final affine output layer. Hidden widths, internal MLP depths, message dimensions, and \(q\) may vary. The scalar family with exactly \(L\) message-passing rounds is denoted \(\mathcal F_L\). <em>Here \(L\) counts communication rounds, not all neural layers inside the MLPs.</em></p>
+<p>All these functions are continuous. Relabeling merely permutes the states and the summation indices, so the states are equivariant and the final output is invariant. The last sum also recalls the invariant pooling in Deep Sets <a href="#ref-deepsets">[7]</a>.</p>
+<div class="note"><p>The flexibility of this definition matters. This is not a theorem about every architecture called a “GCN,” nor about a fixed width, mean aggregation, or a single affine graph convolution followed by ReLU. In particular, the degree-normalized architecture of Kipf and Welling <a href="#ref-gcn">[6]</a> is a narrower family. The nonlinear message map, the separate self-state input, and sum pooling will make the proof work.</p></div>
+
+<h2>Color refinement describes the common kernel</h2>
+<p>The one-dimensional Weisfeiler–Leman procedure, or <em>1-WL</em>, replaces neural states by exact symbolic descriptions. Its initial color is the mark. At each round, a vertex remembers its old color and the multiset of its neighbors' colors:</p>
+\[
+  c_i^0(G)=x_i,
+  \qquad
+  c_i^{\ell+1}(G)=
+  \left(c_i^\ell(G),\;\{\!\{c_j^\ell(G):A_{ij}=1\}\!\}\right).
+\]
+<p>The double braces denote a multiset: order is forgotten, but multiplicities are retained. The graph-level descriptor is the multiset of all vertex colors,</p>
+\[
+  c_L(G)=\{\!\{c_i^L(G):1\le i\le n\}\!\}.
+\]
+<p>Compare these descriptors with a shared color convention across graphs—for example, keep the formal tuples above, rather than assigning unrelated color numbers in separate runs. Colors are symbolic objects, not a claim that a discrete hash is continuous in real-valued marks. We use “1-WL” specifically for this vertex color-refinement procedure; indexing conventions for higher-order WL variants differ across papers.</p>
+
+<p id="theorem-1"><strong>Theorem 1 (the separation power of sum-message passing).</strong> On \(\Omega_N\), for every fixed \(L\ge0\),</p>
+\[
+  \operatorname{Ker}(\mathcal F_L)=\ker(c_L).
+\]
+<p>In words: two marked graphs have the same \(L\)-round color histogram if and only if every network in \(\mathcal F_L\) gives them the same output. The connection between message passing and WL was established by Xu and coauthors and by Morris and coauthors <a href="#ref-xu">[2]</a>, <a href="#ref-morris">[3]</a>. Here is a direct proof for the exact architecture and compact marked-graph space above.</p>
+
+<details class="blog-proof">
+<summary>Proof of Theorem 1: propagate colors, then encode a finite set</summary>
+<div class="blog-proof-body">
+<p><em>Networks cannot distinguish more than colors.</em> Fix any network. Equal initial colors give equal initial states. Inductively, equal next colors mean equal self-states and the same multiset of neighbor states, hence equal message sums and equal updated states. Equal graph color histograms therefore give equal pooled features and outputs. This proves \(\ker(c_L)\subseteq\operatorname{Ker}(\mathcal F_L)\).</p>
+<p><em>Every color distinction can be realized by some network.</em> Fix just two graphs \(G,H\) with different descriptors. Only finitely many marks and colors occur in this pair. The following elementary fact lets us encode them exactly.</p>
+<p id="lemma-2"><strong>Lemma 2 (finite ReLU interpolation).</strong> Given distinct points \(z_1,\ldots,z_r\in\mathbb R^a\) and arbitrary values \(y_1,\ldots,y_r\in\mathbb R^b\), a ReLU MLP can satisfy \(M(z_j)=y_j\) for every \(j\).</p>
+<details class="blog-proof">
+<summary>Proof of Lemma 2: project to a line and interpolate</summary>
+<div class="blog-proof-body">
+<p>Choose \(v\) outside the finitely many hyperplanes \(\langle v,z_i-z_j\rangle=0\). The numbers \(t_j=\langle v,z_j\rangle\) are distinct. A vector-valued piecewise affine curve through \((t_j,y_j)\) has the form</p>
+\[
+  q(t)=a+bt+\sum_k d_k(t-\tau_k)_+.
+\]
+<p>Thus \(M(z)=q(\langle v,z\rangle)\) is a ReLU MLP; its affine term is representable using \(t=t_+-(-t)_+\). The case \(r=1\) is constant interpolation. \(\square\)</p>
+</div></details>
+<p>Use \(V_0\) to send the finitely many distinct initial marks in \(G,H\) to different standard basis vectors. Then \(s_i^0\) is an exact histogram of neighbor colors. The distinct pairs \((h_i^0,s_i^0)\) correspond exactly to distinct next colors, so Lemma 2 supplies an update \(U_0\) encoding these by new basis vectors.</p>
+<p>Repeat: once states are basis vectors encoding colors, take the message map to be the identity, sum the resulting histograms, and interpolate the update on the finitely many encountered pairs. After \(L\) rounds, choose \(\rho\) to be the identity; sum pooling gives the final color histogram. A linear readout selects a coordinate where the two histograms differ. For \(L=0\), put the initial finite encoding in \(\rho\) instead. This constructs an \(f\in\mathcal F_L\) separating \(G,H\), proving the other inclusion. \(\square\)</p>
+</div></details>
+<p>The order of quantifiers is crucial: for <em>each pair</em> distinguished by WL, there exists a network separating it. We have not built one finite-dimensional continuous numerical hash of every possible color for every real-valued input. Pairwise separation is exactly what a common-kernel statement requires.</p>
+
+<h2>Invariance can hide more than a relabeling</h2>
+<p>Give every vertex the same mark. A six-cycle and two disjoint triangles both have six vertices, each with two neighbors of the same color. Every refinement round therefore keeps all six vertices identically colored in both graphs.</p>
+<figure>
+  <img src="assets/universality-invariance-wl.svg" width="840" height="300" alt="A six-cycle and two disjoint triangles, each with six identically colored degree-two vertices. They have the same 1-WL colors, but respectively zero and two triangles." loading="lazy" decoding="async">
+  <figcaption>Same vertex counts, same degrees, and the same colors at every round—yet different graphs. The drawing is schematic, not a numerical experiment.</figcaption>
+</figure>
+<p>Consequently, every network above assigns the same scalar to these two inputs, at every depth. But the triangle count</p>
+\[
+  t(G)=\tfrac16\operatorname{tr}(A^3)
+\]
+<p>is continuous on \(\Omega_N\), invariant under relabeling, and takes values \(0\) and \(2\). For \(N\ge6\), its uniform approximation error by these GNNs is at least \(1\). More neurons, a more powerful final MLP, or more message-passing rounds cannot recover a distinction already lost by this architecture.</p>
+<p>Depth does refine the kernel on other graphs. Define stable WL equivalence to mean equality of the graph color histograms at <em>every</em> round. On graphs of size at most \(N\), it suffices to compare at round \(2N\):</p>
+\[
+  G\sim_{\mathrm{WL}}H
+  \quad\Longleftrightarrow\quad c_{2N}(G)=c_{2N}(H).
+\]
+<details class="blog-proof">
+<summary>Why a bounded number of rounds suffices</summary>
+<div class="blog-proof-body">
+<p>Run refinement jointly on the disjoint union of the two graphs, with at most \(2N\) vertices. Each strict refinement increases the number of color classes. After at most \(2N-1\) such increases, the partition stabilizes. Once a round makes no further split, vertices in each class have the same neighbor-color counts, so no later round can split it either.</p>
+<p>If the graph histograms agree at round \(2N\), they agree at earlier rounds because every new color retains its predecessor. At this stage the joint partition is stable, so agreement also persists at all later rounds. Literal tuple labels keep growing; it is their <em>equality partition</em> that stabilizes. \(\square\)</p>
+</div></details>
+
+<h2>Stone–Weierstrass, without separating every input</h2>
+<p>We now turn from separation to approximation. The usual real Stone–Weierstrass theorem makes an algebra dense in all continuous functions when it contains constants and separates points <a href="#ref-stone">[8]</a>. What if some points are deliberately—or inevitably—identified?</p>
+<figure class="portrait-single">
+  <img src="assets/marshall-stone.jpg" width="1000" height="776" alt="Portrait of Marshall H. Stone in profile" loading="lazy" decoding="async">
+  <figcaption>Marshall H. Stone. <a href="https://photoarchive.lib.uchicago.edu/db.xqy?one=apf1-07972.xml">University of Chicago Photographic Archive, apf1-07972</a>, Hanna Holborn Gray Special Collections Research Center, University of Chicago Library. Used under the archive's <a href="https://photoarchive.lib.uchicago.edu/rights.html">educational and scholarly use permission</a>.</figcaption>
+</figure>
+<p id="theorem-3"><strong>Theorem 3 (relative Stone–Weierstrass).</strong> Let \(\mathcal F\subset C(\Omega,\mathbb R)\), with \(\Omega\) compact metric. If its uniform closure is a unital algebra, then</p>
+\[
+  \overline{\mathcal F}=\mathcal H_{\operatorname{Ker}(\mathcal F)}.
+\]
+<p>“Unital algebra” means containing constants and being stable under linear combinations and pointwise products. Only the <em>closure</em> needs these properties, as in the earlier post on <a href="/blog/2026/10/16/stone-weierstrass-approximate-products/">Stone–Weierstrass and universal approximation</a>. Non-point-separating versions of the theorem are developed by Timofte <a href="#ref-timofte">[9]</a> and used in the neural-network results of <a href="#ref-azizian">[4]</a>, <a href="#ref-geerts">[5]</a>.</p>
+<details class="blog-proof">
+<summary>Proof of Theorem 3: apply the usual theorem to what the family sees</summary>
+<div class="blog-proof-body">
+<p>Collect all model outputs in the evaluation map</p>
+\[
+  E:\Omega\longrightarrow\mathbb R^{\mathcal F},
+  \qquad E(x)=(f(x))_{f\in\mathcal F}.
+\]
+<p>The product topology makes \(E\) continuous. Its image \(Z=E(\Omega)\) is compact Hausdorff, and \(\ker(E)=\operatorname{Ker}(\mathcal F)\). A continuous \(g\) constant on these fibers factors as \(g=\widetilde g\circ E\), with \(\widetilde g\) continuous: the continuous surjection from compact \(\Omega\) onto Hausdorff \(Z\) is a quotient map.</p>
+<p>On \(Z\), coordinate functions separate points. The ordinary Stone–Weierstrass theorem approximates \(\widetilde g\) by polynomials in finitely many coordinates. Pulling back, it approximates \(g\) by expressions \(P(f_1,\ldots,f_r)\). Every such expression belongs to the closed unital algebra \(\overline{\mathcal F}\), so \(g\) belongs to it too. The opposite inclusion follows from constancy on common fibers. \(\square\)</p>
+</div></details>
+<p>This proof does not require a finite-dimensional sufficient statistic, or continuity of a chosen symbolic coloring. The compact space \(Z\) is the space of distinctions themselves.</p>
+
+<h2>The mechanism: concatenate features, then use an MLP</h2>
+<p>Let \(\Phi\) be a nonempty family of continuous feature maps \(\phi:\Omega\to\mathbb R^{d_\phi}\), where the finite dimension \(d_\phi\) can vary. Define</p>
+\[
+  \mathcal F_\Phi=\{m\circ\phi:\phi\in\Phi,\ m\text{ a scalar ReLU MLP}\}.
+\]
+<p>Assume that whenever \(\phi,\psi\in\Phi\), the joint feature map \(x\mapsto(\phi(x),\psi(x))\) also belongs to \(\Phi\). This is <em>stability under concatenation</em>: two feature extractors can be run side by side. There is no fixed bottleneck dimension.</p>
+<p id="proposition-4"><strong>Proposition 4 (parallel features and a universal readout).</strong> Under this assumption,</p>
+\[
+  \overline{\mathcal F_\Phi}=\mathcal H_{R_\Phi},
+  \qquad R_\Phi=\bigcap_{\phi\in\Phi}\ker(\phi).
+\]
+<p>This is the scalar, compact-domain version of the mechanism in Azizian–Lelarge, Theorem 5 <a href="#ref-azizian">[4]</a>. Here the architecture supplies concatenation; the MLP supplies nonlinear recombination.</p>
+<details class="blog-proof">
+<summary>Proof of Proposition 4: an approximate algebra</summary>
+<div class="blog-proof-body">
+<p>First, \(\operatorname{Ker}(\mathcal F_\Phi)=R_\Phi\). Equality of all features forces equality of every readout. Conversely, a differing coordinate of one feature map is detected by an affine readout, which is a ReLU MLP.</p>
+<p>Constants belong to the family. Given \(f=m\circ\phi\) and \(g=n\circ\psi\), concatenate the features. Parallel MLP branches followed by a linear output give \(af+bg\) exactly. To approximate the product, use ordinary MLP universality on the compact joint feature range for the continuous map \((u,v)\mapsto m(u)n(v)\). This proves \(fg\in\overline{\mathcal F_\Phi}\).</p>
+<details class="blog-proof">
+<summary>A constructive multiplier, without invoking MLP universality</summary>
+<div class="blog-proof-body">
+<p>Since \(f,g\) are bounded, choose \(M\) with \(|f|,|g|\le M\). Approximate \(t^2\) on \([-2M,2M]\) by a piecewise affine function \(q\) within \(\delta\). Linear splines are exactly ReLU networks. Polarization gives</p>
+\[
+  p(u,v)=\tfrac14\bigl(q(u+v)-q(u-v)\bigr),
+  \qquad |p(u,v)-uv|\le\delta/2
+\]
+<p>for \(|u|,|v|\le M\). Composing this small multiplier with the two readout branches stays within the class of finite ReLU MLPs. Let \(\delta\to0\).</p>
+</div></details>
+<p>Products of arbitrary elements of the closure also belong to the closure. Indeed, if \(f_k\to f\) and \(g_k\to g\) uniformly, then</p>
+\[
+  \|f_kg_k-fg\|_\infty
+  \le\|f_k\|_\infty\|g_k-g\|_\infty
+      +\|g\|_\infty\|f_k-f\|_\infty\longrightarrow0.
+\]
+<p>Uniform convergence bounds \(\|f_k\|_\infty\); approximate each \(f_kg_k\) within \(1/k\) by a model. Thus the closure is a unital algebra, and Theorem 3 applies. \(\square\)</p>
+</div></details>
+<p>The essential distinction is now visible. A good feature family determines the kernel. A sufficiently flexible readout lets us use <em>several</em> of its distinctions together. Neither ingredient substitutes for the other.</p>
+
+<h2>Applying the mechanism to GNNs</h2>
+<p>Let \(\Phi_L\) be the graph encoders \(\phi(G)=\sum_i\rho(h_i^L)\) defined above. Two such encoders can run in parallel: concatenate their hidden states and messages, use blockwise updates, and concatenate the final vertex readouts. Sum pooling then returns exactly \((\phi(G),\psi(G))\). In the first round, both branches simply read the same initial mark \(x_i\). For \(L=0\), concatenating \(\rho\) is enough.</p>
+<p>So \(\Phi_L\) is stable under concatenation. Theorem 1 identifies the common kernel, and Proposition 4 turns that identification into approximation:</p>
+<p id="corollary-5"><strong>Corollary 5 (relative universality of message-passing GNNs).</strong> For every fixed \(L\),</p>
+\[
+  \overline{\mathcal F_L}
+  =\{g\in C(\Omega_N,\mathbb R):c_L(G)=c_L(H)\Rightarrow g(G)=g(H)\}.
+\]
+<p>Equivalently, for every continuous target satisfying this fiber condition and every \(\varepsilon&gt;0\), some network in \(\mathcal F_L\) approximates it uniformly over <em>all</em> \(G\in\Omega_N\) within \(\varepsilon\). This is stronger than a separate interpolating network for each pair of graphs: compactness and Stone–Weierstrass turn pairwise separation into one global approximant.</p>
+<p>If \(\mathcal F=\bigcup_{L\ge0}\mathcal F_L\) allows arbitrary message-passing depth, then</p>
+\[
+  \overline{\mathcal F}
+  =\{g\in C(\Omega_N,\mathbb R):G\sim_{\mathrm{WL}}H\Rightarrow g(G)=g(H)\}.
+\]
+<details class="blog-proof">
+<summary>Proof of the arbitrary-depth statement</summary>
+<div class="blog-proof-body">
+<p>Every depth respects stable WL equivalence, so its uniform closure is contained in the displayed target class. Conversely, \(\mathcal F_{2N}\subset\mathcal F\), and \(c_{2N}\) already determines that equivalence. The fixed-depth corollary supplies the reverse inclusion. If encoders of different depths need to be concatenated, pad the shorter one with \(U(h,s)=h\), an exact ReLU MLP with an affine output. \(\square\)</p>
+</div></details>
+<p>These are existence theorems, not guarantees about training, useful widths, sample complexity, or approximation rates. They also do not say that a fixed finite feature map suffices for every accuracy. The dimensions and parameters can depend on the target and the required precision.</p>
+
+<h2>Two questions to carry to the next architecture</h2>
+<p>For graph classification, permutation invariance is the symmetry we ask for. WL equivalence describes the extra identifications imposed by this particular message-passing family. Achieving universality for <em>all</em> continuous permutation-invariant graph functions requires changing the architecture's separation power, not merely enlarging its final readout. Higher-order tensor constructions provide such routes, including my work with Nicolas Keriven <a href="#ref-keriven">[10]</a> and the work of Maron and coauthors <a href="#ref-maron">[11]</a>.</p>
+<p>The same method can guide the study of sets, signals, measures, and attention architectures. First characterize the common kernel: <em>which inputs always look the same?</em> Then exhibit a recombination mechanism: <em>can features be concatenated and their outputs multiplied, at least approximately?</em> Kernel analysis describes the available information. An approximate algebra turns it into a universality theorem.</p>
+
+<h2>References</h2>
+<ol class="references">
+  <li id="ref-gilmer">Justin Gilmer, Samuel S. Schoenholz, Patrick F. Riley, Oriol Vinyals, and George E. Dahl. <a href="https://proceedings.mlr.press/v70/gilmer17a.html"><em>Neural Message Passing for Quantum Chemistry</em></a>. ICML, PMLR 70, 1263–1272, 2017.</li>
+  <li id="ref-xu">Keyulu Xu, Weihua Hu, Jure Leskovec, and Stefanie Jegelka. <a href="https://arxiv.org/abs/1810.00826"><em>How Powerful are Graph Neural Networks?</em></a> ICLR, 2019.</li>
+  <li id="ref-morris">Christopher Morris, Martin Ritzert, Matthias Fey, William L. Hamilton, Jan Eric Lenssen, Gaurav Rattan, and Martin Grohe. <a href="https://doi.org/10.1609/aaai.v33i01.33014602"><em>Weisfeiler and Leman Go Neural: Higher-Order Graph Neural Networks</em></a>. AAAI 33(1), 4602–4609, 2019.</li>
+  <li id="ref-azizian">Waïss Azizian and Marc Lelarge. <a href="https://arxiv.org/abs/2006.15646"><em>Expressive Power of Invariant and Equivariant Graph Neural Networks</em></a>. ICLR, 2021.</li>
+  <li id="ref-geerts">Floris Geerts and Juan L. Reutter. <a href="https://arxiv.org/abs/2204.04661"><em>Expressiveness and Approximation Properties of Graph Neural Networks</em></a>. ICLR, 2022.</li>
+  <li id="ref-gcn">Thomas N. Kipf and Max Welling. <a href="https://arxiv.org/abs/1609.02907"><em>Semi-Supervised Classification with Graph Convolutional Networks</em></a>. ICLR, 2017.</li>
+  <li id="ref-deepsets">Manzil Zaheer, Satwik Kottur, Siamak Ravanbakhsh, Barnabás Póczos, Ruslan Salakhutdinov, and Alexander J. Smola. <a href="https://papers.nips.cc/paper/2017/hash/f22e4747da1aa27e363d86d40ff442fe-Abstract.html"><em>Deep Sets</em></a>. Advances in Neural Information Processing Systems 30, 2017.</li>
+  <li id="ref-stone">Marshall H. Stone. <em>The Generalized Weierstrass Approximation Theorem</em>. Mathematics Magazine 21, 167–184 and 237–254, 1948. <a href="https://doi.org/10.2307/3029750">Part I</a> · <a href="https://doi.org/10.2307/3029337">Part II</a>.</li>
+  <li id="ref-timofte">Vlad Timofte. <a href="https://doi.org/10.1016/j.jat.2005.05.004"><em>Stone–Weierstrass theorems revisited</em></a>. Journal of Approximation Theory 136(1), 45–59, 2005.</li>
+  <li id="ref-keriven">Nicolas Keriven and Gabriel Peyré. <a href="https://proceedings.neurips.cc/paper_files/paper/2019/hash/ea9268cb43f55d1d12380fb6ea5bf572-Abstract.html"><em>Universal Invariant and Equivariant Graph Neural Networks</em></a>. Advances in Neural Information Processing Systems 32, 2019.</li>
+  <li id="ref-maron">Haggai Maron, Ethan Fetaya, Nimrod Segol, and Yaron Lipman. <a href="https://proceedings.mlr.press/v97/maron19a.html"><em>On the Universality of Invariant Networks</em></a>. ICML, PMLR 97, 4363–4371, 2019.</li>
+</ol>
+</article></main>
+<footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Blog</a> · <a href="/privacy/">Privacy &amp; audience measurement</a></div></footer>
+</body>
+</html>

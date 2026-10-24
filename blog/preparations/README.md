@@ -24,6 +24,19 @@ New standalone articles must include the shared analytics loader
 It counts only top-level visits on the production domain, not local tests or
 embedded experiments. See the audience-measurement section in `../README.md`.
 
+## Universality and invariance
+
+`universality-and-invariance.html` separates common-kernel analysis from uniform
+approximation. It works on a compact finite disjoint union of marked simple
+graphs of bounded size. A precisely defined sum-message-passing family matches
+vertex color refinement (1-WL), with a pairwise finite ReLU interpolation proof
+that does not assume globally continuous discrete hashes for real-valued marks.
+Concatenation and a final MLP supply the approximate algebra needed for relative
+Stone–Weierstrass. Proofs are folded, with the interpolation and multiplication
+details nested inside their parent arguments. The static six-cycle/two-triangle
+diagram is not a numerical experiment. The Stone portrait reuses the existing
+asset with its archival credit and scholarly-use link.
+
 ## The hump algebra
 
 `hump-algebra.html` develops Meyer's signed, peak-normalized, isotropic Gaussian

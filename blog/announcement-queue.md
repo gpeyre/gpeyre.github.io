@@ -263,3 +263,11 @@ Topic: OT / Wasserstein geometry
 - [ ] Ready to publish
 
 > How can transport compare histograms with no given ground geometry? Wasserstein singular vectors learn sample and feature distances from each other. A fixed-point argument closes the loop. https://www.gpeyre.com/blog/preparations/wasserstein-singular-vectors.html
+
+## 33. Universality and invariance
+
+Topic: Other topics
+
+- [ ] Ready to publish
+
+> What can a neural network distinguish—and approximate? For GNNs, 1-WL describes the blind spots. Concatenating features and adding an MLP turns separation into relative universality. https://www.gpeyre.com/blog/preparations/universality-and-invariance.html

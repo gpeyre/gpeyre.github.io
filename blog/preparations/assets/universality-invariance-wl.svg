@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 300" role="img" aria-labelledby="title desc">
+  <title id="title">Same 1-WL colors, different graphs</title>
+  <desc id="desc">A cycle on six vertices and two disjoint triangles. All vertices have the same mark and degree two. Color refinement cannot tell the graphs apart, but their triangle counts are zero and two.</desc>
+  <rect width="840" height="300" rx="12" fill="#f0f6f5"/>
+  <path d="M420 24V276" stroke="#c6d8d7"/>
+  <g fill="#1d343c" font-family="system-ui,sans-serif" text-anchor="middle">
+    <text x="210" y="38" font-size="20" font-weight="600">One six-cycle</text>
+    <text x="630" y="38" font-size="20" font-weight="600">Two triangles</text>
+    <text x="210" y="267" font-size="17">0 triangles</text>
+    <text x="630" y="267" font-size="17">2 triangles</text>
+  </g>
+  <g stroke="#62878a" stroke-width="3" fill="none" stroke-linejoin="round">
+    <path d="M210 76L280 116L280 196L210 236L140 196L140 116Z"/>
+    <path d="M540 91L481 199L599 199Z M720 91L661 199L779 199Z"/>
+  </g>
+  <g fill="#087c83" stroke="#fff" stroke-width="3">
+    <circle cx="210" cy="76" r="12"/><circle cx="280" cy="116" r="12"/>
+    <circle cx="280" cy="196" r="12"/><circle cx="210" cy="236" r="12"/>
+    <circle cx="140" cy="196" r="12"/><circle cx="140" cy="116" r="12"/>
+    <circle cx="540" cy="91" r="12"/><circle cx="481" cy="199" r="12"/><circle cx="599" cy="199" r="12"/>
+    <circle cx="720" cy="91" r="12"/><circle cx="661" cy="199" r="12"/><circle cx="779" cy="199" r="12"/>
+  </g>
+</svg>
