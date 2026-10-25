@@ -166,6 +166,32 @@
         "mime_type": "image/jpeg",
         "size": 44903
       }
+    },
+    {
+      "slug": "lagrangian-density-interpolation",
+      "title": "Interpolating measures by a Lagrangian flow",
+      "date": "2026-10-25",
+      "url": "https://www.gpeyre.com/blog/2026/10/25/lagrangian-density-interpolation/",
+      "message": "Can a density cross-fade be realized by moving particles? Moser’s construction does it for smooth positive densities: solve a Poisson equation, divide by density, then follow the flow. https://www.gpeyre.com/blog/2026/10/25/lagrangian-density-interpolation/",
+      "status": "prepared",
+      "source_sha256": "6eeb540ec22c03fc578abd01f8d8a80ddaf11db83d776d659054cf24a85a4848",
+      "base_commit": "8dc40f4e04c4111d3d1239e18538678a1538e870",
+      "files": [
+        "blog/_posts/2026-10-25-lagrangian-density-interpolation.md",
+        "blog/preparations/lagrangian-density-interpolation.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "working_sha256": {
+        "blog/_posts/2026-10-25-lagrangian-density-interpolation.md": "e4e3c65036a215441e9d896932bd8b35ef692e53b197603275b405832709b1dc",
+        "blog/preparations/lagrangian-density-interpolation.html": "21f649f43d2268b146de35e8f625958336fc3c01afa10a05cbc00b44b7b4cbc1",
+        "blog/preparations/index.html": "c4a168269920951e98ea4555311329ea0e15dcc1c6d9c5c5e2b26e0580b59289",
+        "js/blog-search-index.js": "fa55396d681dac2c23d6f5cd5ddbb5906e0271115ac7d297fe84214759f56d81"
+      },
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null
     }
   ]
 }

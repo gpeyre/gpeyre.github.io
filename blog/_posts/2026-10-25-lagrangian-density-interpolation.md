@@ -1,0 +1,227 @@
+---
+title: Interpolating measures by a Lagrangian flow
+subtitle: First choose how the density changes. Then find the motion that makes it
+  happen.
+description: 'Moser’s construction turns a prescribed path of positive densities into
+  moving particles: solve one Poisson equation, divide the flux by the density, and
+  integrate a flow.'
+date: '2026-10-25'
+topic: Transport geometry
+keywords:
+- Lagrangian flow
+- Moser interpolation
+- Dacorogna–Moser theorem
+- density interpolation
+- continuity equation
+- pushforward measure
+- transport map
+- prescribed Jacobian
+- Poisson equation
+- Neumann boundary condition
+- periodic domain
+- torus
+- Eulerian velocity
+- Lagrangian trajectories
+- flux
+- positive density
+- probability measure
+- mass conservation
+- Jacobian determinant
+- ordinary differential equation
+- Fourier Poisson solver
+- optimal transport
+- Benamou–Brenier formula
+- Wasserstein geodesic
+- cumulative distribution
+- quantile
+- Jürgen Moser
+- Bernard Dacorogna
+- interpolation de mesures
+- équation de continuité
+proofs: true
+embedded_experiment: true
+---
+
+Two pictures of a probability distribution suggest two different ways to interpolate it. One can blend their densities, as in a cross-fade. Or one can move the particles, carrying every bit of mass from its starting point to a destination. Can these pictures describe exactly the same evolution?
+
+Moser’s construction gives a beautiful affirmative answer for smooth, strictly positive densities. Prescribe the density path, solve a divergence equation for its flux, then divide by the density to recover a velocity. The nonlinear-looking transport problem reduces to one Poisson solve and an ordinary differential equation. The idea originates in Moser’s theorem on volume forms [[1]](#ref-moser); Dacorogna and Moser developed the prescribed-Jacobian problem further [[2]](#ref-dm).
+
+<!--more-->
+
+<figure class="portrait-single"><img src="{{ '/blog/preparations/assets/new-dynamics/jurgen-moser.jpg' | relative_url }}" width="270" height="400" alt="Jürgen Moser in Tokyo in 1969, photographed by Konrad Jacobs" loading="lazy"><figcaption>Jürgen Moser (1928–1999), Tokyo, 1969. Konrad Jacobs / <a href="https://opc.mfo.de/detail?photo_id=7503">Oberwolfach Photo Collection</a>, via <a href="https://commons.wikimedia.org/wiki/File:J%C3%BCrgen_Moser.jpeg">Wikimedia Commons</a>; <a href="https://creativecommons.org/licenses/by-sa/2.0/de/deed.en">CC BY-SA 2.0 Germany</a>. Image unchanged.</figcaption></figure>
+
+## Moving particles, moving measures
+
+Let $$T_t(x)$$ be the position at time $$t$$ of a particle starting at $$x$$. A time-dependent velocity $$v_t$$ generates the flow
+
+$$
+\frac{d}{dt}T_t(x)=v_t(T_t(x)),
+ \qquad T_0(x)=x.
+$$
+
+Starting from a probability measure $$\mu_0$$, its transported law is the *pushforward* $$\mu_t=(T_t)_\#\mu_0$$. This means $$\mu_t(A)=\mu_0(T_t^{-1}(A))$$ for every measurable set $$A$$, or, equivalently,
+
+$$
+\int\varphi(y)\,d\mu_t(y)
+ =\int\varphi(T_t(x))\,d\mu_0(x).
+$$
+
+The trajectories are the Lagrangian description. Differentiating this identity for smooth test functions gives the Eulerian description:
+
+$$
+\partial_t\rho_t+\nabla\cdot(\rho_tv_t)=0,
+ \qquad \mu_t=\rho_t\,dx.
+$$
+
+Density times velocity is the flux $$j_t=\rho_tv_t$$. Thinking in terms of flux is the useful change of viewpoint: after prescribing $$\rho_t$$, the continuity equation is linear in $$j_t$$.
+
+## A density cross-fade realized by a flow
+
+To avoid boundary distractions, work first on the unit flat torus $$\mathbb T^d=\mathbb R^d/\mathbb Z^d$$: opposite faces of the unit cube are identified. Let $$\rho_0,\rho_1$$ be smooth probability densities with $$\rho_i\ge c>0$$. Prescribe
+
+$$
+\rho_t=(1-t)\rho_0+t\rho_1,
+ \qquad 0\le t\le1.
+$$
+
+Because $$\int(\rho_0-\rho_1)=0$$, the periodic Poisson problem
+
+$$
+\Delta u=\rho_0-\rho_1,
+ \qquad \int_{\mathbb T^d}u=0
+$$
+
+has a unique smooth solution. Choose the *time-independent* flux $$j=\nabla u$$, and the time-dependent velocity
+
+$$
+v_t=\frac{\nabla u}{(1-t)\rho_0+t\rho_1}.
+$$
+
+<span id="theorem-1"></span>
+
+**Theorem 1 (Moser interpolation on the torus).** Under these assumptions, $$v_t$$ generates a smooth flow of diffeomorphisms, and
+
+$$
+(T_t)_\#(\rho_0\,dx)=\rho_t\,dx
+ \quad\text{for every }t\in[0,1].
+$$
+
+In particular, $$T_1$$ transports the first prescribed density to the second.
+
+<details class="blog-proof">
+
+<summary>Proof: the continuity equation along a trajectory</summary>
+
+<div class="blog-proof-body" markdown="1">
+
+The lower bound $$\rho_t\ge c$$ makes $$v_t$$ smooth on the compact torus, so its flow exists globally on this time interval and is a diffeomorphism. The crucial identity is only one line:
+
+$$
+\partial_t\rho_t+\nabla\cdot(\rho_tv_t)
+ =\rho_1-\rho_0+\Delta u=0.
+$$
+
+To see directly why this transports the measure, use the Jacobian formula for the flow:
+
+$$
+\frac d{dt}\det DT_t(x)
+ =\big(\nabla\cdot v_t\big)(T_t(x))\det DT_t(x).
+$$
+
+The chain rule therefore gives
+
+$$
+\frac d{dt}\left[\rho_t(T_t(x))\det DT_t(x)\right]=0.
+$$
+
+At time zero the bracket is $$\rho_0(x)$$. The resulting change-of-variables identity is precisely the pushforward statement. $$\square$$
+
+</div>
+
+</details>
+
+This also explains the prescribed-Jacobian viewpoint. The endpoint satisfies
+
+$$
+\rho_1(T_1(x))\det DT_1(x)=\rho_0(x).
+$$
+
+If the target is the uniform density, this becomes $$\det DT_1=\rho_0$$. The flow converts a linear divergence equation into a nonlinear determinant equation.
+
+## Boundaries and low-density regions
+
+On a smooth connected bounded domain $$\Omega$$, use a Neumann problem instead:
+
+$$
+\Delta u=\rho_0-\rho_1,
+ \qquad \partial_nu=0\ \text{on }\partial\Omega,
+ \qquad \int_\Omega u=0.
+$$
+
+The compatibility condition is again equality of total mass. Under the same smoothness and positivity assumptions up to the boundary, $$v_t\cdot n=0$$, so the velocity is tangent to the boundary and its flow preserves the domain. This does *not* assert that every boundary point stays fixed. Boundary-fixing and support-control versions require more careful constructions, as in [[2]](#ref-dm), [[3]](#ref-teixeira).
+
+Positivity is central, not cosmetic. A moderate flux crossing a region with density $$10^{-3}$$ requires a velocity a thousand times larger than the same flux in a region of density one. Quantitatively, $$\lvert v_t\rvert\le\lvert \nabla u\rvert/c$$. Removing the lower bound can destroy this simple regular-flow construction, even when other transport maps still exist.
+
+## One dimension makes the whole flow explicit
+
+On $$[0,1]$$, define the cumulative distributions $$F_i(x)=\int_0^x\rho_i(s)\,ds$$, and $$F_t=(1-t)F_0+tF_1$$. The no-flux solution has $$j(x)=F_0(x)-F_1(x)$$.
+
+<span id="proposition-1"></span>
+
+**Proposition 1 (quantiles follow the density blend).** For positive smooth densities on the interval, the Moser flow is
+
+$$
+T_t=F_t^{-1}\circ F_0.
+$$
+
+<details class="blog-proof">
+
+<summary>Proof: keep the cumulative mass label fixed</summary>
+
+<div class="blog-proof-body" markdown="1">
+
+Implicitly differentiate $$F_t(T_t(x))=F_0(x)$$. Since $$\partial_tF_t=F_1-F_0=-j$$ and $$\partial_xF_t=\rho_t$$,
+
+$$
+\dot T_t(x)=\frac{j(T_t(x))}{\rho_t(T_t(x))}=v_t(T_t(x)).
+$$
+
+The initial condition is $$T_0(x)=x$$, proving the claim. $$\square$$
+
+</div>
+
+</details>
+
+The endpoint $$F_1^{-1}\circ F_0$$ is the monotone optimal map for quadratic transport in one dimension. The *path* is nevertheless generally not the Wasserstein geodesic: a geodesic interpolates quantiles linearly, whereas we interpolate densities linearly.
+
+## A constructive transport, not generally an optimal one
+
+The divergence equation has many flux solutions: any divergence-free field can be added to $$j$$. Choosing $$j=\nabla u$$ selects the smallest unweighted $$L^2$$ flux norm, because gradients are orthogonal to divergence-free fields. But optimal transport minimizes a different quantity, the kinetic action
+
+$$
+\int_0^1\int\rho_t|v_t|^2\,dx\,dt
+ =\int_0^1\int\frac{|j_t|^2}{\rho_t}\,dx\,dt,
+$$
+
+over *both* density paths and fluxes with the given endpoints [[4]](#ref-bb). Even with the path fixed, minimizing this weighted norm gives $$j_t=\rho_t\nabla\phi_t$$, with $$\nabla\cdot(\rho_t\nabla\phi_t)=-\partial_t\rho_t$$, not in general the unweighted Poisson flux. Moser’s construction trades optimality for simplicity.
+
+The same idea works for a smooth positive density path beyond a linear blend: solve $$\Delta u_t=-\partial_t\rho_t$$, then set $$v_t=\nabla u_t/\rho_t$$. Usually one Poisson solve is needed at each time. A linear blend is special because its flux can be chosen once and for all; see also the discussion in my book [[5]](#ref-book). This viewpoint is useful in transport-based generative modeling: flow matching learns velocity fields from a chosen probability path [[6]](#ref-flow).
+
+## Numerical experimentation
+
+Three periodic Gaussian bumps and a positive uniform background define each endpoint below. Particles follow the constructed velocity, while the density heatmap follows the prescribed blend. Move time back and forth, then reduce the background to expose the price of transporting through nearly empty space.
+
+<iframe class="idea-experiment" data-experiment="moser" src="{{ '/blog/preparations/assets/new-dynamics/index.html' | relative_url }}?topic=moser" title="Periodic Moser interpolation with density, speed, and moving particles" loading="lazy" style="height:1000px"></iframe>
+
+The density is prescribed analytically and sampled on a periodic grid; the particle picture is a finite numerical approximation. Exact mass of the prescribed density does not mean the finite particle histogram must agree pointwise. Spatial interpolation, ODE error, and ordinary sampling fluctuations remain visible. The same Poisson machinery reappears in [incompressible fluid projection]({{ '/blog/preparations/stable-fluids.html' | relative_url }}), but there it removes the compressible part of a velocity rather than constructing a prescribed density change.
+
+## Bibliography
+
+<ol class="references">
+<li id="ref-moser">Jürgen Moser. <em>On the Volume Elements on a Manifold</em>. Transactions of the American Mathematical Society 120(2), 286–294, 1965. <a href="https://doi.org/10.1090/S0002-9947-1965-0182927-5">Paper</a>.</li>
+<li id="ref-dm">Bernard Dacorogna and Jürgen Moser. <em>On a partial differential equation involving the Jacobian determinant</em>. Annales de l’Institut Henri Poincaré C, Analyse non linéaire 7(1), 1–26, 1990. <a href="https://archive.numdam.org/item/AIHPC_1990__7_1_1_0/">Paper</a>.</li>
+<li id="ref-teixeira">Pedro Teixeira. <em>Dacorogna–Moser theorem on the Jacobian determinant equation with control of support</em>. Discrete and Continuous Dynamical Systems 37(7), 4071–4089, 2017. <a href="https://arxiv.org/abs/1608.06213">Paper</a>.</li>
+<li id="ref-bb">Jean-David Benamou and Yann Brenier. <em>A computational fluid mechanics solution to the Monge–Kantorovich mass transfer problem</em>. Numerische Mathematik 84, 375–393, 2000. <a href="https://doi.org/10.1007/s002110050002">Paper</a>.</li>
+<li id="ref-book">Gabriel Peyré. <em>Optimal Transport for Machine Learners</em>. <a href="https://www.gpeyre.com/ot4ml/">Online book</a>, chapter on evolutions over the space of measures.</li>
+<li id="ref-flow">Yaron Lipman, Ricky T. Q. Chen, Heli Ben-Hamu, Maximilian Nickel, and Matt Le. <em>Flow Matching for Generative Modeling</em>. ICLR, 2023. <a href="https://arxiv.org/abs/2210.02747">Paper</a>.</li>
+</ol>
