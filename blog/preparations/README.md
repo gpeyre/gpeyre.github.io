@@ -24,6 +24,18 @@ New standalone articles must include the shared analytics loader
 It counts only top-level visits on the production domain, not local tests or
 embedded experiments. See the audience-measurement section in `../README.md`.
 
+## Universal approximation from one nonlinearity
+
+`universality-from-one-nonlinearity.html` develops the real uniform-density
+consequence of de Leeuw–Katznelson. Approximate nonlinear operation passes to
+the uniform closure; an affine-line restriction reduces to one variable;
+mollification and a central Taylor difference recover squares and products.
+Nested proofs explain the line-restriction and averaging lemmas. The neural
+corollary allows arbitrary finite computation graphs with skip connections,
+and distinguishes non-affinity at growing depth from nonpolynomiality for a
+single hidden layer. It does not claim weight or approximation-rate bounds.
+Stone and Weierstrass portraits reuse the existing credited blog assets.
+
 ## Universality and invariance
 
 `universality-and-invariance.html` separates common-kernel analysis from uniform

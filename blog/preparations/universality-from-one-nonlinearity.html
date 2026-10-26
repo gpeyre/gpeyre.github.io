@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <meta name="keywords" content="universal approximation, universality, Stone-Weierstrass theorem, de Leeuw-Katznelson theorem, Karel de Leeuw, Yitzhak Katznelson, Marshall Stone, Karl Weierstrass, operating functions, nonlinear composition, pointwise operations, non-affine activation, uniform closure, approximate algebra, approximate products, separating points, compact Hausdorff space, continuous functions, real function spaces, Taylor expansion, central differences, polarization identity, mollification, smoothing, absolute value, maximum, lattice approximation, ReLU, neural networks, deep networks, computation graphs, skip connections, nonpolynomial activation, polynomial activation, exponential features, approximation universelle">
+  <meta name="description" content="Stone–Weierstrass beyond products: closure under any one continuous non-affine operation already yields universal approximation. A short proof through Taylor expansion, smoothing, and a careful distinction between deep and shallow networks.">
+  <title>Universal approximation from one nonlinearity — Alpha preview — Gabriel Peyré</title>
+  <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/universality-from-one-nonlinearity.html">
+  <link rel="stylesheet" href="assets/drafts.css">
+  <script defer src="assets/drafts.js"></script>
+  <script defer src="../../js/site-analytics.js"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:false}}});
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+</head>
+<body>
+<header class="draft-header"><div class="wrap">
+  <a class="draft-back" href="index.html">← Forthcoming posts</a>
+  <p class="draft-status">Alpha preview · Work in progress</p>
+  <p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
+  <h1>Universal approximation from one nonlinearity</h1>
+  <p class="subtitle">Multiplication is not essential to Stone–Weierstrass. A single continuous non-affine operation can recover it.</p>
+  <p class="byline">Gabriel Peyré</p>
+</div></header>
+<main class="wrap"><article class="blog-prose">
+<p>The Stone–Weierstrass theorem is one of the great shortcuts of approximation theory. Instead of constructing an approximation to each continuous function by hand, check that a linear family contains constants, distinguishes points, and is stable under multiplication. Universality follows.</p>
+<p>But multiplication can feel like the wrong primitive. Neural networks use activations, not products. Other models combine functions using a maximum, an absolute value, or a smooth saturation. Must we build a separate multiplication gadget for each of them?</p>
+<p>A beautiful extension due to Karel de Leeuw and Yitzhak Katznelson says that, in a real linear function space, <em>any continuous non-affine operation is enough</em> <a href="#ref-deleeuw">[2]</a>. Approximate closure under that operation already forces approximate closure under products. The proof explains why: smooth curvature reveals a square, and smoothing reveals curvature even when the original nonlinearity has corners.</p>
+
+<figure class="portrait-pair">
+  <div class="portrait-pair-images">
+    <div><img src="../imgs/marshall-stone.jpg" width="1000" height="776" alt="Portrait of Marshall H. Stone in profile" loading="lazy" decoding="async"><p>Marshall H. Stone</p></div>
+    <div><img src="../imgs/karl-weierstrass.jpg" width="901" height="1322" alt="Portrait of Karl Weierstrass with his signature below" loading="lazy" decoding="async"><p>Karl Weierstrass</p></div>
+  </div>
+  <figcaption>Stone: <a href="https://photoarchive.lib.uchicago.edu/db.xqy?one=apf1-07972.xml">University of Chicago Photographic Archive, apf1-07972</a>, Hanna Holborn Gray Special Collections Research Center, University of Chicago Library; <a href="https://photoarchive.lib.uchicago.edu/rights.html">educational and scholarly use permission</a>.<br>Weierstrass: Smithsonian Institution Libraries, via <a href="https://commons.wikimedia.org/wiki/File:Karl_Weierstrass.jpg">Wikimedia Commons</a>, public domain.</figcaption>
+</figure>
+
+<h2>First, products only need to exist in the closure</h2>
+<p>Let \(K\) be a compact Hausdorff space. We work with <em>real-valued</em> continuous functions and the uniform norm</p>
+\[
+  \|f\|_\infty=\sup_{x\in K}|f(x)|.
+\]
+<p>Let \(V\subset C(K,\mathbb R)\) be a real linear subspace containing the constant function \(1\). Assume it <em>separates points</em>: whenever \(x\ne y\), some \(f\in V\) satisfies \(f(x)\ne f(y)\). Write \(A=\overline V\) for its uniform closure.</p>
+<p>The classical Stone–Weierstrass theorem says that \(V\) is dense if it is also an algebra: \(fg\in V\) for every \(f,g\in V\) <a href="#ref-stone">[1]</a>. A useful reformulation, discussed in an <a href="/blog/2026/10/16/stone-weierstrass-approximate-products/">earlier post</a>, only asks for approximate products.</p>
+<p id="theorem-1"><strong>Theorem 1 (approximate products suffice).</strong> Under the assumptions above, if</p>
+\[
+  \inf_{u\in V}\|u-fg\|_\infty=0
+\]
+<p>for every \(f,g\in V\), then \(A=C(K,\mathbb R)\).</p>
+<details class="blog-proof">
+<summary>Proof of Theorem 1: the closure is an algebra</summary>
+<div class="blog-proof-body">
+<p>Given \(f,g\in A\), choose \(f_n,g_n\in V\) converging uniformly to them. Each \(f_ng_n\) belongs to \(A\) by assumption, and</p>
+\[
+  \begin{aligned}
+  &\|f_ng_n-fg\|_\infty\\
+  &\quad\le \|f_n\|_\infty\|g_n-g\|_\infty\\
+  &\qquad+\|g\|_\infty\|f_n-f\|_\infty
+  \longrightarrow0.
+  \end{aligned}
+\]
+<p>Here \(\|f_n\|_\infty\) stays bounded. Thus \(fg\in A\). The closed space \(A\) is a unital algebra separating points, so classical Stone–Weierstrass gives \(A=C(K,\mathbb R)\). Conversely, if \(A\) is an algebra, every product of members of \(V\) belongs to \(A\), exactly the approximate-product condition. \(\square\)</p>
+</div></details>
+<p>Polynomials restricted to a compact subset of \(\mathbb R^d\) are an exact algebra separating points. So are real trigonometric polynomials on a torus: products reduce to sums of Fourier modes. This proves density, not convergence of the ordinary Fourier partial sums of every continuous function.</p>
+<p>Another useful example is the span of \(x\mapsto e^{w\cdot x}\), with \(w\in\mathbb R^d\). It contains constants, separates points, and satisfies \(e^{u\cdot x}e^{v\cdot x}=e^{(u+v)\cdot x}\). For deep ReLU networks, by contrast, products need not be networks exactly; approximate products suffice. The next theorem lets us bypass even that construction.</p>
+
+<h2>Replace multiplication by one nonlinear operation</h2>
+<p>Fix \(s\ge1\) and a continuous map \(h:\mathbb R^s\to\mathbb R\). It acts on functions <em>pointwise</em>:</p>
+\[
+  h(f_1,\ldots,f_s)(x)
+  =h\bigl(f_1(x),\ldots,f_s(x)\bigr).
+\]
+<p>We say that \(h\) <em>operates on</em> \(A\) when this function lies in \(A\) for every \(f_1,\ldots,f_s\in A\). Non-affine means that \(h\) is not of the form \(a\cdot z+b\).</p>
+<p id="theorem-2"><strong>Theorem 2 (de Leeuw–Katznelson, a multivariable formulation).</strong> Let \(V\subset C(K,\mathbb R)\) be a real linear subspace containing constants and separating points. Suppose that, for one continuous non-affine \(h:\mathbb R^s\to\mathbb R\),</p>
+\[
+  \inf_{u\in V}\|u-h(f_1,\ldots,f_s)\|_\infty=0
+\]
+<p>for every \(f_1,\ldots,f_s\in V\). Then \(\overline V=C(K,\mathbb R)\).</p>
+<p>This is the real uniform-approximation consequence of the operating-functions theorem of de Leeuw and Katznelson <a href="#ref-deleeuw">[2]</a>; later accounts include <a href="#ref-briem">[3]</a> and <a href="#ref-hatori">[4]</a>. Its scalar version can even be formulated for an operation defined only on an interval, applied to functions taking values there. We use globally defined operations to keep the argument transparent. The multivariable version reduces to the scalar one along an affine line.</p>
+<div class="note"><p>“Stable” here means <em>closed, up to uniform approximation, under a pointwise operation</em>. It is not a statement about robustness to perturbing the input or about bounded network weights. We keep linear combinations and constants; only the product hypothesis is being replaced.</p></div>
+
+<h2>Why smooth curvature gives multiplication</h2>
+<p>First suppose the operation is scalar and \(C^2\), denoted \(\sigma:\mathbb R\to\mathbb R\), and that it operates on the closed space \(A\). Since \(\sigma\) is non-affine, some \(b\) satisfies \(\sigma''(b)\ne0\). For \(f\in A\), form the central difference</p>
+\[
+  Q_t(f)=
+  \frac{\sigma(b+tf)+\sigma(b-tf)-2\sigma(b)}
+       {t^2\sigma''(b)},\qquad t\ne0.
+\]
+<p>Constants, linear combinations, and the operation \(\sigma\) keep \(Q_t(f)\) in \(A\). Taylor expansion cancels the constant and linear terms, leaving</p>
+\[
+  Q_t(f)\longrightarrow f^2
+  \quad\text{uniformly as }t\longrightarrow0.
+\]
+<p>Closedness gives squares; polarization gives products:</p>
+\[
+  fg=\frac{(f+g)^2-(f-g)^2}{4}.
+\]
+<p>That is the whole mechanism. A small amount of curvature, viewed at the right offset and scale, recovers the algebra structure.</p>
+<details class="blog-proof">
+<summary>Why the Taylor limit is uniform</summary>
+<div class="blog-proof-body">
+<p>Put \(M=\|f\|_\infty\). Taylor's formula with integral remainder gives, for every real \(z\),</p>
+\[
+  \sigma(b+z)+\sigma(b-z)-2\sigma(b)
+  =z^2\!\int_0^1(1-r)
+    \bigl[\sigma''(b+rz)+\sigma''(b-rz)\bigr]\,dr.
+\]
+<p>Taking \(z=tf(x)\), we obtain</p>
+\[
+  \|Q_t(f)-f^2\|_\infty
+  \le \frac{M^2}{|\sigma''(b)|}
+      \sup_{|u-b|\le |t|M}|\sigma''(u)-\sigma''(b)|
+  \longrightarrow0.
+\]
+<p>Only continuity of the second derivative near \(b\) is needed. \(\square\)</p>
+</div></details>
+<p>A useful sanity check is \(\sigma(t)=t^3\). Its curvature vanishes at the origin, but shifting to \(b=1\) gives the exact identity</p>
+\[
+  \frac{(1+tf)^3+(1-tf)^3-2}{6t^2}=f^2.
+\]
+<p>The constants are doing real work: one must be free to move to a point where the nonlinearity has curvature.</p>
+
+<h2>Corners are enough: the general proof</h2>
+<p>The absolute value and ReLU have no classical second derivative at their corner. Yet averaging nearby translates smooths the corner without losing the ability to operate on \(A\). This supplies the missing curvature. The same argument works for any continuous non-affine operation, however irregular.</p>
+<details class="blog-proof">
+<summary>Proof of Theorem 2: pass to the closure, restrict to a line, and smooth</summary>
+<div class="blog-proof-body">
+<p><em>Step 1: the operation passes to the closure.</em> Let \(A=\overline V\) and \(f_j\in A\). Choose \(f_{j,n}\in V\) converging uniformly to \(f_j\), for \(j=1,\ldots,s\). Their joint ranges lie in one compact box. Uniform continuity of \(h\) on that box implies</p>
+\[
+  h(f_{1,n},\ldots,f_{s,n})
+  \longrightarrow h(f_1,\ldots,f_s)
+  \quad\text{uniformly}.
+\]
+<p>The functions on the left belong to \(A\) by the approximate-operation hypothesis. Closedness therefore puts the limit in \(A\): \(h\) operates on \(A\).</p>
+<p><em>Step 2: find a scalar nonlinearity.</em> Some affine line has a non-affine restriction</p>
+\[
+  \sigma(t)=h(a+tv),\qquad a,v\in\mathbb R^s.
+\]
+<p>Because each \(a_j+v_jf\) belongs to \(A\), the scalar function \(\sigma\) also operates on \(A\).</p>
+<p id="lemma-1"><strong>Lemma 1 (a non-affine restriction exists).</strong> If a map on \(\mathbb R^s\) is affine on every affine line, it is affine.</p>
+<details class="blog-proof">
+<summary>Proof of Lemma 1: lines imply homogeneity and additivity</summary>
+<div class="blog-proof-body">
+<p>Subtract its value at zero and call the result \(H\). Lines through zero give \(H(tz)=tH(z)\). The line through \(z,w\) gives the midpoint identity</p>
+\[
+  H((z+w)/2)=\tfrac12H(z)+\tfrac12H(w).
+\]
+<p>Homogeneity then implies \(H(z+w)=H(z)+H(w)\). Thus \(H\) is real linear, and the original map is affine. Taking the contrapositive proves the claim. \(\square\)</p>
+</div></details>
+<p><em>Step 3: smooth without leaving the space.</em> Choose a nonnegative smooth function \(\rho\), supported in \([-1,1]\), with integral one. For \(\delta&gt;0\), set</p>
+\[
+  \begin{aligned}
+  \rho_\delta(y)&=\delta^{-1}\rho(y/\delta),\\
+  \sigma_\delta(t)&=\int_{\mathbb R}\sigma(t-y)\rho_\delta(y)\,dy.
+  \end{aligned}
+\]
+<p>Then \(\sigma_\delta\) is smooth and converges to \(\sigma\) uniformly on every bounded interval as \(\delta\to0\). Importantly, it still operates on \(A\).</p>
+<p id="lemma-2"><strong>Lemma 2 (averaging translates preserves operation).</strong> If continuous \(\sigma\) operates on a closed unital real linear space \(A\), so does \(\sigma_\delta\).</p>
+<details class="blog-proof">
+<summary>Proof of Lemma 2: approximate the average by finite sums</summary>
+<div class="blog-proof-body">
+<p>For \(f\in A\) and fixed \(y\), the function \(\sigma(f-y)\) is in \(A\). On the compact set \(f(K)\times[-\delta,\delta]\), the integrand is continuous. Riemann sums for</p>
+\[
+  x\longmapsto\int_{-\delta}^{\delta}
+        \sigma(f(x)-y)\rho_\delta(y)\,dy
+\]
+<p>therefore converge uniformly in \(x\). Each sum is a finite real linear combination of members of \(A\). Their limit belongs to \(A\) because it is closed. \(\square\)</p>
+</div></details>
+<p>At least one \(\sigma_\delta\) must be non-affine. Otherwise their locally uniform limit \(\sigma\) would be affine: an affine function is determined by its values at \(0\) and \(1\), so those two convergences determine its limit everywhere.</p>
+<p><em>Step 4: recover the algebra.</em> Apply the preceding Taylor argument to a smooth non-affine \(\sigma_\delta\). It gives \(f^2\in A\) for every \(f\in A\), then \(fg\in A\) by polarization. Since \(A\) contains constants and separates points, Stone–Weierstrass concludes that \(A=C(K,\mathbb R)\). \(\square\)</p>
+</div></details>
+
+<h2>Absolute values, maxima, and activations</h2>
+<p>The theorem covers smooth choices such as \(\sigma(t)=e^t\), \(\sin t\), \(\tanh t\), or \(t^2\), and nonsmooth choices such as \(|t|\) and \(t_+=\max(t,0)\). It also covers genuinely multivariable operations such as \(h(u,v)=\max(u,v)\).</p>
+<p>For absolute value, the connection to the lattice version of Stone–Weierstrass is especially direct:</p>
+\[
+  \begin{aligned}
+  \max(f,g)&=\tfrac12(f+g+|f-g|),\\
+  \min(f,g)&=\tfrac12(f+g-|f-g|).
+  \end{aligned}
+\]
+<p>Conversely, \(|f|=\max(f,-f)\), and ReLU gives \(|f|=f_++(-f)_+\). In a linear space, these three operations provide the same closure property. Their corners encode enough nonlinearity to recover all continuous functions, even though none visibly multiplies two inputs.</p>
+
+<h2>A universality principle for nonlinear networks</h2>
+<p>Let \(K\subset\mathbb R^d\) be compact and fix a continuous non-affine activation \(\sigma\). Consider finite feedforward computation graphs built from the coordinates \(x_1,\ldots,x_d\), constants, real affine combinations, and scalar gates \(z\mapsto\sigma(z)\). Earlier signals may be reused: skip connections are allowed, as are an affine output and arbitrary finite depth and width.</p>
+<p id="corollary-1"><strong>Corollary 1 (universality of nonlinear circuits).</strong> The scalar outputs of these computation graphs are uniformly dense in \(C(K,\mathbb R)\).</p>
+<details class="blog-proof">
+<summary>Proof of Corollary 1: check the closure rules</summary>
+<div class="blog-proof-body">
+<p>Constants and coordinates are available, so the family contains \(1\) and separates points. Run two graphs in parallel and combine their outputs to obtain closure under real linear combinations. Add one gate to obtain \(\sigma(f)\) from any output \(f\). Theorem 2 applies, with exact rather than merely approximate closure under \(\sigma\). \(\square\)</p>
+</div></details>
+<p>This includes the usual universal approximation mechanism for deep ReLU networks. Specifying skip connections avoids silently assuming that an arbitrary activation can pass an old signal unchanged through every intervening layer.</p>
+<div class="note"><p><em>Non-affine is not the same as nonpolynomial.</em> The corollary allows repeated composition and growing depth. With \(\sigma(t)=t^2\), a single hidden layer only produces polynomials of degree at most two, so it is not universal on an interval. It is not closed under applying \(\sigma\) to its own outputs: squaring \(x^2\) produces \(x^4\). For one-hidden-layer ridge networks with biases and a continuous activation, universality on arbitrary compact subsets of Euclidean space requires <em>nonpolynomiality</em>, which is also sufficient <a href="#ref-leshno">[5]</a>. Our hypothesis concerns every already-built function, not just an activation applied once to affine inputs.</p></div>
+
+<h2>What the hypotheses buy us</h2>
+<p>Non-affinity cannot be dropped: affine functions on \([0,1]\) contain constants and separate points, and every affine operation preserves them. They are nevertheless a closed proper subspace of \(C([0,1])\).</p>
+<p>Constants cannot be dropped either. The closed linear space of continuous functions vanishing at \(0\) separates points of \([0,1]\) and is stable under squaring, but can never approximate the constant \(1\). Linearity is also essential: continuous nondecreasing functions contain all constants and separate points, and exponentiation preserves them, but they are not dense in all continuous functions.</p>
+<p>Finally, this is a qualitative theorem in the uniform norm. It says nothing by itself about the number of neurons, training, approximation rates, or coefficient bounds. The factor \(t^{-2}\) in the curvature argument warns that the proof may amplify weights considerably.</p>
+<p>The useful lesson is structural: once constants and linear combinations are available, multiplication is not a privileged source of expressivity. Closure under <em>one</em> continuous non-affine operation already contains an algebra in disguise.</p>
+
+<h2>References</h2>
+<ol class="references">
+  <li id="ref-stone">Marshall H. Stone. <em>The Generalized Weierstrass Approximation Theorem.</em> Mathematics Magazine 21 (1948), 167–184 and 237–254. <a href="https://doi.org/10.2307/3029750">Part I</a> · <a href="https://doi.org/10.2307/3029337">Part II</a>.</li>
+  <li id="ref-deleeuw">Karel de Leeuw and Yitzhak Katznelson. <em>Functions that operate on non-self-adjoint algebras.</em> Journal d’Analyse Mathématique 11 (1963), 207–219. <a href="https://doi.org/10.1007/BF02789985">Paper</a>.</li>
+  <li id="ref-briem">Eggert Briem. <em>Ultraseparating Function Spaces and Operating Functions for the Real Part of a Function Algebra.</em> Proceedings of the American Mathematical Society 111(1) (1991), 55–59. <a href="https://doi.org/10.2307/2047859">Paper</a>.</li>
+  <li id="ref-hatori">Osamu Hatori. <em>Non-Lipschitz functions which operate on function spaces.</em> Scientiae Mathematicae 1(1) (1998), 7–14. <a href="https://www.jams.jp/scm/contents/Vol-1-1/1-1-2.pdf">Paper</a>.</li>
+  <li id="ref-leshno">Moshe Leshno, Vladimir Ya. Lin, Allan Pinkus, and Shimon Schocken. <em>Multilayer feedforward networks with a nonpolynomial activation function can approximate any function.</em> Neural Networks 6(6) (1993), 861–867. <a href="https://doi.org/10.1016/S0893-6080(05)80131-5">Paper</a> · <a href="https://pinkus.net.technion.ac.il/files/2021/02/neural.pdf">Author-hosted PDF</a>.</li>
+</ol>
+</article></main>
+<footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">All forthcoming posts</a> · <a href="/blog/">Blog</a> · <a href="/privacy/">Privacy &amp; audience measurement</a></div></footer>
+</body>
+</html>

@@ -271,3 +271,11 @@ Topic: Other topics
 - [ ] Ready to publish
 
 > What can a neural network distinguish—and approximate? For GNNs, 1-WL describes the blind spots. Concatenating features and adding an MLP turns separation into relative universality. https://www.gpeyre.com/blog/preparations/universality-and-invariance.html
+
+## 34. Universal approximation from one nonlinearity
+
+Topic: Other topics
+
+- [ ] Ready to publish
+
+> Stone–Weierstrass needs products—or does it? Closure under one continuous non-affine operation already gives universality. Taylor expansion and smoothing reveal the hidden algebra. https://www.gpeyre.com/blog/preparations/universality-from-one-nonlinearity.html
