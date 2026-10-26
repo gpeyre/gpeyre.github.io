@@ -201,6 +201,32 @@
         "mime_type": "image/jpeg",
         "size": 56971
       }
+    },
+    {
+      "slug": "dc-programming-toland-duality",
+      "title": "DC programming and Toland duality",
+      "date": "2026-10-26",
+      "url": "https://www.gpeyre.com/blog/2026/10/26/dc-programming-toland-duality/",
+      "message": "A nonconvex problem can sometimes have a convex dual. Toland duality explains how, and also yields the DC algorithm. A simple example shows why this can be useful. https://www.gpeyre.com/blog/2026/10/26/dc-programming-toland-duality/",
+      "status": "prepared",
+      "source_sha256": "4f0854a5e07412e9c0efa0f209ee73a4997939cf8dac7012b672e4033fec5bb4",
+      "base_commit": "31fa36dfc242d08ff510f7adc8e720b6ad4f6f13",
+      "files": [
+        "blog/_posts/2026-10-26-dc-programming-toland-duality.md",
+        "blog/preparations/dc-programming-toland-duality.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "working_sha256": {
+        "blog/_posts/2026-10-26-dc-programming-toland-duality.md": "b002a8ef7f99c92bfeb00d61e9cc576d67bc8f1c17da6ca5fee7d455d2004196",
+        "blog/preparations/dc-programming-toland-duality.html": "38215a8d948eb62fb2f4119702b5131d18ef9e118264b44ab40a98553335deec",
+        "blog/preparations/index.html": "a00e068acd24a32cda0f9173070739e26ab75cbf5de1c353a3826c3570e9ef32",
+        "js/blog-search-index.js": "01a57dd22c0e6ff634a3b87bf80c69f0d8d34c734cb0309ce49335dc9241c0f0"
+      },
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null
     }
   ]
 }
