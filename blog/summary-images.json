@@ -137,6 +137,22 @@
       },
       "sha256": "a3f0a7eb7884a4322862c44f76d5d538d66d1b9aa1e7f8be945145a2bcab0030"
     },
+    "dc-programming-toland-duality": {
+      "path": "/blog/imgs/summaries/dc-programming-toland-duality.jpg",
+      "alt": "A quadratic with cosine oscillations, its exact difference of two convex functions, and the positive and negative curvature components defining the minimal one-dimensional DC split.",
+      "width": 1200,
+      "height": 820,
+      "source": "/blog/preparations/assets/dc-decomposition/index.html",
+      "settings": {
+        "amplitude": 0.35,
+        "phase": 0,
+        "lambda": 0,
+        "domain": [-2, 2],
+        "plotting_points": 801,
+        "renderer": "shared experiment view.js, native canvas summary layout"
+      },
+      "sha256": "7b70ed549b8f0a9c34c6338f47bbdf73519d6f0f3166c04cd23edf0a0cbf9c62"
+    },
     "diffusion-versus-optimal-transport": {
       "path": "/blog/imgs/summaries/diffusion-versus-optimal-transport.jpg",
       "alt": "The same Gaussian particles move to three clusters along curved deterministic diffusion paths and straight optimal-transport paths, colored by destination.",

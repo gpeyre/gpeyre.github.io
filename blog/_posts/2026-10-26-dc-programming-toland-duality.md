@@ -2,9 +2,11 @@
 title: DC programming and Toland duality
 subtitle: A difference of convex functions, two minimization problems, and a surprisingly
   simple convex dual.
-description: An introduction to difference-of-convex optimization, Toland duality,
-  and DCA, with an elementary nonconvex problem whose dual is convex.
+description: Difference-of-convex optimization, canonical curvature splitting in
+  one dimension, nonunique minimal quadratic splits, and Toland duality, with
+  an interactive decomposition and a nonconvex problem whose dual is convex.
 date: '2026-10-26'
+last_modified_at: '2026-10-26'
 topic: Convex optimization
 keywords:
 - DC programming
@@ -42,7 +44,18 @@ keywords:
 - différence de fonctions convexes
 - optimisation non convexe
 - dual convexe
+- canonical DC decomposition
+- minimal DC decomposition
+- positive and negative curvature
+- Jordan decomposition
+- distributional second derivative
+- Loewner order
+- spectral splitting
+- indefinite quadratic forms
+- Philip Hartman
+- Nikolas Stott
 proofs: true
+embedded_experiment: true
 ---
 
 Convex optimization is appealing because a local supporting plane contains global information. But many interesting objectives combine competing effects: a fidelity term and a sparsity incentive, attraction and repulsion, or positive and negative contributions to a transport energy. Subtracting two convex functions is already enough to leave the convex world.
@@ -71,7 +84,7 @@ f(x)=\left(f(x)+\frac{\rho}{2}\|x\|^2\right)
     -\frac{\rho}{2}\|x\|^2
 $$
 
-is a DC decomposition. An indefinite quadratic form can likewise be split using the positive and negative parts of its matrix. Decompositions are not unique: adding the same convex function to $$F$$ and $$G$$ preserves $$\Phi$$, but changes the algorithm built from the decomposition [[4]](#ref-4), [[5]](#ref-5).
+is a DC decomposition. An indefinite quadratic form can likewise be split using the positive and negative parts of its matrix. Decompositions are not unique: adding the same convex function to $$F$$ and $$G$$ preserves $$\Phi$$, but changes the algorithm built from the decomposition [[4]](#ref-4), [[5]](#ref-5). Can we remove all unnecessary shared curvature and obtain a canonical split? We will see that the answer is particularly clean in one dimension, and more subtle in higher dimensions.
 
 The convex conjugate records the cost of a supporting slope:
 
@@ -230,6 +243,164 @@ Take a subsequence $$x_{k_j}\to\bar x$$. Since $$G$$ is finite and convex on all
 </div>
 
 </details>
+
+## Is there a canonical DC decomposition?
+
+Adding the same convex function to both terms hides curvature that cancels in the difference. To compare decompositions, it is therefore more meaningful to compare *convexity* than function values. Write
+
+$$
+F_1\preceq F_2
+\quad\Longleftrightarrow\quad
+F_2-F_1\text{ is convex}.
+$$
+
+For twice differentiable functions, this means $$\nabla^2F_1\preceq\nabla^2F_2$$ in the positive-semidefinite order. Affine functions carry no curvature, so this is an order **modulo affine terms**, not an order on pointwise heights.
+
+A decomposition $$\Phi=F-G$$ is *minimal* if there is no non-affine convex function $$R$$ that can be subtracted from both terms while keeping $$F-R$$ and $$G-R$$ convex. A *least* decomposition is stronger: it lies below **every** other decomposition in this order. Every least decomposition is minimal, but minimal ones can be incomparable. This distinction already appears in Hartman's foundational paper [[12, Section 6]](#ref-12).
+
+### In one dimension: split the curvature, then integrate twice
+
+Let $$\Phi\in C^2([a,b])$$. Define the positive and negative curvature by
+
+$$
+c_+(x)=\max\{\Phi''(x),0\},
+\qquad
+c_-(x)=\max\{-\Phi''(x),0\}.
+$$
+
+Both are nonnegative, and $$\Phi''=c_+-c_-$$. Integrating twice gives a natural choice:
+
+$$
+\begin{aligned}
+F_\star(x)
+  &=\Phi(a)+\Phi'(a)(x-a)
+    +\int_a^x(x-t)c_+(t)\,dt,\\
+G_\star(x)
+  &=\int_a^x(x-t)c_-(t)\,dt.
+\end{aligned}
+$$
+
+The affine part is assigned to $$F_\star$$; equivalently, we fix $$G_\star(a)=G_\star'(a)=0$$. This convention determines the vertical placement and tilt of the two graphs. It does not affect their curvature.
+
+<span id="theorem-2"></span>
+
+**Theorem 2 (the least one-dimensional split).** The functions $$F_\star,G_\star$$ are convex and satisfy $$\Phi=F_\star-G_\star$$. For every other $$C^2$$ convex decomposition $$\Phi=F-G$$ on $$[a,b]$$, there is a convex function $$R$$ such that
+
+$$
+F=F_\star+R,\qquad G=G_\star+R.
+$$
+
+Within this $$C^2$$ class, this pair is least in the convexity order, and it is the unique minimal pair up to adding the same affine function to both terms.
+
+<details class="blog-proof">
+<summary>Proof of Theorem 2: remove exactly the common curvature</summary>
+<div class="blog-proof-body" markdown="1">
+
+The constructed functions have second derivatives $$c_+,c_-\geq0$$. Their difference has the same second derivative, value at $$a$$, and derivative at $$a$$ as $$\Phi$$, hence equals $$\Phi$$.
+
+For any competing split, put $$R=F-F_\star=G-G_\star$$. Since $$\Phi''=F''-G''$$ and both $$F'',G''$$ are nonnegative,
+
+$$
+\begin{aligned}
+R''&=F''-(F''-G'')_+\\
+   &=\min\{F'',G''\}\geq0.
+\end{aligned}
+$$
+
+So $$R$$ is convex. If it is not affine, it is precisely a removable common convex term, and the competing pair is not minimal. Conversely, the constructed pair has $$\min\{F_\star'',G_\star''\}=0$$ everywhere, so it has no non-affine convex term to remove. $$\square$$
+
+</div>
+</details>
+
+The key picture is that positive and negative curvature never coexist at the same point in the least split. For a nonsmooth one-dimensional DC function on an open interval, the same idea uses the **Jordan decomposition of the signed measure** $$D^2\Phi$$: its mutually singular positive and negative parts are the curvature measures of the two least convex terms. The affine normalization must still be fixed. This extends the construction beyond ordinary second derivatives [[12]](#ref-12).
+
+### In two dimensions: minimal does not mean unique
+
+For matrices, positive semidefiniteness is only a partial order; there is no analogue of the scalar minimum that works for every pair. A simple indefinite quadratic already exposes the difference:
+
+$$
+\Phi(x_1,x_2)=\frac12(x_1^2-x_2^2).
+$$
+
+For any $$s\in\mathbb R$$, put $$c_s=\sqrt{1+s^2}$$ and define
+
+$$
+\begin{aligned}
+F_s(x)&=\tfrac12(c_sx_1+sx_2)^2,\\
+G_s(x)&=\tfrac12(sx_1+c_sx_2)^2.
+\end{aligned}
+$$
+
+These are convex quadratics. Their cross terms cancel, and $$c_s^2-s^2=1$$, so $$F_s-G_s=\Phi$$ for every $$s$$. They even share the same normalization: both values and both gradients vanish at the origin.
+
+<span id="theorem-3"></span>
+
+**Theorem 3 (many incomparable minimal splits).** Every pair $$(F_s,G_s)$$ above is minimal, even among decompositions by arbitrary finite convex functions on $$\mathbb R^2$$. Distinct parameters give incomparable pairs. Consequently, this quadratic has no least DC decomposition in the convexity order.
+
+<details class="blog-proof">
+<summary>Proof of Theorem 3: there is no shared direction of curvature</summary>
+<div class="blog-proof-body" markdown="1">
+
+Write $$u_s=(c_s,s)^\top$$ and $$v_s=(s,c_s)^\top$$. The Hessians are rank-one positive-semidefinite matrices,
+
+$$
+P_s=u_su_s^\top,\qquad Q_s=v_sv_s^\top.
+$$
+
+The vectors are independent because $$\det[u_s\ v_s]=c_s^2-s^2=1$$.
+
+If a $$C^2$$ convex function $$R$$ can be subtracted from both terms, its Hessian $$S=\nabla^2R(x)$$ satisfies
+
+$$
+0\preceq S\preceq P_s,
+\qquad S\preceq Q_s.
+$$
+
+For $$z\in\ker P_s$$, these inequalities give $$0\leq z^\top Sz\leq z^\top P_sz=0$$. A positive-semidefinite matrix with $$z^\top Sz=0$$ satisfies $$Sz=0$$. Thus $$S$$ vanishes on both $$\ker P_s$$ and $$\ker Q_s$$. These are different lines spanning $$\mathbb R^2$$, so $$S=0$$. Hence $$R$$ is affine.
+
+<details class="blog-proof">
+<summary>Why the same conclusion holds without assuming that R is smooth</summary>
+<div class="blog-proof-body" markdown="1">
+
+Convolve $$R$$ with a nonnegative smooth compactly supported mollifier. Convolution preserves convexity of $$R$$, $$F_s-R$$, and $$G_s-R$$; the convolved quadratics still have Hessians $$P_s,Q_s$$. The preceding argument therefore makes every smoothed $$R$$ affine. These smoothings converge locally uniformly to $$R$$, so $$R$$ itself is affine. $$\square$$
+
+</div>
+</details>
+
+We have proved minimality. Distinct parameters give distinct Hessians, so the corresponding pairs do not differ by affine terms. If one were below another, their common difference would be a non-affine removable convex function, contradicting minimality. A least pair would have to be below all these minimal pairs and therefore equal to all of them modulo affine terms, which is impossible. $$\square$$
+
+</div>
+</details>
+
+At $$s=0$$, this is the familiar spectral split: put the positive eigenvalue in $$F_0$$ and the negative one in $$G_0$$. It is a natural canonical **choice**, but not a least element. Indeed, for $$s\ne0$$,
+
+$$
+\det(P_s-P_0)=-s^2<0,
+$$
+
+so $$P_s-P_0$$ is indefinite: neither Hessian dominates the other. Hartman gives a related two-dimensional quadratic obstruction [[12]](#ref-12); Stott studies the broader matrix-order geometry [[13]](#ref-13).
+
+An extra optimization criterion can select a preferred split. For example, in this family the total trace is $$\operatorname{tr}(P_s+Q_s)=2+4s^2$$, uniquely minimized at $$s=0$$. But minimizing this scalar quantity is different from being least in every curvature direction. For a variable Hessian, there is an additional difficulty: its pointwise positive and negative matrix parts need not themselves be Hessian fields of functions.
+
+Nor does least curvature automatically mean the best algorithm. Adding a common quadratic can make DCA subproblems strongly convex and uniquely solvable. Minimality answers a structural question about the representation, not a universal question about speed of optimization.
+
+## Numerical experimentation: watch the curvature split
+
+On $$[-2,2]$$, with $$A\geq0$$, consider
+
+$$
+\Phi(x)=\frac{x^2}{2}+A\cos(\pi x+\theta),
+\qquad
+\Phi''(x)=1-A\pi^2\cos(\pi x+\theta).
+$$
+
+Move the phase $$\theta$$ to shift the oscillations, and vary $$A$$ to change the amount of nonconvexity. The figure shows the objective, its two convex terms, and the signed curvature. At $$A\leq\pi^{-2}$$ the objective is already convex, so the normalized negative-curvature term is zero.
+
+The shared-curvature slider adds $$\lambda(x+2)^2/2$$ to **both** terms. It leaves their difference unchanged while visibly making each term more convex. Set $$\lambda=0$$ to return to the least split. All decompositions use the same left-endpoint normalization; the component plots have a different vertical scale from the objective plot.
+
+<iframe class="idea-experiment" data-experiment="dc-decomposition" title="Interactive one-dimensional DC decomposition and positive and negative curvature" src="{{ '/blog/preparations/assets/dc-decomposition/index.html' | relative_url }}" loading="lazy" style="width:100%;height:1120px;border:0;"></iframe>
+
+The implementation locates the zeros of $$\Phi''$$ analytically and integrates each constant-sign interval in closed form. The curves are sampled only for drawing; the displayed identity check measures floating-point evaluation error, not a discretized approximation to convexity. [Open the experiment on its own]({{ '/blog/preparations/assets/dc-decomposition/index.html' | relative_url }}).
 
   <h2 id="why-convex-dual">What a convex dual actually buys us</h2>
 
@@ -548,4 +719,6 @@ These transport results show why the elementary duality is useful beyond finite-
     <li id="ref-9">Jean-Jacques Moreau. <a href="https://www.numdam.org/articles/10.24033/bsmf.1625/"><em>Proximité et dualité dans un espace hilbertien.</em></a> Bulletin de la Société Mathématique de France 93, 273–299, 1965.</li>
     <li id="ref-10">Thomas O. Gallouët, Andrea Natale and Gabriele Todeschi. <a href="https://arxiv.org/abs/2407.10516"><em>Metric extrapolation in the Wasserstein space.</em></a> Calculus of Variations and Partial Differential Equations 64, article 147, 2025.</li>
     <li id="ref-11">Thomas Gallouët, Andrea Natale and Gabriele Todeschi. <a href="https://arxiv.org/abs/2609.17073"><em>Toland duality and particle approximations for signed Wasserstein barycenters.</em></a> arXiv:2609.17073, 2026.</li>
+    <li id="ref-12">Philip Hartman. <a href="https://doi.org/10.2140/pjm.1959.9.707"><em>On functions representable as a difference of convex functions.</em></a> Pacific Journal of Mathematics 9(3), 707–713, 1959. <a href="https://msp.org/pjm/1959/9-3/pjm-v9-n3-p09-s.pdf">Publisher PDF</a>.</li>
+    <li id="ref-13">Nikolas Stott. <a href="https://doi.org/10.1090/proc/13785"><em>Maximal lower bounds in the Löwner order.</em></a> Proceedings of the American Mathematical Society, 2018. <a href="https://arxiv.org/abs/1612.05664">Preprint</a>.</li>
   </ol>

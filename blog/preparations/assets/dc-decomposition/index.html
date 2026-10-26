@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,follow">
+<title>Splitting curvature: an interactive DC decomposition</title>
+<link rel="stylesheet" href="style.css">
+<script defer src="core.js"></script>
+<script defer src="view.js"></script>
+<script defer src="app.js"></script>
+</head>
+<body>
+<main>
+  <header>
+    <p class="eyebrow">Numerical experimentation · one dimension</p>
+    <h1>Split the curvature, keep the function</h1>
+    <p class="intro">Every positive bend goes into <span class="F">F</span>; every negative bend goes into <span class="G">G</span>. Their difference recovers the same target <span class="phi">Φ</span>. Move the oscillations and watch the convex pieces change.</p>
+  </header>
+  <section class="controls" aria-label="Function parameters">
+    <label for="amplitude"><span>Oscillation amplitude A <output id="amplitude-value" for="amplitude"></output></span><input id="amplitude" type="range" min="0" max="1" step="0.01" value="0.35"></label>
+    <label for="phase"><span>Phase θ <output id="phase-value" for="phase"></output></span><input id="phase" type="range" min="-3.14159265359" max="3.14159265359" step="0.0314159265359" value="0"></label>
+    <label for="lambda"><span>Common curvature λ <output id="lambda-value" for="lambda"></output></span><input id="lambda" type="range" min="0" max="3" step="0.05" value="0"></label>
+    <div class="buttons"><button type="button" id="convex-case">Convex example</button><button type="button" id="reset">Reset</button></div>
+  </section>
+  <div class="formula"><span>Φ(x) = x²/2 + A cos(πx + θ)</span><strong>Φ = F − G</strong><span class="badge" id="convexity"></span></div>
+  <div class="plots">
+    <section class="panel"><h2>The target stays the same when λ changes</h2><p class="plot-description">A quadratic with movable oscillations.</p><canvas id="target" role="img" aria-label="Target function Phi on the interval minus two to two"></canvas></section>
+    <section class="panel"><h2>Two convex functions</h2><p class="plot-description"><span class="key F">F</span><span class="key G">G</span> <span class="quiet">Both use the same vertical scale.</span></p><canvas id="pieces" role="img" aria-label="The convex functions F and G, whose difference is Phi"></canvas></section>
+    <section class="panel curvature"><h2>The split is visible in the second derivatives</h2><p class="plot-description"><span class="key phi dashed">Φ″</span><span class="key F">F″ = max(Φ″, 0) + λ</span><span class="key G">G″ = max(−Φ″, 0) + λ</span></p><canvas id="curvature" role="img" aria-label="Signed curvature of Phi and the two nonnegative convex curvatures"></canvas><p class="caption">Vertical guides mark the exact zeros of Φ″. Adding λ raises both convex curvatures equally; their difference is unchanged.</p></section>
+  </div>
+  <div class="metrics" aria-live="polite" aria-atomic="true"><p id="identity"></p><p id="curvature-budget"></p></div>
+  <details><summary>How the decomposition is computed</summary><div class="details-body">
+    <p>On [a, b] = [−2, 2], integrate the positive and negative parts of Φ″ twice. The affine normalization is F(a) = Φ(a), F′(a) = Φ′(a), G(a) = G′(a) = 0. This gives the exact identity F − G = Φ.</p>
+    <p>When λ = 0, the two curvatures never overlap: F″G″ = 0. This minimizes their sum pointwise among all twice differentiable convex decompositions. A positive λ adds the same quadratic λ(x − a)²/2 to both pieces, so it adds unnecessary curvature without changing their difference.</p>
+    <p>The plots use analytic curvature and its exact antiderivatives between known zero crossings. The displayed identity residual measures floating-point arithmetic at 801 plotting points; it is not a certificate for an optimization algorithm. No network requests or training are needed.</p>
+  </div></details>
+  <noscript><p>This interactive figure needs JavaScript. Its target is Φ(x) = x²/2 + A cos(πx + θ); splitting the positive and negative parts of its second derivative produces two convex functions F and G with Φ = F − G.</p></noscript>
+</main>
+</body>
+</html>

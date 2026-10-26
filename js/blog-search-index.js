@@ -1314,7 +1314,7 @@ window.BLOG_SEARCH_RECORDS = [
     "status": "published",
     "date": "2026-10-26",
     "title": "DC programming and Toland duality",
-    "description": "An introduction to difference-of-convex optimization, Toland duality, and DCA, with an elementary nonconvex problem whose dual is convex.",
+    "description": "Difference-of-convex optimization, canonical curvature splitting in one dimension, nonunique minimal quadratic splits, and Toland duality, with an interactive decomposition and a nonconvex problem whose dual is convex.",
     "keywords": [
       "DC programming",
       "difference-of-convex optimization",
@@ -1350,7 +1350,17 @@ window.BLOG_SEARCH_RECORDS = [
       "dualité de Toland",
       "différence de fonctions convexes",
       "optimisation non convexe",
-      "dual convexe"
+      "dual convexe",
+      "canonical DC decomposition",
+      "minimal DC decomposition",
+      "positive and negative curvature",
+      "Jordan decomposition",
+      "distributional second derivative",
+      "Loewner order",
+      "spectral splitting",
+      "indefinite quadratic forms",
+      "Philip Hartman",
+      "Nikolas Stott"
     ]
   },
   {

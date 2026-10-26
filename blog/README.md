@@ -217,8 +217,8 @@ journal are excluded from the public website build.
 
 ## Numerical summary images
 
-Every article with a numerical experiment has a real capture of that experiment
-(currently 36 images across published and forthcoming posts). The JPEGs in
+Every article with a numerical experiment has an image from that experiment's
+actual numerical renderer. The JPEGs in
 `blog/imgs/summaries/` illustrate archive cards, the local editorial queue, and
 article social-sharing metadata. Theory-only articles do not get invented plots.
 Each image has descriptive alt text, its experiment URL and control settings,
@@ -245,6 +245,12 @@ article metadata read the same catalogue through Liquid. Follow with
 `ruby scripts/build-blog-queue.rb`. Both generators offer `--check`.
 Run `ruby tests/blog-summary-images.test.rb` and
 `node tests/blog-summary-jpeg.test.js` for offline regression checks.
+
+The DC-decomposition image replays the interactive figure's exact numerical
+core and canvas drawing routine with a native canvas backend (no replacement
+curves). Reproduce it with `node scripts/render-blog-dc-summary.cjs`; set
+`BLOG_CANVAS_PATH` to an installed `@napi-rs/canvas` module if needed. Its
+parameters and renderer provenance are recorded in the same image manifest.
 
 Future Bluesky announcements attach the matching verified image, with alt text,
 without changing the approved announcement or its final dated URL. The helper

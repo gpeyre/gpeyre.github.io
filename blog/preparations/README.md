@@ -323,6 +323,20 @@ The controls remain inside a stated sufficient mean-square stability bound.
 Run `node tests/blog-sgd-covariance.test.js` to check the independent recurrence,
 stationary solutions, asymptotic orders, and long-time numerical stability.
 
+## DC decomposition experiment
+
+The published DC/Toland article embeds `assets/dc-decomposition/index.html`.
+For a quadratic plus a cosine, it integrates the positive and negative parts
+of the analytic curvature between exact zero crossings. Sliders control
+amplitude, phase, and an optional common convex quadratic. The plots show the
+objective, both convex terms, and their curvatures. The affine normalization
+is fixed at the left endpoint; the displayed identity residual is a
+floating-point check, not an optimization certificate. The DOM-independent
+`view.js` renderer is shared with the numerical summary-image script.
+Run `node tests/blog-dc-decomposition.test.js` for analytic identities,
+derivatives, curvature positivity, threshold cases, independent quadrature,
+and invariance under a common quadratic.
+
 ## Max and softmax experiment
 
 The max/softmax experiment retains a tangent-plane construction for its 1D
