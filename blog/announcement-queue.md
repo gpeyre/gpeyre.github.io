@@ -279,3 +279,11 @@ Topic: Other topics
 - [ ] Ready to publish
 
 > Stone–Weierstrass needs products—or does it? Closure under one continuous non-affine operation already gives universality. Taylor expansion and smoothing reveal the hidden algebra. https://www.gpeyre.com/blog/preparations/universality-from-one-nonlinearity.html
+
+## 35. Training (very) deep ResNets
+
+Topic: Other topics
+
+- [ ] Ready to publish
+
+> Depth becomes time in a ResNet. Explore adjoint training, noncommuting linear flows, and a loss with no bad local minima—but increasingly flat saddles. https://www.gpeyre.com/blog/preparations/training-very-deep-resnets.html

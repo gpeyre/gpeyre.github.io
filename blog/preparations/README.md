@@ -24,6 +24,31 @@ New standalone articles must include the shared analytics loader
 It counts only top-level visits on the production domain, not local tests or
 embedded experiments. See the audience-measurement section in `../README.md`.
 
+## Training (very) deep ResNets
+
+`training-very-deep-resnets.html` separates state depth from optimization time,
+derives discrete and continuous adjoints with the depth-weighted metric, and
+distinguishes tied from independently trained weights. Its commuting real
+2-by-2 example has no nonglobal local minima, but finite-depth saddles become
+degenerate and the exponential limit admits escaping gradient-flow paths.
+All results concern the stated models, not unrestricted nonlinear networks.
+
+`assets/deep-resnet/flow.html` compares a fundamental matrix with the generally
+incorrect exponential-of-the-integral shortcut. Constant and ordered-shear
+flows are exact; rotating strain uses RK4 with a step-halving check and an
+independent rotating-frame benchmark in tests. Playback starts paused and stops
+when hidden. `landscape.html` traces analytic inverse images of loss circles,
+with a radial reparameterization at the f=1 branch point. Depth changes preserve
+the equal-scale camera; logarithmic zoom, wheel/pinch, pan, keyboard controls,
+critical-point toggles and tooltips share that camera.
+
+Run `node tests/blog-resnet-training.test.js`,
+`node tests/blog-resnet-flow.test.js`, and
+`node tests/blog-resnet-landscape.test.js`. The first includes independent
+finite-difference checks of untied and tied training gradients. Reproduce the
+summary with `node scripts/render-blog-resnet-summary.cjs`; it uses the exact
+interactive analytic contour paths, rendered on a native canvas.
+
 ## Universal approximation from one nonlinearity
 
 `universality-from-one-nonlinearity.html` develops the real uniform-density

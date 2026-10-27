@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <title>Residual-network loss landscape — interactive experiment</title>
+  <link rel="stylesheet" href="landscape.css">
+  <script defer src="landscape-core.js"></script>
+  <script defer src="landscape.js"></script>
+</head>
+<body>
+<main id="experiment">
+  <h2>Depth changes the geometry</h2>
+  <p class="intro">Explore <span id="formula">f<sub>L</sub>(z) = |(1 + z/L)<sup>L</sup> + 1|²</span> in the complex plane. Every contour is the analytic inverse image of a circle; both axes use the same scale.</p>
+  <div class="controls">
+    <div><label for="depth">Depth L <output id="depth-value" for="depth">10</output></label><input id="depth" type="range" min="0" max="46" step="1" value="9" aria-describedby="depth-help"><p id="depth-help" class="hint">1–40, 50, 75, 100, 200, 500, 1000, ∞</p></div>
+    <div><label for="zoom">Zoom <output id="zoom-value" for="zoom">1×</output></label><input id="zoom" type="range" min="-8" max="6" step="0.01" value="0" aria-describedby="zoom-help"><p id="zoom-help" class="hint">Logarithmic: 1/256× to 64×</p></div>
+    <div class="reset"><button id="reset-view" type="button">Reset view</button></div>
+  </div>
+  <fieldset class="toggles"><legend class="sr-only">Visible features</legend><label><input id="show-contours" type="checkbox" checked> Contours</label><label><input id="show-minima" type="checkbox" checked> Minima</label><label><input id="show-saddle" type="checkbox" checked> Saddle</label><label><input id="show-grid" type="checkbox" checked> Grid</label></fieldset>
+  <div class="plot-wrap" id="plot-wrap"><canvas id="landscape" tabindex="0" role="img" aria-label="Interactive equal-scale contour plot of the residual-network loss" aria-describedby="interaction-help metrics">This interactive plot needs JavaScript. The article gives the critical points and their classification explicitly.</canvas><div id="tooltip" class="tooltip" hidden></div></div>
+  <p class="hint" id="interaction-help">Drag to pan; scroll or pinch to zoom at the pointer. Keyboard: arrow keys pan, +/− zoom, Home resets. Changing depth keeps your view.</p>
+  <div class="legend" aria-label="Loss contour levels"><span style="--c:#526db4">0.1</span><span style="--c:#2d84a2">0.5</span><span class="dash" style="--c:#163c45">1</span><span style="--c:#45977a">2</span><span style="--c:#a79337">5</span><span style="--c:#c17735">10</span><span style="--c:#b74d69">25</span><span class="minimum">Minimum: f = 0</span><span class="saddle">Saddle: f = 1</span></div>
+  <p id="metrics" class="metrics" aria-live="polite" aria-atomic="true"></p>
+  <p class="footnote">Dashed: f = 1, the saddle level when 2 ≤ L &lt; ∞. For L ≥ 3, its 2L branches meet at a degenerate saddle, even when loss differences there are too small for floating-point evaluation. At L = ∞ the experiment uses e<sup>z</sup> exactly, with infinitely many minima and no finite saddle.</p>
+  <noscript><p class="error">Enable JavaScript to use the controls. The formulas and proofs remain available in <a href="../../training-very-deep-resnets.html">the article</a>.</p></noscript>
+</main>
+</body>
+</html>

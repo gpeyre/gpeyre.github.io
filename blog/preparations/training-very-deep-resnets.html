@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,follow">
+<meta name="description" content="From residual blocks to controlled ODEs: adjoint training, the geometry of linear flows, and an exact complex loss landscape whose saddles flatten as depth grows. Two interactive experiments explore the dynamics and the finite-depth-to-exponential limit.">
+<meta name="keywords" content="ResNet, residual network, skip connection, identity shortcut, deep learning, continuous depth, neural ODE, Euler discretization, optimal control, adjoint equation, backpropagation, gradient flow, learning rate scaling, depth metric, linear residual network, matrix exponential, fundamental matrix, time ordering, noncommuting matrices, Liouville formula, rotating strain, shear, tied weights, complex variable, holomorphic function, loss landscape, degenerate saddle, global minima, analytic contours, infinite depth, Kaiming He, Weinan E, Eldad Haber, Lars Ruthotto, neural ordinary differential equations, entraînement des réseaux résiduels">
+<title>Training (very) deep ResNets — Alpha preview — Gabriel Peyré</title>
+<link rel="canonical" href="https://www.gpeyre.com/blog/preparations/training-very-deep-resnets.html">
+<link rel="stylesheet" href="assets/drafts.css">
+<script defer src="assets/drafts.js"></script><script defer src="assets/idea-experiments.js"></script><script defer src="../../js/site-analytics.js"></script>
+<script type="text/x-mathjax-config">MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:false}}});</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+<style>.resnet-wide{position:relative;left:50%;transform:translateX(-50%);width:min(1240px,calc(100vw - 32px));margin:30px 0}.resnet-wide iframe{width:100%}.resnet-skip{width:100%;height:auto;display:block;margin:26px auto}.resnet-skip text{font-family:system-ui,sans-serif;font-size:16px;fill:#24333b}</style>
+
+<!-- Generated numerical summary image: start -->
+<meta property="og:image" content="https://www.gpeyre.com/blog/imgs/summaries/training-very-deep-resnets.jpg">
+<meta property="og:image:alt" content="Exact residual-network loss contours at depth eight: eight zero-loss minima surrounding the degenerate saddle at minus eight, with its loss-one contour dashed.">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="900">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.gpeyre.com/blog/imgs/summaries/training-very-deep-resnets.jpg">
+<meta name="twitter:image:alt" content="Exact residual-network loss contours at depth eight: eight zero-loss minima surrounding the degenerate saddle at minus eight, with its loss-one contour dashed.">
+<!-- Generated numerical summary image: end -->
+</head>
+<body>
+<header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Training (very) deep ResNets</h1><p class="subtitle">Depth becomes time. Backpropagation becomes an adjoint equation. Even a two-dimensional example reveals a surprisingly rich loss landscape.</p><p class="byline">Gabriel Peyré</p></div></header>
+<main class="wrap"><article class="blog-prose">
+<p>A remarkably effective idea in modern AI is to let a layer learn a <em>correction</em>, rather than an entirely new representation. Residual networks keep the current activation and add an update. These skip connections made much deeper networks practical <a href="#ref-he">[1]</a>, <a href="#ref-identity">[2]</a>; they are also central to transformer architectures.</p>
+<p>The identity path helps information and gradients travel through the network. There is a geometric price: within an identity-skip block, the input and output must have the same dimension. This is not a restriction on the width of the whole architecture—projection shortcuts, embeddings, and changes between stages can change dimensions. Here we keep a fixed state space and ask what happens as the number of small residual steps becomes very large.</p>
+<p>The answer connects learning to differential equations and optimal control. But “more stable propagation” does not mean “easy optimization.” We will end with an exactly solvable loss that has no nonglobal local minima, yet develops extraordinarily flat saddles.</p>
+
+<h2>One small step, repeated many times</h2>
+<p>Let \(x_\ell\in\mathbb R^d\) be the activation, \(\theta_\ell\in\mathbb R^p\) the parameters of block \(\ell\), and \(\phi:\mathbb R^d\times\mathbb R^p\to\mathbb R^d\) a residual function. With depth \(L\), write</p>
+\[
+ h=\frac1L,\qquad
+ x_{\ell+1}=x_\ell+h\phi(x_\ell,\theta_\ell),
+ \qquad \ell=0,\ldots,L-1.
+\]
+<figure>
+<svg class="resnet-skip" viewBox="0 0 740 150" role="img" aria-labelledby="skip-title skip-desc"><title id="skip-title">One residual block</title><desc id="skip-desc">The activation travels directly to a sum along an identity path. A second branch applies phi and scales its result by one over L before joining the sum.</desc><defs><marker id="resnet-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="#397e85"/></marker></defs><g fill="none" stroke="#397e85" stroke-width="2" marker-end="url(#resnet-arrow)"><path d="M90 82H165V29H565V64"/><path d="M165 82H243"/><path d="M443 82H545"/><path d="M585 82H678"/></g><rect x="245" y="57" width="196" height="50" rx="7" fill="#f2f7f7" stroke="#a5c9cc"/><circle cx="565" cy="82" r="19" fill="white" stroke="#397e85" stroke-width="2"/><text x="32" y="88">xℓ</text><text x="279" y="88">φ(xℓ, θℓ) / L</text><text x="556" y="88">+</text><text x="683" y="88">xℓ₊₁</text><text x="307" y="21">identity shortcut</text></svg>
+<figcaption>The two branches must have the same output dimension for their sum to make sense.</figcaption>
+</figure>
+<p>This is the explicit Euler scheme on a time interval of length one. If the weights sample a sufficiently regular profile \(\theta_\ell=\theta(\ell/L)\), the depth variable becomes a continuous variable \(t\):</p>
+\[
+ \partial_t x(t)=\phi(x(t),\theta(t)),\qquad x(0)=a,
+ \qquad 0\le t\le1.
+\]
+<p>For example, a Lipschitz parameter profile, a smooth \(\phi\), and uniform bounds on the relevant trajectories and derivatives give the usual Euler error \(O(L^{-1})\). The dynamical-systems and control viewpoints were developed in <a href="#ref-e">[3]</a>–<a href="#ref-neuralode">[6]</a>.</p>
+<div class="note"><p>The factor \(1/L\) is a deliberate <em>ODE scaling</em>, not part of every practical ResNet. Arbitrarily oscillating or independently initialized layer weights do not automatically converge to a single smooth profile. Other scalings and initializations lead to different limits; convergence of a trained network is a further question <a href="#ref-thorpe">[7]</a>, <a href="#ref-scaling">[8]</a>.</p></div>
+
+<p id="proposition-1"><strong>Proposition 1 (a depth-independent propagation bound).</strong> Suppose \(\|D_x\phi(x_\ell,\theta_\ell)\|_{\mathrm{op}}\le K\). The Jacobian of the network with respect to its input satisfies</p>
+\[
+ \|D_a x_L\|_{\mathrm{op}}
+ \le(1+K/L)^L\le e^K.
+\]
+<details class="blog-proof"><summary>Proof: multiply near-identity Jacobians</summary><div class="blog-proof-body"><p>Each block has Jacobian \(I+hD_x\phi\), of norm at most \(1+hK\). Apply the chain rule and submultiplicativity. The same product controls backward propagation of terminal gradients. If \(L&gt;K\), one also has \(\sigma_{\min}(D_a x_L)\ge(1-K/L)^L\), because \(\|(I+hB)v\|\ge(1-hK)\|v\|\). Both estimates concern propagation with bounded derivatives; they are not a theorem that every parameter is learnable or every loss easy to minimize. \(\square\)</p></div></details>
+
+<h2>Training has a second clock</h2>
+<p>Take training pairs \((a_i,b_i)_{i=1}^N\), with a differentiable terminal loss \(\ell(x,b)\). A fixed output head can be absorbed into \(\ell\). Let \(x^i_0=a_i\) and consider</p>
+\[
+ \mathcal J_L(\theta)=\frac1N\sum_{i=1}^N\ell(x^i_L,b_i)
+ +\frac{\lambda h}{2}\sum_{\ell=0}^{L-1}\|\theta_\ell\|^2.
+\]
+<p>The index \(\ell\) counts <em>layers</em>; the variable \(s\) below measures <em>training time</em>. At each training time, a forward pass computes all the states. A backward pass computes the adjoints</p>
+\[
+ \begin{aligned}
+ p^i_L&=\nabla_x\ell(x^i_L,b_i),\\
+ p^i_\ell&=\bigl(I+hD_x\phi(x^i_\ell,\theta_\ell)\bigr)^\top p^i_{\ell+1}.
+ \end{aligned}
+\]
+<p>Ordinary backpropagation now gives the exact Euclidean gradient:</p>
+\[
+ \nabla_{\theta_\ell}\mathcal J_L
+ =h\left[\frac1N\sum_i
+ D_\theta\phi(x^i_\ell,\theta_\ell)^\top p^i_{\ell+1}
+ +\lambda\theta_\ell\right].
+\]
+<p>The factor \(h\) matters. Ordinary gradient flow is \(d\theta_\ell/ds=-\nabla_{\theta_\ell}\mathcal J_L\). To compare different depths on the same nontrivial training clock, use instead</p>
+\[
+ \frac{d\theta_\ell}{ds}=-L\nabla_{\theta_\ell}\mathcal J_L.
+\]
+<p>This is gradient flow for the discrete depth metric \(\langle u,v\rangle_L=h\sum_\ell u_\ell\cdot v_\ell\), which approximates the \(L^2\) metric on parameter paths. In gradient descent, it corresponds to updates \(\theta_\ell\leftarrow\theta_\ell-\eta L\nabla_{\theta_\ell}\mathcal J_L\). It is a normalization of the model and time scale—not a recommendation to multiply an arbitrary implementation's learning rate by its depth.</p>
+
+<h2>Backpropagation in continuous depth</h2>
+<p>For a smooth bounded parameter path, with state trajectories existing on \([0,1]\), the continuum objective is</p>
+\[
+ \mathcal J(\theta)=\frac1N\sum_i\ell(x^i(1),b_i)
+ +\frac\lambda2\int_0^1\|\theta(t)\|^2\,dt.
+\]
+<p id="proposition-2"><strong>Proposition 2 (the adjoint gradient).</strong> Assume \(\phi\) and the loss are continuously differentiable, with derivatives bounded on a neighborhood of the trajectories under consideration. Solve the state equation forward and the following adjoint backward:</p>
+\[
+ -\partial_t p^i(t)=D_x\phi(x^i(t),\theta(t))^\top p^i(t),
+ \qquad p^i(1)=\nabla_x\ell(x^i(1),b_i).
+\]
+<p>Then the \(L^2\)-gradient, defined by \(D\mathcal J(\theta)[u]=\int_0^1G(t)\cdot u(t)\,dt\), is</p>
+\[
+ G(t)=\frac1N\sum_i D_\theta\phi(x^i(t),\theta(t))^\top p^i(t)
+ +\lambda\theta(t).
+\]
+<details class="blog-proof"><summary>Proof: a single integration by parts</summary><div class="blog-proof-body"><p>For a perturbation \(u\), the state variation \(\xi^i\) satisfies</p>
+\[
+ \partial_t\xi^i=D_x\phi\,\xi^i+D_\theta\phi\,u,
+ \qquad \xi^i(0)=0.
+\]
+<p>The adjoint cancels the term involving \(D_x\phi\):</p>
+\[
+ \partial_t(p^i\cdot\xi^i)=p^i\cdot D_\theta\phi\,u.
+\]
+<p>Integrate from zero to one, use the terminal value of \(p^i\), average over the data, and add the derivative of the quadratic penalty. This gives the formula. Smoothness and the stated bounds justify differentiating the state equation for bounded perturbations; the resulting integral expression is represented by an \(L^2\) function. \(\square\)</p></div></details>
+<p>Training is therefore an evolution of an entire depth profile:</p>
+\[
+ \partial_s\theta_s(t)=-G_s(t).
+\]
+<p>For each \(s\), the states and adjoints must be recomputed across \(t\). It is useful to picture this as a forward–backward sweep inside each training step. The formula is an exact continuum first variation; proving that discrete training converges to this flow requires additional uniform control, not just convergence of a single forward pass <a href="#ref-sander">[10]</a>, <a href="#ref-marion">[11]</a>. Variational convergence of objectives and minimizers is a related but different question <a href="#ref-thorpe">[7]</a>. Also, at a fixed numerical step size, solving the continuous adjoint is not automatically identical to differentiating a discretized solver <a href="#ref-neuralode">[6]</a>.</p>
+<p>Can training preserve the smoothness of the weights across depth? In work with Michael Sander and Pierre Ablin, we studied this question for linear residual networks under suitable initialization and small-loss assumptions <a href="#ref-sander">[10]</a>. Marion, Wu, Sander, and Biau developed a nonlinear analysis with smooth activations: finite-time control uses boundedness/clipping hypotheses, and long-time convergence uses a Polyak–Łojasiewicz condition <a href="#ref-marion">[11]</a>. Neither statement follows from skip connections alone; the simple quadratic weight penalty above does not itself enforce smoothness across depth.</p>
+
+<h2>Linear blocks: simple equations, ordered products</h2>
+<p>Now set \(\phi(x,A)=Ax\), with \(A\in\mathbb R^{d\times d}\). The finite network and the limiting flow are</p>
+\[
+ x_L=(I+hA_{L-1})\cdots(I+hA_0)a,
+ \qquad \partial_t x=A(t)x.
+\]
+<p>Every initial condition shares the same <em>fundamental matrix</em>:</p>
+\[
+ x(t)=\Phi(t)a,\qquad
+ \partial_t\Phi(t)=A(t)\Phi(t),\qquad \Phi(0)=I.
+\]
+<p>For continuous \(A\), repeated integration gives the time-ordered expansion</p>
+\[
+ \begin{aligned}
+ \Phi(t)=I&+\int_0^t A(u)\,du\\
+ &+\int_{0&lt;v&lt;u&lt;t} A(u)A(v)\,dv\,du+\cdots.
+ \end{aligned}
+\]
+<p>Later matrices multiply on the left. In general, \(\Phi(t)\ne\exp(\int_0^tA(u)\,du)\): stretching and then rotating is not the same as rotating and then stretching. Pairwise commutation, \(A(u)A(v)=A(v)A(u)\), is a sufficient condition for the exponential-of-the-integral formula. The Magnus expansion organizes the correction terms using commutators <a href="#ref-magnus">[9]</a>.</p>
+<details class="blog-proof"><summary>Two useful facts: invertibility and volume change</summary><div class="blog-proof-body"><p>Solve \(\dot\Psi=-\Psi A\), \(\Psi(0)=I\). Differentiating \(\Psi\Phi\) gives zero, so \(\Psi=\Phi^{-1}\). Jacobi's determinant identity then yields Liouville's formula</p>
+\[
+ \det\Phi(t)=\exp\left(\int_0^t\operatorname{tr}A(u)\,du\right)&gt;0.
+\]
+<p>Thus a finite-time linear ODE never collapses dimension and preserves orientation. By contrast, an Euler block can be singular if \(I+hA_\ell\) is singular. This distinction will reappear at the saddles in the final experiment. \(\square\)</p></div></details>
+<p>The training equations simplify too. With the Frobenius inner product on matrices,</p>
+\[
+ \begin{aligned}
+ -\partial_t p^i&=A(t)^\top p^i,\\
+ G_A(t)&=\frac1N\sum_i p^i(t)x^i(t)^\top+\lambda A(t),\\
+ \partial_s A_s(t)&=-G_{A_s}(t).
+ \end{aligned}
+\]
+<p>For the discrete network, replace the outer product by \(p^i_{\ell+1}(x^i_\ell)^\top\) and multiply by \(h\) to obtain the ordinary Euclidean gradient. Even though the network is linear in its input, its dependence on all the matrices is nonlinear.</p>
+
+<h2>Numerical experimentation: a family of linear flows</h2>
+<p>Move an entire circle of initial conditions, not just one particle. The explorer runs over \(0\le t\le2\) and offers a constant matrix, a rotating strain, and two shears applied in different orders. The solid teal endpoint curve is the image of the unit circle; compare it with the dashed prediction \(\exp(\int_0^t A)\). These agree in the constant case and can separate when matrices at different times do not commute.</p>
+<div class="resnet-wide"><iframe class="idea-experiment" data-experiment="resnet-flow" src="assets/deep-resnet/flow.html" title="Linear ODE flow explorer: rotation, growth, shear and noncommuting time dependence" loading="lazy" style="height:950px"></iframe></div>
+<p>The constant and switched-shear modes use exact formulas. The rotating-strain mode uses fourth-order Runge–Kutta and reports a step-halving discrepancy; the determinant can also be checked against Liouville's formula. The sliders change a prescribed coefficient path—they do not train a neural network.</p>
+
+<h2>Tie the weights: the matrix exponential</h2>
+<p>If all layers share one matrix \(A\), then the endpoint maps become</p>
+\[
+ F_L(A)=(I+A/L)^L,
+ \qquad F_\infty(A)=e^A.
+\]
+<p>This is a much smaller model than freely choosing \(A(t)\). Weight tying also changes the gradient: the contributions of all layers must be <em>summed</em>. That sum is already of order one; the extra factor \(L\) used for independent layer parameters should not be applied again to the tied parameter. For a perturbation \(H\), with \(B=I+A/L\),</p>
+\[
+ DF_L(A)[H]=\frac1L\sum_{j=0}^{L-1}B^{L-1-j}HB^j,
+\]
+\[
+ D\exp(A)[H]=\int_0^1 e^{(1-u)A}He^{uA}\,du.
+\]
+<p>When \(A\) and \(H\) commute, the second expression simplifies to \(e^AH\). Let us choose a commuting two-dimensional family where the whole landscape can be drawn.</p>
+
+<h2>A complex variable hiding inside a real network</h2>
+<p>Identify the plane with \(\mathbb C\) and set</p>
+\[
+ A(z)=\begin{pmatrix}x&-y\\y&x\end{pmatrix},
+ \qquad z=x+iy.
+\]
+<p>This matrix acts as multiplication by \(z\). All such matrices commute. Their exponential acts as multiplication by \(e^z\): the real part produces dilation, the imaginary part rotation. Take the target map to be \(-I\), a half-turn. The squared fitting loss, with no weight penalty, is</p>
+\[
+ \begin{aligned}
+ f_L(z)&=\tfrac12\|F_L(A(z))+I\|_F^2
+       =\left|(1+z/L)^L+1\right|^2,\\
+ f_\infty(z)&=\left|e^z+1\right|^2
+       =e^{2x}+2e^x\cos y+1.
+ \end{aligned}
+\]
+<p>The Frobenius loss sums squared errors on the two coordinate inputs. This is a loss for <em>real</em> two-dimensional linear networks, not a requirement to implement complex-valued neural layers.</p>
+
+<p id="theorem-1"><strong>Theorem 1 (all critical points in this slice).</strong> For every finite integer \(L\ge1\), the global minima have value zero and are exactly</p>
+\[
+ z_k=L\left(e^{i(2k+1)\pi/L}-1\right),
+ \qquad k=0,\ldots,L-1.
+\]
+<p>For \(L=1\) there is no other critical point. For \(L\ge2\), the only other critical point is \(z=-L\), of value one. It is an ordinary saddle when \(L=2\), and a degenerate saddle with zero Hessian when \(L\ge3\). At infinite depth the critical points are exactly</p>
+\[
+ z_k=(2k+1)\pi i,\qquad k\in\mathbb Z,
+\]
+<p>all global minima; there are no saddles. In every case, the Hessian at each minimum is \(2I_2\). In particular, these landscapes have <em>no nonglobal local minima</em>.</p>
+<details class="blog-proof"><summary>Proof of Theorem 1: zeros and critical points of a holomorphic function</summary><div class="blog-proof-body">
+<p>Write \(f=|g|^2\). In the real coordinates \((x,y)\), its first variation is</p>
+\[
+ Df(z)[\delta]=2\operatorname{Re}\left(\overline{g(z)}\,g'(z)\delta\right).
+\]
+<p>This vanishes for every \(\delta\in\mathbb C\) exactly when \(g(z)=0\) or \(g'(z)=0\). Here</p>
+\[
+ g_L(z)=(1+z/L)^L+1,
+ \qquad g_L'(z)=(1+z/L)^{L-1}.
+\]
+<p>The zeros of \(g_L\) give the listed minima; \(g_L'\) only vanishes at \(-L\) when \(L\ge2\). At a minimum, \(|g_L'|=1\), so \(f_L(z_k+\delta)=|\delta|^2+O(|\delta|^3)\), giving Hessian \(2I_2\).</p>
+<p>At the remaining critical point, put \(z=-L+\delta\). The exact expansion is</p>
+\[
+ f_L(-L+\delta)=1+2\operatorname{Re}\bigl((\delta/L)^L\bigr)+|\delta/L|^{2L}.
+\]
+<p>Along rays with \(\cos(L\arg\delta)=+1\) the value increases; along rays with \(\cos(L\arg\delta)=-1\) it decreases for sufficiently small nonzero \(\delta\). Thus this is a saddle. When \(L=2\), the leading term is \((\operatorname{Re}\delta)^2/2-(\operatorname{Im}\delta)^2/2\), so the Hessian has eigenvalues \(1,-1\). For \(L\ge3\), the first nonconstant term has degree \(L\), and the Hessian vanishes.</p>
+<p>Finally, \(g_\infty=e^z+1\) has derivative \(e^z\), which never vanishes. Its zeros are exactly the odd multiples of \(\pi i\), where again \(|g_\infty'|=1\). This exhausts the critical points. \(\square\)</p>
+</div></details>
+
+<h2>What depth improves—and what it does not</h2>
+<p>For a fixed integer \(k\), the corresponding finite-depth minimum satisfies</p>
+\[
+ z_k=i(2k+1)\pi-\frac{(2k+1)^2\pi^2}{2L}+O(L^{-2}).
+\]
+<p>Thus minima near the origin approach the imaginary axis, while the saddle \(-L\) moves off to the left. Locally near that saddle, the leading variation has degree \(L\): increasingly flat does not mean locally convex. At finite depth, the saddle is precisely the parameter where every residual block in this tied model collapses to zero. It lies outside any fixed bounded-parameter region in the ODE limit.</p>
+<p>Nor does the absence of nonglobal local minima guarantee that gradient descent finds a minimum. For the infinite-depth loss, the real axis \(y=0\) is invariant under gradient flow. There,</p>
+\[
+ \frac{dx}{ds}=-2e^x(e^x+1),\qquad \frac{dy}{ds}=0.
+\]
+<p>Starting on that axis sends \(x\to-\infty\), the gradient to zero, and the loss to <em>one</em>, not zero. The algorithm escapes along an asymptotically flat direction rather than converging to a finite bad critical point. This special trajectory does not describe all initializations, but it is a useful warning.</p>
+<div class="note"><p>These conclusions concern the full two-real-parameter commuting slice, without regularization. They are not a landscape theorem for arbitrary matrix parameterizations or nonlinear ResNets. Even restricting to the real line changes the answer: for even \(L\), \(z=-L\) minimizes the real-line loss at value one, although it is a saddle in the plane. Allowing rotation is what makes the target half-turn exactly reachable.</p></div>
+
+<h2>Numerical experimentation: from one layer to infinity</h2>
+<p>Change depth without moving the camera. The colored curves are the exact loss levels \(0.1,0.5,1,2,5,10,25\); level one is dashed. For finite \(L\ge2\), zoom out to find the saddle at \(-L\), or zoom in to see its alternating sectors. “Infinity” evaluates the exponential itself, not a very large power. The visible-minimum counter counts all minima inside the plotting window.</p>
+<div class="resnet-wide"><iframe class="idea-experiment" data-experiment="resnet-landscape" src="assets/deep-resnet/landscape.html" title="Analytic contours of the finite-depth residual loss and its exponential limit" loading="lazy" style="height:1000px"></iframe></div>
+<details class="blog-proof"><summary>How to trace a flat saddle without missing its contours</summary><div class="blog-proof-body">
+<p>A uniform grid can miss nearly all the structure when \(f_L-1\) is tiny. Instead, trace the level \(f_L=c\) in the image plane:</p>
+\[
+ w(\alpha)=-1+\sqrt c\,e^{i\alpha},
+ \qquad (1+z/L)^L=w(\alpha).
+\]
+<p>Taking every complex root gives</p>
+\[
+ z=L\left[|w|^{1/L}
+ e^{i(\arg w+2\pi k)/L}-1\right],
+ \qquad k=0,\ldots,L-1.
+\]
+<p>At \(c=1\), the curve passes through \(w=0\), whose unique preimage is \(-L\), a saddle when \(L\ge2\); the branches are sampled up to this point explicitly. At infinity, the corresponding formula is</p>
+\[
+ z=\log|w|+i(\arg w+2\pi k),\qquad k\in\mathbb Z,
+\]
+<p>and \(w=0\) has no finite preimage. The missing saddle is replaced by leftward asymptotes. The renderer samples these analytic curves adaptively in screen coordinates and draws only the relevant portion of the infinite family. The paths are numerical polylines, but their vertices come from the exact level-set parametrization, not from interpolating rounded loss values on a grid.</p>
+</div></details>
+<p>Residual connections turn composition into a discretized evolution. The adjoint explains how to train that evolution; time ordering explains why even linear blocks interact nontrivially; and this tiny commuting model shows why a well-behaved forward limit can coexist with a delicate optimization landscape.</p>
+
+<h2>Bibliography</h2>
+<ol class="references">
+<li id="ref-he">Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. <em>Deep Residual Learning for Image Recognition.</em> CVPR, 2016. <a href="https://arxiv.org/abs/1512.03385">Paper</a>.</li>
+<li id="ref-identity">Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. <em>Identity Mappings in Deep Residual Networks.</em> ECCV, 2016. <a href="https://arxiv.org/abs/1603.05027">Paper</a>.</li>
+<li id="ref-e">Weinan E. <em>A Proposal on Machine Learning via Dynamical Systems.</em> Communications in Mathematics and Statistics 5, 1–11, 2017. <a href="https://doi.org/10.1007/s40304-017-0103-z">Paper</a>.</li>
+<li id="ref-haber">Eldad Haber and Lars Ruthotto. <em>Stable Architectures for Deep Neural Networks.</em> Inverse Problems 34, 014004, 2018. <a href="https://arxiv.org/abs/1705.03341">Paper</a>.</li>
+<li id="ref-control">Qianxiao Li, Long Chen, Cheng Tai, and Weinan E. <em>Maximum Principle Based Algorithms for Deep Learning.</em> Journal of Machine Learning Research 18(165), 1–29, 2018. <a href="https://jmlr.org/papers/v18/17-653.html">Paper</a>.</li>
+<li id="ref-neuralode">Ricky T. Q. Chen, Yulia Rubanova, Jesse Bettencourt, and David Duvenaud. <em>Neural Ordinary Differential Equations.</em> NeurIPS, 2018. <a href="https://arxiv.org/abs/1806.07366">Paper</a>.</li>
+<li id="ref-thorpe">Matthew Thorpe and Yves van Gennip. <em>Deep Limits of Residual Neural Networks.</em> Research in the Mathematical Sciences 10, 6, 2023. <a href="https://doi.org/10.1007/s40687-022-00370-y">Paper</a> · <a href="https://doi.org/10.1007/s40687-024-00454-x">Correction</a>.</li>
+<li id="ref-scaling">Pierre Marion, Adeline Fermanian, Gérard Biau, and Jean-Philippe Vert. <em>Scaling ResNets in the Large-depth Regime.</em> Journal of Machine Learning Research 26(56), 1–48, 2025. <a href="https://jmlr.org/papers/v26/22-0664.html">Paper</a>.</li>
+<li id="ref-magnus">Sergio Blanes, Fernando Casas, José A. Oteo, and José Ros. <em>The Magnus Expansion and Some of Its Applications.</em> Physics Reports 470, 151–238, 2009. <a href="https://arxiv.org/abs/0810.5488">Paper</a>.</li>
+<li id="ref-sander">Michael Sander, Pierre Ablin, and Gabriel Peyré. <em>Do Residual Neural Networks Discretize Neural Ordinary Differential Equations?</em> NeurIPS 35, 36520–36532, 2022. <a href="https://proceedings.neurips.cc/paper_files/paper/2022/hash/ecc38927fe5148c66bee64ee8fed1e76-Abstract-Conference.html">Paper</a>.</li>
+<li id="ref-marion">Pierre Marion, Yu-Han Wu, Michael Sander, and Gérard Biau. <em>Implicit Regularization of Deep Residual Networks towards Neural ODEs.</em> ICLR, 2024. <a href="https://arxiv.org/abs/2309.01213">Paper</a>.</li>
+</ol>
+</article></main>
+<footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">All forthcoming posts</a> · <a href="/blog/">Blog</a> · <a href="/privacy/">Privacy &amp; audience measurement</a></div></footer>
+</body></html>

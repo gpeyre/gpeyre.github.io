@@ -1,6 +1,20 @@
 {
   "version": 1,
   "images": {
+    "training-very-deep-resnets": {
+      "path": "/blog/imgs/summaries/training-very-deep-resnets.jpg",
+      "width": 1200,
+      "height": 900,
+      "alt": "Exact residual-network loss contours at depth eight: eight zero-loss minima surrounding the degenerate saddle at minus eight, with its loss-one contour dashed.",
+      "source": "/blog/preparations/assets/deep-resnet/landscape.html",
+      "settings": {
+        "depth": 8,
+        "camera": {"cx": -7.5, "cy": 0, "zoom": 1},
+        "levels": [0.1, 0.5, 1, 2, 5, 10, 25],
+        "renderer": "interactive landscape-core.js analytic contour paths; native canvas summary layout"
+      },
+      "sha256": "568a5404a95221d4d7ebc8f2ac0225f6727ad0d4224d1f48f77e43c36b6f4860"
+    },
     "autonomous-wasserstein-statistics": {
       "path": "/blog/imgs/summaries/autonomous-wasserstein-statistics.jpg",
       "alt": "Two different particle clouds approach the unit circle while their common signed-distance moment follows the same exponential decay.",

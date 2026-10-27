@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <title>Linear flows and time ordering — ResNet experiment</title>
+  <link rel="stylesheet" href="flow.css">
+</head>
+<body>
+<main id="flow-lab">
+  <p class="eyebrow">Experiment 01 · a flow of linear maps</p>
+  <h2>Let the vector field change with time</h2>
+  <p class="intro">Every particle follows ẋ(t) = A(t)x(t). The same fundamental matrix Φ(t) moves all initial points: x(t) = Φ(t)x(0). Can one exponential describe the result?</p>
+  <div class="choices">
+    <label for="flow-mode">Matrix schedule
+      <select id="flow-mode">
+        <option value="constant">Constant growth, rotation &amp; shear</option>
+        <option value="strain" selected>Smoothly rotating strain</option>
+        <option value="shears">Two shears: order matters</option>
+      </select>
+    </label>
+    <label for="flow-seeds">Starting points
+      <select id="flow-seeds"><option value="circle">20 points on a circle</option><option value="grid">5 × 5 grid</option></select>
+    </label>
+  </div>
+  <div class="controls">
+    <label for="flow-alpha">Isotropic growth α <output id="flow-alpha-value" for="flow-alpha">0.00</output>
+      <input id="flow-alpha" type="range" min="-0.45" max="0.45" step="0.01" value="0">
+      <span class="help">Negative contracts; positive expands.</span>
+    </label>
+    <label for="flow-omega" data-modes="constant strain">Rotation rate ω <output id="flow-omega-value" for="flow-omega">0.35</output>
+      <input id="flow-omega" type="range" min="-2" max="2" step="0.05" value="0.35">
+      <span class="help">Positive is counterclockwise (radians/time).</span>
+    </label>
+    <label for="flow-shear" data-modes="constant shears" hidden>Shear strength κ <output id="flow-shear-value" for="flow-shear">1.00</output>
+      <input id="flow-shear" type="range" min="-1.5" max="1.5" step="0.05" value="1">
+      <span class="help">Horizontal shear H; the second shear is vertical V.</span>
+    </label>
+    <label for="flow-strain" data-modes="strain">Strain strength σ <output id="flow-strain-value" for="flow-strain">0.75</output>
+      <input id="flow-strain" type="range" min="0" max="1.2" step="0.05" value="0.75">
+      <span class="help">Stretch one axis, compress its perpendicular.</span>
+    </label>
+    <label for="flow-speed" data-modes="strain">Strain-axis rotation ν <output id="flow-speed-value" for="flow-speed">1.25</output>
+      <input id="flow-speed" type="range" min="0" max="2.5" step="0.05" value="1.25">
+      <span class="help">The strain axes turn through angle νt.</span>
+    </label>
+  </div>
+  <div class="view-options">
+    <label><input id="flow-naive" type="checkbox" checked> Compare with exp(∫₀ᵗ A(s) ds)</label>
+    <label data-modes="shears" hidden><input id="flow-reverse" type="checkbox"> Reverse the shear order</label>
+  </div>
+  <div class="experiment">
+    <section class="plot-panel" aria-labelledby="flow-plot-title">
+      <div class="panel-heading"><h3 id="flow-plot-title">One family, one linear map</h3><span id="flow-time-label">t = 1.20</span></div>
+      <canvas id="flow-canvas" role="img" aria-label="Trajectories of a family of initial points under a two-dimensional time-varying linear flow."></canvas>
+      <div class="legend"><span><i class="initial"></i>Initial circle</span><span><i class="true-flow"></i>Φ(t) circle</span><span id="flow-naive-key"><i class="naive-flow"></i>exp(∫A) circle</span></div>
+      <p class="plot-note" id="flow-scale-note">Equal axis scales; the view stays fixed during playback.</p>
+    </section>
+    <aside class="readout" aria-label="Linear flow measurements">
+      <div class="matrix-card"><h3>Instantaneous A(t)</h3><div id="flow-matrix-a" class="matrix" aria-label="Matrix A"></div></div>
+      <div class="matrix-card"><h3>Fundamental matrix Φ(t)</h3><div id="flow-matrix-phi" class="matrix" aria-label="Fundamental matrix"></div><p class="small">Φ̇ = A(t)Φ, &nbsp; Φ(0) = I</p></div>
+      <dl class="metrics">
+        <div><dt>Area multiplier · det Φ(t)</dt><dd id="flow-determinant">—</dd></div>
+        <div><dt>Liouville prediction · exp(2αt)</dt><dd id="flow-liouville">—</dd></div>
+        <div><dt>Relative matrix gap to exp(∫A)</dt><dd id="flow-gap">—</dd></div>
+        <div><dt id="flow-accuracy-title">RK4 step-halving difference</dt><dd id="flow-accuracy">—</dd></div>
+      </dl>
+    </aside>
+  </div>
+  <div class="timeline">
+    <button id="flow-play" type="button" aria-pressed="false">Play</button>
+    <button id="flow-reset" type="button" class="secondary">Reset time</button>
+    <label for="flow-time">Time <output id="flow-time-value" for="flow-time">1.20 / 2</output><input id="flow-time" type="range" min="0" max="2" step="0.005" value="1.2"></label>
+    <span id="flow-status" role="status" aria-live="polite">Paused</span>
+  </div>
+  <section class="explanation" aria-labelledby="flow-schedule-title">
+    <h3 id="flow-schedule-title">A rotating strain field</h3>
+    <p class="formula" id="flow-formula">A(t) = αI + ωJ + σR(νt)DR(−νt)</p>
+    <p id="flow-description">The instantaneous stretching axes turn in time. The matrices at different times generally do not commute, so the order of the small transformations matters.</p>
+    <p class="definitions">I is the identity, J = [0, −1; 1, 0], H = [0, 1; 0, 0], V = [0, 0; 1, 0], D = diag(1, −1), and R(θ) is counterclockwise rotation by θ.</p>
+  </section>
+  <p class="method" id="flow-method">Smooth flow: fourth-order Runge–Kutta (RK4), maximum step Δt = 1/120. The displayed step-halving difference compares Φ at Δt and Δt/2; it is a convergence diagnostic, not a rigorous error bound.</p>
+  <p class="method">The solid ellipse is the image of the unit circle, even when the particles start on a grid. The dashed amber ellipse uses exp(∫₀ᵗA(s) ds); it agrees for constant or pairwise-commuting A, but not in general. The matrix gap is ‖Φ − exp(∫A)‖<sub>F</sub>/‖Φ‖<sub>F</sub>. The determinant measures signed area, not the length of every vector.</p>
+  <noscript>Enable JavaScript to explore the linear flow and compare matrix schedules.</noscript>
+</main>
+<script src="flow-core.js"></script>
+<script src="flow.js"></script>
+</body>
+</html>
