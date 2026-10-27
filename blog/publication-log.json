@@ -227,6 +227,32 @@
       "publication_commit": "a086f40756a018f956044843fc5c49ea0445a6a4",
       "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3myqg3hg222ld",
       "bluesky_cid": "bafyreiclmjzsrom5ctjubxnmuhri6tb73623u7fa35fmmn55mwbblfvc4a"
+    },
+    {
+      "slug": "langevin-without-a-potential",
+      "title": "Langevin without a potential",
+      "date": "2026-10-27",
+      "url": "https://www.gpeyre.com/blog/2026/10/27/langevin-without-a-potential/",
+      "message": "Langevin dynamics need not follow a potential. A stable linear drift has a Gaussian equilibrium that can keep circulating. Its covariance follows from a Lyapunov equation. https://www.gpeyre.com/blog/2026/10/27/langevin-without-a-potential/",
+      "status": "prepared",
+      "source_sha256": "9b5338f214c358033b32b85297ec984de4389265ea75e34dd11c371da8cba665",
+      "base_commit": "3d63fcf8e5b7531b06cbfcb9f11585a19d64e69c",
+      "files": [
+        "blog/_posts/2026-10-27-langevin-without-a-potential.md",
+        "blog/preparations/langevin-without-a-potential.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null,
+      "working_sha256": {
+        "blog/_posts/2026-10-27-langevin-without-a-potential.md": "248e3c0c5e25b4c4e9ee5133d811bd8c0774e2276a61ff72300d981781fe250f",
+        "blog/preparations/langevin-without-a-potential.html": "8daea79c5cf9c1ea031f325e1ce89ba601c494c6fca77285ba741bbf868f714b",
+        "blog/preparations/index.html": "c71019bf58e7771beb9973b2565b237341ddd4284b8fca3e17a04b37c923ddbe",
+        "js/blog-search-index.js": "cae168addb9c006388e39ab2b8a44ad231620af49badf3ccf1e9013ceead9350"
+      }
     }
   ]
 }
