@@ -31,7 +31,7 @@
 <p>The answer connects learning to differential equations and optimal control. But “more stable propagation” does not mean “easy optimization.” We will end with an exactly solvable loss that has no nonglobal local minima, yet develops extraordinarily flat saddles.</p>
 
 <h2>One small step, repeated many times</h2>
-<p>Let \(x_\ell\in\mathbb R^d\) be the activation, \(\theta_\ell\in\mathbb R^p\) the parameters of block \(\ell\), and \(\phi:\mathbb R^d\times\mathbb R^p\to\mathbb R^d\) a residual function. With depth \(L\), write</p>
+<p>Let \(x_\ell\in\mathbb R^d\) be the activation, \(\theta_\ell\in\mathbb R^p\) the parameters of block \(\ell\), and \(\phi:\mathbb R^d\times\mathbb R^p\to\mathbb R^d\) a residual function. We assume \(\phi\) is continuously differentiable for the gradient calculations below. With depth \(L\), write</p>
 \[
  h=\frac1L,\qquad
  x_{\ell+1}=x_\ell+h\phi(x_\ell,\theta_\ell),
@@ -49,15 +49,20 @@
 <p>For example, a Lipschitz parameter profile, a smooth \(\phi\), and uniform bounds on the relevant trajectories and derivatives give the usual Euler error \(O(L^{-1})\). The dynamical-systems and control viewpoints were developed in <a href="#ref-e">[3]</a>–<a href="#ref-neuralode">[6]</a>.</p>
 <div class="note"><p>The factor \(1/L\) is a deliberate <em>ODE scaling</em>, not part of every practical ResNet. Arbitrarily oscillating or independently initialized layer weights do not automatically converge to a single smooth profile. Other scalings and initializations lead to different limits; convergence of a trained network is a further question <a href="#ref-thorpe">[7]</a>, <a href="#ref-scaling">[8]</a>.</p></div>
 
-<p id="proposition-1"><strong>Proposition 1 (a depth-independent propagation bound).</strong> Suppose \(\|D_x\phi(x_\ell,\theta_\ell)\|_{\mathrm{op}}\le K\). The Jacobian of the network with respect to its input satisfies</p>
+<p id="proposition-1"><strong>Proposition 1 (depth-independent propagation bounds).</strong> Suppose \(\|D_x\phi(x_\ell,\theta_\ell)\|_{\mathrm{op}}\le K\) for every layer, with \(K\) independent of \(L\). The Jacobian of the network with respect to its input satisfies</p>
 \[
  \|D_a x_L\|_{\mathrm{op}}
  \le(1+K/L)^L\le e^K.
 \]
-<details class="blog-proof"><summary>Proof: multiply near-identity Jacobians</summary><div class="blog-proof-body"><p>Each block has Jacobian \(I+hD_x\phi\), of norm at most \(1+hK\). Apply the chain rule and submultiplicativity. The same product controls backward propagation of terminal gradients. If \(L&gt;K\), one also has \(\sigma_{\min}(D_a x_L)\ge(1-K/L)^L\), because \(\|(I+hB)v\|\ge(1-hK)\|v\|\). Both estimates concern propagation with bounded derivatives; they are not a theorem that every parameter is learnable or every loss easy to minimize. \(\square\)</p></div></details>
+<p>If also \(L&gt;K\), its smallest singular value obeys</p>
+\[
+ \sigma_{\min}(D_a x_L)\ge(1-K/L)^L.
+\]
+<p>The lower bound tends to \(e^{-K}&gt;0\). Thus, under a uniform derivative bound, merely increasing the depth neither explodes nor extinguishes gradients propagated through the state. The constants can still be poor when \(K\) is large; this does not control parameter gradients.</p>
+<details class="blog-proof"><summary>Proof: multiply near-identity Jacobians</summary><div class="blog-proof-body"><p>Each block has Jacobian \(I+hD_x\phi\), of norm at most \(1+hK\). Apply the chain rule and submultiplicativity. For the lower bound, \(\|(I+hB)v\|\ge(1-hK)\|v\|\) whenever \(\|B\|_{\mathrm{op}}\le K\); iterate this inequality over the blocks. The same singular-value bounds apply to the transposed product used in backpropagation. These are propagation estimates, not a theorem that every parameter is learnable or every loss easy to minimize. \(\square\)</p></div></details>
 
 <h2>Training has a second clock</h2>
-<p>Take training pairs \((a_i,b_i)_{i=1}^N\), with a differentiable terminal loss \(\ell(x,b)\). A fixed output head can be absorbed into \(\ell\). Let \(x^i_0=a_i\) and consider</p>
+<p>Take training pairs \((a_i,b_i)_{i=1}^N\), with a differentiable terminal loss \(\ell(x,b)\). A fixed output head can be absorbed into \(\ell\). Let \(x^i_0=a_i\), choose \(\lambda\ge0\), and consider</p>
 \[
  \mathcal J_L(\theta)=\frac1N\sum_{i=1}^N\ell(x^i_L,b_i)
  +\frac{\lambda h}{2}\sum_{\ell=0}^{L-1}\|\theta_\ell\|^2.
@@ -83,17 +88,17 @@
 <p>This is gradient flow for the discrete depth metric \(\langle u,v\rangle_L=h\sum_\ell u_\ell\cdot v_\ell\), which approximates the \(L^2\) metric on parameter paths. In gradient descent, it corresponds to updates \(\theta_\ell\leftarrow\theta_\ell-\eta L\nabla_{\theta_\ell}\mathcal J_L\). It is a normalization of the model and time scale—not a recommendation to multiply an arbitrary implementation's learning rate by its depth.</p>
 
 <h2>Backpropagation in continuous depth</h2>
-<p>For a smooth bounded parameter path, with state trajectories existing on \([0,1]\), the continuum objective is</p>
+<p>Fix a bounded measurable parameter path \(\theta\), with state trajectories existing on \([0,1]\). The continuum objective is</p>
 \[
  \mathcal J(\theta)=\frac1N\sum_i\ell(x^i(1),b_i)
  +\frac\lambda2\int_0^1\|\theta(t)\|^2\,dt.
 \]
-<p id="proposition-2"><strong>Proposition 2 (the adjoint gradient).</strong> Assume \(\phi\) and the loss are continuously differentiable, with derivatives bounded on a neighborhood of the trajectories under consideration. Solve the state equation forward and the following adjoint backward:</p>
+<p id="proposition-2"><strong>Proposition 2 (the adjoint first variation).</strong> Assume \(\phi\) and the loss are continuously differentiable, with their derivatives bounded on a neighborhood of the state and parameter values under consideration. Solve the state equation forward and the following adjoint backward, with the differential equations understood almost everywhere:</p>
 \[
  -\partial_t p^i(t)=D_x\phi(x^i(t),\theta(t))^\top p^i(t),
  \qquad p^i(1)=\nabla_x\ell(x^i(1),b_i).
 \]
-<p>Then the \(L^2\)-gradient, defined by \(D\mathcal J(\theta)[u]=\int_0^1G(t)\cdot u(t)\,dt\), is</p>
+<p>For every bounded perturbation \(u\), the directional derivative is \(D\mathcal J(\theta)[u]=\int_0^1G(t)\cdot u(t)\,dt\), where</p>
 \[
  G(t)=\frac1N\sum_i D_\theta\phi(x^i(t),\theta(t))^\top p^i(t)
  +\lambda\theta(t).
@@ -107,12 +112,17 @@
 \[
  \partial_t(p^i\cdot\xi^i)=p^i\cdot D_\theta\phi\,u.
 \]
-<p>Integrate from zero to one, use the terminal value of \(p^i\), average over the data, and add the derivative of the quadratic penalty. This gives the formula. Smoothness and the stated bounds justify differentiating the state equation for bounded perturbations; the resulting integral expression is represented by an \(L^2\) function. \(\square\)</p></div></details>
-<p>Training is therefore an evolution of an entire depth profile:</p>
+<p>Integrate from zero to one, use the terminal value of \(p^i\), average over the data, and add the derivative of the quadratic penalty. Standard dependence of ODE solutions on parameters justifies this linearization for bounded \(u\) and sufficiently small perturbation amplitude. The bounded coefficients and finite time interval make \(G\) bounded, hence square-integrable. \(\square\)</p></div></details>
+<p>We call \(G\) the \(L^2\)-gradient: it represents the first variation in the depth inner product. This does not, under these local assumptions alone, assert that the objective is defined and differentiable on an open set of all \(L^2\) controls. The corresponding training equation evolves an entire bounded depth profile:</p>
 \[
  \partial_s\theta_s(t)=-G_s(t).
 \]
-<p>For each \(s\), the states and adjoints must be recomputed across \(t\). It is useful to picture this as a forward–backward sweep inside each training step. The formula is an exact continuum first variation; proving that discrete training converges to this flow requires additional uniform control, not just convergence of a single forward pass <a href="#ref-sander">[10]</a>, <a href="#ref-marion">[11]</a>. Variational convergence of objectives and minimizers is a related but different question <a href="#ref-thorpe">[7]</a>. Also, at a fixed numerical step size, solving the continuous adjoint is not automatically identical to differentiating a discretized solver <a href="#ref-neuralode">[6]</a>.</p>
+<p>As long as a sufficiently regular bounded training trajectory exists, the chain rule gives the energy identity</p>
+\[
+ \frac{d}{ds}\mathcal J(\theta_s)
+ =-\int_0^1\|G_s(t)\|^2\,dt\le0.
+\]
+<p>For each \(s\), the states and adjoints must be recomputed across \(t\). Think of a forward–backward sweep inside each training step. Proving that discrete training converges to this flow requires additional uniform control, not just convergence of a single forward pass <a href="#ref-sander">[10]</a>, <a href="#ref-marion">[11]</a>. Variational convergence of objectives and minimizers is a different question: the result in <a href="#ref-thorpe">[7]</a> uses explicit regularization across neighboring layers, not merely the quadratic weight penalty written here. Also, at a fixed numerical step size, solving the continuous adjoint is not automatically identical to differentiating a discretized solver <a href="#ref-neuralode">[6]</a>.</p>
 <p>Can training preserve the smoothness of the weights across depth? In work with Michael Sander and Pierre Ablin, we studied this question for linear residual networks under suitable initialization and small-loss assumptions <a href="#ref-sander">[10]</a>. Marion, Wu, Sander, and Biau developed a nonlinear analysis with smooth activations: finite-time control uses boundedness/clipping hypotheses, and long-time convergence uses a Polyak–Łojasiewicz condition <a href="#ref-marion">[11]</a>. Neither statement follows from skip connections alone; the simple quadratic weight penalty above does not itself enforce smoothness across depth.</p>
 
 <h2>Linear blocks: simple equations, ordered products</h2>
@@ -126,14 +136,15 @@
  x(t)=\Phi(t)a,\qquad
  \partial_t\Phi(t)=A(t)\Phi(t),\qquad \Phi(0)=I.
 \]
-<p>For continuous \(A\), repeated integration gives the time-ordered expansion</p>
+<p>For continuous, or bounded piecewise-continuous, \(A\), repeated integration gives the time-ordered expansion</p>
 \[
  \begin{aligned}
  \Phi(t)=I&+\int_0^t A(u)\,du\\
  &+\int_{0&lt;v&lt;u&lt;t} A(u)A(v)\,dv\,du+\cdots.
  \end{aligned}
 \]
-<p>Later matrices multiply on the left. In general, \(\Phi(t)\ne\exp(\int_0^tA(u)\,du)\): stretching and then rotating is not the same as rotating and then stretching. Pairwise commutation, \(A(u)A(v)=A(v)A(u)\), is a sufficient condition for the exponential-of-the-integral formula. The Magnus expansion organizes the correction terms using commutators <a href="#ref-magnus">[9]</a>.</p>
+<p>If \(\|A(t)\|_{\mathrm{op}}\le M\), the term with \(j\) matrices has norm at most \((Mt)^j/j!\), so the series converges uniformly on bounded time intervals. Later matrices multiply on the left. In general, \(\Phi(t)\ne\exp(\int_0^tA(u)\,du)\): stretching and then rotating is not the same as rotating and then stretching.</p>
+<p>Pairwise commutation, \(A(u)A(v)=A(v)A(u)\), is sufficient for the exponential-of-the-integral formula: the integrand in each term is then symmetric, so its ordered integral equals \(1/j!\) times \((\int_0^tA(u)\,du)^j\). Without commutation, the Magnus expansion organizes the correction terms using commutators <a href="#ref-magnus">[9]</a>.</p>
 <details class="blog-proof"><summary>Two useful facts: invertibility and volume change</summary><div class="blog-proof-body"><p>Solve \(\dot\Psi=-\Psi A\), \(\Psi(0)=I\). Differentiating \(\Psi\Phi\) gives zero, so \(\Psi=\Phi^{-1}\). Jacobi's determinant identity then yields Liouville's formula</p>
 \[
  \det\Phi(t)=\exp\left(\int_0^t\operatorname{tr}A(u)\,du\right)&gt;0.
@@ -195,7 +206,7 @@
 \[
  z_k=(2k+1)\pi i,\qquad k\in\mathbb Z,
 \]
-<p>all global minima; there are no saddles. In every case, the Hessian at each minimum is \(2I_2\). In particular, these landscapes have <em>no nonglobal local minima</em>.</p>
+<p>all global minima; there are no saddles. In the Euclidean coordinates \((x,y)\), the Hessian at each minimum is \(2I_2\). In particular, these landscapes have <em>no nonglobal local minima</em>.</p>
 <details class="blog-proof"><summary>Proof of Theorem 1: zeros and critical points of a holomorphic function</summary><div class="blog-proof-body">
 <p>Write \(f=|g|^2\). In the real coordinates \((x,y)\), its first variation is</p>
 \[
@@ -220,13 +231,20 @@
 \[
  z_k=i(2k+1)\pi-\frac{(2k+1)^2\pi^2}{2L}+O(L^{-2}).
 \]
-<p>Thus minima near the origin approach the imaginary axis, while the saddle \(-L\) moves off to the left. Locally near that saddle, the leading variation has degree \(L\): increasingly flat does not mean locally convex. At finite depth, the saddle is precisely the parameter where every residual block in this tied model collapses to zero. It lies outside any fixed bounded-parameter region in the ODE limit.</p>
-<p>Nor does the absence of nonglobal local minima guarantee that gradient descent finds a minimum. For the infinite-depth loss, the real axis \(y=0\) is invariant under gradient flow. There,</p>
+<p>Thus minima near the origin approach the imaginary axis, while the saddle \(-L\) moves off to the left. For fixed \(L\ge2\), the gradient near that saddle satisfies</p>
+\[
+ \|\nabla f_L(-L+\delta)\|
+ =2\left|1+(\delta/L)^L\right|\left|\delta/L\right|^{L-1}
+ \sim 2\left|\delta/L\right|^{L-1}
+ \quad(\delta\to0).
+\]
+<p>This follows directly from \(\|\nabla|g|^2\|=2|g||g'|\). The gradient vanishes to increasingly high order: a saddle can be very flat without being locally convex. Here every residual block collapses to zero at \(-L\). This point lies outside any fixed bounded-parameter region in the ODE limit.</p>
+<p>Nor does the absence of nonglobal local minima guarantee that gradient descent finds a minimum. For Euclidean gradient flow in \((x,y)\) at infinite depth, the real axis \(y=0\) is invariant. There,</p>
 \[
  \frac{dx}{ds}=-2e^x(e^x+1),\qquad \frac{dy}{ds}=0.
 \]
-<p>Starting on that axis sends \(x\to-\infty\), the gradient to zero, and the loss to <em>one</em>, not zero. The algorithm escapes along an asymptotically flat direction rather than converging to a finite bad critical point. This special trajectory does not describe all initializations, but it is a useful warning.</p>
-<div class="note"><p>These conclusions concern the full two-real-parameter commuting slice, without regularization. They are not a landscape theorem for arbitrary matrix parameterizations or nonlinear ResNets. Even restricting to the real line changes the answer: for even \(L\), \(z=-L\) minimizes the real-line loss at value one, although it is a saddle in the plane. Allowing rotation is what makes the target half-turn exactly reachable.</p></div>
+<p>Indeed, \(u=e^{-x}\) satisfies \(du/ds=2+2/u\), so \(u(s)\sim2s\). Consequently \(x(s)=-\log(2s)+o(1)\) and \(f_\infty(x(s))-1\sim1/s\): the loss decreases toward <em>one</em>, not zero. The algorithm escapes along an asymptotically flat direction rather than converging to a finite bad critical point. Each finite-depth loss grows to infinity as \(|z|\to\infty\), but this boundedness of sublevel sets is lost in the limit. The exceptional real-axis trajectory is a useful warning, not a description of all initializations.</p>
+<div class="note"><p>These conclusions concern the full two-real-parameter commuting slice, without regularization. They are not a landscape theorem for arbitrary matrix parameterizations or nonlinear ResNets. Even restricting to the real line changes the answer: for even \(L\), \(z=-L\) minimizes the real-line loss at value one, although it is a saddle in the plane. Odd finite depths, in contrast, have the real zero-loss solution \(z=-2L\). Rotation is necessary to reach the half-turn at even depth and in the ODE limit; the odd-depth real solution escapes to infinity as \(L\) grows.</p></div>
 
 <h2>Numerical experimentation: from one layer to infinity</h2>
 <p>Change depth without moving the camera. The colored curves are the exact loss levels \(0.1,0.5,1,2,5,10,25\); level one is dashed. For finite \(L\ge2\), zoom out to find the saddle at \(-L\), or zoom in to see its alternating sectors. “Infinity” evaluates the exponential itself, not a very large power. The visible-minimum counter counts all minima inside the plotting window.</p>
@@ -237,13 +255,13 @@
  w(\alpha)=-1+\sqrt c\,e^{i\alpha},
  \qquad (1+z/L)^L=w(\alpha).
 \]
-<p>Taking every complex root gives</p>
+<p>For \(w\ne0\), taking every complex root gives</p>
 \[
  z=L\left[|w|^{1/L}
  e^{i(\arg w+2\pi k)/L}-1\right],
  \qquad k=0,\ldots,L-1.
 \]
-<p>At \(c=1\), the curve passes through \(w=0\), whose unique preimage is \(-L\), a saddle when \(L\ge2\); the branches are sampled up to this point explicitly. At infinity, the corresponding formula is</p>
+<p>At finite depth, \(0&lt;c&lt;1\) gives \(L\) separate loops around the minima: the circle in the \(w\)-plane does not surround zero. For \(c&gt;1\), it winds once around zero, so the root sheets join into one closed curve. At \(c=1\), the \(L\) loops meet at the unique preimage of \(w=0\), namely \(-L\), a saddle when \(L\ge2\). The renderer samples the branches all the way to this point explicitly. At infinity, the corresponding formula is</p>
 \[
  z=\log|w|+i(\arg w+2\pi k),\qquad k\in\mathbb Z,
 \]

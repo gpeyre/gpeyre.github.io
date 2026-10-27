@@ -43,9 +43,14 @@ the equal-scale camera; logarithmic zoom, wheel/pinch, pan, keyboard controls,
 critical-point toggles and tooltips share that camera.
 
 Run `node tests/blog-resnet-training.test.js`,
+`node tests/blog-resnet-calculus.test.js`,
 `node tests/blog-resnet-flow.test.js`, and
 `node tests/blog-resnet-landscape.test.js`. The first includes independent
-finite-difference checks of untied and tied training gradients. Reproduce the
+finite-difference checks of untied and tied training gradients. The calculus
+suite independently checks the continuous adjoint, noncommuting exponential
+and tied-weight derivatives, and first-order Euler convergence. Landscape
+checks also cover Hessians, saddle flatness, odd/even real restrictions, and
+the infinite-depth escaping trajectory. Reproduce the
 summary with `node scripts/render-blog-resnet-summary.cjs`; it uses the exact
 interactive analytic contour paths, rendered on a native canvas.
 

@@ -41,6 +41,36 @@ assert.equal(G.loss(Infinity, 1000, 2), Infinity);
 assert.equal(G.loss(Infinity, -1000, 2), 1);
 assert.deepEqual(G.minima(Infinity, {xmin: 1, xmax: 2, ymin: -100, ymax: 100}), []);
 
+// Local calculus independently checks the theorem, not just the marker labels.
+for (const L of [1, 2, 3, 8, 1000, Infinity]) {
+  const p = G.minima(L, defaultBounds)[0], h = 1e-4;
+  const value = (dx, dy) => G.loss(L, p.x + dx, p.y + dy);
+  close((value(h, 0) - 2 * value(0, 0) + value(-h, 0)) / h ** 2, 2, 2e-6);
+  close((value(0, h) - 2 * value(0, 0) + value(0, -h)) / h ** 2, 2, 2e-6);
+  close((value(h, h) - value(h, -h) - value(-h, h) + value(-h, -h)) / (4 * h ** 2), 0, 2e-6);
+}
+for (const L of [2, 3, 4, 5]) {
+  const r = 0.65, angle = 0.37, x = -L + r * Math.cos(angle), y = r * Math.sin(angle), h = 1e-4;
+  const gx = (directLoss(L, x + h, y) - directLoss(L, x - h, y)) / (2 * h);
+  const gy = (directLoss(L, x, y + h) - directLoss(L, x, y - h)) / (2 * h);
+  const predicted = 2 * Math.sqrt(directLoss(L, x, y)) * (r / L) ** (L - 1);
+  assert.ok(Math.abs(Math.hypot(gx, gy) / predicted - 1) < 2e-7, "saddle gradient order");
+}
+for (const L of [1, 2, 3, 4, 9, 10]) {
+  close(G.loss(L, -2 * L, 0), L % 2 ? 0 : 4);
+  if (L % 2 === 0) for (const x of [-4 * L, -1.4 * L, -L, 0, L]) {
+    assert.ok(G.loss(L, x, 0) >= 1, "even-depth real restriction has minimum one");
+  }
+}
+// On the real-axis limit flow, u=e^(-x) solves u'=2+2/u.
+// Its implicit solution u-log(1+u)=2s+C verifies both asymptotic rates.
+for (const u of [1e4, 1e5, 1e6]) {
+  const s = (u - Math.log1p(u) - (1 - Math.log(2))) / 2, x = -Math.log(u);
+  assert.ok(Math.abs(x + Math.log(2 * s)) < 0.001);
+  close(s * (G.loss(Infinity, x, 0) - 1), 1, 0.001);
+  close(-(2 + 2 / u) / u, -2 * Math.exp(x) * (Math.exp(x) + 1));
+}
+
 // Contour vertices have the requested loss on every root sheet, including the
 // critical origin and all depth choices. Verify against an independent power.
 for (const L of G.DEPTHS) for (const level of G.LEVELS) {
