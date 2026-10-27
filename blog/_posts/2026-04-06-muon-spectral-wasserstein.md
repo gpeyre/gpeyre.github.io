@@ -2,6 +2,7 @@
 title: "Muon as a spectral Wasserstein flow"
 subtitle: "From matrix orthogonalization to a geometry of distributions."
 description: "How Muon's polar update connects to a Wasserstein gradient flow defined through displacement covariances."
+last_modified_at: '2026-10-27'
 topic: Optimal transport
 keywords:
   - "Muon"
@@ -37,13 +38,15 @@ In my [paper *Muon Dynamics as a Spectral Wasserstein Flow*](https://arxiv.org/a
 
 <!--more-->
 
-**Muon** replaces the nonzero singular values of its momentum matrix by ones. Ignoring momentum and stochasticity, the compact SVD $$G_k=\nabla F(X_k)=U_k\Sigma_k V_k^\top$$ gives the update direction
+**Muon** replaces the nonzero singular values of its momentum matrix by ones. Ignoring momentum and stochasticity, write $$G_k=\nabla F(X_k)=U_k\Sigma_k V_k^\top$$ using only its strictly positive singular values. This gives the update direction
 
 $$
 X_{k+1}=X_k-\eta_k U_kV_k^\top.
 $$
 
-**The spectral Wasserstein distance** uses a norm $$\gamma$$ on symmetric matrices, monotone in the positive semidefinite order. For probability measures on $$\mathbb R^d$$ with finite second moments, define
+Here $$U_kV_k^\top$$ is the partial polar factor; set it to zero when $$G_k=0$$. No arbitrary directions from a zero-singular-value subspace are added.
+
+**The spectral Wasserstein distance** uses a continuous, convex, positively one-homogeneous gauge $$\gamma$$ on positive semidefinite matrices, positive away from zero and monotone in the positive semidefinite order. A monotone matrix norm restricted to that cone is one example. For probability measures on $$\mathbb R^d$$ with finite second moments, define
 
 $$
 \begin{aligned}
@@ -53,12 +56,12 @@ $$
 \end{aligned}
 $$
 
-Here $$\Pi(\mu,\nu)$$ denotes all couplings. The trace choice $$\gamma(S)=\operatorname{tr}(S)$$ recovers $$\mathsf W_2$$; the operator norm $$\gamma(S)=\|S\|_{\mathrm{op}}$$ measures the largest directional mean-square displacement.
+Here $$\Pi(\mu,\nu)$$ denotes all couplings. The trace choice $$\gamma(S)=\operatorname{tr}(S)$$ recovers $$\mathsf W_2$$; on the positive semidefinite cone it is the restriction of the nuclear norm, not a norm on all symmetric matrices. The operator norm $$\gamma(S)=\|S\|_{\mathrm{op}}$$ measures the largest directional mean-square displacement.
 
 **The connection** comes from the infinitesimal cost $$\gamma(\int vv^\top\,\mathrm d\mu)$$. For particles $$\mu_X=n^{-1}\sum_i\delta_{x_i}$$ stacked as rows of $$X$$, the operator choice gives $$n^{-1}\|\dot X\|_{\mathrm{op}}^2$$.
 
 <span id="proposition-1"></span>
-**Proposition 1 (the polar descent direction).** For a loss $$\mathcal F$$ and $$F(X)=n\mathcal F(\mu_X)$$, steepest descent in this geometry reads
+**Proposition 1 (the polar descent direction).** For a loss $$\mathcal F$$ with differentiable particle lift $$F(X)=n\mathcal F(\mu_X)$$, one steepest-descent velocity in this geometry is
 
 $$
 \begin{aligned}
@@ -67,4 +70,11 @@ G&=\nabla F(X)=U\Sigma V^\top,\\
 \end{aligned}
 $$
 
-where $$\|G\|_*=\sum_i\sigma_i$$ is the nuclear norm. This is Muon's polar direction with a scalar speed factor: the paper's idealized continuous-time, zero-momentum mean-field dynamics is a $$\mathsf W_\gamma$$ gradient flow.
+where $$\|G\|_*=\sum_i\sigma_i$$ is the nuclear norm and the same partial-polar convention is used. Indeed, this velocity minimizes
+
+$$
+V\longmapsto \frac1n\langle G,V\rangle_{\mathrm F}
++\frac1{2n}\|V\|_{\mathrm{op}}^2:
+$$
+
+the dual inequality $$\langle G,V\rangle_{\mathrm F}\ge-\|G\|_*\|V\|_{\mathrm{op}}$$ is attained by the displayed choice. The minimizing velocity need not be unique at a rank-deficient nonzero gradient. This selected velocity is Muon's polar direction with a scalar speed factor; under the paper's regularity hypotheses, its idealized continuous-time, zero-momentum mean-field dynamics has the corresponding $$\mathsf W_\gamma$$ gradient-flow interpretation.

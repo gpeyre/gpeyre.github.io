@@ -2,6 +2,7 @@
 title: "Fast gradient flows without convexity"
 subtitle: "The Polyak–Łojasiewicz condition, and a favourite banana-shaped valley."
 description: "Why a gradient inequality can be enough for exponential convergence, illustrated by an interactive curved valley."
+last_modified_at: '2026-10-27'
 topic: Optimization
 keywords:
   - "Polyak–Łojasiewicz inequality"
@@ -121,6 +122,26 @@ $$
 $$
 
 On $$F_b\leq R$$, one has $$|x-\tfrac12|\leq \tfrac12+\sqrt R$$. Combining these estimates gives the stated inequality.
+
+</div>
+</details>
+
+<details class="blog-proof">
+<summary>Why no positive global P–L constant exists when the valley bends</summary>
+<div class="blog-proof-body" markdown="1">
+
+Fix $$b>0$$ and take $$x>1$$. With the notation of the preceding proof, choose
+$$z=-r/c$$, or equivalently $$y=-b(x-\tfrac12)^2-(x-1)/(2b(x-\tfrac12))$$.
+This cancels the first component of the gradient. Consequently,
+
+$$
+\frac{\tfrac12\|\nabla F_b(x,y)\|^2}{F_b(x,y)}
+=\frac{2z^2}{r^2+z^2}
+=\frac{2}{1+c^2}\longrightarrow0
+\qquad(x\to\infty).
+$$
+
+No fixed positive constant can bound this ratio below on the whole plane. This does not contradict Proposition 2: these points leave every bounded sublevel set. When $$b=0$$, by contrast, the ratio is exactly $$2$$ away from the minimizers, so the global P–L inequality holds with $$\mu=2$$.
 
 </div>
 </details>

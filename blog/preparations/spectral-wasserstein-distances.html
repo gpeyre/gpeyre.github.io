@@ -189,8 +189,8 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p>Each integrand is a quadratic perspective. Taking their supremum gives a convex action in mass and momentum, while continuity becomes \(\partial_t\rho+\nabla\cdot m=0\), linear in the unknowns. The closed perspective extends the formula to measures; for singular \(Q\), the local vacuum cost is zero on \(\ker Q\) and infinite in the other directions. The full action still forces finite-energy momentum to be absolutely continuous with respect to mass, because \(\gamma\) bounds Euclidean kinetic energy from below.</p>
 
 <h2>Can the Schatten exponent be smaller than one?</h2>
-<p>Yes, with a precise change of scope. The paper uses matrix norms, hence \(p\ge1\). For \(0\lt p\lt 1\), \(\gamma_p\) is a Schatten anti-norm on positive matrices: it is monotone and concave rather than convex <a href="#ref-antinorm">[8]</a>. The robust-cost theorem and convex coupling formulation above no longer apply. Nevertheless, the distance and dynamic statements extend further.</p>
-<p id="theorem-3"><strong>Theorem 3 (the half-Schatten threshold).</strong> Define \(\mathsf W_{\gamma_p}\) by the same static formula. For every \(p\in[1/2,\infty]\), it is a distance and satisfies the same Benamou–Brenier formula with action \(\mathcal E_{\gamma_p}\). For every \(0\lt p\lt 1/2\), the triangle inequality can fail.</p>
+<p>Yes, with a precise change of scope. The paper's main theory uses matrix norms, hence \(p\ge1\); Appendix E.4 of its October 2026 revision develops the extension below <a href="#ref-muon">[1]</a>. For \(0\lt p\lt 1\), \(\gamma_p\) is a Schatten anti-norm on positive matrices: it is monotone and concave rather than convex <a href="#ref-antinorm">[8]</a>. The robust-cost theorem and convex coupling formulation above no longer apply. Nevertheless, the distance and dynamic statements extend further.</p>
+<p id="theorem-3"><strong>Theorem 3 (the half-Schatten threshold).</strong> Define \(\mathsf W_{\gamma_p}\) by the same static formula. For every \(p\in[1/2,\infty]\), it is a distance and satisfies the same Benamou–Brenier formula with action \(\mathcal E_{\gamma_p}\). In dimension \(d\ge2\), for every \(0\lt p\lt 1/2\), the triangle inequality can fail. In dimension one, \(\gamma_p(s)=s\) for every \(p>0\), so all these choices simply give \(W_2\) and its usual dynamic formula.</p>
 <details class="blog-proof"><summary>Proof: the square root lifts to a Schatten-2p norm</summary><div class="blog-proof-body">
 <p><em>The norm hidden inside the covariance.</em> For a square-integrable random vector \(Z\) on a probability space \(\Omega\), define</p>
 \[
@@ -257,7 +257,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 
 <h2>References</h2>
 <ol class="references">
-<li id="ref-muon">Gabriel Peyré. <a href="https://arxiv.org/abs/2604.04891"><em>Muon Dynamics as a Spectral Wasserstein Flow</em></a>. 2026. Sections 3–4 and Appendices A and E.</li>
+<li id="ref-muon">Gabriel Peyré. <a href="https://arxiv.org/abs/2604.04891v3"><em>Muon Dynamics as a Spectral Wasserstein Flow</em></a>. October 2026 revision. Sections 3–4 and Appendices A and E; Appendix E.4 treats root-norm gauges and the half-Schatten threshold.</li>
 <li id="ref-paty">François-Pierre Paty and Marco Cuturi. <a href="https://proceedings.mlr.press/v97/paty19a.html"><em>Subspace Robust Wasserstein Distances</em></a>. ICML, PMLR 97, 5072–5081, 2019.</li>
 <li id="ref-sion">Maurice Sion. <a href="https://msp.org/pjm/1958/8-1/pjm-v8-n1-p14-p.pdf"><em>On General Minimax Theorems</em></a>. Pacific Journal of Mathematics 8(1), 171–176, 1958.</li>
 <li id="ref-adversarial">François-Pierre Paty and Marco Cuturi. <a href="https://proceedings.mlr.press/v119/paty20a.html"><em>Regularized Optimal Transport is Ground Cost Adversarial</em></a>. ICML, PMLR 119, 7532–7542, 2020.</li>

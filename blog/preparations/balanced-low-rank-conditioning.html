@@ -24,7 +24,7 @@
 <p>Our work with Valérie Castin, Kimia Nadjahi, and Pierre Ablin <a href="#ref-balora">[2]</a> studies this redundancy through local conditioning and proposes a balancing method. Here is a particularly clean result: for exact low-rank matrix recovery, every balanced factorization has the best possible positive Hessian condition number. The proof needs only a Jacobian, a Sylvester operator, and two singular-value inequalities.</p>
 
 <h2>Remove symmetry directions before measuring conditioning</h2>
-<p>Fix a matrix \(Y\in\mathbb R^{n\times m}\) of rank \(r&lt;\min(n,m)\), and consider</p>
+<p>Fix a matrix \(Y\in\mathbb R^{n\times m}\) of rank \(1\le r&lt;\min(n,m)\), and consider</p>
 \[
  f(A,B)=\tfrac12\|AB-Y\|_F^2,
  \qquad A\in\mathbb R^{n\times r},\quad B\in\mathbb R^{r\times m}.

@@ -2,6 +2,7 @@
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
+const {articleSource, localAsset} = require("./blog-article-source.js");
 const D = require("../blog/preparations/assets/new-dynamics/core.js");
 let checks = 0;
 function test(name, run) { run(); checks++; console.log("✓ " + name); }
@@ -199,13 +200,17 @@ test("Moser transported low-frequency moments improve with spatial refinement", 
 });
 test("article metadata, disclosures, local experiment paths, and image credits are present", () => {
   for (const [slug, topic] of [["langevin-without-a-potential", "langevin"], ["lagrangian-density-interpolation", "moser"], ["stable-fluids", "fluids"]]) {
-    const source = fs.readFileSync(path.join(__dirname, "../blog/preparations/" + slug + ".html"), "utf8");
-    assert.match(source, /noindex,follow/); assert.match(source, /Alpha preview · Work in progress/);
-    const keywords = source.match(/<meta name="keywords" content="([^"]+)"/)[1].split(","); assert.ok(keywords.length >= 22);
-    assert.ok(source.includes(`data-experiment="${topic}"`)); assert.ok(source.includes(`assets/new-dynamics/index.html?topic=${topic}`));
-    assert.match(source, /<details class="blog-proof">/); assert.match(source, /<strong>(Theorem|Proposition) 1/); assert.match(source, /Image unchanged/);
+    const article = articleSource(slug), source = article.body;
+    if (!article.published) { assert.match(source, /noindex,follow/); assert.match(source, /Alpha preview · Work in progress/); }
+    else { assert.match(article.source, /^proofs: true$/m); assert.match(article.source, /^embedded_experiment: true$/m); }
+    assert.ok(article.keywords.length >= 22);
+    assert.ok(source.includes(`data-experiment="${topic}"`));
+    const experiment = Array.from(source.matchAll(/<iframe[^>]*src="([^"]+)"/g), m => localAsset(m[1], article));
+    assert.ok(experiment.some(asset => asset && asset.link.endsWith("assets/new-dynamics/index.html") && fs.existsSync(asset.file)));
+    assert.ok(new RegExp(`index\\.html(?:\\?topic=${topic}|[^"\\n]*\\}\\}\\?topic=${topic})`).test(source));
+    assert.match(source, /<details class="blog-proof">/); assert.match(source, /(?:<strong>|\*\*)(Theorem|Proposition) 1/); assert.match(source, /Image unchanged/);
     for (const math of source.matchAll(/\\\[([\s\S]*?)\\\]|\\\(([\s\S]*?)\\\)/g)) assert.ok(!/[<>]/.test(math[0]), "Raw angle bracket in HTML math");
-    for (const image of source.matchAll(/<img src="([^"]+)"/g)) assert.ok(fs.existsSync(path.join(__dirname, "../blog/preparations/", image[1])));
+    for (const image of source.matchAll(/<img src="([^"]+)"/g)) { const asset = localAsset(image[1], article); assert.ok(asset && fs.existsSync(asset.file)); }
   }
 });
 console.log(`\n${checks} numerical and source checks passed.`);

@@ -2,6 +2,7 @@
 title: "From Perron–Frobenius to Sinkhorn"
 subtitle: "Linear and nonlinear contractions of the probability simplex."
 description: "Compare a positive Markov operator with Sinkhorn’s nonlinear scaling map in an interactive simplex."
+last_modified_at: '2026-10-27'
 topic: Optimal transport
 keywords:
   - "Perron–Frobenius theorem"
@@ -67,7 +68,7 @@ Strict positivity is important here: an arbitrary stochastic matrix can have sev
 
 ## The nonlinear picture
 
-For strictly positive probability vectors $$a,b$$ and a cost matrix $$C$$, let $$K_{ij}=e^{-C_{ij}/\varepsilon}>0$$. Entropically regularized optimal transport seeks
+For strictly positive probability vectors $$a,b$$, a cost matrix $$C$$, and $$\varepsilon>0$$, let $$K_{ij}=e^{-C_{ij}/\varepsilon}>0$$. Entropically regularized optimal transport seeks
 
 $$
 \min_{\substack{\Gamma\geq0\\\Gamma\mathbf1=a,\ \Gamma^\top\mathbf1=b}}

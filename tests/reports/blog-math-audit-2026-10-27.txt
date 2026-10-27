@@ -1,0 +1,412 @@
+BLOG MATHEMATICS AUDIT — 27 OCTOBER 2026
+========================================
+
+Scope and standard
+------------------
+Reviewed every article source and all folded proofs in the current catalogue:
+35 published articles and 31 forthcoming articles. Four are announcements or
+commentary without mathematical theorems; the other 62 contain mathematical
+exposition. Old-preview redirects were resolved to their actual published source.
+Untracked ideas and authoring notes are not published/forthcoming articles.
+
+This is an independent mathematical and numerical review, not formal verification
+or a guarantee of error-free mathematics. Proofs were checked for assumptions,
+quantifiers, boundary cases, constants, matrix order, and consistency with the
+experiments. Selected specialized claims were compared with primary references.
+No additional established defect was found beyond the corrections below.
+
+Article changes
+---------------
+1. Muon as a spectral Wasserstein flow:
+   - Put gamma on the PSD cone, so the trace example is correctly a gauge
+     (the restriction of the nuclear norm), not a norm on all symmetric matrices.
+   - Specify the partial polar factor using strictly positive singular values,
+     including the zero-gradient convention.
+   - State a selected steepest velocity rather than incorrectly suggesting
+     uniqueness at rank-deficient gradients.
+   - Give the normalized particle variational objective and its dual-norm argument.
+
+2. Spectral Wasserstein distances:
+   - Restrict possible triangle-inequality failure for 0 < p < 1/2 to d >= 2.
+     In dimension one every positive p reduces to ordinary W2.
+   - Credit Appendix E.4 of the paper's October 2026 v3 for the extension,
+     replacing the outdated statement that the paper covers only p >= 1.
+
+3. Straighter flows, smaller Euler errors:
+   - Explicitly state b >= 0 for the experiment whose acceleration bound is b*pi^2.
+
+4. From Perron-Frobenius to Sinkhorn:
+   - Explicitly require epsilon > 0 for the entropy-minimization/scaling problem.
+
+5. Fast gradient flows without convexity:
+   - Add a folded, explicit proof that no positive global PL constant exists for
+     b > 0: cancel the first gradient coordinate and obtain the ratio 2/(1+c^2).
+   - Explain why the sublevel theorem remains valid and why b = 0 is different.
+   - This strengthens the justification of an already correct statement.
+
+6. Optimal conditioning of low-rank adaptation:
+   - Explicitly require nonzero rank, 1 <= r < min(n,m), so the extreme positive
+     singular values and condition number are defined.
+
+Publication dates, titles, approvals, announcement text, numerical assets and
+forthcoming/published status have not been changed. Changed published articles
+have last_modified_at set to 2026-10-27.
+
+Tests improved or added
+-----------------------
+- tests/blog-article-source.js resolves published preview redirects to actual
+  article sources. The developed-ideas and new-dynamics suites now validate both
+  previews and published articles rather than failing on the redirect stubs.
+- tests/blog-transport-audit.test.js independently checks the partial polar
+  normalization/nonuniqueness, Schatten threshold and transport identities.
+- tests/blog-optimization-audit.test.js checks the global-PL counterexample
+  and the nonunique minimal quadratic DC splits.
+- tests/blog-clt-audit.test.py independently checks all 22 saved uniform CLT
+  distances with high-precision Irwin-Hall formulas and adaptive quadrature,
+  using only the Python standard library.
+- tests/blog-quantum-pinsker-audit.test.py uses NumPy to check 40 genuinely complex,
+  noncommuting state pairs, logarithm derivatives, entropy curvature, singular
+  limits and the sharp classical constant.
+
+Validation results
+------------------
+PASS: all 26 non-browser JavaScript test files (including numerical, source,
+search, summary-image and analytics tests).
+PASS: both new Python audit tests.
+PASS: clean temporary Jekyll build.
+PASS: search catalogue freshness and full coverage (699 assertions).
+PASS: RSS/Atom consistency for all 35 published entries.
+PASS: built-site analytics tests (1,578 assertions).
+PASS: summary-image checks (282 assertions; 38 experiment captures).
+PASS: queue HTML generator tests (37 assertions); this tests rendering, not queue
+      archival/order correctness.
+PASS: diff whitespace checks.
+PASS: browser typesetting of all six changed articles; no MathJax errors.
+      Folded proof opening checked for the new PL proof and spectral proof.
+      Narrow-screen checks on spectral, Euler, Sinkhorn and low-rank articles
+      showed no page-level horizontal overflow.
+
+Additional numerical evidence:
+- Uniform CLT stored values: largest independent discrepancy 3.72e-16.
+- Planar energy-distance data: all 101 energies recomputed, largest discrepancy
+  2.38e-14; ordered one-dimensional ranks also checked.
+- ResNet continuous-adjoint finite differences: maximum error 5.31e-10.
+- ResNet exponential derivative: maximum error 2.94e-11.
+- ResNet tied finite-depth derivative: maximum error 5.59e-10.
+- ResNet analytic contours: 197,054 checked adaptive vertices; worst checked
+  screen interpolation error 0.337 px.
+- DC curvature experiment: 43,308 pointwise checks.
+- Extra independent ICNN lattice/incidence/connectivity and hinge checks,
+  Bernstein identities, DNN eigenvalues and tensor error identities passed.
+
+Outstanding limitations and unrelated findings
+----------------------------------------------
+- The original SciPy-dependent CLT/ICNN optimization regeneration could not be
+  run because SciPy is not installed. No packages were installed. The independent
+  standard-library CLT test covers every saved uniform value; ICNN model hashes,
+  stored LP witness evaluations and geometric checks passed, but the LP optimizer
+  was not rerun.
+- The hump-algebra article invokes an external Gaussian-atomic/Besov theorem.
+  Its scaling, displayed derivations and dictionary were checked; the full Meyer
+  chapter/Brandolese PDF was unavailable for a fresh proof-level source check.
+  This is a source-verification limitation, not an established counterexample.
+- Standard invoked results (Brenier, Strassen, superposition, nonsmooth Jacobian
+  facts, etc.) remain dependencies; their complete proofs were not rederived.
+- Browser-only subscription test was not run: a broad test discovery reached it
+  and stopped at its missing Playwright dependency. Actual browser checks used
+  the app browser. No claim is made of exhaustive browser/UI testing of all posts.
+- Existing editorial-queue tests have THREE failures, unrelated to mathematical
+  edits: four completed articles remain in the active queue rather than the
+  archive, and ready entries are not all ordered first. The four articles are
+  max/softmax, Lagrangian interpolation, DC/Toland, and Langevin.
+  These overlap user-edited queue state; neither queue file was changed or staged.
+- Existing .DS_Store changes and untracked blog/ideas files were preserved.
+
+Selected primary-source comparisons
+-----------------------------------
+https://arxiv.org/html/2604.04891v3
+https://arxiv.org/html/2407.01202v2
+https://arxiv.org/html/1707.06386v2
+https://arxiv.org/html/2408.07498v2
+https://arxiv.org/html/2512.10656v3
+https://arxiv.org/html/2006.15646v3
+https://arxiv.org/html/2211.14047v2
+https://arxiv.org/html/1404.6810
+https://arxiv.org/html/math/0607647
+https://arxiv.org/html/2009.04266v3
+https://arxiv.org/abs/2610.09356
+https://arxiv.org/abs/2604.22670
+https://arxiv.org/abs/1304.0630
+https://arxiv.org/abs/2508.07370
+https://arxiv.org/abs/2605.31484
+https://www.ceremade.dauphine.fr/~carlier/toland.pdf
+https://optimization-online.org/2008/05/1990/
+https://www.jams.jp/scm/contents/Vol-1-1/1-1-2.pdf
+https://www.math.uni-leipzig.de/~wirth/notes_of_trace_inequalities.pdf
+
+Complete article coverage
+-------------------------
+
+1. Tout comprendre (ou presque) sur l’intelligence artificielle [published]
+   blog/_posts/2025-03-28-tout-comprendre-intelligence-artificielle.md
+   Read: announcement/commentary; no theorem or numerical mathematical claim to audit.
+
+2. Which linear maps preserve matrix rank? [published]
+   blog/_posts/2025-07-02-linear-rank-preservers.md
+   Rank-one subspaces, tensor factorization, transpose alternative, one-dimensional cases.
+
+3. Solving a positive definite congruence equation [published]
+   blog/_posts/2025-08-09-positive-definite-congruence.md
+   Positive square-root formula, uniqueness, Lyapunov derivative.
+
+4. Muon as a spectral Wasserstein flow [published]
+   blog/_posts/2026-04-06-muon-spectral-wasserstein.md
+   CORRECTED: PSD gauge domain, partial polar convention, nonunique steepest velocity, particle normalization.
+
+5. Straighter flows, smaller Euler errors [published]
+   blog/_posts/2026-04-16-straight-flows-and-euler-error.md
+   CLARIFIED: nonnegative bending parameter; checked acceleration defect and Euler bound.
+
+6. When does a covariance gauge define a matrix norm? [published]
+   blog/_posts/2026-05-06-covariance-gauges-and-matrix-norms.md
+   Both equivalence directions, singular matrices, monotonicity counterexample.
+
+7. Diffusion versus optimal transport: two maps from one Gaussian [published]
+   blog/_posts/2026-06-15-diffusion-versus-optimal-transport.md
+   OU variance, reverse ODE scaling, mixture score, assignment certificates.
+
+8. Optimal Transport for Machine Learners [published]
+   blog/_posts/2026-06-16-optimal-transport-for-machine-learners.md
+   Read: announcement/commentary; no theorem or numerical mathematical claim to audit.
+
+9. Two notions of positivity, separated by a pentagon [published]
+   blog/_posts/2026-07-04-doubly-nonnegative-completely-positive.md
+   Pentagon eigenvalues, clique/support obstruction, dimension threshold.
+
+10. A convex functional hidden behind the Legendre transform [published]
+   blog/_posts/2026-07-07-legendre-transforms-and-moment-measures.md
+   Prekopa-Leindler sign, conjugate variation, moment-measure stationarity and existence scope.
+
+11. Duhamel’s formula for matrix products [published]
+   blog/_posts/2026-07-10-discrete-duhamel-formula.md
+   Noncommuting telescoping identity, norm bounds, continuous analogue.
+
+12. The KL barycenter of Gaussians is Gaussian [published]
+   blog/_posts/2026-07-13-kl-barycenters-of-gaussians.md
+   Geometric-density optimizer, precision/mean order, reversed KL and singular laws.
+
+13. From Perron–Frobenius to Sinkhorn [published]
+   blog/_posts/2026-07-30-perron-frobenius-and-sinkhorn.md
+   CLARIFIED: epsilon > 0; stochastic convention, homogeneous scaling and residuals checked.
+
+14. The Mathematical Nexus [published]
+   blog/_posts/2026-08-07-mathematical-nexus.md
+   Read: announcement/commentary; no theorem or numerical mathematical claim to audit.
+
+15. Fast gradient flows without convexity [published]
+   blog/_posts/2026-08-14-polyak-lojasiewicz-gradient-flows.md
+   IMPROVED: explicit proof of global-PL failure for b > 0, while preserving sublevel rates.
+
+16. Why I love Gaussian-preserving flows [published]
+   blog/_posts/2026-09-15-gaussian-preserving-wasserstein-flows.md
+   Gelbrich coupling argument, JKO projection, KL decomposition, noncommuting covariance flow.
+
+17. IA pour les maths : clarifications [published]
+   blog/_posts/2026-09-15-ia-pour-les-maths-clarifications.md
+   Read: announcement/commentary; no theorem or numerical mathematical claim to audit.
+
+18. Inverse optimisation and the convexity of the gap loss [published]
+   blog/_posts/2026-10-03-inverse-optimisation-gap-loss.md
+   Affine-parameter convexity, subgradient, Fenchel-Young identity, cost identifiability and certified numerical envelope.
+
+19. The barycentric projection map [published]
+   blog/_posts/2026-10-10-barycentric-projection-map.md
+   Fiberwise L2 projection, conditional variance, OT/entropic optimality to the modified target.
+
+20. Mean field conservation laws [published]
+   blog/_posts/2026-10-13-mean-field-conservation-laws.md
+   Gram invariance, covariance Lax equation, trace powers, isotropic lower bounds and rate 4 sigma^2 kappa.
+
+21. Translation equivariance of optimal transport [published]
+   blog/_posts/2026-10-14-translation-equivariance-optimal-transport.md
+   Two-point necessity, mixed-Hessian compatibility, cubic classification and examples.
+
+22. Convex neural networks: when width is not enough [published]
+   blog/_posts/2026-10-15-icnn-universality-and-depth.md
+   Finite-evaluation cone closure, interpolation rigidity, Minkowski faces, lattice construction and depth recurrence.
+
+23. Stone–Weierstrass and Universal Approximation [published]
+   blog/_posts/2026-10-16-stone-weierstrass-approximate-products.md
+   Closure algebra, deep multiplier, exponential-network interpolation and shallow approximation.
+
+24. How many tokens does attention need? [published]
+   blog/_posts/2026-10-16-token-sample-complexity-attention.md
+   Gaussian tilt and variance, radius tradeoff, concentration constants and sample threshold.
+
+25. When is independence optimal transport? [published]
+   blog/_posts/2026-10-17-when-independence-is-optimal.md
+   Centered perturbation, full support, quantitative bound and entropic/logistic limits.
+
+26. The heat equation over quantiles [published]
+   blog/_posts/2026-10-18-heat-equation-over-quantiles.md
+   Quantile W2 isometry, JKO variation, heat signs, tails, Fisher dissipation and Gaussian step.
+
+27. Two optimal transports need not compose optimally [published]
+   blog/_posts/2026-10-19-composing-optimal-transport-maps.md
+   Gaussian composition, target covariance, exact gap, cyclic versus ordinary monotonicity.
+
+28. The Monge gap: a penalty for inversions [published]
+   blog/_posts/2026-10-20-monge-gap-inversions.md
+   Sorting identity, convexity, RKHS representer/uniqueness, smooth-hinge error and large-penalty limit.
+
+29. Energy distance: convexity hidden in the ordering [published]
+   blog/_posts/2026-10-21-energy-distance-wasserstein-convexity.md
+   Energy normalization, CDF identity, factor-four flow, atomic resolvent and planar counterexample.
+
+30. Konno’s quadratic relaxation: two copies, the same minimum [published]
+   blog/_posts/2026-10-22-konno-quadratic-relaxation.md
+   Polarization identity, exactness, strict-convex diagonal corollary, CNSD GW and tensorized KL.
+
+31. Gaussians are not closed for Gromov–Wasserstein [published]
+   blog/_posts/2026-10-23-gaussian-gromov-wasserstein-counterexample.md
+   Fourth-moment expansion, Gaussian optimum, radial coupling and W2 CLT argument.
+
+32. Convex approximation with max and softmax layers [published]
+   blog/_posts/2026-10-24-convex-max-softmax-approximation.md
+   Affine minorants, upper/lower rates, LSE Hessian, temperature and bounded-slope obstruction.
+
+33. Interpolating measures by a Lagrangian flow [published]
+   blog/_posts/2026-10-25-lagrangian-density-interpolation.md
+   Poisson compatibility, Jacobian pushforward, boundary tangency and action.
+
+34. DC programming and Toland duality [published]
+   blog/_posts/2026-10-26-dc-programming-toland-duality.md
+   Domain-safe infimum interchange, minimizer recovery, DCA, least 1D split, incomparable quadratic splits and convex-dual certificates.
+
+35. Langevin without a potential [published]
+   blog/_posts/2026-10-27-langevin-without-a-potential.md
+   Lyapunov/recurrence hypotheses, covariance/current signs and nonnormal stability.
+
+36. Which statistics evolve on their own? [forthcoming]
+   blog/preparations/autonomous-wasserstein-statistics.html
+   Affine-closure criterion, distance-coordinate classification, fourth-moment counterexample.
+
+37. Optimal conditioning of low-rank adaptation [forthcoming]
+   blog/preparations/balanced-low-rank-conditioning.html
+   CLARIFIED: 1 <= r < min(n,m); positive Hessian spectrum and optimal balancing checked.
+
+38. Bernstein polynomials on probability measures [forthcoming]
+   blog/preparations/bernstein-polynomials-on-measures.html
+   Empirical/histogram convergence, hierarchical coupling, dimension regimes and binomial identities.
+
+39. c-transform as a generalized Legendre transform [forthcoming]
+   blog/preparations/c-transforms-and-averaging.html
+   Transform signs, closure/triple-transform identities, power regimes and sphere supports.
+
+40. Two symmetric central limit theorems, two rates [forthcoming]
+   blog/preparations/central-limit-wasserstein-constants.html
+   Lattice phase, Edgeworth signs, integrated-tail remainder, all stored uniform W1 values.
+
+41. Why KL belongs to two divergence families [forthcoming]
+   blog/preparations/divergences-and-bregman-geometry.html
+   Hessian identification, binary realization, affine ambiguity, singular extension and KL update; independently reviewed twice.
+
+42. Sinkhorn on Gaussians: an exact convergence rate [forthcoming]
+   blog/preparations/gaussian-sinkhorn-convergence.html
+   Matrix recurrence, order bounds, cross-ratio rho^4, dual-gap rho^8 and mean-mode rho^2.
+
+43. The hump algebra of Yves Meyer [forthcoming]
+   blog/preparations/hump-algebra.html
+   Gaussian product, atomic norm/completeness, scaling, differences and wavelets; external-theorem limitation below.
+
+44. In-context composition [forthcoming]
+   blog/preparations/in-context-composition.html
+   Pushforward/lifted composition, associativity, residual consistency and Wasserstein stability.
+
+45. Intrinsic dynamics of overparameterized dynamics [forthcoming]
+   blog/preparations/intrinsic-factor-training-dynamics.html
+   Conserved imbalance, balanced square roots, relaxed-balance formulas and essential projectors.
+
+46. Logarithmic Sobolev is a Wasserstein P–L inequality [forthcoming]
+   blog/preparations/logarithmic-sobolev-wasserstein-pl.html
+   Constants, finite-length proof, Talagrand implication and Gaussian sharpness.
+
+47. From MLP universality to ConvNet Universality [forthcoming]
+   blog/preparations/mlp-to-convnet-universality.html
+   Activation approximation, filter indexing, equivariance, accumulator construction and channel count.
+
+48. Optimal Planar Matching and Crossings [forthcoming]
+   blog/preparations/noncrossing-matchings-catalan.html
+   Uncrossing, squared-cost counterexample, Catalan sampling and nonoptimal local minimum.
+
+49. Carefully placed particles versus random samples [forthcoming]
+   blog/preparations/optimal-particles-versus-random-sampling.html
+   Bin-average optimum, Pythagorean identity, expected 1/(6n) and asymptotic constants.
+
+50. An Axiomatic Definition of the Wasserstein Distance [forthcoming]
+   blog/preparations/optimal-transport-convex-extension.html
+   Joint convexity, weak lower semicontinuity, maximality and dual envelope.
+
+51. The perspective transform: convexity on measures [forthcoming]
+   blog/preparations/perspective-transform-on-measures.html
+   Recession boundary, conjugate representation, reference independence and kinetic/WFR factors.
+
+52. Iterative projections: Dykstra and Douglas–Rachford [forthcoming]
+   blog/preparations/projections-corrections-reflections.html
+   Fejer inequalities, Dykstra normals, DR fixed points, product-space Sudoku and exact projections.
+
+53. From Classical to Quantum Pinsker Inequality [forthcoming]
+   blog/preparations/quantum-pinsker-sign-observable.html
+   Resolvent derivative, Hermitian Cauchy-Schwarz, support limit and sharp constant; independently reviewed twice.
+
+54. The covariance of SGD iterates [forthcoming]
+   blog/preparations/sgd-iterate-covariance.html
+   Exact moments, safe-step contraction, fourth-moment expansion, Gaussian correction and scaling.
+
+55. Conditioning of Non-Euclidean Gradient Descent [forthcoming]
+   blog/preparations/sign-gradient-descent-geometry.html
+   Dual-norm direction/speed, PL rate, induced operator norms and isospectral examples.
+
+56. Spectral Wasserstein distances [forthcoming]
+   blog/preparations/spectral-wasserstein-distances.html
+   CORRECTED: d >= 2 for p < 1/2 failure, W2 for every p > 0 in dimension one, updated v3 attribution.
+
+57. Stable fluids [forthcoming]
+   blog/preparations/stable-fluids.html
+   Fourier projection/scaling, split scheme, stability norms, positive dye diffusion and mass accounting.
+
+58. When the best low-rank tensor approximation does not exist [forthcoming]
+   blog/preparations/tensor-rank-without-best-approximation.html
+   Slice determinant, border rank, component blowup and closed rank-one/Tucker classes.
+
+59. Training (very) deep ResNets [forthcoming]
+   blog/preparations/training-very-deep-resnets.html
+   Discrete/continuous adjoints, training clock, time ordering, tied derivatives, critical points and escape trajectory.
+
+60. Universality and invariance [forthcoming]
+   blog/preparations/universality-and-invariance.html
+   Compact graph domain, WL kernel quantifiers, stabilization and relative Stone-Weierstrass.
+
+61. Universal approximation from one nonlinearity [forthcoming]
+   blog/preparations/universality-from-one-nonlinearity.html
+   Closure transfer, line restriction, mollification and square extraction.
+
+62. Wasserstein distance without quantiles [forthcoming]
+   blog/preparations/wasserstein-distance-without-quantiles.html
+   CDF triangle identity, atoms, explicit example and estimator variance.
+
+63. Why optimal transport respects a density cap [forthcoming]
+   blog/preparations/wasserstein-geodesics-density-caps.html
+   Determinant-root inequality, nonsmooth hypotheses and density bounds.
+
+64. Polynomials of probability measures [forthcoming]
+   blog/preparations/wasserstein-polynomials.html
+   Moment separation, product algebra, collision bound and neural pooling.
+
+65. Wasserstein singular vectors: a distance that defines itself [forthcoming]
+   blog/preparations/wasserstein-singular-vectors.html
+   Unrooted LP, Hilbert nonexpansiveness, convex normalized Brouwer slice and convergence scope.
+
+66. Weak transport and mean-preserving spreads [forthcoming]
+   blog/preparations/weak-transport-and-convex-order.html
+   Strassen/Farkas signs, attainment/uniqueness, modified target and numerical certificates.

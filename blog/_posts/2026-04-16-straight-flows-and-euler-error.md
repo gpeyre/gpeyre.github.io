@@ -2,6 +2,7 @@
 title: "Straighter flows, smaller Euler errors"
 subtitle: "Making the material acceleration explicit in the Cauchy–Lipschitz estimate."
 description: "A detailed Euler error bound isolating trajectory acceleration, with a proof and an interactive example."
+last_modified_at: '2026-10-27'
 topic: Differential equations
 keywords:
   - "Euler method"
@@ -193,7 +194,7 @@ If $$a(t,X(t))=0$$ for all $$t$$, the trajectory has constant velocity, and Eule
 
 But a path can be geometrically straight and still accelerate. For example, $$X(t)=(e^t,0)$$ lies on a line, yet has nonzero acceleration and a nonzero Euler error. The relevant notion is therefore **straightness with constant speed**, in the chosen time parametrization.
 
-The interactive example uses
+The interactive example uses a nonnegative bending parameter $$b\geq0$$:
 
 $$
 v(t,x)=\bigl(1,b\pi\cos(\pi t)\bigr),
