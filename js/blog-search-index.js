@@ -1443,6 +1443,14 @@ window.BLOG_SEARCH_RECORDS = [
       "George Gabriel Stokes",
       "Alexandre Chorin",
       "Roger Temam",
+      "Francis Harlow",
+      "Eddie Welch",
+      "Olivier Pironneau",
+      "André Robert",
+      "Andrew Staniforth",
+      "Jean Côté",
+      "marker-and-cell method",
+      "Lagrange–Galerkin method",
       "simulation de fluides",
       "projection incompressible"
     ]
