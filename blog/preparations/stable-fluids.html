@@ -1,127 +1,17 @@
+---
+permalink: /blog/preparations/stable-fluids.html
+redirect_to: /blog/2026/10/28/stable-fluids/
+---
 <!doctype html>
-<html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,follow">
-<meta name="description" content="Stam’s Stable Fluids combines semi-Lagrangian advection, implicit diffusion, and an orthogonal incompressibility projection. Derive its Fourier solver and stir a periodic fluid interactively.">
-<meta name="keywords" content="Stable Fluids, Jos Stam, incompressible Navier–Stokes, fluid simulation, semi-Lagrangian advection, backward characteristics, bilinear interpolation, implicit diffusion, pressure projection, Helmholtz–Hodge decomposition, Leray projector, Poisson equation, Fourier transform, FFT, mixed-radix FFT, spectral differentiation, periodic boundary conditions, odd grid, Nyquist mode, vorticity, passive scalar, dye transport, viscosity, kinetic energy, maximum principle, mass conservation, first-order splitting, George Gabriel Stokes, Alexandre Chorin, Roger Temam, simulation de fluides, projection incompressible">
-<title>Stable fluids — Alpha preview — Gabriel Peyré</title>
-<link rel="canonical" href="https://www.gpeyre.com/blog/preparations/stable-fluids.html"><link rel="stylesheet" href="assets/drafts.css"><script defer src="assets/drafts.js"></script><script defer src="assets/idea-experiments.js"></script>
-<script type="text/x-mathjax-config">MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
-<script defer src="../../js/site-analytics.js"></script>
-
-<!-- Generated numerical summary image: start -->
-<meta property="og:image" content="https://www.gpeyre.com/blog/imgs/summaries/stable-fluids.jpg">
-<meta property="og:image:alt" content="A stirred periodic Stable Fluids simulation: transported teal dye beside the velocity field and signed vorticity.">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="572">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://www.gpeyre.com/blog/imgs/summaries/stable-fluids.jpg">
-<meta name="twitter:image:alt" content="A stirred periodic Stable Fluids simulation: transported teal dye beside the velocity field and signed vorticity.">
-<!-- Generated numerical summary image: end -->
-</head><body>
-<header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Stable fluids</h1><p class="subtitle">Trace backwards, diffuse implicitly, and project away compression.</p><p class="byline">Gabriel Peyré</p></div></header>
-<main class="wrap"><article class="blog-prose">
-<p><em>Stable Fluids</em> is one of my favorite papers. Its blend of mathematics, numerical analysis, computer graphics, and physics has been a tremendous source of inspiration for me: a few elegant ideas become a simulation one can immediately see and interact with.</p>
-<figure class="portrait-single"><img src="assets/new-dynamics/jos-stam-azam-khan.jpg" width="1884" height="1712" alt="Jos Stam in front of a whiteboard with fluid simulation equations" loading="lazy"><figcaption>Jos Stam, photographed by Azam Khan in May 2005. <a href="https://commons.wikimedia.org/wiki/File:Jos_Stam_2005_-_by_Azam_Khan.jpg">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>. Image unchanged.</figcaption></figure>
-<p>A moving cloud of smoke looks complicated. Its solver need not be. Jos Stam’s <em>Stable Fluids</em> <a href="#ref-stam">[1]</a> is built from a handful of operations with clear geometric meanings: carry a field along trajectories, smooth it, and enforce incompressibility by an orthogonal projection.</p>
-<p>The trick is not to solve the entire fluid equation at once. Split it into manageable pieces, and choose each piece to avoid a familiar numerical instability. On a periodic domain, the pressure solve becomes particularly elegant: each Fourier coefficient is projected onto a line perpendicular to its wave vector. Stam’s later implementation notes <a href="#ref-stam2003">[4]</a> and Bridson’s book <a href="#ref-bridson">[5]</a> are useful companions.</p>
-<figure class="portrait-single"><img src="assets/new-dynamics/george-stokes.jpg" width="711" height="1065" alt="Portrait of George Gabriel Stokes after a photograph by Fradelle and Young" loading="lazy"><figcaption>George Gabriel Stokes (1819–1903), after a photograph by Fradelle &amp; Young, reproduced in Schuster and Shipley’s <em>Britain’s Heritage of Science</em> (1917). <a href="https://commons.wikimedia.org/wiki/File:SS-stokes.jpg">Wikimedia Commons</a>, public domain. Image unchanged.</figcaption></figure>
-
-<h2>Velocity, pressure, and the constraint</h2>
-<p>Work on a periodic square \([0,L)^2\). The velocity \(u(t,x)\in\mathbb R^2\) solves the incompressible Navier–Stokes equations</p>
-\[
- \partial_tu+(u\cdot\nabla)u
- =-\nabla p+\nu\Delta u+f,
- \qquad \nabla\cdot u=0.
-\]
-<p>The force \(f\) pushes the fluid and the viscosity \(\nu\ge0\) smooths velocity variations. Pressure is the multiplier enforcing incompressibility: a parcel may move or deform, but its volume cannot change. Dye is a separate passive scalar \(a\), evolving by</p>
-\[
- \partial_ta+u\cdot\nabla a=\kappa\Delta a+s,
-\]
-<p>where \(\kappa\ge0\) is dye diffusivity and \(s\) a dye source. Since \(\nabla\cdot u=0\), the advection term can equally be written \(\nabla\cdot(au)\). Dye does not feed back into the velocity in the simple model used here.</p>
-
-<h2>First understand the projection</h2>
-<p>Suppose \(w\) is a provisional velocity that may compress the fluid. Remove a gradient:</p>
-\[
- \mathsf P w=w-\nabla\phi,
- \qquad \Delta\phi=\nabla\cdot w,
- \qquad \int\phi=0.
-\]
-<p>The Poisson equation is compatible because a periodic divergence has integral zero. The field \(\mathsf Pw\) is divergence free by construction.</p>
-<p id="proposition-1"><strong>Proposition 1 (the pressure step is an orthogonal projection).</strong> In periodic \(L^2\), \(\mathsf Pw\) is the unique closest divergence-free field to \(w\). In particular,</p>
-\[
- \|w\|_{L^2}^2
- =\|\mathsf Pw\|_{L^2}^2+\|\nabla\phi\|_{L^2}^2.
-\]
-<details class="blog-proof"><summary>Proof: gradients are perpendicular to incompressible motion</summary><div class="blog-proof-body">
-<p>For any divergence-free \(z\), periodic integration by parts gives \(\int\nabla\phi\cdot z=-\int\phi\nabla\cdot z=0\). Hence the decomposition \(w=\mathsf Pw+\nabla\phi\) is orthogonal. More generally,</p>
-\[
- \|w-z\|_{L^2}^2
- =\|\nabla\phi\|_{L^2}^2+\|\mathsf Pw-z\|_{L^2}^2,
-\]
-<p>so the unique minimum occurs at \(z=\mathsf Pw\). \(\square\)</p>
-</div></details>
-<p>This is the Helmholtz–Hodge decomposition, or Leray projection. Projection methods for incompressible flow precede Stable Fluids; the classical work of Chorin and Temam is fundamental <a href="#ref-chorin">[2]</a>, <a href="#ref-temam">[3]</a>. Stam’s contribution combines this structure with a particularly robust, graphics-friendly advection step.</p>
-
-<h2>One time step, four operations</h2>
-<p>Let \(h&gt;0\) be the time step. A first-order splitting in the order of Stam’s 1999 presentation is</p>
-\[
- \begin{aligned}
- w_1&=u^n+hf^n &&\text{add forces},\\
- w_2(x)&=\mathcal I[w_1](x-hw_1(x)) &&\text{advect},\\
- (I-h\nu\Delta)w_3&=w_2 &&\text{diffuse},\\
- u^{n+1}&=\mathsf Pw_3 &&\text{project}.
- \end{aligned}
-\]
-<p>Here \(\mathcal I\) is periodic bilinear interpolation of the grid values. The pressure potential \(\phi\) in the projection has the units of \(hp\); one should not identify it directly with the continuous pressure without that time-step scaling.</p>
-<p><em>Why trace backwards?</em> To fill a grid point at the next time, ask where the arriving fluid came from. The first-order answer is \(x-hw_1(x)\). Interpolate the old field there. Forward tracing would leave the grid and create a separate problem of depositing particles back onto it.</p>
-<p>Dye is advected by the resulting projected velocity, with the same backward-tracing operation, then optionally diffused. A mouse drag supplies a localized velocity impulse and a positive dye source. This is an externally forced simulation, not an unforced energy-decay experiment.</p>
-
-<h2>Fourier projection: one small matrix per wave</h2>
-<p>For a Fourier mode \(e^{ik\cdot x}\), with \(k=(2\pi/L)(j_1,j_2)\), differentiation becomes multiplication by \(ik\). Thus, for \(k\ne0\),</p>
-\[
- \widehat\phi(k)=-\frac{i\,k\cdot\widehat w(k)}{|k|^2},
- \qquad
- \widehat{\nabla\phi}(k)
- =\frac{k(k\cdot\widehat w(k))}{|k|^2}.
-\]
-<p id="proposition-2"><strong>Proposition 2 (spectral pressure and diffusion).</strong> The periodic projection is</p>
-\[
- \widehat{\mathsf Pw}(k)
- =\left(I-\frac{kk^\top}{|k|^2}\right)\widehat w(k)
- \quad(k\ne0),
- \qquad \widehat{\mathsf Pw}(0)=\widehat w(0).
-\]
-<p>Implicit velocity diffusion multiplies each coefficient by \((1+h\nu|k|^2)^{-1}\). The two operations commute and can be combined into a single Fourier pass.</p>
-<details class="blog-proof"><summary>Proof: solve the scalar Poisson equation mode by mode</summary><div class="blog-proof-body">
-<p>The Fourier Poisson equation is \(-|k|^2\widehat\phi=ik\cdot\widehat w\). Solving it gives the formula above; subtracting its gradient gives the projector. The matrix \(I-kk^\top/|k|^2\) removes the component parallel to \(k\), so its output has zero Fourier divergence. The zero mode is the mean velocity, already divergence free, and remains unchanged. Finally the diffusion equation gives \((1+h\nu|k|^2)\widehat w_3=\widehat w_2\). Both multipliers act on each mode independently, and the diffusion multiplier is scalar. \(\square\)</p>
-</div></details>
-<p>In practice: transform the two velocity components, apply these multipliers, inverse transform. An FFT makes the cost \(O(M\log M)\) for \(M\) grid cells; no iterative pressure solver is hidden inside this step. The experiment uses a genuine mixed-radix FFT on a \(45\times45\) grid.</p>
-<aside class="note"><p><strong>Why an odd grid?</strong> Spectral differentiation must preserve conjugate symmetry so that real fields stay real. On an even grid, the Nyquist modes need a special consistent convention. An odd grid avoids that issue: every nonzero wave number has a distinct opposite. The divergence diagnostic below uses exactly the same Fourier derivative as the projection—not an incompatible finite-difference derivative.</p></aside>
-
-<h2>What “stable” really means</h2>
-<p id="proposition-3"><strong>Proposition 3 (three separate stability facts).</strong> Bilinear semi-Lagrangian advection preserves the range of each transported scalar component. Implicit spectral diffusion is an \(L^2\) contraction for every \(h&gt;0\). Pressure projection is also an \(L^2\) contraction.</p>
-<details class="blog-proof"><summary>Proof: convex weights, bounded multipliers, and orthogonality</summary><div class="blog-proof-body">
-<p>A bilinear interpolated value is a convex combination of four old values, even if the backtrace crosses many grid cells. It therefore lies between the old minimum and maximum. Every diffusion multiplier lies in \((0,1]\), so Parseval’s identity gives its \(L^2\) contraction. Proposition 1, or the orthogonal matrix in Proposition 2 at each Fourier mode, gives the projection contraction. \(\square\)</p>
-</div></details>
-<p>These are statements in <em>different norms</em>. They do not combine into a universal monotone kinetic-energy theorem for the entire discrete split scheme. In particular, bilinear advection is not generally a grid-mass-preserving operator, nor automatically an \(\ell^2\) contraction. Increasing \(h\) can make a bounded animation very inaccurate: the backtrace is less precise, splitting error grows, and interpolation introduces numerical diffusion. Stability is not an accuracy certificate.</p>
-<p>One more discretization detail matters for dye. Spectral implicit diffusion is \(L^2\)-stable but its truncated-grid kernel need not preserve positivity. We instead diffuse dye with the periodic five-point Laplacian \(\Delta_h\). Its implicit inverse is positive, and the same FFT diagonalizes it, with multiplier</p>
-\[
- \left[1+\frac{4h\kappa}{\Delta x^2}
- \left(\sin^2\frac{\pi j_1}{N}
- +\sin^2\frac{\pi j_2}{N}\right)\right]^{-1}.
-\]
-<p>The maximum-principle argument is elementary: at a negative minimum of a hypothetical solution of \((I-h\kappa\Delta_h)a=b\ge0\), one has \(\Delta_h a\ge0\), so the left side is negative, a contradiction. This diffusion step also preserves the mean. The <em>advection</em> step can still change dye mass; the display reports it honestly rather than renormalizing it away.</p>
-
-<h2>Numerical experimentation</h2>
-<p>Paint and stir, adjust the brush radius and stirring strength, compare viscosity levels, and increase the time step. Zero stirring strength paints without pushing. Every stroke is a discrete impulse, and its actual grid-integrated dye increment is recorded: the reference mass is the initial mass plus all these increments. The signed difference from that reference exposes the advection error. Turn projection off to see what is lost, then turn it back on and take one step: the spectral divergence falls back to roundoff. This is an educational low-resolution periodic solver, not a turbulence benchmark.</p>
-<iframe class="idea-experiment" data-experiment="fluids" src="assets/new-dynamics/index.html?topic=fluids" title="Interactive periodic Stable Fluids with dye injection, viscosity, and pressure projection" loading="lazy" style="height:1100px"></iframe>
-<p>There is a useful companion viewpoint in <a href="lagrangian-density-interpolation.html">Moser’s interpolation of measures</a>. There, one prescribes a density change and solves for a flux having the right divergence. Here, one starts with a velocity and removes its divergence. In both constructions, a Poisson equation turns conservation of mass into a practical operation.</p>
-
-<h2>Bibliography</h2><ol class="references">
-<li id="ref-stam">Jos Stam. <em>Stable Fluids</em>. SIGGRAPH, 121–128, 1999. <a href="https://doi.org/10.1145/311535.311548">Paper</a>; <a href="https://graphics.stanford.edu/courses/cs468-05-fall/Papers/p121-stam.pdf">PDF</a>.</li>
-<li id="ref-chorin">Alexandre J. Chorin. <em>Numerical Solution of the Navier–Stokes Equations</em>. Mathematics of Computation 22(104), 745–762, 1968. <a href="https://doi.org/10.1090/S0025-5718-1968-0242392-2">Paper</a>.</li>
-<li id="ref-temam">Roger Temam. <em>Sur l’approximation de la solution des équations de Navier–Stokes par la méthode des pas fractionnaires (I)</em>. Archive for Rational Mechanics and Analysis 32, 135–153, 1969. <a href="https://doi.org/10.1007/BF00247678">Paper</a>.</li>
-<li id="ref-stam2003">Jos Stam. <em>Real-Time Fluid Dynamics for Games</em>. Game Developers Conference, 2003. <a href="https://www.josstam.com/publications">Author’s publications</a>.</li>
-<li id="ref-bridson">Robert Bridson. <em>Fluid Simulation for Computer Graphics</em>. Second edition, A K Peters/CRC Press, 2015. <a href="https://www.cs.ubc.ca/~rbridson/fluidsimulation/">Author’s materials</a>.</li>
-</ol>
-</article></main><footer class="draft-footer"><div class="wrap">Forthcoming post · Alpha preview · <a href="index.html">All forthcoming posts</a> · <a href="../">Published blog</a> · <a href="/privacy/">Privacy &amp; audience measurement</a></div></footer></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="refresh" content="0; url={{ page.redirect_to | relative_url }}">
+  <link rel="canonical" href="{{ page.redirect_to | absolute_url }}">
+  <title>Stable fluids — Gabriel Peyré</title>
+</head>
+<body>
+  <p>This article has been published. <a href="{{ page.redirect_to | relative_url }}">Read “Stable fluids”</a>.</p>
+</body>
+</html>

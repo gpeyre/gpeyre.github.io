@@ -262,6 +262,32 @@
         "mime_type": "image/jpeg",
         "size": 55529
       }
+    },
+    {
+      "slug": "stable-fluids",
+      "title": "Stable fluids",
+      "date": "2026-10-28",
+      "url": "https://www.gpeyre.com/blog/2026/10/28/stable-fluids/",
+      "message": "A smoke simulation from four operations: add forces, trace particles backwards, diffuse, then project away compression. Fourier geometry explains the pressure step in Stam’s Stable Fluids. https://www.gpeyre.com/blog/2026/10/28/stable-fluids/",
+      "status": "prepared",
+      "source_sha256": "3c4951553a1db387c09dc86ecdd2409a51234626904278f4194198054d906960",
+      "base_commit": "665d4cd51b9f8b14519cd4ff6cb5de270d5c78bc",
+      "files": [
+        "blog/_posts/2026-10-28-stable-fluids.md",
+        "blog/preparations/stable-fluids.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null,
+      "working_sha256": {
+        "blog/_posts/2026-10-28-stable-fluids.md": "15c3e7f841064c3fc9c3373543f99b2afa5ba29ccc709574efd5fe8380fa1bb6",
+        "blog/preparations/stable-fluids.html": "cdce098f0dda9d6601b97e76f5e0ff59bd7997b3c9c844c8f2d55a3f52e67355",
+        "blog/preparations/index.html": "df87097c24dd62406a20ae17dac5c903e5c748a81572a3649a8b9a1cd22f8105",
+        "js/blog-search-index.js": "06f2acbca5ec286f780af804772a30cd335593d1de4b123e2575a0e9c90c8527"
+      }
     }
   ]
 }
