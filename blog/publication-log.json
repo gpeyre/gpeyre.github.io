@@ -297,6 +297,32 @@
         "mime_type": "image/jpeg",
         "size": 58570
       }
+    },
+    {
+      "slug": "mlp-to-convnet-universality",
+      "title": "From MLP universality to ConvNet Universality",
+      "date": "2026-10-29",
+      "url": "https://www.gpeyre.com/blog/2026/10/29/mlp-to-convnet-universality/",
+      "message": "Why are ConvNets universal for translation-equivariant maps? Approximate one coordinate by an MLP, then share it across space. An accumulator trades width for depth. https://www.gpeyre.com/blog/2026/10/29/mlp-to-convnet-universality/",
+      "status": "prepared",
+      "source_sha256": "84e6becb5aa6618e92899ceec1a626773a18136ac93305c6f8b9b598491f8340",
+      "base_commit": "fb3d57d1faa555f7640908418f86fb4aecde3281",
+      "files": [
+        "blog/_posts/2026-10-29-mlp-to-convnet-universality.md",
+        "blog/preparations/mlp-to-convnet-universality.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null,
+      "working_sha256": {
+        "blog/_posts/2026-10-29-mlp-to-convnet-universality.md": "55bb27c8640e54ce06db0aa2a5e53b7a8e23e34e0b1d758bac5816c026749286",
+        "blog/preparations/mlp-to-convnet-universality.html": "bfa9a65c2a91c2ae5ad4bd9cd3ba15a58aaa2733f999014bf68717d011f48a17",
+        "blog/preparations/index.html": "df4ba7c62efd0a206c62e6493e74707ca41e56153ca363036252995b66d7adbb",
+        "js/blog-search-index.js": "6be420a40a33daa1efc79489892afbe924e88e13e6726d3d080ab2082010c835"
+      }
     }
   ]
 }
