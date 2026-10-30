@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Two geometries of covariance interpolation</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <header><p class="eyebrow">A covariance is not just an ellipse</p><h1>Same endpoints. Different geometry.</h1><p>Compare square-root Frobenius and Bures interpolation. Each outline is a unit-Mahalanobis covariance ellipse: its principal radii are square roots of eigenvalues, oriented along the eigenvectors.</p></header>
+  <nav class="presets" aria-label="Covariance presets"><button id="preset-commuting" type="button" aria-pressed="false">Commuting axes</button><button id="preset-noncommuting" type="button" aria-pressed="true">Rotated axes</button><button id="preset-thin" type="button" aria-pressed="false">Nearly rank one</button></nav>
+  <section class="time-control" aria-label="Interpolation time"><label for="time">Interpolation <span>t = <output id="time-value" for="time">0.50</output></span></label><input id="time" type="range" min="0" max="1" step="0.01" value="0.5"><div class="time-ends"><span>0 · covariance A</span><span>covariance B · 1</span></div></section>
+  <div class="plots">
+    <section class="panel" aria-labelledby="root-heading"><div class="panel-heading"><span class="number">01</span><div><h2 id="root-heading">Square-root Frobenius</h2><p>Interpolate the symmetric square roots</p></div></div><canvas id="root-plot" tabindex="0" role="img" aria-label="Square-root covariance interpolation"></canvas><p class="matrix"><span>Σ<sub>root</sub>(t)</span><output id="root-matrix"></output></p></section>
+    <section class="panel" aria-labelledby="bures-heading"><div class="panel-heading"><span class="number">02</span><div><h2 id="bures-heading">Bures–Wasserstein</h2><p>Align the factors, then interpolate</p></div></div><canvas id="bures-plot" tabindex="0" role="img" aria-label="Bures covariance interpolation"></canvas><p class="matrix"><span>Σ<sub>B</sub>(t)</span><output id="bures-matrix"></output></p></section>
+  </div>
+  <p class="legend"><span class="line blue"></span>A <span class="line red"></span>B <span class="line current"></span>current t <span class="line faint"></span>t = 0.1, …, 0.9 <span class="axis-note">Equal axes · shared, time-independent scale</span></p>
+  <section class="parameters" aria-label="Strictly positive definite covariance controls">
+    <div class="parameter-group"><h3><span class="dot blue-dot"></span>Covariance A</h3><label for="a-angle">Orientation <output id="a-angle-value" for="a-angle"></output></label><input id="a-angle" type="range" min="-90" max="90" step="1" value="-15"><label for="a-aspect">Axis ratio <output id="a-aspect-value" for="a-aspect"></output></label><input id="a-aspect" type="range" min="1" max="25" step="0.1" value="9"><p>Geometric-mean radius fixed at 1.</p></div>
+    <div class="parameter-group"><h3><span class="dot red-dot"></span>Covariance B</h3><label for="b-angle">Orientation <output id="b-angle-value" for="b-angle"></output></label><input id="b-angle" type="range" min="-90" max="90" step="1" value="30"><label for="b-aspect">Axis ratio <output id="b-aspect-value" for="b-aspect"></output></label><input id="b-aspect" type="range" min="1" max="25" step="0.1" value="6"><label for="b-size">Relative size <output id="b-size-value" for="b-size"></output></label><input id="b-size" type="range" min="0.4" max="1.8" step="0.01" value="1.08"></div>
+  </section>
+  <section class="metrics" aria-label="Numerical comparison"><div><span>d<sub>root</sub>(A, B)</span><output id="root-distance"></output></div><div><span>d<sub>B</sub>(A, B)</span><output id="bures-distance"></output></div><div><span>d<sub>root</sub> / d<sub>B</sub></span><output id="distance-ratio"></output></div><div><span>‖AB − BA‖<sub>F</sub> / (‖A‖<sub>F</sub>‖B‖<sub>F</sub>)</span><output id="commutator"></output></div></section>
+  <p id="status" class="status" role="status" aria-live="polite"></p>
+  <footer>Blue → red is linear in t in both panels. Axis ratio means major/minor radius; relative size multiplies both radii. Every control keeps both covariances strictly positive definite. Focus a plot: ← / → changes t, Shift takes larger steps, Home / End selects an endpoint.</footer>
+</main>
+<script src="core.js"></script><script src="view.js"></script><script src="app.js"></script>
+</body>
+</html>

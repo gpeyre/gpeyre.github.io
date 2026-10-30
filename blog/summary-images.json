@@ -1,6 +1,23 @@
 {
   "version": 1,
   "images": {
+    "bures-distance-square-root-covariances": {
+      "path": "/blog/imgs/summaries/bures-distance-square-root-covariances.jpg",
+      "width": 1200,
+      "height": 680,
+      "alt": "Two panels of Gaussian covariance ellipses compare square-root and Bures interpolations at the same time, with common blue and red endpoints and identical axes.",
+      "source": "/blog/preparations/assets/bures-covariances/index.html",
+      "settings": {
+        "aAngle": -15,
+        "bAngle": 30,
+        "aAspect": 9,
+        "bAspect": 6,
+        "bSize": 1.08,
+        "t": 0.5,
+        "renderer": "shared experiment core.js and view.js, native canvas summary layout"
+      },
+      "sha256": "cc60dba29e0232ade236a885927c58ec538e09ba80ba623cf15e34206fbe70ac"
+    },
     "training-very-deep-resnets": {
       "path": "/blog/imgs/summaries/training-very-deep-resnets.jpg",
       "width": 1200,

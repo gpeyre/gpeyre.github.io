@@ -287,3 +287,11 @@ Topic: Other topics
 - [ ] Ready to publish
 
 > Depth becomes time in a ResNet. Explore adjoint training, noncommuting linear flows, and a loss with no bad local minima—but increasingly flat saddles. https://www.gpeyre.com/blog/preparations/training-very-deep-resnets.html
+
+## 37. Bures’ distance and square roots of covariances
+
+Topic: OT / Wasserstein geometry
+
+- [ ] Ready to publish
+
+> How far apart are two Gaussian covariances? Bures optimizes their alignment; linear OT fixes a reference. They agree exactly for commuting matrices—and differ by at most a factor √2. https://www.gpeyre.com/blog/preparations/bures-distance-square-root-covariances.html

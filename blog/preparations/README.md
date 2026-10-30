@@ -24,6 +24,22 @@ New standalone articles must include the shared analytics loader
 It counts only top-level visits on the production domain, not local tests or
 embedded experiments. See the audience-measurement section in `../README.md`.
 
+## Bures’ distance and square roots of covariances
+
+The forthcoming article bures-distance-square-root-covariances.html distinguishes
+raw covariance Frobenius distance from the square-root distance induced by linear
+optimal transport with a standard Gaussian reference. Self-contained proofs cover
+Gaussian optimality, Procrustes alignment, commuting equality including singular
+covariances, the sharp dimension-free comparison, and two-point barycenters.
+The cited Letrouit–Manole potential-stability theorem is specialized to quadratic
+potentials; it is not misidentified as general gradient-map Lipschitz stability.
+
+The companion assets/bures-covariances/ evaluates exact two-by-two matrix formulas,
+with common axes, linear time colors, and strictly positive definite slider
+endpoints. Stable factor alignment avoids subtracting large nearly equal traces.
+Run node tests/blog-bures-covariances.test.js, and reproduce the summary with
+node scripts/render-blog-bures-summary.cjs using the shared numerical renderer.
+
 ## Training (very) deep ResNets
 
 `training-very-deep-resnets.html` separates state depth from optimization time,
