@@ -24,6 +24,24 @@ New standalone articles must include the shared analytics loader
 It counts only top-level visits on the production domain, not local tests or
 embedded experiments. See the audience-measurement section in `../README.md`.
 
+## Averaging Positive Symmetric Matrices
+
+`averaging-positive-symmetric-matrices.html` distinguishes log-Euclidean
+geometric interpolation, weighted Kubo–Ando geometric interpolation, and the
+operator logarithmic mean obtained by integrating the latter. Folded proofs
+cover congruence invariance, monotonicity, harmonic–geometric–arithmetic bounds,
+the logarithmic time-average, the small-power bridge, and the Gaussian OT map.
+All logarithms and inverse formulas are explicitly restricted to SPD matrices.
+
+`assets/positive-matrix-means/` reuses the existing Bures numerical utilities
+and displays two ellipse paths with common axes. A static teal logarithmic-mean
+overlay and scalar preset distinguish the time-average from a log-Euclidean
+midpoint. Run `node tests/blog-positive-matrix-means.test.js`; reproduce the
+summary with `node scripts/render-blog-matrix-means-summary.cjs`.
+The unmodified, watermarked Ando portrait is by Konrad Jacobs, MFO, under
+CC BY-SA 2.0 Germany. Kubo’s institutional portrait is linked, not copied,
+because no reuse license was located.
+
 ## Bures’ distance and square roots of covariances
 
 The forthcoming article bures-distance-square-root-covariances.html distinguishes

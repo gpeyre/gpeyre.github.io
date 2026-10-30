@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <meta name="keywords" content="positive semidefinite matrix, positive definite matrix, PSD cone, SPD cone, covariance matrix, matrix averaging, diffusion tensor imaging, covariance descriptor, arithmetic matrix mean, harmonic matrix mean, geometric matrix mean, log-Euclidean mean, operator logarithmic mean, Kubo–Ando mean, Fumio Kubo, Tsuyoshi Ando, Pusz–Woronowicz mean, matrix logarithm, matrix exponential, spectral calculus, Löwner order, congruence invariance, affine-invariant geometry, Gaussian optimal transport, Bures–Wasserstein geometry, determinant interpolation, Fréchet mean, Karcher mean, noncommuting matrices, positive matrix interpolation, moyenne de matrices, moyenne logarithmique">
+  <meta name="description" content="Three different ways to average positive matrices: log-Euclidean geometry, the Kubo–Ando geometric mean, and the logarithmic mean obtained by averaging its path. Short proofs, Gaussian transport, and interactive covariance ellipses.">
+  <title>Averaging Positive Symmetric Matrices — Alpha preview — Gabriel Peyré</title>
+  <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/averaging-positive-symmetric-matrices.html">
+  <link rel="stylesheet" href="assets/drafts.css">
+  <script defer src="assets/drafts.js"></script>
+  <script defer src="assets/idea-experiments.js"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+  <script defer src="../../js/site-analytics.js"></script>
+
+<!-- Generated numerical summary image: start -->
+<meta property="og:image" content="https://www.gpeyre.com/blog/imgs/summaries/averaging-positive-symmetric-matrices.jpg">
+<meta property="og:image:alt" content="Log-Euclidean and Kubo–Ando geometric covariance midpoints on common axes, with a distinct fixed logarithmic time-average drawn as a teal dotted ellipse.">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="680">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.gpeyre.com/blog/imgs/summaries/averaging-positive-symmetric-matrices.jpg">
+<meta name="twitter:image:alt" content="Log-Euclidean and Kubo–Ando geometric covariance midpoints on common axes, with a distinct fixed logarithmic time-average drawn as a teal dotted ellipse.">
+<!-- Generated numerical summary image: end -->
+</head>
+<body>
+<header class="draft-header"><div class="wrap">
+  <a class="draft-back" href="index.html">← Forthcoming posts</a>
+  <p class="draft-status">Alpha preview · Work in progress</p>
+  <p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
+  <h1>Averaging Positive Symmetric Matrices</h1>
+  <p class="subtitle">Average matrices, average their logarithms, or average an entire geometric path?</p>
+  <p class="byline">Gabriel Peyré</p>
+</div></header>
+<main class="wrap"><article class="blog-prose">
+<p>A positive matrix records a shape, not just a list of numbers. A covariance describes uncertainty; a diffusion tensor describes preferred directions of motion; a feature covariance summarizes an image region. Averaging these objects is how we pool noisy estimates, interpolate measurements, or build a representative template. Which average respects what the matrices mean?</p>
+<p>For positive numbers, arithmetic and geometric averaging already answer different questions. For matrices, there is an additional twist: multiplication does not commute. Even the phrase <em>geometric mean</em> has several natural meanings. We will distinguish three objects carefully: the <em>log-Euclidean geometric mean</em>, the <em>Kubo–Ando geometric mean</em>, and the <em>logarithmic mean</em>. The last two words do not name the first object!</p>
+
+<h2>The positive cone: why matrices encode data</h2>
+<p>Write \(\mathbb S^d\) for the real symmetric \(d\times d\) matrices. Its positive semidefinite cone and positive definite interior are</p>
+\[
+ \begin{aligned}
+ \mathbb S_+^d&amp;=\{A\in\mathbb S^d:x^\top Ax\ge0\ \forall x\},\\
+ \mathbb S_{++}^d&amp;=\{A\in\mathbb S^d:x^\top Ax&gt;0\ \forall x\ne0\}.
+ \end{aligned}
+\]
+<p>We write \(A\succeq0\) or \(A\succ0\), respectively. The <em>Löwner order</em> is \(A\preceq B\) when \(B-A\succeq0\): every directional quadratic form increases. For a random vector \(X\) with finite second moment and mean \(m\),</p>
+\[
+ A=\mathbb E[(X-m)(X-m)^\top]\succeq0,
+ \qquad x^\top Ax=\operatorname{Var}(x^\top X).
+\]
+<p>Thus covariance averaging combines directional uncertainty. In diffusion MRI, positive tensors describe local anisotropic diffusion; smoothing and resampling require averages of nearby tensors <a href="#ref-arsigny">[1]</a>, <a href="#ref-pennec">[2]</a>. In computer vision, covariances of local features describe image regions, and averaged descriptors can serve as templates or update tracking models <a href="#ref-tuzel">[3]</a>, <a href="#ref-tracker">[4]</a>. Positive matrices also appear as kernel Gram matrices and, in their complex Hermitian version, quantum density matrices. Extra constraints, such as a fixed trace or diagonal, may require a separate normalization; the means below act on the whole positive cone.</p>
+<p>The naive weighted average is perfectly legitimate:</p>
+\[
+ A\nabla_t B=(1-t)A+tB,\qquad 0\le t\le1.
+\]
+<p>The PSD matrices form a <em>convex cone</em>, since \(x^\top(aA+bB)x\ge0\) for \(a,b\ge0\). Positive definite endpoints stay positive definite. There is no positivity problem with convex arithmetic averaging. The issue is the geometry: a multiplicative change from variance \(1\) to \(100\) has arithmetic midpoint \(50.5\), whereas the scalar geometric midpoint is \(10\).</p>
+<p>From now on, assume \(A,B\succ0\). Logarithms and inverse-based formulas require this assumption. A singular covariance can be regularized as \(A+\delta I\), but results involving its logarithm are not assertions about \(\delta=0\).</p>
+
+<h2>First route: average logarithms</h2>
+<p>The spectral theorem writes \(A=U\operatorname{diag}(a_i)U^\top\), with \(U\) orthogonal and \(a_i&gt;0\). Define</p>
+\[
+ \begin{aligned}
+ \log A&amp;=U\operatorname{diag}(\log a_i)U^\top,\\
+ A^t&amp;=U\operatorname{diag}(a_i^t)U^\top.
+ \end{aligned}
+\]
+<p>Conversely, for any symmetric \(H=V\operatorname{diag}(h_i)V^\top\),</p>
+\[
+ \exp H=V\operatorname{diag}(e^{h_i})V^\top.
+\]
+<p>These definitions are independent of choices inside repeated eigenspaces. The exponential maps \(\mathbb S^d\) bijectively onto \(\mathbb S_{++}^d\), with inverse the symmetric logarithm. We can therefore take an ordinary average in logarithmic coordinates:</p>
+\[
+ E_t(A,B)=\exp\!\big((1-t)\log A+t\log B\big).
+\]
+<p>This is the <em>log-Euclidean geometric interpolation</em>, developed by Arsigny, Fillard, Pennec, and Ayache <a href="#ref-arsigny">[1]</a>, <a href="#ref-arsigny-siam">[5]</a>. Its midpoint is \(E_{1/2}\). In dimension one it is \(a^{1-t}b^t\). More generally, if \(A\) and \(B\) commute, they share an eigenbasis, and each eigenvalue follows precisely this scalar rule.</p>
+<p>The name describes an actual geometry: \(d_{\mathrm{LE}}(A,B)=\|\log A-\log B\|_{\mathrm F}\), where \(\|M\|_{\mathrm F}^2=\operatorname{tr}(M^\top M)\). The path \(E_t\) is a straight line in log coordinates and minimizes the weighted squared-distance objective. For several matrices with nonnegative weights summing to one, the corresponding mean is explicitly \(\exp(\sum_i w_i\log A_i)\).</p>
+
+<h2>Second route: the Kubo–Ando geometric mean</h2>
+<p>Another principle is to make averaging compatible with <em>every invertible linear change of coordinates</em>. Covariances transform as \(A\mapsto SAS^\top\). One would like to average before or after this change with the same result.</p>
+<p>The geometric mean associated with Kubo–Ando theory is</p>
+\[
+ A\#B=A^{1/2}\big(A^{-1/2}BA^{-1/2}\big)^{1/2}A^{1/2}.
+\]
+<p>It first turns \(A\) into the identity, takes a square root in these relative coordinates, then transforms back. For commuting matrices it equals \((AB)^{1/2}\); for general matrices \(AB\) is not even symmetric, so taking an entrywise or naive product square root misses the point.</p>
+<p>Pusz and Woronowicz introduced this operator geometric mean in 1975 <a href="#ref-pusz">[6]</a>. Fumio Kubo and Tsuyoshi Ando subsequently placed it within an axiomatic theory of operator means, based on positivity, monotonicity, compatibility with congruences, and continuity from above <a href="#ref-kubo">[7]</a>. Their theory applies to operators as well as finite matrices; the geometric mean is one distinguished example, not the only Kubo–Ando mean.</p>
+<figure class="portrait-single"><img src="../imgs/ando-mfo.jpg" alt="Tsuyoshi Ando, photographed by Konrad Jacobs in Erlangen in 1976" width="282" height="400" loading="lazy"><figcaption>Tsuyoshi Ando, Erlangen, 1976. Konrad Jacobs, Archives of the Mathematisches Forschungsinstitut Oberwolfach; <a href="https://opc.mfo.de/detail?photo_id=73">photo 73</a>, <a href="https://creativecommons.org/licenses/by-sa/2.0/de/deed.en">CC BY-SA 2.0 Germany</a>. The archive’s watermarked image is reproduced unmodified. An official biography and portrait of Fumio Kubo are available in the <a href="https://www3.u-toyama.ac.jp/alumni4/bulletin/50th_Anniversary_Bulletin_Hyojun_16.pdf">University of Toyama’s anniversary bulletin</a>, printed p. 29.</figcaption></figure>
+
+<p id="proposition-1"><strong>Proposition 1 (a square-root equation).</strong> The midpoint \(A\#B\) is the unique positive definite solution \(X\) of</p>
+\[
+ XA^{-1}X=B.
+\]
+<details class="blog-proof"><summary>Proof: whiten the equation</summary><div class="blog-proof-body">
+<p>Set \(Y=A^{-1/2}XA^{-1/2}\) and \(C=A^{-1/2}BA^{-1/2}\). The equation becomes \(Y^2=C\). Its unique positive definite solution is the spectral root \(C^{1/2}\), giving the formula for \(A\#B\). Moreover, \(XA^{-1}X=B\) implies \(XB^{-1}X=A\), so uniqueness also proves \(A\#B=B\#A\). \(\square\)</p>
+</div></details>
+<p>To interpolate rather than just take a midpoint, replace the relative square root by a power:</p>
+\[
+ A\#_tB=A^{1/2}C^tA^{1/2},\qquad 0\le t\le1,
+\]
+\[
+ C=A^{-1/2}BA^{-1/2}.
+\]
+<p>The endpoints are \(A\#_0B=A\), \(A\#_1B=B\), and \(A\#_{1/2}B=A\#B\). This is also the geodesic of the standard affine-invariant Riemannian geometry on positive definite matrices <a href="#ref-moakher">[8]</a>, <a href="#ref-bhatia">[9]</a>. For more than two matrices, its Riemannian barycenter is generally found by optimization, unlike the explicit log-Euclidean formula.</p>
+
+<p id="theorem-1"><strong>Theorem 1 (scalar-like identities, with coordinate invariance).</strong> For \(0\le t\le1\) and invertible \(S\),</p>
+\[
+ A\#_tB=B\#_{1-t}A,
+\]
+\[
+ (A\#_tB)^{-1}=A^{-1}\#_tB^{-1},
+\]
+\[
+ (SAS^\top)\#_t(SBS^\top)=S(A\#_tB)S^\top.
+\]
+<p>The operation is homogeneous and jointly monotone: increasing either endpoint in Löwner order cannot decrease the result. Both geometric interpolations satisfy the same determinant law,</p>
+\[
+ \det(A\#_tB)=\det E_t(A,B)
+ =(\det A)^{1-t}(\det B)^t.
+\]
+<details class="blog-proof"><summary>Proof: changing the whitening basis only introduces a rotation</summary><div class="blog-proof-body">
+<p>Put \(\widetilde A=SAS^\top\) and \(U=\widetilde A^{-1/2}SA^{1/2}\). Then \(UU^\top=I\), and the whitened second endpoint is \(UCU^\top\). Spectral powers commute with orthogonal conjugation, so transforming back gives the congruence identity.</p>
+<p>Using congruence, the symmetry identity reduces to \(I\#_tC=C\#_{1-t}I=C^t\). Inversion follows directly because \(A^{1/2}B^{-1}A^{1/2}=C^{-1}\). Homogeneity follows by taking \(S=\sqrt c\,I\), for \(c&gt;0\). Finally, \(\det C=\det B/\det A\), while \(\det e^H=e^{\operatorname{tr}H}\), proving the two determinant formulas.</p>
+<details class="blog-proof"><summary>Why joint monotonicity also holds</summary><div class="blog-proof-body">
+<p>For \(0&lt;t&lt;1\), scalar integration gives \(r^t=(\sin\pi t/\pi)\int_0^\infty \lambda^{t-1}r/(r+\lambda)\,d\lambda\). Applying this identity spectrally to \(C\) yields</p>
+\[
+ A\#_tB=\frac{\sin\pi t}{\pi}
+ \int_0^\infty\lambda^{t-1}(A^{-1}+\lambda B^{-1})^{-1}\,d\lambda.
+\]
+<p>Inversion reverses positive definite order. Increasing \(A\) and \(B\) therefore decreases the sum of inverses, then increases its inverse. Integration preserves the order. The endpoint cases are immediate. \(\square\)</p>
+</div></details>
+</div></details>
+<p>The log-Euclidean mean also has endpoint symmetry, homogeneity, inverse compatibility, and orthogonal equivariance. It is <em>not</em> generally equivariant under arbitrary invertible congruences, nor jointly monotone in Löwner order. Noncommutativity is the obstruction; the matrix exponential does not preserve arbitrary Löwner inequalities.</p>
+<p>A useful warning follows just from determinants: whenever \(E_t(A,B)\) and \(A\#_tB\) differ, neither is above the other in Löwner order. Indeed, \(P\preceq Q\) for positive definite matrices with equal determinants forces \(P=Q\): all eigenvalues of \(P^{-1/2}QP^{-1/2}\) are at least one and their product is one.</p>
+
+<h2>An operator arithmetic–geometric–harmonic inequality</h2>
+<p id="theorem-2"><strong>Theorem 2 (an order sandwich).</strong> Define the weighted harmonic mean \(A!_tB=((1-t)A^{-1}+tB^{-1})^{-1}\). Then</p>
+\[
+ A!_tB\preceq A\#_tB\preceq A\nabla_tB.
+\]
+<p>For \(0&lt;t&lt;1\), equality of either pair of matrices holds exactly when \(A=B\). Thus Kubo–Ando geometry retains the scalar harmonic–geometric–arithmetic ordering in every direction. This statement is about \(\#_t\), not a claimed order sandwich for \(E_t\).</p>
+<details class="blog-proof"><summary>Proof: the scalar inequality in relative coordinates</summary><div class="blog-proof-body">
+<p>For \(r&gt;0\), scalar weighted AM–GM and its reciprocal give</p>
+\[
+ \big((1-t)+t/r\big)^{-1}\le r^t\le(1-t)+tr.
+\]
+<p>Apply these scalar inequalities to every eigenvalue of \(C\), then multiply on the left and right by \(A^{1/2}\). The three expressions become exactly the harmonic, geometric, and arithmetic matrix means above. For interior weights, scalar equality requires every eigenvalue of \(C\) to be one, hence \(A=B\). A nonzero difference in these inequalities need not be positive definite: some generalized eigenvalues may already equal one. \(\square\)</p>
+</div></details>
+
+<h2>A third object: the logarithmic mean</h2>
+<p>Now average the <em>whole Kubo–Ando path</em> using an ordinary matrix integral. This defines the <em>operator logarithmic mean</em>, denoted here by \(\mathcal L\):</p>
+\[
+ \mathcal L(A,B)=\int_0^1 A\#_tB\,dt.
+\]
+<p id="theorem-3"><strong>Theorem 3 (integrating a geometric path).</strong> With the same relative matrix \(C\),</p>
+\[
+ \mathcal L(A,B)=A^{1/2}\ell(C)A^{1/2},
+\]
+\[
+ \ell(r)=\begin{cases}\dfrac{r-1}{\log r},&amp;r\ne1,\\1,&amp;r=1.\end{cases}
+\]
+\[
+ A\#B\preceq\mathcal L(A,B)\preceq\frac{A+B}{2}.
+\]
+<details class="blog-proof"><summary>Proof: integrate each relative eigenvalue</summary><div class="blog-proof-body">
+<p>Diagonalize \(C\). For each eigenvalue \(r&gt;0\), \(\int_0^1r^t\,dt=\ell(r)\); the value at one is its continuous limit. This proves the formula without dividing by a potentially singular matrix \(\log C\).</p>
+<p>The scalar inequality \(r^t+r^{1-t}\ge2\sqrt r\), integrated over \([0,1]\), gives \(\sqrt r\le\ell(r)\). Integrating \(r^t\le(1-t)+tr\) gives \(\ell(r)\le(1+r)/2\). Apply spectral calculus and congruence once more. Both matrix equalities require \(A=B\). \(\square\)</p>
+</div></details>
+<p>The logarithmic mean is symmetric: exchanging \(A,B\) reverses \(t\) to \(1-t\) in the integral. Joint monotonicity and congruence equivariance pass through the integral as well. But it is <em>not</em> the log-Euclidean geometric midpoint. Already for positive numbers,</p>
+\[
+ E_{1/2}(1,4)=1\#4=2,
+\]
+\[
+ \mathcal L(1,4)=\frac3{\log4}\simeq2.164.
+\]
+<p>This separates the names cleanly. <em>Log-Euclidean</em> means average the logarithms and exponentiate. <em>Logarithmic mean</em> means integrate the relative geometric interpolation. The latter produces one fixed matrix for the chosen endpoints; it does not move when we change the observation time \(t\).</p>
+<table><thead><tr><th>Mean</th><th>Construction</th><th>For \(1,4\)</th></tr></thead><tbody>
+<tr><td>Log-Euclidean geometric</td><td>Average logs, then exponentiate</td><td>\(2\)</td></tr>
+<tr><td>Kubo–Ando geometric</td><td>Take a relative square root</td><td>\(2\)</td></tr>
+<tr><td>Logarithmic</td><td>Average the whole Kubo–Ando path</td><td>\(3/\log4\)</td></tr>
+</tbody></table>
+
+<h3>A genuine bridge to log-Euclidean geometry</h3>
+<p>There is nevertheless a simple limiting connection—not by averaging time, but by shrinking matrix powers toward the identity.</p>
+<p id="proposition-2"><strong>Proposition 2 (small-power limit).</strong> For fixed positive definite \(A,B\) and \(t\in[0,1]\),</p>
+\[
+ \lim_{r\to0}(A^r\#_tB^r)^{1/r}=E_t(A,B).
+\]
+<details class="blog-proof"><summary>Proof: near the identity, noncommuting products agree to first order</summary><div class="blog-proof-body">
+<p>Write \(H=\log A\), \(K=\log B\). Matrix Taylor expansions give \(A^{\pm r/2}=I\pm rH/2+O(r^2)\) and \(B^r=I+rK+O(r^2)\). Hence</p>
+\[
+ A^{-r/2}B^rA^{-r/2}=I+r(K-H)+O(r^2),
+\]
+\[
+ A^r\#_tB^r=I+r\big((1-t)H+tK\big)+O(r^2).
+\]
+<p>Taking its symmetric logarithm and dividing by \(r\ne0\) gives \((1-t)H+tK+O(r)\). Exponentiating proves the limit. All remainders are in a matrix norm for these fixed matrices; no commutation assumption was made. \(\square\)</p>
+</div></details>
+
+<h2>A Gaussian transport map hidden in a geometric mean</h2>
+<p>Here is a useful connection to <a href="bures-distance-square-root-covariances.html">Bures geometry and Gaussian optimal transport</a>. The optimal quadratic-cost transport from \(\mathcal N(0,A)\) to \(\mathcal N(0,B)\) is \(x\mapsto Tx\), where</p>
+\[
+ \begin{aligned}
+ T&amp;=A^{-1}\#B\\
+ &amp;=A^{-1/2}(A^{1/2}BA^{1/2})^{1/2}A^{-1/2},\\
+ T^{-1}&amp;=A\#B^{-1}.
+ \end{aligned}
+\]
+<details class="blog-proof"><summary>Proof: the covariance transport equation is the same square-root equation</summary><div class="blog-proof-body">
+<p>A symmetric positive definite transport matrix must satisfy \(TAT=B\). Proposition 1, with first argument \(A^{-1}\), identifies its unique solution as \(A^{-1}\#B\). To verify optimality directly, for every \(x,y\),</p>
+\[
+ 2x^\top y\le x^\top Tx+y^\top T^{-1}y.
+\]
+<p>The difference is \(|T^{1/2}x-T^{-1/2}y|^2\). In a coupling with these Gaussian marginals, the expectation of the right-hand side is fixed. Equality is attained by \(Y=TX\), which has covariance \(B\); this maximizes \(\mathbb E[X^\top Y]\), hence minimizes \(\mathbb E|X-Y|^2\). Inverse compatibility of \(\#\) gives the formula for \(T^{-1}\). \(\square\)</p>
+</div></details>
+<p>Notice the roles: \(A^{-1}\#B\) is a <em>map</em>, whereas \(A\#B\) is an averaged covariance. The Bures covariance path \(((1-t)I+tT)A((1-t)I+tT)\) is yet another interpolation. Even for scalar variances \(a,b\), it is \(((1-t)\sqrt a+t\sqrt b)^2\), not \(a^{1-t}b^t\). Geometry chooses the average.</p>
+
+<h2>Numerical experimentation</h2>
+<p>Compare log-Euclidean and Kubo–Ando interpolation between two covariance ellipses. Both panels share endpoints, time, axes, and scale; blue to red is linear in \(t\). Rotating the endpoints apart reveals noncommutation. With common axes, the two geometric paths agree—but the logarithmic mean remains a different object.</p>
+<p>Enable the teal logarithmic-mean overlay to see \(\mathcal L(A,B)\), the <em>fixed time-average</em> of the Kubo–Ando path. The scalar preset uses \(A=I,B=4I\): at \(t=1/2\), both geometric paths give \(2I\), while the overlay is \((3/\log4)I\). Covariance eigenvalues are squared radii, so the ellipse radii are their square roots.</p>
+<iframe class="idea-experiment" data-experiment="positive-matrix-means" src="assets/positive-matrix-means/index.html" title="Compare log-Euclidean and Kubo–Ando covariance interpolations, with a fixed logarithmic-mean overlay" loading="lazy" style="height:1250px"></iframe>
+<p class="caption">The figures evaluate the spectral formulas, not fitted approximations. Every control keeps both endpoints strictly positive definite. The two moving matrices have the same determinant \((\det A)^{1-t}(\det B)^t\); the logarithmic time-average generally does not. Equal determinant fixes ellipse area, not orientation or anisotropy.</p>
+
+<h2>Bibliography</h2>
+<ol class="references">
+<li id="ref-arsigny">Vincent Arsigny, Pierre Fillard, Xavier Pennec, and Nicholas Ayache. <em>Log-Euclidean Metrics for Fast and Simple Calculus on Diffusion Tensors.</em> Magnetic Resonance in Medicine <strong>56</strong>(2), 411–421, 2006. <a href="https://doi.org/10.1002/mrm.20965">Paper</a>.</li>
+<li id="ref-pennec">Xavier Pennec, Pierre Fillard, and Nicholas Ayache. <em>A Riemannian Framework for Tensor Computing.</em> International Journal of Computer Vision <strong>66</strong>, 41–66, 2006. <a href="https://doi.org/10.1007/s11263-005-3222-z">Paper</a>.</li>
+<li id="ref-tuzel">Oncel Tuzel, Fatih Porikli, and Peter Meer. <em>Region Covariance: A Fast Descriptor for Detection and Classification.</em> ECCV 2006, 589–600. <a href="https://doi.org/10.1007/11744047_45">Paper</a>.</li>
+<li id="ref-tracker">Fatih Porikli and Oncel Tuzel. <em>Covariance Tracker.</em> MERL Technical Report TR2006-042, 2006. <a href="https://www.merl.com/publications/docs/TR2006-042.pdf">Report</a>.</li>
+<li id="ref-arsigny-siam">Vincent Arsigny, Pierre Fillard, Xavier Pennec, and Nicholas Ayache. <em>Geometric Means in a Novel Vector Space Structure on Symmetric Positive-Definite Matrices.</em> SIAM Journal on Matrix Analysis and Applications <strong>29</strong>(1), 328–347, 2007. <a href="https://doi.org/10.1137/050637996">Paper</a>.</li>
+<li id="ref-pusz">Wiesław Pusz and Stanisław L. Woronowicz. <em>Functional calculus for sesquilinear forms and the purification map.</em> Reports on Mathematical Physics <strong>8</strong>(2), 159–170, 1975. <a href="https://doi.org/10.1016/0034-4877(75)90061-0">Paper</a>.</li>
+<li id="ref-kubo">Fumio Kubo and Tsuyoshi Ando. <em>Means of positive linear operators.</em> Mathematische Annalen <strong>246</strong>, 205–224, 1980. <a href="https://doi.org/10.1007/BF01371042">Paper</a>.</li>
+<li id="ref-moakher">Maher Moakher. <em>A Differential Geometric Approach to the Geometric Mean of Symmetric Positive-Definite Matrices.</em> SIAM Journal on Matrix Analysis and Applications <strong>26</strong>(3), 735–747, 2005. <a href="https://doi.org/10.1137/S0895479803436937">Paper</a>.</li>
+<li id="ref-bhatia">Rajendra Bhatia and John Holbrook. <em>Riemannian geometry and matrix geometric means.</em> Linear Algebra and its Applications <strong>413</strong>, 594–618, 2006. <a href="https://doi.org/10.1016/j.laa.2005.08.025">Paper</a>.</li>
+</ol>
+</article></main>
+<footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Blog</a> · <a href="/privacy/">Privacy &amp; audience measurement</a></div></footer>
+</body>
+</html>

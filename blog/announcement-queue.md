@@ -303,3 +303,11 @@ Topic: OT / Wasserstein geometry
 - [ ] Ready to publish
 
 > How far apart are two Gaussian covariances? Bures optimizes their alignment; linear OT fixes a reference. They agree exactly for commuting matrices—and differ by at most a factor √2. https://www.gpeyre.com/blog/preparations/bures-distance-square-root-covariances.html
+
+## 38. Averaging Positive Symmetric Matrices
+
+Topic: Other topics
+
+- [ ] Ready to publish
+
+> How should we average positive matrices? Compare log-Euclidean and Kubo–Ando geometric means—and the different logarithmic mean obtained by averaging a path. https://www.gpeyre.com/blog/preparations/averaging-positive-symmetric-matrices.html

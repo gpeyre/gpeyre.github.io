@@ -38,6 +38,24 @@
       },
       "sha256": "979ea4cd93952c9e6d277762b0b8b812271b19d80566b8f482bd91d7621f5ff2"
     },
+    "averaging-positive-symmetric-matrices": {
+      "path": "/blog/imgs/summaries/averaging-positive-symmetric-matrices.jpg",
+      "width": 1200,
+      "height": 680,
+      "alt": "Log-Euclidean and Kubo–Ando geometric covariance midpoints on common axes, with a distinct fixed logarithmic time-average drawn as a teal dotted ellipse.",
+      "source": "/blog/preparations/assets/positive-matrix-means/index.html",
+      "settings": {
+        "aAngle": -22,
+        "bAngle": 37,
+        "aAspect": 9,
+        "bAspect": 6,
+        "bSize": 1.08,
+        "t": 0.5,
+        "showLogarithmic": true,
+        "renderer": "shared experiment core.js and view.js, native canvas summary layout"
+      },
+      "sha256": "8a6c6ec4d2ffc590f2b1af353035cf0506a64fa1e2a48ab167a28cb366ca5f89"
+    },
     "balanced-low-rank-conditioning": {
       "path": "/blog/imgs/summaries/balanced-low-rank-conditioning.jpg",
       "alt": "Exact Hessian condition number versus factor scale and local gradient-descent losses for balanced and unbalanced factorizations.",
