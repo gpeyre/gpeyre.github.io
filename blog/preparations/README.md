@@ -40,6 +40,24 @@ endpoints. Stable factor alignment avoids subtracting large nearly equal traces.
 Run node tests/blog-bures-covariances.test.js, and reproduce the summary with
 node scripts/render-blog-bures-summary.cjs using the shared numerical renderer.
 
+## Arithmetico-geometric means and their generalizations
+
+The forthcoming article arithmetico-geometric-means.html distinguishes
+quasi-arithmetic generators from the Gauss composition of two means.
+Nested intervals prove convergence and uniqueness of the invariant mean;
+arithmetic–harmonic iteration conserves the product. The full continuous
+Daróczy–Páles classification is stated in fractional-linear form. Elementary
+sufficiency and smooth rigidity proofs are included; the deep continuous
+regularity-and-extension step is explicitly cited. Institutional portraits
+are linked from the University of Debrecen.
+
+The companion assets/generalized-means/ evaluates stable log-domain power
+means and their simultaneous iteration. Heatmaps and a nested-bracket trace
+share interactive parameters, presets, keyboard controls, and point selection.
+Floating-point roundoff and iteration caps are distinguished from convergence.
+Run node tests/blog-generalized-means.test.js; reproduce its summary with
+node scripts/render-blog-means-summary.cjs using the same numerical renderer.
+
 ## Training (very) deep ResNets
 
 `training-very-deep-resnets.html` separates state depth from optimization time,

@@ -1,6 +1,22 @@
 {
   "version": 1,
   "images": {
+    "arithmetico-geometric-means": {
+      "path": "/blog/imgs/summaries/arithmetico-geometric-means.jpg",
+      "width": 1200,
+      "height": 490,
+      "alt": "Arithmetic-mean and arithmetic–geometric-mean heatmaps on identical positive axes, with a selected orbit and its closing lower and upper bounds.",
+      "source": "/blog/preparations/assets/generalized-means/index.html",
+      "settings": {
+        "p": 1,
+        "q": 0,
+        "x": 0.45,
+        "y": 1.8,
+        "grid": 111,
+        "renderer": "shared experiment view.js and core.js, native canvas summary layout"
+      },
+      "sha256": "cfede2d17a7aeff736ca16904947d29b4ccad9f8b4979a97c5a758b46e4db5d1"
+    },
     "autonomous-wasserstein-statistics": {
       "path": "/blog/imgs/summaries/autonomous-wasserstein-statistics.jpg",
       "alt": "Two different particle clouds approach the unit circle while their common signed-distance moment follows the same exponential decay.",

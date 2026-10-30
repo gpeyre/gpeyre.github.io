@@ -288,6 +288,14 @@ Topic: Other topics
 
 > Depth becomes time in a ResNet. Explore adjoint training, noncommuting linear flows, and a loss with no bad local minima—but increasingly flat saddles. https://www.gpeyre.com/blog/preparations/training-very-deep-resnets.html
 
+## 36. Arithmetico-geometric means and their generalizations
+
+Topic: Other topics
+
+- [ ] Ready to publish
+
+> Iterate two means to get a third. Arithmetic + harmonic gives geometric; arithmetic + geometric gives AGM. When is the limit quasi-arithmetic? A rigidity theorem answers exactly. https://www.gpeyre.com/blog/preparations/arithmetico-geometric-means.html
+
 ## 37. Bures’ distance and square roots of covariances
 
 Topic: OT / Wasserstein geometry

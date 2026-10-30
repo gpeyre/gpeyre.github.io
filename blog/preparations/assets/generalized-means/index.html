@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <title>Generalized means — interactive experiment</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <p class="eyebrow">Numerical experimentation · from two means to a new mean</p>
+  <h2>Let two means meet</h2>
+  <p class="intro">Choose two powers, then drag the dot. Updating both coordinates simultaneously squeezes a bracket around their common limit.</p>
+  <div class="controls">
+    <label for="power-p">First power <i>p</i> <output id="p-value" for="power-p">1 · arithmetic</output>
+      <input id="power-p" type="range" min="-2" max="2" step="0.05" value="1">
+      <span class="help">Controls the left landscape and the first update.</span>
+    </label>
+    <label for="power-q">Second power <i>q</i> <output id="q-value" for="power-q">−1 · harmonic</output>
+      <input id="power-q" type="range" min="-2" max="2" step="0.05" value="-1">
+      <span class="help">−1 harmonic · 0 geometric · 1 arithmetic.</span>
+    </label>
+  </div>
+  <div class="toolbar">
+    <div class="presets" aria-label="Examples">
+      <button id="preset-ah" type="button">A + H → G</button>
+      <button id="preset-ag" type="button">A + G → AGM</button>
+      <button id="preset-equal" type="button">Same power</button>
+    </div>
+    <div class="coordinates" aria-label="Starting coordinates">
+      <label for="point-x">x <input id="point-x" type="number" min="0.08" max="2" step="0.01" value="0.45"></label>
+      <label for="point-y">y <input id="point-y" type="number" min="0.08" max="2" step="0.01" value="1.8"></label>
+    </div>
+  </div>
+  <div class="plots">
+    <section class="panel" aria-labelledby="single-title">
+      <div class="heading"><h3 id="single-title">One power mean</h3><span id="single-formula">P₁(x, y)</span></div>
+      <canvas id="single-plot" tabindex="0" role="img" aria-label="Power mean heatmap; drag to select x and y." aria-describedby="interaction-help"></canvas>
+      <p class="panel-note">At the dot <output id="single-value">—</output></p>
+    </section>
+    <section class="panel composed" aria-labelledby="composed-title">
+      <div class="heading"><h3 id="composed-title">The Gauss composition</h3><span id="composed-formula">M₁,₋₁(x, y)</span></div>
+      <canvas id="composed-plot" tabindex="0" role="img" aria-label="Gauss composition heatmap and simultaneous iteration trace; drag to select x and y." aria-describedby="interaction-help"></canvas>
+      <p class="panel-note">Common-limit estimate <output id="composed-value">—</output></p>
+    </section>
+    <section class="panel" aria-labelledby="trace-title">
+      <div class="heading"><h3 id="trace-title">A closing bracket</h3><span id="iteration-count">—</span></div>
+      <canvas id="trace-plot" role="img" aria-label="The lower and upper endpoints of the bracket after each simultaneous update."></canvas>
+      <p class="panel-note"><span class="legend"><b class="lower-key"></b>lower <b class="upper-key"></b>upper</span><span>iteration n →</span></p>
+    </section>
+  </div>
+  <p id="interaction-help" class="interaction-help">Drag either heatmap, edit x and y, or focus a heatmap and use the arrow keys (Shift: larger steps; Home: reset). Both heatmaps share equal axes and the same color scale.</p>
+  <dl class="metrics">
+    <div><dt>Floating-point bracket</dt><dd id="bracket-value">—</dd></div>
+    <div><dt>Bracket half-width</dt><dd id="radius-value">—</dd></div>
+    <div><dt>What this pair produces</dt><dd id="identity-value">Geometric mean</dd></div>
+  </dl>
+  <p id="status" role="status" aria-live="polite">Computing the bracket…</p>
+  <details>
+    <summary>Read the numerical trace</summary>
+    <div class="table-wrap"><table><caption>Simultaneous updates, including the initial pair (n = 0).</caption><thead><tr><th scope="col">n</th><th scope="col">xₙ</th><th scope="col">yₙ</th><th scope="col">half-width</th></tr></thead><tbody id="trace-rows"></tbody></table></div>
+  </details>
+  <p class="method">Pₚ(x, y) = ((xᵖ + yᵖ)/2)¹/ᵖ, with P₀ = √(xy). Each update uses the same old pair: (xₙ₊₁, yₙ₊₁) = (Pₚ(xₙ, yₙ), Pq(xₙ, yₙ)). In exact arithmetic, the limit lies between min(xₙ, yₙ) and max(xₙ, yₙ), so the midpoint error is at most the bracket half-width. The displayed bracket uses ordinary floating-point arithmetic, not certified interval arithmetic; its half-width excludes rounding error. A collapsed or stalled floating-point bracket is reported separately. Selected points stop at relative half-width 10⁻¹² or 64 updates. The 111 × 111 heatmap uses 10⁻⁹; colors and contours are raw mean values on [0.08, 2]². No animation runs in the background.</p>
+  <noscript>Enable JavaScript to explore the power means and their Gauss composition.</noscript>
+</main>
+<script src="core.js"></script>
+<script src="view.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
