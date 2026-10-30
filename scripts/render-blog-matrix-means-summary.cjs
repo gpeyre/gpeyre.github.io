@@ -13,8 +13,8 @@ else {
 const { createCanvas } = library;
 const settings = { ...M.presets.noncommuting, showLogarithmic: true,
   renderer: "shared experiment core.js and view.js, native canvas summary layout" };
-const A = M.covariance(settings.aAngle, settings.aAspect, 1);
-const B = M.covariance(settings.bAngle, settings.bAspect, settings.bSize);
+const A = M.covariance(0, settings.anisotropy, 1);
+const B = M.covariance(settings.rotation, settings.anisotropy, settings.bSize);
 const bound = V.extent(A, B), canvas = createCanvas(1200, 680), ctx = canvas.getContext("2d");
 ctx.fillStyle = "#f5f7fb"; ctx.fillRect(0, 0, canvas.width, canvas.height);
 function text(t, x, y, size, weight = 400, color = "#21344d") {

@@ -50,7 +50,7 @@ assert.throws(() => M.exp([0, 1, 0, 1]), RangeError); assert.throws(() => M.powe
 assert.throws(() => M.interpolate(M.I, M.I, .5, "unknown"), RangeError);
 let seed = 824775;
 function random() { seed = (Math.imul(1664525, seed) + 1013904223) >>> 0; return seed / 2 ** 32; }
-const cases = Object.values(M.presets).map(p => [M.covariance(p.aAngle, p.aAspect, 1), M.covariance(p.bAngle, p.bAspect, p.bSize)]);
+const cases = Object.values(M.presets).map(p => [M.covariance(0, p.anisotropy, 1), M.covariance(p.rotation, p.anisotropy, p.bSize)]);
 for (let k = 0; k < 120; k++) cases.push([M.covariance(180 * random() - 90, 1 + 12 * random(), .4 + random()), M.covariance(180 * random() - 90, 1 + 12 * random(), .4 + random())]);
 for (const [A, B] of cases) {
   const logarithmic = M.logarithmic(A, B), arithmetic = M.scale(M.add(A, B), .5), midpoint = M.geometric(A, B, .5);
@@ -143,9 +143,21 @@ close(window.PositiveMatrixMeansApp.getState().extent, bound);
 nodes["time"].value = ".37"; nodes["time"].dispatch("input"); close(window.PositiveMatrixMeansApp.getState().t, .37); close(window.PositiveMatrixMeansApp.getState().extent, bound);
 nodes["preset-commuting"].dispatch("click"); state = window.PositiveMatrixMeansApp.getState(); matrixClose(state.log, state.ka); assert.match(nodes.status.textContent, /endpoints commute/);
 nodes["preset-thin"].dispatch("click"); state = window.PositiveMatrixMeansApp.getState(); assert.equal(state.strictlyPositive, true); assert.ok(M.relativeDifference(state.log, state.ka) > .1);
-nodes["b-angle"].value = "-25"; nodes["b-angle"].dispatch("input"); assert.equal(window.PositiveMatrixMeansApp.getState().bAngle, -25);
-nodes["b-size"].value = "0"; nodes["b-size"].dispatch("input"); assert.equal(window.PositiveMatrixMeansApp.getState().bSize, .4);
-nodes["a-aspect"].value = "NaN"; nodes["a-aspect"].dispatch("input"); assert.equal(window.PositiveMatrixMeansApp.getState().aAspect, 25);
+nodes["time"].value = ".37"; nodes["time"].dispatch("input"); state = window.PositiveMatrixMeansApp.getState();
+const unrotatedA = state.A.slice(), beforeRotation = M.eigen(state.B).values.slice(), determinantA = M.determinant(state.A), determinantB = M.determinant(state.B);
+nodes.rotation.value = "-25"; nodes.rotation.dispatch("input"); state = window.PositiveMatrixMeansApp.getState();
+assert.equal(state.rotation, -25); matrixClose(state.A, unrotatedA); matrixClose(M.eigen(state.B).values, beforeRotation);
+matrixClose(state.B, M.covariance(-25, 25, 1.08)); close(state.t, .37); close(state.anisotropy, 25);
+nodes.anisotropy.value = "3.2"; nodes.anisotropy.dispatch("input"); state = window.PositiveMatrixMeansApp.getState();
+assert.equal(state.anisotropy, 3.2); assert.equal(state.rotation, -25); close(state.t, .37);
+matrixClose(state.A, M.covariance(0, 3.2, 1)); matrixClose(state.B, M.covariance(-25, 3.2, 1.08));
+for (const C of [state.A, state.B]) { const values = M.eigen(C).values; close(Math.sqrt(values[0] / values[1]), 3.2); }
+close(M.determinant(state.A), determinantA); close(M.determinant(state.B), determinantB);
+nodes.anisotropy.value = "NaN"; nodes.anisotropy.dispatch("input"); assert.equal(window.PositiveMatrixMeansApp.getState().anisotropy, 3.2);
+nodes.anisotropy.value = "30"; nodes.anisotropy.dispatch("input"); assert.equal(window.PositiveMatrixMeansApp.getState().anisotropy, 25);
+nodes.rotation.value = "100"; nodes.rotation.dispatch("input"); assert.equal(window.PositiveMatrixMeansApp.getState().rotation, 90);
+nodes.anisotropy.value = "0"; nodes.anisotropy.dispatch("input"); state = window.PositiveMatrixMeansApp.getState();
+assert.equal(state.anisotropy, 1); matrixClose(state.A, M.I); matrixClose(state.B, M.scale(M.I, 1.08 ** 2));
 nodes["preset-scalar"].dispatch("click"); state = window.PositiveMatrixMeansApp.getState();
 matrixClose(state.log, [2, 0, 0, 2]); matrixClose(state.ka, state.log); matrixClose(state.logarithmic, M.scale(M.I, 3 / Math.log(4)));
 const timeAverage = state.logarithmic.slice(); nodes["time"].value = ".1"; nodes["time"].dispatch("input"); matrixClose(window.PositiveMatrixMeansApp.getState().logarithmic, timeAverage);
@@ -161,7 +173,12 @@ for (const width of [220, 300, 600]) for (const kind of ["log", "ka"]) {
   V.drawPanel(context(), width, 330, { A: state.A, B: state.B, t: state.t, kind, extent: state.extent, showLogarithmic: true });
 }
 assert.equal(V.color(0), "rgb(37,99,201)"); assert.equal(V.color(1), "rgb(220,75,76)"); assert.equal(V.color(.5), "rgb(129,87,139)");
-for (const id of ["time", "a-angle", "b-angle", "a-aspect", "b-aspect", "b-size"]) assert.ok(html.includes('for="' + id + '"'));
+for (const id of ["time", "rotation", "anisotropy"]) assert.ok(html.includes('for="' + id + '"'));
+assert.equal((html.match(/<input\b[^>]*type="range"[^>]*>/g) || []).length, 3, "Exactly time, relative rotation, and anisotropy sliders");
+for (const [id, key] of [["rotation", "rotation"], ["anisotropy", "anisotropy"]]) {
+  const input = html.match(new RegExp('<input\\b[^>]*id="' + id + '"[^>]*>'))[0];
+  assert.equal(Number(input.match(/\bvalue="([^"]+)"/)[1]), M.presets.noncommuting[key], "Initial HTML agrees with the live preset");
+}
 assert.equal((html.match(/tabindex="0"/g) || []).length, 2);
 const article = fs.readFileSync(path.join(__dirname, "../blog/preparations/averaging-positive-symmetric-matrices.html"), "utf8");
 assert.ok(!/[\x00-\x08\x0b\x0c\x0e-\x1f]/.test(article), "No corrupted LaTeX control characters");

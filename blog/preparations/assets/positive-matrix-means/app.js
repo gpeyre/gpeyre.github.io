@@ -1,8 +1,8 @@
 (function () {
   "use strict";
   const M = window.PositiveMatrixMeans, V = window.PositiveMatrixMeansView, $ = id => document.getElementById(id);
-  const controls = { t: "time", aAngle: "a-angle", bAngle: "b-angle", aAspect: "a-aspect", bAspect: "b-aspect", bSize: "b-size" };
-  const limits = { t: [0, 1], aAngle: [-90, 90], bAngle: [-90, 90], aAspect: [1, 25], bAspect: [1, 25], bSize: [.4, 2.2] };
+  const controls = { t: "time", rotation: "rotation", anisotropy: "anisotropy" };
+  const limits = { t: [0, 1], rotation: [-90, 90], anisotropy: [1, 25] };
   let parameters = { ...M.presets.noncommuting }, A, B, bound, frame = 0, showLogarithmic = true;
   function notifyHeight() {
     if (window.parent !== window) window.parent.postMessage({ type: "ot-experiment-size", topic: "positive-matrix-means", height: Math.ceil(document.querySelector("main").getBoundingClientRect().height) + 2 }, location.protocol === "file:" ? "*" : location.origin);
@@ -19,12 +19,12 @@
   }
   function render() { if (A) { renderPanel("log"); renderPanel("ka"); notifyHeight(); } }
   function update() {
-    A = M.covariance(parameters.aAngle, parameters.aAspect, 1); B = M.covariance(parameters.bAngle, parameters.bAspect, parameters.bSize); bound = V.extent(A, B);
+    A = M.covariance(0, parameters.anisotropy, 1); B = M.covariance(parameters.rotation, parameters.anisotropy, parameters.bSize); bound = V.extent(A, B);
     const logMean = M.logEuclidean(A, B, parameters.t), kaMean = M.geometric(A, B, parameters.t);
     const commutator = M.relativeCommutator(A, B), logDet = (1 - parameters.t) * M.logDet(A) + parameters.t * M.logDet(B);
     for (const [key, id] of Object.entries(controls)) {
       $(id).value = String(parameters[key]);
-      const label = key === "t" ? parameters[key].toFixed(2) : key.endsWith("Angle") ? parameters[key].toFixed(0) + "°" : key.endsWith("Aspect") ? parameters[key].toFixed(1) + " : 1" : parameters[key].toFixed(2) + "×";
+      const label = key === "t" ? parameters[key].toFixed(2) : key === "rotation" ? parameters[key].toFixed(0) + "°" : parameters[key].toFixed(1) + " : 1";
       $(id + "-value").textContent = label; $(id).setAttribute("aria-valuetext", label);
     }
     $("mean-difference").textContent = M.relativeDifference(logMean, kaMean).toFixed(4);

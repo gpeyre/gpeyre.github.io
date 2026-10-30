@@ -36,7 +36,9 @@ All logarithms and inverse formulas are explicitly restricted to SPD matrices.
 `assets/positive-matrix-means/` reuses the existing Bures numerical utilities
 and displays two ellipse paths with common axes. A static teal logarithmic-mean
 overlay and scalar preset distinguish the time-average from a log-Euclidean
-midpoint. Run `node tests/blog-positive-matrix-means.test.js`; reproduce the
+midpoint. Its only sliders are time, relative rotation, and shared anisotropy;
+endpoint areas stay fixed while the shape controls change. The scalar preset
+retains its fixed relative size. Run `node tests/blog-positive-matrix-means.test.js`; reproduce the
 summary with `node scripts/render-blog-matrix-means-summary.cjs`.
 The unmodified, watermarked Ando portrait is by Konrad Jacobs, MFO, under
 CC BY-SA 2.0 Germany. Kubo’s institutional portrait is linked, not copied,
@@ -54,7 +56,9 @@ potentials; it is not misidentified as general gradient-map Lipschitz stability.
 
 The companion assets/bures-covariances/ evaluates exact two-by-two matrix formulas,
 with common axes, linear time colors, and strictly positive definite slider
-endpoints. Stable factor alignment avoids subtracting large nearly equal traces.
+endpoints. Its only sliders are time, relative rotation, and shared anisotropy:
+the blue axes and relative overall size stay fixed, and anisotropy preserves
+both endpoint areas. Stable factor alignment avoids subtracting large nearly equal traces.
 Run node tests/blog-bures-covariances.test.js, and reproduce the summary with
 node scripts/render-blog-bures-summary.cjs using the shared numerical renderer.
 

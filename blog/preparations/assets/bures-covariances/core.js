@@ -89,9 +89,9 @@
     return [a * c * c + b * s * s, (a - b) * c * s, (a - b) * c * s, a * s * s + b * c * c];
   }
   const presets = {
-    commuting: { aAngle: 20, bAngle: 20, aAspect: 3.8, bAspect: 1.7, bSize: 1.2, t: .5 },
-    noncommuting: { aAngle: -15, bAngle: 30, aAspect: 9, bAspect: 6, bSize: 1.08, t: .5 },
-    thin: { aAngle: 0, bAngle: 78, aAspect: 25, bAspect: 25, bSize: .85, t: .5 }
+    commuting: { rotation: 0, anisotropy: 4, bSize: 1.08, t: .5 },
+    noncommuting: { rotation: 45, anisotropy: 9, bSize: 1.08, t: .5 },
+    thin: { rotation: 78, anisotropy: 25, bSize: 1.08, t: .5 }
   };
   return { I: I.slice(), scale, add, transpose, multiply, symmetric, norm, trace, determinant, sqrt, eigen, inverseSqrt, transport, alignedFactors, rootDistance, buresDistance, rootGeodesic, buresGeodesic, commutator, relativeCommutator, covariance, presets };
 });

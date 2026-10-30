@@ -67,10 +67,10 @@
   }
   function relativeDifference(A, C) { return B.norm(A.map((v, i) => v - C[i])) / Math.max(B.norm(A), B.norm(C), Number.MIN_VALUE); }
   const presets = {
-    commuting: { aAngle: 20, bAngle: 20, aAspect: 5, bAspect: 2, bSize: 1.1, t: .5 },
-    noncommuting: { aAngle: -22, bAngle: 37, aAspect: 9, bAspect: 6, bSize: 1.08, t: .5 },
-    thin: { aAngle: -15, bAngle: 63, aAspect: 25, bAspect: 25, bSize: .85, t: .5 },
-    scalar: { aAngle: 0, bAngle: 0, aAspect: 1, bAspect: 1, bSize: 2, t: .5 }
+    commuting: { rotation: 0, anisotropy: 4, bSize: 1.08, t: .5 },
+    noncommuting: { rotation: 45, anisotropy: 9, bSize: 1.08, t: .5 },
+    thin: { rotation: 78, anisotropy: 25, bSize: 1.08, t: .5 },
+    scalar: { rotation: 0, anisotropy: 1, bSize: 2, t: .5 }
   };
   return { ...B, log, exp, power, logDet, sandwich, logEuclidean, geometric, logarithmic, interpolate, relativeDifference, presets };
 });

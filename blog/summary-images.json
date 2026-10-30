@@ -8,16 +8,14 @@
       "alt": "Log-Euclidean and Kubo–Ando geometric covariance midpoints on common axes, with a distinct fixed logarithmic time-average drawn as a teal dotted ellipse.",
       "source": "/blog/preparations/assets/positive-matrix-means/index.html",
       "settings": {
-        "aAngle": -22,
-        "bAngle": 37,
-        "aAspect": 9,
-        "bAspect": 6,
+        "rotation": 45,
+        "anisotropy": 9,
         "bSize": 1.08,
         "t": 0.5,
         "showLogarithmic": true,
         "renderer": "shared experiment core.js and view.js, native canvas summary layout"
       },
-      "sha256": "8a6c6ec4d2ffc590f2b1af353035cf0506a64fa1e2a48ab167a28cb366ca5f89"
+      "sha256": "4ae484d05ae34a33337a58d3bb6b7ec66a6223130808a5f0053fbad275a938c9"
     },
     "bures-distance-square-root-covariances": {
       "path": "/blog/imgs/summaries/bures-distance-square-root-covariances.jpg",
@@ -26,15 +24,13 @@
       "alt": "Two panels of Gaussian covariance ellipses compare square-root and Bures interpolations at the same time, with common blue and red endpoints and identical axes.",
       "source": "/blog/preparations/assets/bures-covariances/index.html",
       "settings": {
-        "aAngle": -15,
-        "bAngle": 30,
-        "aAspect": 9,
-        "bAspect": 6,
+        "rotation": 45,
+        "anisotropy": 9,
         "bSize": 1.08,
         "t": 0.5,
         "renderer": "shared experiment core.js and view.js, native canvas summary layout"
       },
-      "sha256": "cc60dba29e0232ade236a885927c58ec538e09ba80ba623cf15e34206fbe70ac"
+      "sha256": "bebcf71af645900e9749184f771a47d206d9fc612ef3320473a1e6d90d9dc50f"
     },
     "arithmetico-geometric-means": {
       "path": "/blog/imgs/summaries/arithmetico-geometric-means.jpg",

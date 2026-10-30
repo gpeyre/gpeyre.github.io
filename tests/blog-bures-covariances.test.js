@@ -177,20 +177,39 @@ nodes["time"].value = ".37"; nodes["time"].dispatch("input"); close(window.Bures
 nodes["preset-commuting"].dispatch("click"); state = window.BuresCovariancesApp.getState();
 assert.ok(state.relativeCommutator < 1e-12); close(state.rootDistance, state.buresDistance); matrixClose(state.root, state.bures); assert.match(nodes.status.textContent, /endpoints commute/);
 nodes["preset-thin"].dispatch("click"); state = window.BuresCovariancesApp.getState();
-assert.equal(state.aAspect, 25); assert.equal(state.bAspect, 25); assert.equal(state.strictlyPositive, true); assert.ok(M.norm(difference(state.root, state.bures)) > 1);
-nodes["b-angle"].value = "-25"; nodes["b-angle"].dispatch("input"); assert.equal(window.BuresCovariancesApp.getState().bAngle, -25); assert.equal(nodes["preset-thin"].getAttribute("aria-pressed"), "false");
-nodes["b-size"].value = "0"; nodes["b-size"].dispatch("input"); state = window.BuresCovariancesApp.getState(); assert.equal(state.bSize, .4); assert.equal(state.strictlyPositive, true);
-nodes["a-aspect"].value = "NaN"; nodes["a-aspect"].dispatch("input"); assert.equal(window.BuresCovariancesApp.getState().aAspect, 25);
-nodes["preset-commuting"].dispatch("click");
-for (const id of ["a-aspect", "b-aspect", "b-size"]) { nodes[id].value = "1"; nodes[id].dispatch("input"); }
-assert.equal(window.BuresCovariancesApp.getState().buresDistance, 0); assert.equal(nodes["distance-ratio"].textContent, "— (equal)");
+assert.equal(state.anisotropy, 25); assert.equal(state.strictlyPositive, true); assert.ok(M.norm(difference(state.root, state.bures)) > 1);
+// Rotation affects only B's orientation, never its eigenvalues, size, or A.
+const beforeRotation = state;
+nodes.rotation.value = "-25"; nodes.rotation.dispatch("input"); state = window.BuresCovariancesApp.getState();
+assert.equal(state.rotation, -25); assert.equal(nodes["preset-thin"].getAttribute("aria-pressed"), "false");
+matrixClose(state.A, beforeRotation.A); matrixClose(M.eigen(state.B).values, M.eigen(beforeRotation.B).values);
+assert.ok(M.norm(difference(state.B, beforeRotation.B)) > 1); assert.equal(state.t, beforeRotation.t);
+// Anisotropy affects both radius ratios, independently of angle and area.
+const beforeAnisotropy = state;
+nodes.anisotropy.value = "3.2"; nodes.anisotropy.dispatch("input"); state = window.BuresCovariancesApp.getState();
+assert.equal(state.rotation, -25); assert.equal(state.anisotropy, 3.2); assert.equal(state.t, beforeAnisotropy.t);
+for (const key of ["A", "B"]) {
+  const E = M.eigen(state[key]); close(E.values[0] / E.values[1], 3.2 ** 2);
+  close(M.determinant(state[key]), M.determinant(beforeAnisotropy[key]));
+}
+close(M.eigen(state.A).angle, 0); close(M.eigen(state.B).angle, -25 * Math.PI / 180);
+nodes.anisotropy.value = "NaN"; nodes.anisotropy.dispatch("input"); assert.equal(window.BuresCovariancesApp.getState().anisotropy, 3.2);
+nodes.anisotropy.value = "0"; nodes.anisotropy.dispatch("input"); state = window.BuresCovariancesApp.getState();
+assert.equal(state.anisotropy, 1); assert.equal(state.bSize, 1.08); assert.equal(state.strictlyPositive, true);
+matrixClose(state.A, M.I); matrixClose(state.B, M.scale(M.I, 1.08 ** 2));
+assert.equal(nodes["distance-ratio"].textContent, "1.0000");
+const circle = state.B;
+nodes.rotation.value = "90"; nodes.rotation.dispatch("input"); state = window.BuresCovariancesApp.getState(); matrixClose(state.B, circle);
 events.resize(); for (const fn of frames.values()) fn(); frames.clear();
 for (const width of [220, 300, 600]) {
   const box = V.layout(width, 330); assert.ok(box.side > 0 && box.side <= width - box.left);
   for (const kind of ["root", "bures"]) V.drawPanel(context(), width, 330, { A: state.A, B: state.B, t: state.t, kind, extent: state.extent });
 }
 assert.equal(V.color(0), "rgb(37,99,201)"); assert.equal(V.color(1), "rgb(220,75,76)"); assert.equal(V.color(.5), "rgb(129,87,139)");
-for (const id of ["time", "a-angle", "b-angle", "a-aspect", "b-aspect", "b-size"]) assert.ok(html.includes('for="' + id + '"'), id + " needs a visible label");
+for (const id of ["time", "rotation", "anisotropy"]) assert.ok(html.includes('for="' + id + '"'), id + " needs a visible label");
+assert.equal((html.match(/type="range"/g) || []).length, 3, "Exactly time, rotation and anisotropy sliders");
+for (const id of ["a-angle", "a-aspect", "b-angle", "b-aspect", "b-size"]) assert.ok(!nodes[id], "Old per-endpoint control removed: " + id);
+assert.match(html, /<input id="time" type="range" min="0" max="1" step="0.01" value="0.5">/, "Time control is unchanged");
 assert.equal((html.match(/tabindex="0"/g) || []).length, 2);
 const article = fs.readFileSync(path.join(directory, "../../bures-distance-square-root-covariances.html"), "utf8");
 assert.match(article, /data-experiment="bures-covariances"/, "Parent and child resize topics must match");
@@ -270,9 +289,9 @@ assert.equal(portrait.subarray(-2).toString("hex"), "ffd9");
     assert.equal(frame.style.height, "982px", "Unrelated, wrong-origin, wrong-topic and nonfinite messages are ignored");
     loadEvents.load(); assert.equal(frame.style.height, "1102px", "Restoring the matching topic restores measurement");
   }
-  for (const [id, key] of [["a-angle", "aAngle"], ["b-angle", "bAngle"], ["a-aspect", "aAspect"], ["b-aspect", "bAspect"]]) {
+  for (const [id, key] of [["rotation", "rotation"], ["anisotropy", "anisotropy"]]) {
     const input = html.match(new RegExp('<input\\b[^>]*id="' + id + '"[^>]*>'))[0];
     assert.equal(Number(input.match(/\bvalue="([^"]+)"/)[1]), M.presets.noncommuting[key], "Initial HTML agrees with the live default preset");
   }
 }
-console.log("Bures covariances: PSD square roots, singular metrics, invariances, sharp distance bounds, commuting equality, both geodesics and barycenters, independent Procrustes/local-speed checks, shared renderer, presets and keyboard controls pass.");
+console.log("Bures covariances: PSD square roots, singular metrics, invariances, sharp distance bounds, commuting equality, both geodesics and barycenters, independent Procrustes/local-speed checks, shared renderer, independent rotation/anisotropy sliders, unchanged time and keyboard controls pass.");
