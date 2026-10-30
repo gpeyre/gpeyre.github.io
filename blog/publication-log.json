@@ -330,7 +330,7 @@
       "date": "2026-10-30",
       "url": "https://www.gpeyre.com/blog/2026/10/30/hump-algebra/",
       "message": "The product of two Gaussian bumps is another bump. Yves Meyer turned this identity into a Banach algebra, whose atomic norm is equivalent to a Besov norm. Explore moving mixtures and their products. https://www.gpeyre.com/blog/2026/10/30/hump-algebra/",
-      "status": "prepared",
+      "status": "announced",
       "source_sha256": "79e8ed83896b0aa77820aa14b9bbd134b1d2fe9246f99a8d273d6afc5c495a45",
       "base_commit": "c84214d31e9c4f308966cc0131115c98c0281b25",
       "files": [
@@ -340,14 +340,23 @@
         "js/blog-search-index.js",
         "blog/publication-log.json"
       ],
-      "publication_commit": null,
-      "bluesky_uri": null,
-      "bluesky_cid": null,
+      "publication_commit": "43527c68e48f5a0c4c3df008b432ea6b6bf1a705",
+      "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3mz2hx5b222eg",
+      "bluesky_cid": "bafyreiahzgmgokumb6phuno7v4kwsqefpz7ry5e7cc2q7kd5ntorahakpq",
       "working_sha256": {
         "blog/_posts/2026-10-30-hump-algebra.md": "14c45bcaf089551a374178a8b5ebd87d8289139618434db7387fd1e2b194d31d",
         "blog/preparations/hump-algebra.html": "04bb8faa98157b4b561a284380e7af96738aa4c5068a41ceceb324216f50ad61",
         "blog/preparations/index.html": "38253f709cbbdfc859d5e8c7fd9301b4c38d83b3aaebfaef0c993428cffbf08f",
         "js/blog-search-index.js": "f03b862f4c20196072fc55a617050830803b52b757e3e6dbabb762c741424d07"
+      },
+      "announcement_image": {
+        "path": "/blog/imgs/summaries/hump-algebra.jpg",
+        "alt": "Contour plots of two five-bump Gaussian mixtures and their product, with separate labelled color scales showing the product's narrower overlapping peaks.",
+        "width": 1200,
+        "height": 546,
+        "sha256": "43b056899a77cf822a62c14677bfd086ff1a9a1c448bb621d225944969721ae9",
+        "mime_type": "image/jpeg",
+        "size": 51109
       }
     }
   ]
