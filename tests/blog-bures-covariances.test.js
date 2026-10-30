@@ -203,6 +203,14 @@ assert.match(article, /<h3>From Gaussian transport to FID<\/h3>/);
 assert.match(article, /\\operatorname\{FID\}\s*=\s*\\\|m_r-m_g\\\|\^2\+d_\{\\mathrm B\}\(C_r,C_g\)\^2/);
 assert.match(article, /id="ref-fid"/);
 assert.match(article, /fitted feature Gaussians—not between the original image distributions/);
+// Keep the credited historical portrait local, accessible, and portable to
+// the later dated post; it is not the experiment's social-summary image.
+assert.match(article, /<figure class="portrait-single"><img src="\.\.\/imgs\/donald-bures\.jpg" alt="Portrait of Donald John Charles Bures" width="261" height="334" loading="lazy">/);
+assert.match(article, /Photograph credited to the University of British Columbia/);
+assert.match(article, /Witte-BAF22\.pdf#page=16/);
+const portrait = fs.readFileSync(path.join(directory, "../../../imgs/donald-bures.jpg"));
+assert.equal(portrait.subarray(0, 2).toString("hex"), "ffd8");
+assert.equal(portrait.subarray(-2).toString("hex"), "ffd9");
 
 // Run the actual parent loader and child app in connected VM contexts. The
 // fixtures model message source/origin, load and ResizeObserver, not the sizing
