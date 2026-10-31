@@ -358,6 +358,32 @@
         "mime_type": "image/jpeg",
         "size": 51109
       }
+    },
+    {
+      "slug": "bures-distance-square-root-covariances",
+      "title": "Bures’ distance and square roots of covariances",
+      "date": "2026-10-31",
+      "url": "https://www.gpeyre.com/blog/2026/10/31/bures-distance-square-root-covariances/",
+      "message": "How far apart are two Gaussian covariances? Bures optimizes their alignment; linear OT fixes a reference. They agree exactly for commuting matrices—and differ by at most a factor √2. https://www.gpeyre.com/blog/2026/10/31/bures-distance-square-root-covariances/",
+      "status": "prepared",
+      "source_sha256": "32b00edfa4296080ae4e35db9e82abafa0ff2e3880bade29e1175329155947b9",
+      "base_commit": "56034a8cdf701f19b5e15f4c7346d35501f07dbd",
+      "files": [
+        "blog/_posts/2026-10-31-bures-distance-square-root-covariances.md",
+        "blog/preparations/bures-distance-square-root-covariances.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "working_sha256": {
+        "blog/_posts/2026-10-31-bures-distance-square-root-covariances.md": "6476a6a950311b772ede31345f1a6d206ab3b54ff9fcdb085b7554e497786eb3",
+        "blog/preparations/bures-distance-square-root-covariances.html": "faf50328a01af083efe03cf78997bee72db92fe4e4b91a590f0bf6b1f864254c",
+        "blog/preparations/index.html": "11062ee1798cc91475e340d858903d6ffe42c4be2cd3b0319f476b25842e21b2",
+        "js/blog-search-index.js": "49d42a8b4a387bfb7aa25c064acce2c2578950a877ba1c1bddcbd630d6b6e6c1"
+      },
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null
     }
   ]
 }
