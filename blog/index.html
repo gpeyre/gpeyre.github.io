@@ -34,12 +34,12 @@ permalink: /blog/
             <span>{{ post.topic | escape }}</span>
             {% if post.figure or post.embedded_experiment %}<span class="blog-interactive-label">Interactive</span>{% endif %}
         </div>
-        <div class="blog-preview-body">
-            {% if summary_image %}<a class="blog-preview-image" href="{{ post.url | prepend: site.baseurl }}" tabindex="-1" aria-hidden="true"><img src="{{ summary_image.path | relative_url }}" alt="" width="{{ summary_image.width }}" height="{{ summary_image.height }}" loading="lazy" decoding="async"></a>{% endif %}
+        <div class="blog-preview-body{% if summary_image %} has-image{% endif %}">
             <h2><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title | escape }}</a></h2>
             <p class="sr-only">{{ post.description | escape }}</p>
             <div class="blog-preview-excerpt blog-prose" aria-hidden="true" inert>{{ post.excerpt }}</div>
             <a class="blog-read-link" href="{{ post.url | prepend: site.baseurl }}" aria-label="Read {{ post.title | escape }}">{% if post.lang == 'fr' %}Lire l’article{% else %}Read the post{% endif %} <span aria-hidden="true">&rarr;</span></a>
+            {% if summary_image %}<a class="blog-preview-image" href="{{ post.url | prepend: site.baseurl }}" tabindex="-1" aria-hidden="true"><img src="{{ summary_image.path | relative_url }}" alt="" width="{{ summary_image.width }}" height="{{ summary_image.height }}" loading="lazy" decoding="async"></a>{% endif %}
         </div>
     </article>
     {% endfor %}

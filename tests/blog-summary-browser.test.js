@@ -27,9 +27,27 @@ const expectedForthcoming=Object.keys(images).length-expectedPublished;
      image.onerror=()=>reject(Error("Missing image "+source));image.src=source;
     })));
    },sources);
-   for(const width of [320,375,768,1280]){
+   for(const width of [320,375,600,640,768,1280]){
     await page.setViewportSize({width,height:950});
     assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),url+" has no horizontal overflow at "+width);
+    if(url==="/blog/"){
+     const cards=await page.locator('.blog-preview').evaluateAll(nodes=>nodes.map(node=>{
+      const body=node.querySelector('.blog-preview-body'),image=body.querySelector('.blog-preview-image'),heading=body.querySelector('h2');
+      const box=element=>{const r=element.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width};};
+      return {hasImage:body.classList.contains('has-image'),display:getComputedStyle(body).display,body:box(body),heading:box(heading),image:image&&box(image),fit:image&&getComputedStyle(image.querySelector('img')).objectFit};
+     }));
+     for(const card of cards){
+      assert.equal(card.hasImage,Boolean(card.image),'Image layout applies only to illustrated posts');
+      if(!card.image){assert.notEqual(card.display,'grid','Text-only posts reserve no thumbnail column');continue;}
+      assert.ok(card.image.width<=(width<=600?128:200)+1,'Thumbnails stay compact at '+width);
+      assert.equal(card.fit,'contain','Scientific plots are not cropped');
+      assert.ok(Math.abs(card.image.right-card.body.right)<=1,'Thumbnail is aligned to the right');
+      if(width<=600){
+       assert.ok(Math.abs(card.heading.width-card.body.width)<=1,'Mobile titles retain the full width');
+       assert.ok(card.image.top>=card.heading.bottom-1,'Mobile image follows the title');
+      }else assert.ok(card.image.left>=card.heading.right+15,'Desktop title and thumbnail never overlap');
+     }
+    }
    }
    if(process.env.BLOG_SCREENSHOT_DIR){
     await page.locator(selector).first().scrollIntoViewIfNeeded();
