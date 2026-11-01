@@ -393,6 +393,32 @@
         "mime_type": "image/jpeg",
         "size": 76203
       }
+    },
+    {
+      "slug": "arithmetico-geometric-means",
+      "title": "Arithmetico-geometric means and their generalizations",
+      "date": "2026-11-01",
+      "url": "https://www.gpeyre.com/blog/2026/11/01/arithmetico-geometric-means/",
+      "message": "Iterate two means to get a third. Arithmetic + harmonic gives geometric; arithmetic + geometric gives AGM. When is the limit quasi-arithmetic? A rigidity theorem answers exactly. https://www.gpeyre.com/blog/2026/11/01/arithmetico-geometric-means/",
+      "status": "prepared",
+      "source_sha256": "0086c95c695089b385b814854c478633849c57df14a89adeb290071ac6981909",
+      "base_commit": "e300f11dd738bd6ee543037cca304928a3bad3bf",
+      "files": [
+        "blog/_posts/2026-11-01-arithmetico-geometric-means.md",
+        "blog/preparations/arithmetico-geometric-means.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "working_sha256": {
+        "blog/_posts/2026-11-01-arithmetico-geometric-means.md": "f8a89a691166bc23364bb6a0f54bf95ee9807177f553e07e7c5b7ed8c897c3b0",
+        "blog/preparations/arithmetico-geometric-means.html": "76102068fc7c538ee1b44f8aac40470af48f65f21d7cb1937fa4fa542641f9d2",
+        "blog/preparations/index.html": "8a9471ad5f24cbc21108e62181a070455f9a45aca6c05c3b0895da4c2ceef366",
+        "js/blog-search-index.js": "0b13ae940b64df2808c6aafb90247a04338bdbfcc16b00b7f07e3127795f0ca7"
+      },
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null
     }
   ]
 }

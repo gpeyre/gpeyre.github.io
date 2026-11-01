@@ -1586,10 +1586,10 @@ window.BLOG_SEARCH_RECORDS = [
     ]
   },
   {
-    "id": "blog/preparations/arithmetico-geometric-means.html",
-    "url": "/blog/preparations/arithmetico-geometric-means.html",
-    "status": "forthcoming",
-    "date": null,
+    "id": "blog/_posts/2026-11-01-arithmetico-geometric-means.md",
+    "url": "/blog/2026/11/01/arithmetico-geometric-means/",
+    "status": "published",
+    "date": "2026-11-01",
     "title": "Arithmetico-geometric means and their generalizations",
     "description": "Iterate two means to obtain a third. Nested intervals prove convergence; arithmetic and harmonic means recover the geometric mean; Daróczy–Páles characterize exactly when a Gauss composition is quasi-arithmetic.",
     "keywords": [
