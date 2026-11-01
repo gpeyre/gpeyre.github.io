@@ -170,7 +170,7 @@ normalizations, and hypotheses have been checked against the primary papers.
 | `projections-corrections-reflections.html` | Halfplane algorithms and actual product-space Douglas–Rachford Sudoku |
 | `logarithmic-sobolev-wasserstein-pl.html` | Proof-focused; exact shifted-Gaussian example |
 | `lagrangian-density-interpolation.html` | Periodic Fourier Poisson solve and RK4 particle flow |
-| `quantum-pinsker-sign-observable.html` | Classical and matrix proofs, including singular states |
+| `quantum-pinsker-sign-observable.html` | Classical and matrix proofs, plus three synchronized probability triangles |
 | `intrinsic-factor-training-dynamics.html` | Conserved scalar imbalance and factor trajectories |
 | `balanced-low-rank-conditioning.html` | Positive Hessian spectrum and actual local training |
 | `sign-gradient-descent-geometry.html` | Ordinary versus scaled sign descent on isospectral quadratics |
@@ -214,9 +214,11 @@ Portraits are local, with source and license links in their captions:
 Langevin (Henri Manuel/Wellcome, CC BY 4.0), Moser (Konrad Jacobs/MFO,
 CC BY-SA 2.0 Germany), Stokes (Fradelle & Young, public domain), von Neumann
 (U.S. Department of Energy, public domain), and Legendre with Fourier
-(Julien-Léopold Boilly, 1820, public domain). The supplied Dykstra, Douglas,
-and Rachford obituary photographs are not reused without a verified license;
-the historical sources are instead linked in the projection article.
+(Julien-Léopold Boilly, 1820, public domain). The projection article's
+historical portraits of Dykstra, Douglas, and Rachford embed verified ASA, Purdue, and Rice images
+remotely with institutional attribution and an explicit note that no open
+reuse license is stated. Do not label those photographs public domain or
+copy them into the local portrait collection without checking their rights.
 
 ## Heat equation over quantiles
 
@@ -260,6 +262,27 @@ optimization certificates, marginal constraints, and mass conservation.
 `tests/blog-spectral-transport-browser.test.js` checks the embedded controls,
 zero-width lazy loading, and responsive sizing.
 
+## Probability-simplex experiments
+
+`assets/pinsker-simplex/` shows KL, total variation, and the nonnegative
+Pinsker gap `KL - 2 TV^2` (natural logarithms; TV is half the L1 norm).
+Clicking or dragging any of the three triangles updates the same interior
+target in all panels. Numerical inputs and keyboard controls are equivalent.
+Targets stay above 0.015 per coordinate; each panel has a labeled scale.
+Run `node tests/blog-pinsker-simplex.test.js`; its summary uses the actual
+shared renderer through `node scripts/render-blog-pinsker-summary.cjs`.
+Pinsker's local portrait is Konrad Jacobs's 1976 MFO photograph, CC BY-SA
+2.0 Germany, unmodified and credited in the article.
+
+`assets/divergence-simplex/` explores normalized power f-divergences for
+`0 <= lambda <= 2`. The endpoints are reverse KL and half Pearson chi-square;
+lambda 1 is KL, and lambda one-half gives twice the squared Hellinger
+normalization used in the article. A target coordinate pair, pointer and
+keyboard selection share the same probability constraint. The static
+generator SVG uses the same scalar formulas. Boundary infinities and the
+fixed color cap are explicit. Run `node tests/blog-divergence-simplex.test.js`
+and `node scripts/render-blog-divergence-summary.cjs`.
+
 ## Perspective transform
 
 `perspective-transform-on-measures.html` develops closed perspectives and their
@@ -270,6 +293,15 @@ model provide further applications. The action uses kinetic energy with a
 factor one-half, so its transport value is `W2²/2`. No general equivalence is
 claimed between arbitrary KL-marginal-penalized OT and the dynamic reaction
 model. The article remains an undated alpha preview, outside the feeds.
+
+`assets/perspective-powers/` displays the exact power perspective
+`|z|^p / (p r^(p-1))` for `1 <= p <= 4`. The heatmap uses a fixed logarithmic
+color scale; analytic level curves avoid mesh-dependent contours near vacuum.
+The power slider and presets distinguish linear from superlinear recession
+growth. Pointer and keyboard probes report the closed-form value. The iframe
+height follows the shared parent protocol. Run
+`node tests/blog-perspective-powers.test.js`; reproduce its illustration with
+`node scripts/render-blog-perspective-summary.cjs`.
 
 Portrait credits are in the article: Csiszár (Konrad Jacobs/MFO, CC BY-SA 2.0
 Germany), Brenier (MFO, CC BY-SA 2.5), and the watermarked group photograph
@@ -332,7 +364,9 @@ is loaded separately, as in the existing previews.
 
 The thirteen experiments cover the eleven supplied prototypes plus exact
 two-point illustrations of independent couplings and the convex extension.
-The Gaussian GW, divergence, and convex-extension articles are proof-focused.
+The Gaussian GW and convex-extension articles are proof-focused. The divergence
+article also compares normalized scalar generators and has a new dedicated
+probability-simplex experiment.
 The convex-extension article retains its analytic two-point example but no
 longer embeds the numerical experiment; its standalone lab demo is retained.
 The independence

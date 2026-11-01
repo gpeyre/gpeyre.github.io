@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pinsker on a probability triangle</title><link rel="stylesheet" href="style.css"><script defer src="core.js"></script><script defer src="view.js"></script><script defer src="app.js"></script></head>
+<body><main>
+<p class="eyebrow">Three outcomes · one moving target</p><h1>Entropy, variation, and the gap between them</h1>
+<p class="intro">Every point q in the triangle is a probability vector (q₁,q₂,q₃). Click or drag in any panel to move the same target p in all three.</p>
+<div class="target-controls" aria-label="Target probabilities">
+<label>p₁ <input id="p1" type="number" min="0.015" max="0.97" step="0.01" value="0.2"></label>
+<label>p₂ <input id="p2" type="number" min="0.015" max="0.97" step="0.01" value="0.45"></label>
+<label>p₃ <input id="p3" type="number" min="0.015" max="0.97" step="0.01" value="0.35"></label>
+<button id="balanced" type="button">Uniform target</button><button id="skew" type="button">Asymmetric target</button>
+</div>
+<p id="target-value" class="target-value" aria-live="polite"></p>
+<div class="panels">
+<section><h2>KL(q ∣ p)</h2><p>Relative entropy · natural logarithms</p><canvas id="kl" tabindex="0" role="img" aria-label="Relative entropy on the three-outcome probability simplex. Click to change the shared target; arrow keys change p1 and p2."></canvas></section>
+<section><h2>TV(q − p)</h2><p>½ (|q₁−p₁| + |q₂−p₂| + |q₃−p₃|)</p><canvas id="tv" tabindex="0" role="img" aria-label="Total variation on the three-outcome probability simplex. Click to change the shared target; arrow keys change p1 and p2."></canvas></section>
+<section><h2>KL(q ∣ p) − 2 TV(q − p)²</h2><p>The nonnegative Pinsker gap</p><canvas id="gap" tabindex="0" role="img" aria-label="Nonnegative Pinsker gap on the three-outcome probability simplex. Click to change the shared target; arrow keys change p1 and p2."></canvas></section>
+</div>
+<p class="note">The rust-colored dot is p. Each panel has its own labeled color scale; contours are equally spaced in the displayed quantity. Targets stay in pᵢ ≥ 0.015, so entropy is finite even on the boundary in q. A click nearer the boundary is projected onto this interior triangle; numerical inputs are projected to probabilities adding to one.</p>
+<p class="note">Keyboard: focus any plot. ←/→ adjusts p₁; ↓/↑ adjusts p₂, with the third coordinate compensating. Home restores the uniform target. The triangle is the two-dimensional simplex of three-component probabilities, not a tetrahedron.</p>
+</main></body></html>

@@ -64,6 +64,13 @@ class BlogEditorialQueueTest < Minitest::Test
   end
 
   def test_approved_first_and_best_effort_topic_alternation
+    preamble = File.read(File.join(ROOT, "blog/announcement-queue.md"), encoding: "UTF-8").split(/^## /).first
+    explicit = preamble.scan(%r{^\d+\. \[[^\n]+\]\(https://www\.gpeyre\.com/blog/preparations/([a-z0-9-]+)\.html\)$}).flatten
+    assert_equal explicit.uniq, explicit, "An explicitly requested order has no duplicates"
+    explicit.each { |slug| assert (@active + @archive).any? { |entry| entry[:slug] == slug }, "An ordered article must exist in the editorial catalogues" }
+    priority = explicit.select { |slug| @active.any? { |entry| entry[:slug] == slug && entry[:ready] } }
+    assert_equal priority, @active.select { |entry| entry[:ready] }.first(priority.size).map { |entry| entry[:slug] },
+                 "The author's explicit approved order takes precedence over topic alternation"
     seen_review = false
     @active.each do |entry|
       seen_review ||= !entry[:ready]
@@ -74,6 +81,7 @@ class BlogEditorialQueueTest < Minitest::Test
       entry[:transport] = topics.first != "Other topics"
     end
     @active.partition { |entry| entry[:ready] }.each do |group|
+      group = group.reject { |entry| entry[:ready] && priority.include?(entry[:slug]) }
       group.each_cons(2).with_index do |(a, b), i|
         next unless a[:transport] == b[:transport]
         refute group.drop(i + 2).any? { |later| later[:transport] != a[:transport] },

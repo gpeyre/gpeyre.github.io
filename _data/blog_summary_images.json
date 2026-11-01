@@ -215,6 +215,27 @@
       },
       "sha256": "b7a54fef29344bfa96d751daefdef6ce58c8ac0a9dc5cde4d9c245a033677025"
     },
+    "divergences-and-bregman-geometry": {
+      "path": "/blog/imgs/summaries/divergences-and-bregman-geometry.jpg",
+      "width": 1200,
+      "height": 650,
+      "alt": "Reverse-KL and half-Pearson divergence heatmaps on the same three-probability simplex, with a shared off-center target and color scale.",
+      "source": "/blog/preparations/assets/divergence-simplex/index.html",
+      "settings": {
+        "target": [
+          0.16,
+          0.58,
+          0.26
+        ],
+        "powers": [
+          0,
+          2
+        ],
+        "colorCap": 4,
+        "renderer": "shared divergence-simplex core.js and view.js, native canvas summary layout"
+      },
+      "sha256": "0ec3cf570ae81577a9d05a4e580e80f40d9fa14138e70ef6bbc73a847dcbbe4a"
+    },
     "energy-distance-wasserstein-convexity": {
       "path": "/blog/imgs/summaries/energy-distance-wasserstein-convexity.jpg",
       "alt": "Energy-distance flow at an intermediate time: one-dimensional quantiles, planar particle trajectories, and decreasing normalized energies.",
@@ -452,6 +473,23 @@
       },
       "sha256": "b50d6ab7b5298b17e447f079c5a41f0880664e2fba779d09113aac61651f1aa1"
     },
+    "perspective-transform-on-measures": {
+      "path": "/blog/imgs/summaries/perspective-transform-on-measures.jpg",
+      "width": 1200,
+      "height": 720,
+      "alt": "Colored level sets of the quadratic perspective z squared over twice the mass, with exact white contours and the dashed unit-mass slice recovering the original function.",
+      "source": "/blog/preparations/assets/perspective-powers/index.html",
+      "settings": {
+        "p": 2,
+        "resolution": 240,
+        "point": {
+          "z": 0.8,
+          "r": 0.6
+        },
+        "renderer": "shared experiment core.js and view.js, native canvas summary layout"
+      },
+      "sha256": "3a76025315bf690e4314b6eb3b424c76e97217e6551117c18ef221f569771183"
+    },
     "polyak-lojasiewicz-gradient-flows": {
       "path": "/blog/imgs/summaries/polyak-lojasiewicz-gradient-flows.jpg",
       "alt": "Gradient-flow particles descend a curved banana-shaped valley toward a parabolic set of minimizers, with energy contours and trajectories.",
@@ -481,6 +519,23 @@
         "clue_residual": 0
       },
       "sha256": "27852dfc639584ada2dc886922841fa155849d40b6a6cf60f1cba4f0c0f49608"
+    },
+    "quantum-pinsker-sign-observable": {
+      "path": "/blog/imgs/summaries/quantum-pinsker-sign-observable.jpg",
+      "width": 1200,
+      "height": 550,
+      "alt": "Three probability-simplex triangles show relative entropy, total variation, and the nonnegative Pinsker gap for the same interior target, marked by a rust-colored dot.",
+      "source": "/blog/preparations/assets/pinsker-simplex/index.html",
+      "settings": {
+        "p": [
+          0.12,
+          0.58,
+          0.3
+        ],
+        "grid": 241,
+        "renderer": "shared pinsker-simplex core.js and view.js, native canvas summary layout"
+      },
+      "sha256": "634bf19ba7f0caa208ab67a609383bd42ee625fe78bd6c99e627b36a2b95f765"
     },
     "sgd-iterate-covariance": {
       "path": "/blog/imgs/summaries/sgd-iterate-covariance.jpg",

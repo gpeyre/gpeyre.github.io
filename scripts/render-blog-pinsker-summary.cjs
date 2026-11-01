@@ -1,0 +1,13 @@
+/* Use the interactive experiment's exact core and shared canvas renderer. */
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),M=require('../blog/preparations/assets/pinsker-simplex/core.js'),V=require('../blog/preparations/assets/pinsker-simplex/view.js'),{stripMetadata,dimensions}=require('./blog-summary-jpeg.cjs');
+let library;if(process.env.BLOG_CANVAS_PATH)library=require(process.env.BLOG_CANVAS_PATH);else{try{library=require('@napi-rs/canvas');}catch(_){library=require('/Users/gpeyre/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/@napi-rs/canvas');}}
+const{createCanvas}=library,settings={p:[.12,.58,.30],grid:241,renderer:'shared pinsker-simplex core.js and view.js, native canvas summary layout'},fields=M.sampleFields(settings.p,settings.grid),canvas=createCanvas(1200,550),ctx=canvas.getContext('2d');
+ctx.fillStyle='#f3f8f6';ctx.fillRect(0,0,1200,550);
+function text(s,x,y,size,weight=400,color='#27434c'){ctx.fillStyle=color;ctx.font=weight+' '+size+'px sans-serif';ctx.fillText(s,x,y);}
+text('Pinsker on the probability triangle',28,40,26,600);text('One shared target p = (0.12, 0.58, 0.30) · natural logarithms',29,71,16,400,'#647b81');
+const keys=['kl','tv','gap'],titles=['Relative entropy  KL(q | p)','Total variation  TV(q - p)','Pinsker gap  KL - 2 TV²'];
+for(let i=0;i<3;i++){const x=24+390*i;ctx.fillStyle='#fff';ctx.strokeStyle='#d7e4e1';ctx.beginPath();ctx.roundRect(x,95,372,408,9);ctx.fill();ctx.stroke();text(titles[i],x+13,122,i===2?16:17,600);const plot=createCanvas(360,365);V.draw(plot.getContext('2d'),360,365,{p:settings.p,fields},keys[i],createCanvas);ctx.drawImage(plot,x+6,134);}
+text('Click any triangle to move the target. Each panel has its own labeled scale; the final quantity is nonnegative.',29,533,14,400,'#647b81');
+const arg=process.argv.indexOf('--out'),output=arg<0?path.join(__dirname,'../blog/imgs/summaries/quantum-pinsker-sign-observable.jpg'):process.argv[arg+1];if(!output)throw Error('--out requires a path');const bytes=stripMetadata(canvas.encodeSync('jpeg',90));if(bytes.length>1e6)throw Error('Summary is too large');fs.mkdirSync(path.dirname(output),{recursive:true});fs.writeFileSync(output,bytes);
+console.log(JSON.stringify({slug:'quantum-pinsker-sign-observable',path:'/blog/imgs/summaries/quantum-pinsker-sign-observable.jpg',...dimensions(bytes),alt:'Three probability-simplex triangles show relative entropy, total variation, and the nonnegative Pinsker gap for the same interior target, marked by a rust-colored dot.',source:'/blog/preparations/assets/pinsker-simplex/index.html',settings,sha256:crypto.createHash('sha256').update(bytes).digest('hex')}));

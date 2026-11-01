@@ -103,8 +103,12 @@ The browser tests use mocked file access, not the real approval file.
 ### Queue order and publication safeguards
 
 Keep every forthcoming article in this queue, with one readiness checkbox and
-a short announcement. New entries start unchecked. Put approved entries first,
-alternating OT/Wasserstein geometry and other topics where the approved pool
+a short announcement. New entries start unchecked. Put approved entries first.
+An explicit publication order requested by the author takes precedence over
+topic alternation; record that order as a numbered list of preview links in
+the queue preamble. This list is descriptive, not an additional approval:
+the exact checked checkbox is still required for every selected article.
+Outside such a requested order, alternate OT/Wasserstein geometry and other topics where the approved pool
 allows it; never approve an article merely to fill a topic slot. Keep relative
 order within each topic where possible. Clearly distinguish transport-related
 constructions, such as Moser’s interpolation, from optimal transport itself.

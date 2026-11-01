@@ -74,6 +74,7 @@
 <p>The last point already belongs to the intersection, so the algorithm stops. Yet \(P_Bz_0=(1/2,1/2)\) also belongs to \(A\). Since it minimizes distance over all of \(B\), it is also the nearest point over the smaller set \(A\cap B\). The squared distances are \(5\) for the POCS limit and \(9/2\) for the true projection.</p>
 
 <h2>Dykstra: remember the normal displacements</h2>
+<figure class="portrait-single"><a href="https://magazine.amstat.org/blog/2025/12/01/dykstra/"><img src="https://magazine.amstat.org/wp-content/uploads/2025/12/ObitRichard-Dykstra-2011-731x1024.jpg" width="731" height="1024" loading="lazy" decoding="async" alt="Portrait of Richard L. Dykstra"></a><figcaption>Richard L. Dykstra. Portrait linked from Kung-Sik Chan’s <a href="https://magazine.amstat.org/blog/2025/12/01/dykstra/">memorial in <em>Amstat News</em></a>, American Statistical Association, December 2025. The source does not identify the photographer or specify an open reuse license.</figcaption></figure>
 <p>Dykstra’s algorithm adds two correction vectors. Initialize \(z=z_0\) and \(p=q=0\), then repeat the following full cycle:</p>
 \[
  \begin{aligned}
@@ -99,6 +100,7 @@
 <p>The original algorithm is not being replaced by a nearest-point shortcut in the experiment below: its correction vectors are updated at every cycle.</p>
 
 <h2>Douglas–Rachford: reflect, then average</h2>
+<figure class="portrait-pair"><div class="portrait-pair-images"><div><a href="https://www.math.purdue.edu/news/2016/douglas_obit.html"><img src="https://www.math.purdue.edu/news/2016/images/JimDouglas.jpeg" width="198" height="264" loading="lazy" decoding="async" alt="Portrait of Jim Douglas Jr."><p>Jim Douglas Jr.</p></a></div><div><a href="https://cmor.rice.edu/news/henry-rachford-former-rice-professor-dies-97"><img src="https://cmor.rice.edu/sites/g/files/bxs4926/files/2022-11/2211_Henry_Rachford.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="Portrait of Henry H. Rachford Jr."><p>Henry H. Rachford Jr.</p></a></div></div><figcaption>Institutional portraits linked from the memorials published by <a href="https://www.math.purdue.edu/news/2016/douglas_obit.html">Purdue University</a> (Douglas, 2016) and <a href="https://cmor.rice.edu/news/henry-rachford-former-rice-professor-dies-97">Rice University</a> (Rachford, 2022). Photographers and open reuse licenses are not specified on these pages.</figcaption></figure>
 <p>Instead of correcting a projection, reflect across the set. Write \(R_A=2P_A-I\). Douglas–Rachford uses</p>
 \[
  z_{k+1}=\frac12(I+R_BR_A)z_k

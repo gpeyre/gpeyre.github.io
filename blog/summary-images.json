@@ -1,6 +1,61 @@
 {
   "version": 1,
   "images": {
+    "quantum-pinsker-sign-observable": {
+      "path": "/blog/imgs/summaries/quantum-pinsker-sign-observable.jpg",
+      "width": 1200,
+      "height": 550,
+      "alt": "Three probability-simplex triangles show relative entropy, total variation, and the nonnegative Pinsker gap for the same interior target, marked by a rust-colored dot.",
+      "source": "/blog/preparations/assets/pinsker-simplex/index.html",
+      "settings": {
+        "p": [
+          0.12,
+          0.58,
+          0.3
+        ],
+        "grid": 241,
+        "renderer": "shared pinsker-simplex core.js and view.js, native canvas summary layout"
+      },
+      "sha256": "634bf19ba7f0caa208ab67a609383bd42ee625fe78bd6c99e627b36a2b95f765"
+    },
+    "divergences-and-bregman-geometry": {
+      "path": "/blog/imgs/summaries/divergences-and-bregman-geometry.jpg",
+      "width": 1200,
+      "height": 650,
+      "alt": "Reverse-KL and half-Pearson divergence heatmaps on the same three-probability simplex, with a shared off-center target and color scale.",
+      "source": "/blog/preparations/assets/divergence-simplex/index.html",
+      "settings": {
+        "target": [
+          0.16,
+          0.58,
+          0.26
+        ],
+        "powers": [
+          0,
+          2
+        ],
+        "colorCap": 4,
+        "renderer": "shared divergence-simplex core.js and view.js, native canvas summary layout"
+      },
+      "sha256": "0ec3cf570ae81577a9d05a4e580e80f40d9fa14138e70ef6bbc73a847dcbbe4a"
+    },
+    "perspective-transform-on-measures": {
+      "path": "/blog/imgs/summaries/perspective-transform-on-measures.jpg",
+      "width": 1200,
+      "height": 720,
+      "alt": "Colored level sets of the quadratic perspective z squared over twice the mass, with exact white contours and the dashed unit-mass slice recovering the original function.",
+      "source": "/blog/preparations/assets/perspective-powers/index.html",
+      "settings": {
+        "p": 2,
+        "resolution": 240,
+        "point": {
+          "z": 0.8,
+          "r": 0.6
+        },
+        "renderer": "shared experiment core.js and view.js, native canvas summary layout"
+      },
+      "sha256": "3a76025315bf690e4314b6eb3b424c76e97217e6551117c18ef221f569771183"
+    },
     "averaging-positive-symmetric-matrices": {
       "path": "/blog/imgs/summaries/averaging-positive-symmetric-matrices.jpg",
       "width": 1200,

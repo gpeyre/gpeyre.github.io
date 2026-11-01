@@ -113,3 +113,23 @@ Topic: Other topics
 Published: 2026-10-30 · [Read post](https://www.gpeyre.com/blog/2026/10/30/hump-algebra/)
 
 > The product of two Gaussian bumps is another bump. Yves Meyer turned this identity into a Banach algebra, whose atomic norm is equivalent to a Besov norm. Explore moving mixtures and their products. https://www.gpeyre.com/blog/preparations/hump-algebra.html
+
+## 13. Bures’ distance and square roots of covariances
+
+Topic: OT / Wasserstein geometry
+
+- [x] Ready to publish
+
+Published: 2026-10-31 · [Read post](https://www.gpeyre.com/blog/2026/10/31/bures-distance-square-root-covariances/)
+
+> How far apart are two Gaussian covariances? Bures optimizes their alignment; linear OT fixes a reference. They agree exactly for commuting matrices—and differ by at most a factor √2. https://www.gpeyre.com/blog/preparations/bures-distance-square-root-covariances.html
+
+## 14. Arithmetico-geometric means and their generalizations
+
+Topic: Other topics
+
+- [x] Ready to publish
+
+Published: 2026-11-01 · [Read post](https://www.gpeyre.com/blog/2026/11/01/arithmetico-geometric-means/)
+
+> Iterate two means to get a third. Arithmetic + harmonic gives geometric; arithmetic + geometric gives AGM. When is the limit quasi-arithmetic? A rigidity theorem answers exactly. https://www.gpeyre.com/blog/preparations/arithmetico-geometric-means.html

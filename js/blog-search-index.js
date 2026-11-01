@@ -1912,6 +1912,11 @@ window.BLOG_SEARCH_RECORDS = [
       "Solomon Kullback",
       "Richard Leibler",
       "Lev Bregman",
+      "Imre Csiszár",
+      "Ronald Fisher",
+      "Cressie–Read power divergence",
+      "normalized convex generator",
+      "simplex level sets",
       "Jiantao Jiao",
       "Thomas Courtade",
       "Gabriel Peyré",
@@ -2087,7 +2092,8 @@ window.BLOG_SEARCH_RECORDS = [
       "Gabriel Peyre",
       "inégalité de Sobolev logarithmique",
       "flot de gradient",
-      "information de Fisher"
+      "information de Fisher",
+      "Raphaël Barboni"
     ]
   },
   {
@@ -2266,7 +2272,12 @@ window.BLOG_SEARCH_RECORDS = [
       "second-order cone",
       "proximal splitting",
       "transformée perspective",
-      "transport optimal dynamique"
+      "transport optimal dynamique",
+      "power perspective",
+      "power costs",
+      "analytic level sets",
+      "recession growth",
+      "convex sublevel sets"
     ]
   },
   {
@@ -2352,7 +2363,12 @@ window.BLOG_SEARCH_RECORDS = [
       "Masanori Ohya",
       "Makoto Tsukada",
       "information quantique",
-      "inégalité de Pinsker"
+      "inégalité de Pinsker",
+      "probability simplex",
+      "three-outcome probabilities",
+      "triangular level sets",
+      "Pinsker gap",
+      "Mark Pinsker"
     ]
   },
   {
@@ -2575,7 +2591,8 @@ window.BLOG_SEARCH_RECORDS = [
       "Eldad Haber",
       "Lars Ruthotto",
       "neural ordinary differential equations",
-      "entraînement des réseaux résiduels"
+      "entraînement des réseaux résiduels",
+      "Raphaël Barboni"
     ]
   },
   {

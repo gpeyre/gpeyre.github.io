@@ -24,6 +24,7 @@
 <main class="wrap"><article class="blog-prose">
 <p>A matrix can have many factorizations. Multiplying one factor by a scalar and dividing the other by the same scalar changes neither the matrix nor its predictions. But Euclidean gradient descent sees the factors, not just their product: two representations of the same model can start moving at different speeds.</p>
 <p>Can we nevertheless describe training directly in the space of represented models? In our work with <a href="https://arxiv.org/abs/2508.07370">Sibylle Marcotte and Rémi Gribonval</a> <a href="#ref-intrinsic">[1]</a>, we study when such an <em>intrinsic dynamics</em> exists. The key is to keep the right conserved information from initialization. A two-factor linear model makes the idea completely explicit.</p>
+<p>I owe my understanding of these dynamics to Sibylle Marcotte. In particular, the results on relaxed balancedness presented below are due to her, as developed in our joint work with Rémi Gribonval.</p>
 
 <h2>The question: can the model evolve on its own?</h2>
 <p>Let a smooth parameterization \(z=\phi(\theta)\) represent the model, with loss \(F(z)\). The chain rule gives</p>

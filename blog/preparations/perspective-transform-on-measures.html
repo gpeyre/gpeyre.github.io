@@ -4,17 +4,28 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,follow">
-<meta name="keywords" content="perspective transform, perspective function, convex analysis, joint convexity, positive homogeneity, recession function, convex conjugate, Fenchel duality, functions of measures, Radon measures, reference measure, Radon–Nikodym derivative, singular measures, Lebesgue decomposition, Csiszár f-divergence, Imre Csiszár, Ali–Silvey divergence, relative entropy, Kullback–Leibler divergence, Hellinger distance, total variation, data processing inequality, coarse graining, unbalanced optimal transport, Benamou–Brenier formulation, Jean-David Benamou, Yann Brenier, dynamic optimal transport, continuity equation, momentum, kinetic energy, Hamilton–Jacobi inequality, Wasserstein–Fisher–Rao, Hellinger–Kantorovich, convex optimization, second-order cone, proximal splitting, transformée perspective, transport optimal dynamique">
+<meta name="keywords" content="perspective transform, perspective function, convex analysis, joint convexity, positive homogeneity, recession function, convex conjugate, Fenchel duality, functions of measures, Radon measures, reference measure, Radon–Nikodym derivative, singular measures, Lebesgue decomposition, Csiszár f-divergence, Imre Csiszár, Ali–Silvey divergence, relative entropy, Kullback–Leibler divergence, Hellinger distance, total variation, data processing inequality, coarse graining, unbalanced optimal transport, Benamou–Brenier formulation, Jean-David Benamou, Yann Brenier, dynamic optimal transport, continuity equation, momentum, kinetic energy, Hamilton–Jacobi inequality, Wasserstein–Fisher–Rao, Hellinger–Kantorovich, convex optimization, second-order cone, proximal splitting, transformée perspective, transport optimal dynamique, power perspective, power costs, analytic level sets, recession growth, convex sublevel sets">
 <meta name="description" content="A short convexity proof connects Csiszár divergences, the Benamou–Brenier action, and transport with mass creation. Perspectives turn density ratios into convex, reference-independent functionals on measures.">
 <title>The perspective transform: convexity on measures — Alpha preview — Gabriel Peyré</title>
 <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/perspective-transform-on-measures.html">
 <link rel="stylesheet" href="assets/drafts.css">
 <script defer src="assets/drafts.js"></script>
+<script defer src="assets/idea-experiments.js"></script>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});
 </script>
 <script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
 <script defer src="../../js/site-analytics.js"></script>
+
+<!-- Generated numerical summary image: start -->
+<meta property="og:image" content="https://www.gpeyre.com/blog/imgs/summaries/perspective-transform-on-measures.jpg">
+<meta property="og:image:alt" content="Colored level sets of the quadratic perspective z squared over twice the mass, with exact white contours and the dashed unit-mass slice recovering the original function.">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="720">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.gpeyre.com/blog/imgs/summaries/perspective-transform-on-measures.jpg">
+<meta name="twitter:image:alt" content="Colored level sets of the quadratic perspective z squared over twice the mass, with exact white contours and the dashed unit-mass slice recovering the original function.">
+<!-- Generated numerical summary image: end -->
 </head>
 <body>
 <header class="draft-header"><div class="wrap">
@@ -309,6 +320,20 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 \]
 <p>This is a rotated second-order cone constraint, including vacuum exactly. Alternatively, proximal and primal–dual methods exploit the local perspective terms and the global linear continuity equation; see Papadakis, Peyré, and Oudet <a href="#ref-proximal">[11]</a> and Combettes and Müller <a href="#ref-prox-calculus">[12]</a>.</p>
 <p>The most useful feature is that the same finite-dimensional convex construction survives passage to measures. Ratios describe local geometry; one-homogeneity makes that geometry independent of coordinates; integrating produces a convex variational model.</p>
+
+<h2>Numerical experimentation: a family of convex perspectives</h2>
+<p>To see the geometry directly, take the convex power costs</p>
+\[
+ f_p(u)=\frac{|u|^p}{p},\qquad
+ P_p(z,r)=\frac{|z|^p}{p\,r^{p-1}},\qquad p\ge1,\quad r&gt;0.
+\]
+<p>The exponent slider moves from absolute value to higher powers. At \(p=2\), this is the scalar kinetic-energy density in Benamou–Brenier. The dashed slice \(r=1\) recovers \(f_p\), while each white curve is a constant-cost contour. Solving \(P_p(z,r)=c\) gives its exact parametrization:</p>
+\[
+ |z|=(pc)^{1/p}r^{1-1/p},\qquad c&gt;0.
+\]
+<p>The curves bend, but their sublevel sets remain convex by Theorem 1. At \(p=1\), the perspective is simply \(|z|\), independent of positive mass; for \(p&gt;1\), sending the mass to zero makes every nonzero numerator infinitely expensive. This change at the boundary is the difference between linear and superlinear recession growth.</p>
+<iframe class="idea-experiment" data-experiment="perspective-powers" src="assets/perspective-powers/index.html" title="Interactive level sets of convex power perspectives" loading="lazy" style="width:100%;height:900px;border:0"></iframe>
+<p class="caption">The heatmap samples the closed-form cost; the contours use the analytic formula, not a contour extraction from the grid. A common logarithmic color scale saturates above cost 6, without clipping the reported values. Move the pointer, or focus the plot and use the arrow keys, to inspect a value. The caption states the exact boundary cost at zero mass.</p>
 
 <h2>References</h2>
 <ol class="references">

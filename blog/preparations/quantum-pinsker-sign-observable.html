@@ -1,15 +1,26 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,follow">
-<meta name="keywords" content="Pinsker inequality, quantum Pinsker inequality, classical Pinsker, relative entropy, quantum relative entropy, Kullback–Leibler divergence, Umegaki entropy, density matrix, trace norm, trace distance, total variation, sign observable, positive eigenspace, quantum state discrimination, Helstrom measurement, logarithmic mean, matrix logarithm, Fréchet derivative, Cauchy–Schwarz inequality, entropy curvature, strong convexity, log-sum inequality, binary divergence, support condition, singular states, natural logarithms, John Watrous, Melchior Wirth, Fumio Hiai, Masanori Ohya, Makoto Tsukada, information quantique, inégalité de Pinsker">
+<meta name="keywords" content="Pinsker inequality, quantum Pinsker inequality, classical Pinsker, relative entropy, quantum relative entropy, Kullback–Leibler divergence, Umegaki entropy, density matrix, trace norm, trace distance, total variation, sign observable, positive eigenspace, quantum state discrimination, Helstrom measurement, logarithmic mean, matrix logarithm, Fréchet derivative, Cauchy–Schwarz inequality, entropy curvature, strong convexity, log-sum inequality, binary divergence, support condition, singular states, natural logarithms, John Watrous, Melchior Wirth, Fumio Hiai, Masanori Ohya, Makoto Tsukada, information quantique, inégalité de Pinsker, probability simplex, three-outcome probabilities, triangular level sets, Pinsker gap, Mark Pinsker">
 <meta name="description" content="A self-contained proof of classical and quantum Pinsker: reduce probabilities to a sign set, then test matrix entropy curvature against a sign observable. The sharp constant survives noncommutativity.">
-<title>From Classical to Quantum Pinsker Inequality — Alpha preview — Gabriel Peyré</title><link rel="canonical" href="https://www.gpeyre.com/blog/preparations/quantum-pinsker-sign-observable.html"><link rel="stylesheet" href="assets/drafts.css"><script defer src="assets/drafts.js"></script>
+<title>From Classical to Quantum Pinsker Inequality — Alpha preview — Gabriel Peyré</title><link rel="canonical" href="https://www.gpeyre.com/blog/preparations/quantum-pinsker-sign-observable.html"><link rel="stylesheet" href="assets/drafts.css"><script defer src="assets/drafts.js"></script><script defer src="assets/idea-experiments.js"></script>
 <script type="text/x-mathjax-config">MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script><script defer src="../../js/site-analytics.js"></script>
+
+<!-- Generated numerical summary image: start -->
+<meta property="og:image" content="https://www.gpeyre.com/blog/imgs/summaries/quantum-pinsker-sign-observable.jpg">
+<meta property="og:image:alt" content="Three probability-simplex triangles show relative entropy, total variation, and the nonnegative Pinsker gap for the same interior target, marked by a rust-colored dot.">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="550">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.gpeyre.com/blog/imgs/summaries/quantum-pinsker-sign-observable.jpg">
+<meta name="twitter:image:alt" content="Three probability-simplex triangles show relative entropy, total variation, and the nonnegative Pinsker gap for the same interior target, marked by a rust-colored dot.">
+<!-- Generated numerical summary image: end -->
 </head>
 <body><header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>From Classical to Quantum Pinsker Inequality</h1><p class="subtitle">One sign set, one matrix sign, and the same sharp constant.</p><p class="byline">Gabriel Peyré</p></div></header>
 <main class="wrap"><article class="blog-prose">
 <p>Relative entropy is asymmetric, can be infinite, and is not a distance. Nevertheless, a small relative entropy forces two probability distributions to be close in a very concrete sense: no event can have very different probabilities under the two laws. This is the content of Pinsker’s inequality.</p>
 <p>The same statement survives when probabilities become density matrices, even if the matrices do not commute. The proof below keeps the essential idea visible. In the classical case, collect all positive discrepancies into one event. In the quantum case, collect the positive eigenvalues of the discrepancy into one observable. A weighted Cauchy–Schwarz inequality then does the work.</p>
 <p>All logarithms are natural, and all matrices are finite-dimensional. The classical and quantum inequalities are standard; see Watrous <a href="#ref-watrous">[1]</a> and Wirth <a href="#ref-wirth">[2]</a>. The purpose here is a direct matrix-calculus proof, without assuming the quantum data-processing theorem.</p>
+<figure class="portrait-single"><img src="assets/pinsker-simplex/mark-pinsker.jpg" alt="Mark Pinsker in Leningrad in 1976" width="180" height="247" loading="lazy" decoding="async"><figcaption>Mark Pinsker, Leningrad, 1976. Photograph: Konrad Jacobs, <a href="https://opc.mfo.de/detail?photo_id=3300">Oberwolfach Photo Collection</a>, <a href="https://creativecommons.org/licenses/by-sa/2.0/de/deed.en">CC BY-SA 2.0 Germany</a>. Unmodified image; <a href="https://commons.wikimedia.org/wiki/File:Pinsker_mark.jpg">source and license record</a>.</figcaption></figure>
 
 <h2>First, two classical outcomes are enough</h2>
 <p>For probability vectors \(a,b\), define the relative entropy and the full \(\ell^1\) discrepancy by</p>
@@ -126,6 +137,18 @@
 \]
 <p>As \(\varepsilon\to0\), \(D(\rho_\varepsilon\Vert\sigma)=2\varepsilon^2+O(\varepsilon^4)\), while \(\lVert\rho_\varepsilon-\sigma\rVert_1=2|\varepsilon|\). The ratio tends to \(1/2\), so the constant is sharp. With base-two logarithms it becomes \(1/(2\log2)\).</p>
 <p>The classical and quantum proofs have the same skeleton: entropy has enough curvature along the line connecting the two states, and a sign test measures the entire discrepancy. Quantum data processing gives another short route via the two-outcome measurement <a href="#ref-watrous">[1]</a>; the direct proof above makes the curvature responsible for the constant explicit. Early quantum forms appear in work of Hiai, Ohya, and Tsukada <a href="#ref-hiai">[4]</a>.</p>
+<h2>Numerical experimentation: Pinsker on a triangle</h2>
+<p>The simplex of three-component probabilities is the triangle
+\(\Delta_3=\{q\in\mathbb R_+^3:q_1+q_2+q_3=1\}\): it is two-dimensional, even though its vectors have three coordinates. The three panels below compare, for the same target \(p\),</p>
+\[
+ \operatorname{KL}(q\mid p),\qquad
+ \operatorname{TV}(q-p)=\frac12\sum_{i=1}^3|q_i-p_i|,\qquad
+ \operatorname{KL}(q\mid p)-2\operatorname{TV}(q-p)^2.
+\]
+<p>The last panel shows the <em>Pinsker gap</em>, which is nonnegative by Theorem 1. It is not the raw difference \(\operatorname{KL}-\operatorname{TV}\), which can be negative. Notice the contrast between the smooth entropy contours and the polygonal variation contours. Click or drag in any triangle to move \(p\); the other two update at the same time. Numeric target controls and keyboard interaction provide another way to explore.</p>
+<iframe class="idea-experiment" data-experiment="pinsker-simplex" src="assets/pinsker-simplex/index.html" title="Relative entropy, total variation, and the nonnegative Pinsker gap on synchronized probability triangles" loading="lazy" style="width:100%;height:1000px;border:0"></iframe>
+<p class="caption">Each panel has its own labeled color scale. The target stays in \(p_i\ge0.015\), ensuring finite entropy throughout the closed simplex in \(q\), with \(0\log0=0\). Near-boundary clicks are projected onto this interior target region. The colors and contours evaluate the displayed functions on a fine grid; they are a visualization, not an additional proof or a numerical optimality certificate. This is a classical experiment; it also describes commuting quantum states, not the full noncommutative state space.</p>
+
 <h2>Bibliography</h2><ol class="references">
 <li id="ref-watrous">John Watrous. <em>The Theory of Quantum Information</em>. Cambridge University Press, 2018. <a href="https://cs.uwaterloo.ca/~watrous/TQI/">Open book</a> · <a href="https://cs.uwaterloo.ca/~watrous/TQI/TQI.5.pdf">Chapter 5</a>.</li>
 <li id="ref-wirth">Melchior Wirth. <em>Trace Inequalities and Quantum Entropies</em>. <a href="https://www.math.uni-leipzig.de/~wirth/notes_of_trace_inequalities.pdf">Lecture notes</a>.</li>

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,follow">
-<meta name="keywords" content="Kullback–Leibler divergence, KL divergence, relative entropy, Bregman divergence, f-divergence, phi-divergence, density ratios, convex tangent planes, first variation, entropy Hessian, Fisher information metric, divergence characterization, rigidity theorem, Pearson chi-square divergence, Hellinger distance, squared density error, separable generators, nonseparable functionals, singular measures, Lebesgue decomposition, probability simplex, multiplicative weights, exponential reweighting, Solomon Kullback, Richard Leibler, Lev Bregman, Jiantao Jiao, Thomas Courtade, Gabriel Peyré, divergence de Bregman, entropie relative, géométrie de l'information, rapport de densités">
+<meta name="keywords" content="Kullback–Leibler divergence, KL divergence, relative entropy, Bregman divergence, f-divergence, phi-divergence, density ratios, convex tangent planes, first variation, entropy Hessian, Fisher information metric, divergence characterization, rigidity theorem, Pearson chi-square divergence, Hellinger distance, squared density error, separable generators, nonseparable functionals, singular measures, Lebesgue decomposition, probability simplex, multiplicative weights, exponential reweighting, Solomon Kullback, Richard Leibler, Lev Bregman, Imre Csiszár, Ronald Fisher, Cressie–Read power divergence, normalized convex generator, simplex level sets, Jiantao Jiao, Thomas Courtade, Gabriel Peyré, divergence de Bregman, entropie relative, géométrie de l'information, rapport de densités">
 <meta name="description" content="Definitions and examples of phi-divergences and Bregman divergences, with a short measure-level proof that their smooth overlap is precisely scaled Kullback–Leibler divergence.">
 <title>Why KL belongs to two divergence families — Alpha preview — Gabriel Peyré</title>
 <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/divergences-and-bregman-geometry.html">
@@ -16,6 +16,16 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 </script>
 <script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
 <script defer src="../../js/site-analytics.js"></script>
+
+<!-- Generated numerical summary image: start -->
+<meta property="og:image" content="https://www.gpeyre.com/blog/imgs/summaries/divergences-and-bregman-geometry.jpg">
+<meta property="og:image:alt" content="Reverse-KL and half-Pearson divergence heatmaps on the same three-probability simplex, with a shared off-center target and color scale.">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="650">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.gpeyre.com/blog/imgs/summaries/divergences-and-bregman-geometry.jpg">
+<meta name="twitter:image:alt" content="Reverse-KL and half-Pearson divergence heatmaps on the same three-probability simplex, with a shared off-center target and color scale.">
+<!-- Generated numerical summary image: end -->
 </head>
 <body>
 <header class="draft-header"><div class="wrap">
@@ -30,6 +40,13 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p>A discrepancy between probability distributions can be built in two quite different ways. We can compare their density ratio at each point. Or we can measure how far a convex functional lies above its tangent plane. The first construction comes from statistical information; the second comes from convex geometry and optimization.</p>
 <p>Kullback–Leibler divergence belongs to both families. This is more than a convenient coincidence: under natural smoothness assumptions, it is the <em>only</em> common member, up to scale. A short proof reveals why entropy appears so often when probability models meet convex optimization.</p>
 <p>The finite-alphabet characterization is Theorem 5 of Jiao, Courtade, No, Venkat, and Weissman <a href="#ref-jiao">[1]</a>. The measure-level formulation below follows <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.8.8.34">Proposition 8.34 of <em>Optimal Transport for Machine Learners</em></a> <a href="#ref-book">[2]</a>. We start with the two definitions, because similar-looking quadratic formulas can disguise genuinely different geometries.</p>
+<figure class="portrait-pair">
+<div class="portrait-pair-images">
+<div><img src="assets/imre-csiszar.jpg" alt="Imre Csiszár in 1976" width="274" height="400" loading="lazy"><p>Imre Csiszár</p></div>
+<div><img src="assets/divergence-simplex/ronald-fisher-1913.jpg" alt="Ronald Fisher in 1913" width="291" height="408" loading="lazy"><p>Ronald Fisher</p></div>
+</div>
+<figcaption>Csiszár developed the density-ratio viewpoint <a href="#ref-csiszar">[5]</a>; Fisher’s information is the local quadratic geometry shared by the smooth divergences below <a href="#ref-fisher">[6]</a>. Left: Konrad Jacobs, MFO, 1976, <a href="https://commons.wikimedia.org/wiki/File:ImreCsiszar1976.jpg">source</a>, <a href="https://creativecommons.org/licenses/by-sa/2.0/de/deed.en">CC BY-SA 2.0 Germany</a>, unmodified. Right: anonymous 1913 photograph, University of Adelaide archive via <a href="https://commons.wikimedia.org/wiki/File:Youngronaldfisher2.JPG">Wikimedia Commons</a>, public domain.</figcaption>
+</figure>
 
 <h2>First construction: compare density ratios</h2>
 <p>Let \(\alpha=p\,\omega\) and \(\beta=q\,\omega\) be probability measures with positive densities relative to a finite reference measure \(\omega\). For a convex function \(\phi:(0,\infty)\to\mathbb R\) satisfying \(\phi(1)=0\), define the <em>\(\phi\)-divergence</em>, also called an \(f\)-divergence, by</p>
@@ -48,6 +65,22 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
  \end{array}
 \]
 <p>These are KL, half the Pearson \(\chi^2\) divergence, and squared Hellinger distance with the displayed normalization. For probabilities, the linear terms in the KL generator integrate to zero. More generally, replacing \(\phi(r)\) by \(\phi(r)+a(r-1)\) leaves the divergence unchanged.</p>
+
+<h3>One family, several geometries</h3>
+<p>To compare shapes rather than arbitrary linear terms, normalize the generators by \(\phi(1)=\phi'(1)=0\). For the pictures, also fix \(\phi''(1)=1\). A convenient power-divergence family is <a href="#ref-cressie-read">[7]</a></p>
+\[
+ \phi_\lambda(r)=
+ \begin{cases}
+ \displaystyle\frac{r^\lambda-1-\lambda(r-1)}{\lambda(\lambda-1)},&amp;\lambda\notin\{0,1\},\\[5pt]
+ -\log r+r-1,&amp;\lambda=0,\\[2pt]
+ r\log r-r+1,&amp;\lambda=1.
+ \end{cases}
+\]
+<p>The cases \(0\) and \(1\) are the continuous limits in the parameter. Since \(\phi_\lambda''(r)=r^{\lambda-2}&gt;0\), every member is strictly convex. For \(\lambda=0,\frac12,1,2\), the corresponding divergences are reverse KL, <em>twice</em> the squared Hellinger distance displayed above, KL, and half Pearson \(\chi^2\). Our parameter is one larger than the parameter in Cressie–Read’s original convention.</p>
+<figure>
+<img src="assets/divergence-simplex/generators.svg" width="960" height="430" alt="Curves of the normalized convex generators for reverse KL, twice squared Hellinger, KL and half Pearson chi-square; all touch zero at one with the same curvature" loading="lazy">
+<figcaption>The generators have the same value, slope, and curvature at one. Their differences away from one encode different penalties for density ratios. All curves are evaluated from the displayed formulas.</figcaption>
+</figure>
 <details class="blog-proof"><summary>Definition at zero densities and for singular measures</summary><div class="blog-proof-body">
 <p>Write the Lebesgue decomposition \(\alpha=f\,\beta+\alpha^\perp\), with \(\alpha^\perp\) singular relative to \(\beta\). The lower-semicontinuous extension is</p>
 \[
@@ -144,12 +177,29 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p>A Lagrange multiplier for total mass makes \(\log(p_i/q_i)+\eta c_i\) constant, which gives the formula. Entropy geometry turns an additive change in dual coordinates into multiplicative reweighting in probability coordinates.</p>
 <p>The overlap theorem explains why KL simultaneously enjoys a density-ratio interpretation and a tangent-plane interpretation. It does not say that other divergences are inferior. Pearson, Hellinger, squared density error, and feature-mean errors encode different choices. What it rules out is freely exchanging their geometric formulas merely because all of them measure a discrepancy.</p>
 
+<h2>Numerical experimentation: a triangle of probabilities</h2>
+<p>Three nonnegative probabilities summing to one form a two-dimensional triangle inside \(\mathbb R^3\):</p>
+\[
+ \Delta_3=\left\{q\in\mathbb R_+^3:\sum_{i=1}^3q_i=1\right\}.
+\]
+<p>Here write \(q\) for the varying point and \(p\) for the target. The figure evaluates the <em>same density-ratio construction</em></p>
+\[
+ D_{\phi_\lambda}(q\mid p)
+ =\sum_{i=1}^3p_i\phi_\lambda(q_i/p_i).
+\]
+<p>Change \(\lambda\) to move between the four familiar examples, and click or drag in the triangle to move \(p\). The two target-coordinate sliders provide the same control without a pointer. Contours bend as the generator changes, even though all these divergences have the same second-order Fisher geometry at the target. This plot is not the Bregman divergence of \(\phi_\lambda\); only the KL member belongs to both families in the sense of Theorem 1.</p>
+<iframe class="idea-experiment" data-experiment="divergence-simplex" src="assets/divergence-simplex/index.html" title="Power f-divergence level sets on a probability simplex with interactive target and generator" loading="lazy" style="width:100%;height:1120px;border:0"></iframe>
+<p class="caption">Targets are projected to \(p_i\ge0.04\), while the plotted \(q\) ranges over the whole closed triangle. Reverse KL is infinite on its boundary. The fixed color scale saturates at four; finite contours use a triangular grid and omit cells with an infinite corner. Changing the plot resolution does not change the divergence definition.</p>
+
 <h2>References</h2>
 <ol class="references">
 <li id="ref-jiao">Jiantao Jiao, Thomas A. Courtade, Albert No, Kartik Venkat, and Tsachy Weissman. <a href="https://arxiv.org/abs/1404.6810"><em>Information Measures: The Curious Case of the Binary Alphabet</em></a>. IEEE Transactions on Information Theory 60(12), 7616–7626, 2014. Theorem 5.</li>
 <li id="ref-book">Gabriel Peyré. <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.8.8.34"><em>Optimal Transport for Machine Learners</em>, Proposition 8.34</a>, <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.8.8.31">Definition 8.31</a>, and <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.7.3.16">Definition 7.16</a>. Book manuscript.</li>
 <li id="ref-bregman">Lev M. Bregman. <a href="https://doi.org/10.1016/0041-5553(67)90040-7"><em>The Relaxation Method of Finding the Common Point of Convex Sets and Its Application to the Solution of Problems in Convex Programming</em></a>. USSR Computational Mathematics and Mathematical Physics 7(3), 200–217, 1967.</li>
 <li id="ref-kl">Solomon Kullback and Richard A. Leibler. <a href="https://doi.org/10.1214/aoms/1177729694"><em>On Information and Sufficiency</em></a>. Annals of Mathematical Statistics 22(1), 79–86, 1951.</li>
+<li id="ref-csiszar">Imre Csiszár. <em>Information-type measures of difference of probability distributions and indirect observations</em>. Studia Scientiarum Mathematicarum Hungarica 2, 299–318, 1967. <a href="https://www.renyi.hu/~csiszar/publist2012.pdf#page=1">Author’s publication list, item 13</a>.</li>
+<li id="ref-fisher">Ronald A. Fisher. <a href="https://doi.org/10.1098/rsta.1922.0009"><em>On the Mathematical Foundations of Theoretical Statistics</em></a>. Philosophical Transactions of the Royal Society A 222, 309–368, 1922. <a href="https://digital.library.adelaide.edu.au/items/36b96da4-e256-4e94-9720-eef372935c3a">Author archive</a>.</li>
+<li id="ref-cressie-read">Noel Cressie and Timothy R. C. Read. <a href="https://doi.org/10.1111/j.2517-6161.1984.tb01318.x"><em>Multinomial Goodness-of-Fit Tests</em></a>. Journal of the Royal Statistical Society, Series B 46(3), 440–464, 1984.</li>
 </ol>
 </article></main>
 <footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Blog</a> · <a href="/privacy/">Privacy &amp; audience measurement</a></div></footer>
