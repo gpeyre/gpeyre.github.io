@@ -400,7 +400,7 @@
       "date": "2026-11-01",
       "url": "https://www.gpeyre.com/blog/2026/11/01/arithmetico-geometric-means/",
       "message": "Iterate two means to get a third. Arithmetic + harmonic gives geometric; arithmetic + geometric gives AGM. When is the limit quasi-arithmetic? A rigidity theorem answers exactly. https://www.gpeyre.com/blog/2026/11/01/arithmetico-geometric-means/",
-      "status": "prepared",
+      "status": "announced",
       "source_sha256": "0086c95c695089b385b814854c478633849c57df14a89adeb290071ac6981909",
       "base_commit": "e300f11dd738bd6ee543037cca304928a3bad3bf",
       "files": [
@@ -416,9 +416,18 @@
         "blog/preparations/index.html": "8a9471ad5f24cbc21108e62181a070455f9a45aca6c05c3b0895da4c2ceef366",
         "js/blog-search-index.js": "0b13ae940b64df2808c6aafb90247a04338bdbfcc16b00b7f07e3127795f0ca7"
       },
-      "publication_commit": null,
-      "bluesky_uri": null,
-      "bluesky_cid": null
+      "publication_commit": "b16aa3850efae8a695a142fda9d177bd095be808",
+      "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3mz7iuy6k22l3",
+      "bluesky_cid": "bafyreihop67b7v6kutvasjje4fbdhehaxp3dkjxed2mnaefoi5wdkfmpie",
+      "announcement_image": {
+        "path": "/blog/imgs/summaries/arithmetico-geometric-means.jpg",
+        "alt": "Arithmetic-mean and arithmetic–geometric-mean heatmaps on identical positive axes, with a selected orbit and its closing lower and upper bounds.",
+        "width": 1200,
+        "height": 490,
+        "sha256": "cfede2d17a7aeff736ca16904947d29b4ccad9f8b4979a97c5a758b46e4db5d1",
+        "mime_type": "image/jpeg",
+        "size": 59570
+      }
     }
   ]
 }
