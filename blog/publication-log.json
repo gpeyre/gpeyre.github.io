@@ -428,6 +428,32 @@
         "mime_type": "image/jpeg",
         "size": 59570
       }
+    },
+    {
+      "slug": "noncrossing-matchings-catalan",
+      "title": "Optimal Planar Matching and Crossings",
+      "date": "2026-11-02",
+      "url": "https://www.gpeyre.com/blog/2026/11/02/noncrossing-matchings-catalan/",
+      "message": "Optimal Euclidean matchings cannot cross. But removing crossings still leaves exponentially many candidates! Catalan numbers explain why uncrossing alone does not solve the problem. https://www.gpeyre.com/blog/2026/11/02/noncrossing-matchings-catalan/",
+      "status": "prepared",
+      "source_sha256": "ac3f674cb4eb2fb656831a22300aa680509ba6d13c54eefbfd4849de946a8b22",
+      "base_commit": "a63589d369932ce9ea56559cd54fb812ca495fef",
+      "files": [
+        "blog/_posts/2026-11-02-noncrossing-matchings-catalan.md",
+        "blog/preparations/noncrossing-matchings-catalan.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null,
+      "working_sha256": {
+        "blog/_posts/2026-11-02-noncrossing-matchings-catalan.md": "0a9acc29b0d622e82b4de03df3295837a791a460220eed7f6a99f4c5b55717ba",
+        "blog/preparations/noncrossing-matchings-catalan.html": "a6597e6b9ee1cd6aab6557ce5d86fd0b7c13caca68922e8f6fd7c895625fd757",
+        "blog/preparations/index.html": "65f6e8556e737fd6eb025938ceecadf741eb22dd487c65c9f8fec21bd5f89d0e",
+        "js/blog-search-index.js": "cd018edaf5d6c2dcb5bd2e02299b90b3358573fd30aa765a02fceec42005de10"
+      }
     }
   ]
 }
