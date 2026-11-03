@@ -101,6 +101,37 @@ for (const [A, B] of cases) {
     matrixClose(M.scale(integral, 1 / (3 * steps)), M.logarithmic(X, Y), 2e-9);
   }
 }
+// Axiomatic characterizations: subpath midpoints, uniform subdivision of the
+// logarithmic path average, and the inverse equation used in the uniqueness proof.
+for (const [A, B] of cases) {
+  const midpoint = M.geometric(A, B, .5);
+  const halves = M.scale(M.add(M.logarithmic(A, midpoint), M.logarithmic(midpoint, B)), .5);
+  matrixClose(halves, M.logarithmic(A, B), 2e-7);
+  for (const [s, t] of [[.11, .86], [.88, .13]]) {
+    const start = M.geometric(A, B, s), end = M.geometric(A, B, t);
+    matrixClose(M.geometric(start, end, .5), M.geometric(A, B, (s + t) / 2), 2e-7);
+    matrixClose(M.geometric(start, end, .37), M.geometric(A, B, .63 * s + .37 * t), 2e-7);
+  }
+  const relative = M.sandwich(M.power(A, -.5), B), D = M.power(relative, .5);
+  const X = M.geometric(M.I, relative, .5);
+  matrixClose(X, M.sandwich(D, inverse(X)), 2e-7);
+  const Y = M.sandwich(M.power(D, -.5), X);
+  matrixClose(Y, M.I, 2e-7); matrixClose(Y, inverse(Y), 2e-7);
+}
+{
+  const A = M.I, B = M.scale(M.I, 4);
+  const logInverse = M.logarithmic(inverse(A), inverse(B));
+  matrixClose(logInverse, M.scale(M.I, 3 / (4 * Math.log(4))));
+  assert.ok(M.relativeDifference(logInverse, inverse(M.logarithmic(A, B))) > .1,
+    "The logarithmic mean is not self-dual");
+  const h = t => t * t / (t * t + (1 - t) * (1 - t));
+  for (const t of [0, .13, .25, .5, .83, 1]) close(h(1 - t), 1 - h(t));
+  assert.ok(M.relativeDifference(M.geometric(A, B, h(.25)), M.geometric(A, M.geometric(A, B, h(.5)), .5)) > .1,
+    "The exchange law does not fix time parametrization; full midpoint consistency does");
+  const arithmetic = (X, Y) => M.scale(M.add(X, Y), .5), G = M.geometric(A, B, .5);
+  assert.ok(M.norm(difference(arithmetic(A, B), arithmetic(arithmetic(A, G), arithmetic(G, B)))) > .1,
+    "Geometric subdivision with arithmetic aggregation distinguishes the logarithmic mean from arithmetic");
+}
 // Extreme common scales and isotropic/repeated eigenvalues.
 for (const s of [1e-200, 1e200]) for (const [A, B] of cases.slice(0, 3)) {
   matrixClose(M.scale(M.geometric(M.scale(A, s), M.scale(B, s), .37), 1 / s), M.geometric(A, B, .37), 3e-8);
@@ -180,14 +211,21 @@ for (const [id, key] of [["rotation", "rotation"], ["anisotropy", "anisotropy"]]
   assert.equal(Number(input.match(/\bvalue="([^"]+)"/)[1]), M.presets.noncommuting[key], "Initial HTML agrees with the live preset");
 }
 assert.equal((html.match(/tabindex="0"/g) || []).length, 2);
-const article = fs.readFileSync(path.join(__dirname, "../blog/preparations/averaging-positive-symmetric-matrices.html"), "utf8");
+const article = fs.readFileSync(path.join(__dirname, "../blog/_posts/2026-11-03-averaging-positive-symmetric-matrices.md"), "utf8");
 assert.ok(!/[\x00-\x08\x0b\x0c\x0e-\x1f]/.test(article), "No corrupted LaTeX control characters");
-assert.equal((article.match(/class="blog-proof"/g) || []).length, 7);
-for (const id of ["theorem-1", "theorem-2", "theorem-3", "proposition-1", "proposition-2"]) assert.ok(article.includes('id="' + id + '"'));
+assert.equal((article.match(/class="blog-proof"/g) || []).length, 10);
+for (const id of ["theorem-1", "theorem-2", "theorem-3", "theorem-4", "theorem-5", "theorem-6", "proposition-1", "proposition-2"]) assert.ok(article.includes('id="' + id + '"'));
 assert.ok(article.includes("Logarithmic mean</em> means integrate the relative geometric interpolation"));
-assert.ok(article.includes("T&amp;=A^{-1}\\#B"));
+assert.ok(article.includes("T&=A^{-1}\\#B"));
 assert.ok(article.includes('data-experiment="positive-matrix-means"'));
-assert.ok(article.includes('src="../../js/site-analytics.js"'));
+assert.ok(article.includes("embedded_experiment: true"));
+assert.ok(!article.includes("site-analytics.js"), "Published article inherits analytics from its shared layout");
+assert.equal((article.match(/<li id="ref-/g) || []).length, 12);
+assert.ok(article.includes("uniformly continuous on"));
+assert.ok(article.includes("s,t\\in[0,1]"));
+assert.ok(article.includes("last_modified_at:"));
+const redirect = fs.readFileSync(path.join(__dirname, "../blog/preparations/averaging-positive-symmetric-matrices.html"), "utf8");
+assert.ok(redirect.includes("redirect_to: /blog/2026/11/03/averaging-positive-symmetric-matrices/"));
 assert.ok(!html.includes("L<sub>t</sub>"), "Use E_t consistently for log-Euclidean geometry");
 for (const [, id] of article.matchAll(/href="#(ref-[^"]+)"/g)) assert.ok(article.includes('id="' + id + '"'), "Reference " + id + " resolves");
-console.log("Positive matrix means: spectral calculus, independent interpolation formulas, AM–GM–HM, determinant law, congruence, inverses, logarithmic time-average, scalar distinction, responsive renderer, real UI handlers, article proofs and citations pass.");
+console.log("Positive matrix means: spectral calculus, interpolation and order identities, midpoint/self-duality characterization, subpath consistency, logarithmic subdivision, scalar distinction, responsive renderer, real UI handlers, published article proofs and citations pass.");

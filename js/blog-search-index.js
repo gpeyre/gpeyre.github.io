@@ -1674,7 +1674,7 @@ window.BLOG_SEARCH_RECORDS = [
     "status": "published",
     "date": "2026-11-03",
     "title": "Averaging Positive Symmetric Matrices",
-    "description": "Three different ways to average positive matrices: log-Euclidean geometry, the Kubo–Ando geometric mean, and the logarithmic mean obtained by averaging its path. Short proofs, Gaussian transport, and interactive covariance ellipses.",
+    "description": "Three ways to average positive matrices: log-Euclidean geometry, the Kubo–Ando geometric mean, and its logarithmic path average. Short axiomatic characterizations, proofs, Gaussian transport, and interactive covariance ellipses.",
     "keywords": [
       "positive semidefinite matrix",
       "positive definite matrix",
@@ -1707,7 +1707,14 @@ window.BLOG_SEARCH_RECORDS = [
       "noncommuting matrices",
       "positive matrix interpolation",
       "moyenne de matrices",
-      "moyenne logarithmique"
+      "moyenne logarithmique",
+      "axiomatic characterization",
+      "inverse compatibility",
+      "self-duality",
+      "midpoint consistency",
+      "dyadic subdivision",
+      "uniform path average",
+      "Riemann sums"
     ]
   },
   {

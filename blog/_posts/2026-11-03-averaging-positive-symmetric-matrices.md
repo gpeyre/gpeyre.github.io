@@ -1,10 +1,11 @@
 ---
 title: "Averaging Positive Symmetric Matrices"
 subtitle: "Average matrices, average their logarithms, or average an entire geometric path?"
-description: "Three different ways to average positive matrices: log-Euclidean geometry, the Kubo–Ando geometric mean, and the logarithmic mean obtained by averaging its path. Short proofs, Gaussian transport, and interactive covariance ellipses."
+description: "Three ways to average positive matrices: log-Euclidean geometry, the Kubo–Ando geometric mean, and its logarithmic path average. Short axiomatic characterizations, proofs, Gaussian transport, and interactive covariance ellipses."
 date: "2026-11-03"
+last_modified_at: "2026-11-03T09:16:42Z"
 topic: "Matrix means and covariance geometry"
-keywords: ["positive semidefinite matrix","positive definite matrix","PSD cone","SPD cone","covariance matrix","matrix averaging","diffusion tensor imaging","covariance descriptor","arithmetic matrix mean","harmonic matrix mean","geometric matrix mean","log-Euclidean mean","operator logarithmic mean","Kubo–Ando mean","Fumio Kubo","Tsuyoshi Ando","Pusz–Woronowicz mean","matrix logarithm","matrix exponential","spectral calculus","Löwner order","congruence invariance","affine-invariant geometry","Gaussian optimal transport","Bures–Wasserstein geometry","determinant interpolation","Fréchet mean","Karcher mean","noncommuting matrices","positive matrix interpolation","moyenne de matrices","moyenne logarithmique"]
+keywords: ["positive semidefinite matrix","positive definite matrix","PSD cone","SPD cone","covariance matrix","matrix averaging","diffusion tensor imaging","covariance descriptor","arithmetic matrix mean","harmonic matrix mean","geometric matrix mean","log-Euclidean mean","operator logarithmic mean","Kubo–Ando mean","Fumio Kubo","Tsuyoshi Ando","Pusz–Woronowicz mean","matrix logarithm","matrix exponential","spectral calculus","Löwner order","congruence invariance","affine-invariant geometry","Gaussian optimal transport","Bures–Wasserstein geometry","determinant interpolation","Fréchet mean","Karcher mean","noncommuting matrices","positive matrix interpolation","moyenne de matrices","moyenne logarithmique","axiomatic characterization","inverse compatibility","self-duality","midpoint consistency","dyadic subdivision","uniform path average","Riemann sums"]
 proofs: true
 embedded_experiment: true
 ---
@@ -273,6 +274,149 @@ $$
 
 </details>
 
+## Which axioms select the mean?
+
+<p>The formulas above are natural, but do their properties <em>force</em> them? There are two distinct questions: what counts as a matrix mean, and which additional principles distinguish one mean from another?</p>
+<p>For this discussion, a <em>matrix mean</em> is a map \(M:\mathbb P_d\times\mathbb P_d\to\mathbb P_d\), where \(\mathbb P_d=\mathbb S_{++}^d\), which is normalized by \(M(A,A)=A\) and jointly monotone in the Löwner order. If \(A\preceq B\), these conditions imply \(A\preceq M(A,B)\preceq B\). They do not impose symmetry, which would exclude weighted means. This is a convenient working definition, not the full Kubo–Ando axiomatization: that theory additionally uses a transformer inequality and continuity from above on positive semidefinite operators <a href="#ref-kubo">[7]</a>, <a href="#ref-connections">[10]</a>.</p>
+<p>In particular, <em>Kubo–Ando mean</em> names a whole class, not just the geometric mean. Arithmetic, harmonic, geometric, and logarithmic means all satisfy congruence equivariance. Coordinate invariance alone cannot choose between them.</p>
+
+### The geometric midpoint: three invariances suffice
+
+<p id="theorem-4"><strong>Theorem 4 (invariance determines the geometric midpoint).</strong> The only map \(M:\mathbb P_d\times\mathbb P_d\to\mathbb P_d\) satisfying the following three identities, for all \(A,B\) and every invertible \(S\), is \(M(A,B)=A\#B\):</p>
+
+$$
+M(SAS^\top,SBS^\top)=SM(A,B)S^\top
+,
+$$
+
+$$
+M(B,A)=M(A,B),
+$$
+
+$$
+M(A^{-1},B^{-1})=M(A,B)^{-1}.
+$$
+
+<p>These express <em>congruence equivariance</em>, <em>symmetry</em>, and <em>inverse compatibility</em> (also called self-duality). Remarkably, positivity of the output and these identities suffice: normalization, continuity, and monotonicity need not be assumed for this uniqueness statement. They follow because the resulting operation is the geometric mean.</p>
+
+<details class="blog-proof">
+
+<summary>Proof: normalize, swap, and invert</summary>
+
+<div class="blog-proof-body" markdown="1">
+
+<p>Theorem 1 shows that \(A\#B\) satisfies the identities. For uniqueness, congruence reduces the problem to the pair \(I,C\), where \(C=A^{-1/2}BA^{-1/2}\). Set \(X=M(I,C)\) and \(D=C^{1/2}\). Apply congruence to the pair \(C^{-1},I\), then use symmetry and inverse compatibility:</p>
+
+$$
+X=D\,M(C^{-1},I)\,D=DX^{-1}D.
+$$
+
+<p>Consequently \(Y=D^{-1/2}XD^{-1/2}\) is positive definite and satisfies \(Y=Y^{-1}\). Each eigenvalue is positive and squares to one, so \(Y=I\). Thus \(X=D=C^{1/2}\). Transforming back gives</p>
+
+$$
+M(A,B)=A^{1/2}C^{1/2}A^{1/2}=A\#B.
+$$
+
+<p>No order or regularity assumption entered the argument. \(\square\)</p>
+
+</div>
+
+</details>
+
+<p>Full congruence equivariance matters: the log-Euclidean midpoint has symmetry and inverse compatibility, but not equivariance under every invertible change of coordinates. Conversely, the arithmetic midpoint is symmetric and congruence-equivariant, but fails inverse compatibility. Another standard characterization uses congruence equivariance together with agreement with the scalar geometric mean on diagonal matrices <a href="#ref-bini-iannazzo">[11]</a>.</p>
+
+### The interpolation: make midpoints consistent
+
+<p>For a whole interpolation, the natural exchange law is \(M_t(A,B)=M_{1-t}(B,A)\). Even with congruence and inverse compatibility, this does not fix the speed along the path: replacing \(t\) by an increasing continuous \(h(t)\), with \(h(0)=0\), \(h(1)=1\), and \(h(1-t)=1-h(t)\), preserves those laws. The missing requirement is that <em>every temporal midpoint is the geometric midpoint of its endpoints</em>.</p>
+
+<p id="theorem-5"><strong>Theorem 5 (midpoint consistency determines the path).</strong> The unique continuous path \(\gamma:[0,1]\to\mathbb P_d\) satisfying the following identities, with the midpoint condition holding for every \(s,t\in[0,1]\),</p>
+
+$$
+\gamma(0)=A,\qquad \gamma(1)=B,
+$$
+
+$$
+\gamma\!\left(\frac{s+t}{2}\right)
+=\gamma(s)\#\gamma(t)
+$$
+
+<p>is \(\gamma(t)=A\#_tB\).</p>
+
+<details class="blog-proof">
+
+<summary>Proof: dyadic subdivision fixes every time</summary>
+
+<div class="blog-proof-body" markdown="1">
+
+<p>For existence, whiten by \(A^{-1/2}\). The candidate path becomes \(C^t\), and its matrices commute. Their geometric midpoint is \(C^s\#C^t=C^{(s+t)/2}\); congruence proves the midpoint identity. The same calculation gives the useful subpath identity, for all \(s,t,u\in[0,1]\),</p>
+
+$$
+\gamma(s)\#_u\gamma(t)
+=\gamma((1-u)s+ut).
+$$
+
+<p>For uniqueness, the endpoint midpoint is forced, then the midpoints of the two halves are forced, and so on. This determines \(\gamma(j/2^k)\) for every dyadic time. Continuity extends equality from this dense set to all of \([0,1]\). Thus midpoint consistency fixes both the path and its parametrization. \(\square\)</p>
+
+</div>
+
+</details>
+
+### The logarithmic mean: average consistently over subdivisions
+
+<p>The logarithmic mean is selected by a different principle: split the geometric path into equal halves, average each half, then average the two answers <em>arithmetically</em>. Its integral representation is standard <a href="#ref-raissouli-furuichi">[12]</a>; the following elementary characterization follows directly from subdivision.</p>
+
+<p id="theorem-6"><strong>Theorem 6 (subdivision consistency determines the logarithmic mean).</strong> Let \(N:\mathbb P_d\times\mathbb P_d\to\mathbb P_d\) be continuous and satisfy \(N(A,A)=A\). If, for every pair \(A,B\), writing \(G=A\#B\),</p>
+
+$$
+N(A,B)=\frac{N(A,G)+N(G,B)}2,
+$$
+
+<p>then necessarily</p>
+
+$$
+N(A,B)=\mathcal L(A,B)=\int_0^1 A\#_tB\,dt.
+$$
+
+<p>Conversely, the logarithmic mean satisfies this identity. No monotonicity or congruence assumption is needed for uniqueness here either.</p>
+
+<details class="blog-proof">
+
+<summary>Proof: repeated subdivision becomes a Riemann sum</summary>
+
+<div class="blog-proof-body" markdown="1">
+
+<p>Set \(\gamma(t)=A\#_tB\) and \(t_j=j/2^k\). By Theorem 5, every geometric midpoint of points on this path is its temporal midpoint. Iterating the subdivision identity therefore gives</p>
+
+$$
+N(A,B)=\frac1{2^k}\sum_{j=0}^{2^k-1}
+N\big(\gamma(t_j),\gamma(t_{j+1})\big).
+$$
+
+<p>The image \(K=\gamma([0,1])\) is compact. Continuity of \(N\) makes it uniformly continuous on \(K\times K\), and adjacent points on the path approach each other uniformly. Using \(N(X,X)=X\), we obtain</p>
+
+$$
+\max_{0\le j<2^k}
+\big\|N\big(\gamma(t_j),\gamma(t_{j+1})\big)
+-\gamma(t_j)\big\|_{\mathrm F}
+\longrightarrow0.
+$$
+
+<p>The preceding average has the same limit as the left-endpoint Riemann sums for \(\gamma\), proving the integral formula.</p>
+<p>Conversely, Theorem 5 identifies \(A\#_uG=\gamma(u/2)\) and \(G\#_uB=\gamma((1+u)/2)\). Splitting the integral at \(1/2\) gives exactly the subdivision identity. Normalization and continuity of \(\mathcal L\) follow from those of the geometric interpolation. \(\square\)</p>
+
+</div>
+
+</details>
+
+<p>The logarithmic mean is <em>not</em> inverse-compatible, already for scalars:</p>
+
+$$
+\mathcal L(1,1/4)=\frac3{4\log4}
+\ne\frac{\log4}{3}=\mathcal L(1,4)^{-1}.
+$$
+
+<p>The distinction is now structural: coordinate changes, swapping, and inversion select the <em>geometric midpoint</em>; consistent midpoints select its <em>constant-speed path</em>; arithmetic aggregation over equal subdivisions selects the <em>logarithmic path average</em>.</p>
+
 ## A Gaussian transport map hidden in a geometric mean
 
 <p>Here is a useful connection to <a href="{{ '/blog/preparations/bures-distance-square-root-covariances.html' | relative_url }}">Bures geometry and Gaussian optimal transport</a>. The optimal quadratic-cost transport from \(\mathcal N(0,A)\) to \(\mathcal N(0,B)\) is \(x\mapsto Tx\), where</p>
@@ -323,4 +467,7 @@ $$
 <li id="ref-kubo">Fumio Kubo and Tsuyoshi Ando. <em>Means of positive linear operators.</em> Mathematische Annalen <strong>246</strong>, 205–224, 1980. <a href="https://doi.org/10.1007/BF01371042">Paper</a>.</li>
 <li id="ref-moakher">Maher Moakher. <em>A Differential Geometric Approach to the Geometric Mean of Symmetric Positive-Definite Matrices.</em> SIAM Journal on Matrix Analysis and Applications <strong>26</strong>(3), 735–747, 2005. <a href="https://doi.org/10.1137/S0895479803436937">Paper</a>.</li>
 <li id="ref-bhatia">Rajendra Bhatia and John Holbrook. <em>Riemannian geometry and matrix geometric means.</em> Linear Algebra and its Applications <strong>413</strong>, 594–618, 2006. <a href="https://doi.org/10.1016/j.laa.2005.08.025">Paper</a>.</li>
+<li id="ref-connections">Pattrawut Chansangiam and Wicharn Lewkeeratiyutkul. <em>Characterizations of Connections for Positive Operators.</em> arXiv:1208.4912, 2012. <a href="https://arxiv.org/abs/1208.4912">Paper</a>.</li>
+<li id="ref-bini-iannazzo">Dario A. Bini and Bruno Iannazzo. <em>Computational aspects of the geometric mean of two matrices: a survey.</em> Acta Scientiarum Mathematicarum <strong>90</strong>, 349–389, 2024. <a href="https://doi.org/10.1007/s44146-024-00155-5">Paper</a>.</li>
+<li id="ref-raissouli-furuichi">Mustapha Raïssouli and Shigeru Furuichi. <em>On weighted means and their inequalities.</em> Journal of Inequalities and Applications <strong>2021</strong>, article 65, 2021. <a href="https://doi.org/10.1186/s13660-021-02589-9">Paper</a>.</li>
 </ol>
