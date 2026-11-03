@@ -470,7 +470,7 @@
       "date": "2026-11-03",
       "url": "https://www.gpeyre.com/blog/2026/11/03/averaging-positive-symmetric-matrices/",
       "message": "How should we average positive matrices? Compare log-Euclidean and Kubo–Ando geometric means—and the different logarithmic mean obtained by averaging a path. https://www.gpeyre.com/blog/2026/11/03/averaging-positive-symmetric-matrices/",
-      "status": "prepared",
+      "status": "announced",
       "source_sha256": "9e320c8e6ac7e11f3a5051c35ae14501cb07d798947be1f959043179283fdcbe",
       "base_commit": "43c30faa289d2c4f9010320d24dcaa71812b138f",
       "files": [
@@ -480,14 +480,23 @@
         "js/blog-search-index.js",
         "blog/publication-log.json"
       ],
-      "publication_commit": null,
-      "bluesky_uri": null,
-      "bluesky_cid": null,
+      "publication_commit": "7e93353559cbdaca9eeba21e6d0942975bfd388c",
+      "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3mzejst4222qg",
+      "bluesky_cid": "bafyreiadkbw2sjdu54ncy3lrmhqqmg6inmvsh4ltcjgvl2fw5io6wax6si",
       "working_sha256": {
         "blog/_posts/2026-11-03-averaging-positive-symmetric-matrices.md": "b00321aa0bc997215faab824d38302ee910ca136beb3b100870a8a1b5642b708",
         "blog/preparations/averaging-positive-symmetric-matrices.html": "2be476af391136c7ef7a9f1b34ea703eaf29c336339a830a48930f8adef2baec",
         "blog/preparations/index.html": "0d3f970b35792150c5a183574c51d8e1b233fba4717de9d4336ccb0f59fff3ab",
         "js/blog-search-index.js": "93ca2f7eb877c80ca8bf167a61cf2b7031991f9b9c63b23b3e10c77079746d99"
+      },
+      "announcement_image": {
+        "path": "/blog/imgs/summaries/averaging-positive-symmetric-matrices.jpg",
+        "alt": "Log-Euclidean and Kubo–Ando geometric covariance midpoints on common axes, with a distinct fixed logarithmic time-average drawn as a teal dotted ellipse.",
+        "width": 1200,
+        "height": 680,
+        "sha256": "4ae484d05ae34a33337a58d3bb6b7ec66a6223130808a5f0053fbad275a938c9",
+        "mime_type": "image/jpeg",
+        "size": 70321
       }
     }
   ]
