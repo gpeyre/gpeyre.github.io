@@ -77,7 +77,8 @@
   function drawDensity(ctx,w,h,grid,density,options={}) {
     ctx.clearRect(0,0,w,h); const f=frame(w,h), X=x=>f.left+(x-domain.xMin)*f.scale, Y=y=>f.top+(domain.yMax-y)*f.scale;
     const create=options.createCanvas||((width,height)=>{const c=document.createElement("canvas");c.width=width;c.height=height;return c;});
-    const rw=Math.max(2,Math.min(480,Math.round(f.width))),rh=Math.max(2,Math.min(480,Math.round(f.height))),raster=create(rw,rh),rc=raster.getContext("2d"),image=rc.createImageData(rw,rh);
+    const resolution=options.preview?260:480;
+    const rw=Math.max(2,Math.min(resolution,Math.round(f.width))),rh=Math.max(2,Math.min(resolution,Math.round(f.height))),raster=create(rw,rh),rc=raster.getContext("2d"),image=rc.createImageData(rw,rh);
     for(let py=0;py<rh;py++) { const y=domain.yMax-(py+.5)*9/rh; for(let px=0;px<rw;px++) {
       const x=domain.xMin+(px+.5)*9/rw,value=interpolate(grid,density,x,y),q=Math.max(0,Math.min(1024,Math.round(1024*Math.log1p(Math.max(0,value)/colorOffset)/logPeak))),c=palette[q],k=4*(py*rw+px);
       image.data[k]=c[0];image.data[k+1]=c[1];image.data[k+2]=c[2];image.data[k+3]=255;

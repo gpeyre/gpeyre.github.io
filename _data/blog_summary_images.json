@@ -401,7 +401,7 @@
     "logarithmic-sobolev-wasserstein-pl": {
       "path": "/blog/imgs/summaries/logarithmic-sobolev-wasserstein-pl.jpg",
       "width": 1200,
-      "height": 560,
+      "height": 450,
       "alt": "The same narrow initial Gaussian evolves towards targets with one, two, or three Gaussian components; colored densities and white level sets are overlaid with dashed target contours on identical axes.",
       "source": "/blog/preparations/assets/gaussian-mixture-langevin/index.html",
       "settings": {
@@ -414,8 +414,8 @@
         "time": 4,
         "sigma": 0.65,
         "initialMean": [
-          -2.2,
-          -0.35
+          -3.6,
+          0
         ],
         "initialSigma": 0.3,
         "nx": 151,
@@ -429,7 +429,7 @@
         },
         "renderer": "shared gaussian-mixture-langevin core.js and view.js, native canvas comparison layout"
       },
-      "sha256": "54e012836c5fabb4d2fb483c0d064867418799feb51ba290c51520cef9bf5e75"
+      "sha256": "2dacdbabb8f8509849f2a0ecb17e2fb162d0516b846e379c21fc6a686462c5fd"
     },
     "monge-gap-inversions": {
       "path": "/blog/imgs/summaries/monge-gap-inversions.jpg",

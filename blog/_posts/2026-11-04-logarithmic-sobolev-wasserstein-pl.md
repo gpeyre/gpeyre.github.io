@@ -3,7 +3,7 @@ title: "Logarithmic Sobolev is a Wasserstein P–L inequality"
 subtitle: "An entropy inequality controls both the objective and the distance travelled by a distribution."
 description: "Logarithmic Sobolev is the Polyak–Łojasiewicz inequality for entropy in Wasserstein geometry. A finite-length proof turns entropy decay into convergence of distributions."
 date: "2026-11-04"
-last_modified_at: "2026-11-04T11:34:30Z"
+last_modified_at: "2026-11-04T12:34:06Z"
 topic: "Wasserstein gradient flows"
 keywords:
 - "logarithmic Sobolev inequality"
@@ -268,9 +268,11 @@ w_j(x)=\frac{e^{-|x-\mu_j|^2/(2\sigma^2)}}
  {\sum_\ell e^{-|x-\mu_\ell|^2/(2\sigma^2)}}.
 $$
 
-<p>Every run starts from the <em>same</em> narrow distribution \(\rho_0=\mathcal N(m_0,\tau^2I_2)\), with \(m_0=(-2.2,-0.35)\) and \(\tau=0.3\). Noise strength, physical time, spatial axes, and density colors are identical across settings. Unlike the initial distribution itself, its relative entropy to the target changes with \(k\) and \(R\).</p>
+<p>Every run starts from the <em>same</em> narrow distribution \(\rho_0=\mathcal N(m_0,\tau^2I_2)\), with \(m_0=(-3.6,0)\) and \(\tau=0.3\). Its center stays clearly to the left of <em>every</em> target center throughout the slider range \(0\le R\le2.5\). Noise strength, physical time, spatial axes, and density colors are identical across settings. Unlike the initial distribution itself, its relative entropy to the target changes with \(k\) and \(R\).</p>
 
-<iframe class="idea-experiment" data-experiment="gaussian-mixture-langevin" src="{{ '/blog/preparations/assets/gaussian-mixture-langevin/index.html' | relative_url }}" title="One Langevin density plot with target contours, time, Gaussian component count and position sliders" loading="lazy" style="height:1100px"></iframe>
+<p>The dark dashed target level sets move immediately when either target control changes; the colored initial Gaussian remains visible while the new diffusion is computed. Changing the target restarts the time at zero, so the display never combines a new target with an old trajectory.</p>
+
+<iframe class="idea-experiment" data-experiment="gaussian-mixture-langevin" src="{{ '/blog/preparations/assets/gaussian-mixture-langevin/index.html' | relative_url }}?v=left-preview-v2" title="One Langevin density plot with target contours, time, Gaussian component count and position sliders" loading="lazy" style="height:1100px"></iframe>
 
 <p>For one component, the exact solution stays Gaussian. Its mean and variance are</p>
 

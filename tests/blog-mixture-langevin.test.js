@@ -37,16 +37,16 @@ for (const k of [2, 3, 6]) {
   for (const dt of [0.05, 0.0125, 0.003125]) {
     const solver = M.createSolver({ k: 1, spread, dt }); solver.advance(t); const m = solver.metrics();
     errors.push(Math.abs(m.entropy - exact.entropy));
-    if (dt === 0.003125) {
-      close(m.mean[0], exact.mean[0], 0.001, "OU translated mean x");
-      close(m.mean[1], exact.mean[1], 0.001, "OU translated mean y");
-      close(m.covariance[0], exact.variance, 0.001, "OU widening variance x");
-      close(m.covariance[2], exact.variance, 0.001, "OU widening variance y");
-      close(m.covariance[1], 0, 1e-12, "OU independent coordinates");
-      close(m.entropy, exact.entropy, 0.0005, "OU relative entropy");
-    }
   }
   ok(errors[1] < errors[0] * 0.4 && errors[2] < errors[1] * 0.4, "time refinement approaches the exact widening OU solution");
+  const fine = M.createSolver({ k: 1, spread, nx: 301, ny: 301, dt: 0.00078125 });
+  fine.advance(t); const accurate = fine.metrics();
+  close(accurate.mean[0], exact.mean[0], 0.001, "OU translated mean x after spatial / temporal refinement");
+  close(accurate.mean[1], exact.mean[1], 0.001, "OU translated mean y after spatial / temporal refinement");
+  close(accurate.covariance[0], exact.variance, 0.0006, "OU widening variance x after refinement");
+  close(accurate.covariance[2], exact.variance, 0.0006, "OU widening variance y after refinement");
+  close(accurate.covariance[1], 0, 1e-12, "OU independent coordinates");
+  close(accurate.entropy, exact.entropy, 0.0011, "OU relative entropy after refinement");
   const initial = M.exactSingleGaussian(0, spread);
   close(initial.variance, M.defaults.initialSigma ** 2, 1e-16, "narrow initial covariance");
   initial.mean.forEach((value, i) => close(value, M.defaults.initialMean[i], 1e-15, "same shifted initial mean"));
@@ -79,7 +79,7 @@ for (let k = 1; k < runs.length; k++) {
   let l1 = 0; for (let i = 0; i < runs[0].target.length; i++) l1 += Math.abs(runs[k].snapshots[0][i] - runs[0].snapshots[0][i]);
   close(l1 * runs[0].grid.area, 0, 0, "identical initial distribution across component counts");
 }
-ok(runs[0].entropies[10] < 0.00003 && runs[1].entropies[10] > 0.5 && runs[2].entropies[10] > 0.5,
+ok(runs[0].entropies[10] < 0.0003 && runs[1].entropies[10] > 0.5 && runs[2].entropies[10] > 0.5,
   "genuine one-mode / multimode contrast by physical time two");
 ok(runs[2].totalVariations[100] < runs[1].totalVariations[100], "do not falsely assume mixing is monotonic in component count");
 ok(runs[0].entropies[0] < runs[1].entropies[0] && runs[1].entropies[0] < runs[2].entropies[0],
@@ -91,6 +91,40 @@ ok(runs[0].entropies[0] < runs[1].entropies[0] && runs[1].entropies[0] < runs[2]
   const medium = Math.abs(result[1].entropies[1] - result[2].entropies[1]);
   ok(medium < 0.4 * coarse && medium < 0.0003, "mixture spatial KL refinement");
   close(result[1].totalVariations[1], result[2].totalVariations[1], 0.00015, "mixture spatial TV refinement");
+}
+// All mode configurations start from the same visibly left-shifted cloud.
+// A three-standard-deviation margin separates its mean from every target mean.
+{
+  for (const k of [1, 2, 3, 4, 5, 6]) for (const spread of [0, 0.7, 2, 2.5]) {
+    const means = M.centers(k, spread);
+    ok(means.every(mu => M.defaults.initialMean[0] + 3 * M.defaults.initialSigma < mu[0]),
+      "initial cloud lies clearly left of every component center over the whole slider range");
+  }
+  const shared = require(path.join(directory, "../banana-langevin/core.js")), original = shared.createSolver;
+  let scene;
+  shared.createSolver = () => { throw new Error("preview must not construct a PDE solver"); };
+  try { scene = M.preview(3, 2, { nx: 81, ny: 81 }); }
+  finally { shared.createSolver = original; }
+  ok(scene.grid.nx === 81 && scene.grid.ny === 81 && scene.target.length === 81 * 81,
+    "cheap preview samples the requested coarse grid without constructing a solver");
+  close(M.integrate(scene.target, scene.grid), 1, 2e-14, "preview target is normalized");
+  close(M.integrate(scene.initialDensity, scene.grid), 1, 2e-14, "preview initial density is normalized");
+  ok(scene.initialMetrics.entropy > 0 && scene.initialMetrics.totalVariation > 0,
+    "preview reports initial diagnostics for the displayed target");
+  const full = M.createSolver({ k: 3, spread: 2, nx: 81, ny: 81 });
+  let errorTarget = 0, errorInitial = 0;
+  for (let i = 0; i < scene.target.length; i++) {
+    errorTarget = Math.max(errorTarget, Math.abs(scene.target[i] - full.target[i]));
+    errorInitial = Math.max(errorInitial, Math.abs(scene.initialDensity[i] - full.density[i]));
+  }
+  close(errorTarget, 0, 2e-15, "preview target exactly matches the physical solver on the same grid");
+  close(errorInitial, 0, 2e-15, "preview initial density matches the physical solver on the same grid");
+  const baseline = M.preview(1, 0, { nx: 41, ny: 41 });
+  for (const k of [2, 3, 6]) {
+    const collapsed = M.preview(k, 0, { nx: 41, ny: 41 }); let error = 0;
+    for (let i = 0; i < collapsed.target.length; i++) error = Math.max(error, Math.abs(collapsed.target[i] - baseline.target[i]));
+    close(error, 0, 2e-15, "coincident components collapse in the immediate preview too");
+  }
 }
 // The single live plot and animated comparison use the same fixed physical
 // frame, density palette and bilinear interpolation of the computed arrays.
@@ -144,18 +178,38 @@ ok(runs[0].entropies[0] < runs[1].entropies[0] && runs[1].entropies[0] < runs[2]
     "visible experiment has no stale banana model or equal-initial-KL claim");
   ok(html.includes("Initial KL need not be the same") && html.includes("More components do not automatically mean slower convergence"),
     "fair comparison caveats remain explicit");
-  ok(worker.includes('importScripts("../banana-langevin/core.js", "core.js")') && worker.includes("MixtureLangevin.run(k, spread)"),
+  ok(/importScripts\("\.\.\/banana-langevin\/core\.js(?:\?[^\"]+)?", "core\.js(?:\?[^\"]+)?"\)/.test(worker) && worker.includes("MixtureLangevin.run(k, spread)"),
     "worker loads the checked physical-space engine before the mixture model");
+  const version = app.match(/new Worker\("worker\.js\?v=([a-z0-9-]+)"\)/)?.[1];
+  ok(version && [...html.matchAll(/<script src="([^"]+)"/g)].every(match => match[1].endsWith("?v=" + version)) &&
+    worker.includes('"../banana-langevin/core.js?v=' + version + '"') && worker.includes('"core.js?v=' + version + '"'),
+    "HTML, worker and shared / model numerical engines use one consistent cache-busting version");
   ok(app.includes('type: "ot-experiment-size"') && app.includes('topic: "gaussian-mixture-langevin"') &&
     app.includes('event.data?.type === "ot-experiment-measure"'), "embedded experiment uses the shared height protocol");
-  ok(app.includes('canvas.getContext("2d").clearRect') && app.includes('$("entropy-value").textContent = "—"') &&
-    app.includes('$("results").setAttribute("aria-busy", "false")'), "new runs and failures clear stale data / busy states");
+  ok(app.includes('previewScene = M.preview(k, radius, { nx: 101, ny: 101 })') &&
+    app.indexOf('previewScene = M.preview(k, radius') < app.indexOf('pendingTimer = setTimeout(') &&
+    app.includes('const scene = result || previewScene') && app.includes('density: scene.initialDensity'),
+    "new target contours and fixed initial density draw synchronously before any delayed evolution");
+  ok(app.includes('result = null; time.value = "0"; time.disabled = true; play.disabled = true') &&
+    app.includes('play.disabled = false; time.disabled = false') && app.includes('results.dataset.phase = "preview"'),
+    "changing the target resets time and disables evolution until the matching worker is ready");
+  ok(app.includes('result ? V.number(state.entropy) : "—"') &&
+    app.includes('$("results").setAttribute("aria-busy", "false")'), "preview diagnostics are not stale trajectory values and failures clear busy state");
+  ok(html.includes("N((−3.6,0), 0.3² I)") && html.includes("strictly to the left of every component mean"),
+    "the visible initial-location description matches the all-configurations left-shift guarantee");
+  ok(app.includes("currentId !== request || worker !== currentWorker") && app.includes("event.preventDefault()"),
+    "a terminated worker cannot overwrite the latest configuration with a stale error");
   ok(exporter.includes('require("../blog/preparations/assets/gaussian-mixture-langevin/core.js")') &&
     exporter.includes('require("../blog/preparations/assets/gaussian-mixture-langevin/view.js")') &&
     exporter.includes("[1, 2, 3].map(k => M.run(k, 2))") && exporter.includes("M.sample(result, t)"),
     "three-panel export replays the actual numerical arrays on the same clock");
-  ok(exporter.includes('flag("--gif")') && exporter.includes("palettegen=") && exporter.includes("paletteuse=") &&
-    exporter.includes("physicalTime: [0, 20]"), "GIF export uses a generated fixed palette and records physical time provenance");
+  ok(exporter.includes('flag("--video")') && !exporter.includes('flag("--gif")') && !exporter.includes("palettegen=") &&
+    exporter.includes("physicalTime: [0, 20]"), "MP4-only export records physical time provenance without generating a GIF");
+  ok(exporter.includes("const fps = 30, seconds = 5") && exporter.includes("const width = 1200, height = 450"),
+    "animation is a five-second 30-fps three-panel MP4");
+  ok(!exporter.includes("One initial cloud. Three target geometries.") && !exporter.includes("Same narrow initial Gaussian · R = 2") &&
+    exporter.includes('text(ctx, "k = "') && exporter.includes('text(ctx, "t = "'),
+    "clean video has only component-count and time labels, with no title or commentary");
 }
 assert.throws(() => M.centers(0, 2), RangeError);
 assert.throws(() => M.centers(7, 2), RangeError);

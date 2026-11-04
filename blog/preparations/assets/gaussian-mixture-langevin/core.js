@@ -9,7 +9,7 @@
   "use strict";
   if (!S) throw new Error("Load the shared Langevin numerical engine first");
   const defaults = Object.freeze({ nx: 151, ny: 151, xMin: -6, xMax: 6, yMin: -6, yMax: 6,
-    dt: 0.0125, tMax: 20, snapshotCount: 101, sigma: 0.65, initialSigma: 0.3, initialMean: [-2.2, -0.35] });
+    dt: 0.0125, tMax: 20, snapshotCount: 101, sigma: 0.65, initialSigma: 0.3, initialMean: [-3.6, 0] });
   function centers(k, spread) {
     if (!Number.isInteger(k) || k < 1 || k > 6 || !Number.isFinite(spread) || spread < 0 || spread > 2.5)
       throw new RangeError("Use 1–6 components and spread in [0,2.5]");
@@ -73,6 +73,28 @@
       advance: t => { engine.advance(t); return metrics(engine.density, engine.target, engine.grid); },
       metrics: () => metrics(engine.density, engine.target, engine.grid) };
   }
+  // Cheap synchronous geometry preview. This samples two densities only: no
+  // generator, tridiagonal factors, time stepping or worker is constructed.
+  function preview(k, spread, options = {}) {
+    const o = Object.assign({}, defaults, { nx: 101, ny: 101 }, options, { k, spread });
+    if (!(o.initialSigma > 0) || !Number.isFinite(o.initialSigma) || !Array.isArray(o.initialMean) ||
+      o.initialMean.length !== 2 || !o.initialMean.every(Number.isFinite)) throw new RangeError("Invalid initial Gaussian");
+    const targetModel = model(k, spread, o.sigma), grid = S.makeGrid(o);
+    const target = new Float64Array(grid.nx * grid.ny), initialDensity = new Float64Array(target.length);
+    let targetMass = 0, initialMass = 0;
+    for (let j = 0, index = 0; j < grid.ny; j++) for (let i = 0; i < grid.nx; i++, index++) {
+      target[index] = targetModel.density(grid.x[i], grid.y[j]);
+      initialDensity[index] = normalDensity(grid.x[i], grid.y[j], o.initialMean, o.initialSigma);
+      targetMass += target[index]; initialMass += initialDensity[index];
+    }
+    targetMass *= grid.area; initialMass *= grid.area;
+    if (!(targetMass > 0 && initialMass > 0) || !Number.isFinite(targetMass + initialMass))
+      throw new RangeError("Nonintegrable preview density");
+    for (let i = 0; i < target.length; i++) { target[i] /= targetMass; initialDensity[i] /= initialMass; }
+    return { k, spread, sigma: o.sigma, centers: targetModel.centers,
+      initialMean: o.initialMean.slice(), initialSigma: o.initialSigma, grid, target, initialDensity,
+      initialMetrics: metrics(initialDensity, target, grid) };
+  }
   function run(k, spread, options) {
     const o = Object.assign({}, defaults, options, { k, spread });
     if (!Number.isInteger(o.snapshotCount) || o.snapshotCount < 2 || o.snapshotCount > 2001 ||
@@ -111,6 +133,6 @@
     return { mean, variance: v, entropy: ratio - 1 - Math.log(ratio) + distance / (2 * variance),
       density: (x, y) => normalDensity(x, y, mean, Math.sqrt(v)) };
   }
-  return { defaults, centers, model, normalDensity, metrics, createSolver, run, sample,
+  return { defaults, centers, model, normalDensity, metrics, createSolver, preview, run, sample,
     exactSingleGaussian, integrate: S.integrate, makeGrid: options => S.makeGrid(Object.assign({}, defaults, options)) };
 }));

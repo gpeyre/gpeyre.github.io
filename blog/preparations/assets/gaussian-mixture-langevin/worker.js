@@ -1,5 +1,5 @@
 "use strict";
-importScripts("../banana-langevin/core.js", "core.js");
+importScripts("../banana-langevin/core.js?v=left-preview-v2", "core.js?v=left-preview-v2");
 self.onmessage = event => {
   const { id, k, spread } = event.data;
   try {
