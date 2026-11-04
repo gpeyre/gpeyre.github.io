@@ -505,7 +505,7 @@
       "date": "2026-11-04",
       "url": "https://www.gpeyre.com/blog/2026/11/04/logarithmic-sobolev-wasserstein-pl/",
       "message": "Logarithmic Sobolev is a Polyak–Łojasiewicz inequality for entropy in Wasserstein geometry. A finite-length argument turns entropy decay into convergence of distributions. https://www.gpeyre.com/blog/2026/11/04/logarithmic-sobolev-wasserstein-pl/",
-      "status": "prepared",
+      "status": "announced",
       "source_sha256": "0f148d8c2a27a7b1f390f52dbe8037eedb877b5916fe4f3619a287cb05b95ca5",
       "base_commit": "71b67d549350e703e2aa570bed98f9f67c5d762c",
       "files": [
@@ -515,9 +515,9 @@
         "js/blog-search-index.js",
         "blog/publication-log.json"
       ],
-      "publication_commit": null,
-      "bluesky_uri": null,
-      "bluesky_cid": null,
+      "publication_commit": "4cf75d8b3d51a2b637513e327c4de0bac530936f",
+      "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3mzh2bqks22vh",
+      "bluesky_cid": "bafyreihuoomcnhlu44mbaljynixqrematim5odi5lz6wk6o5u5zbmcimym",
       "working_sha256": {
         "blog/_posts/2026-11-04-logarithmic-sobolev-wasserstein-pl.md": "d7c14911f7f1da154708c19f154e8bb727c8508b088f231121c0b49e8c7760c4",
         "blog/preparations/logarithmic-sobolev-wasserstein-pl.html": "8acb5de174887332e556e5919945724243ad36e9b491da29fa9c541cdce7e230",
