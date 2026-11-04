@@ -3,7 +3,7 @@ title: "Logarithmic Sobolev is a Wasserstein P–L inequality"
 subtitle: "An entropy inequality controls both the objective and the distance travelled by a distribution."
 description: "Logarithmic Sobolev is the Polyak–Łojasiewicz inequality for entropy in Wasserstein geometry. A finite-length proof turns entropy decay into convergence of distributions."
 date: "2026-11-04"
-last_modified_at: "2026-11-04T08:18:20Z"
+last_modified_at: "2026-11-04T11:34:30Z"
 topic: "Wasserstein gradient flows"
 keywords:
 - "logarithmic Sobolev inequality"
@@ -40,8 +40,10 @@ keywords:
 - "information de Fisher"
 - "Raphaël Barboni"
 - "Langevin diffusion"
-- "banana distribution"
-- "Lipschitz pushforward"
+- "Gaussian mixture"
+- "multimodal sampling"
+- "metastability"
+- "mixture score"
 - "Scharfetter Gummel scheme"
 proofs: true
 embedded_experiment: true
@@ -241,68 +243,84 @@ $$
 
 <p>is \(\lambda\)-displacement convex and satisfies Wasserstein P–L with constant \(\lambda\). Indeed, its geodesic subgradient inequality bounds the energy gap by \(|\partial\mathcal G|r-\lambda r^2/2\le|\partial\mathcal G|^2/(2\lambda)\), where \(r\) is the distance to a minimizer. Convexity supplies one route to P–L; the finite-length argument needs only P–L itself. See <em>Optimal Transport for Machine Learners</em> <a href="#ref-book">[5]</a>.</p>
 
-## Numerical experimentation: bending the route to equilibrium
+<span id="numerical-experimentation-bending-the-route-to-equilibrium"></span>
+<span id="langevin-experiment"></span>
 
-<p>What does a weaker log-Sobolev inequality look like? Start with a two-dimensional Gaussian and bend it into a banana. To make the comparison meaningful, we keep the same isotropic noise, the same physical clock, and the same initial relative entropy.</p>
+## Numerical experimentation: a narrow Gaussian explores a mixture
 
-<p>Here is a smooth deformation whose effect on the inequality can actually be proved. Set \(h(u)=\log\cosh u\), \(c=\mathbb E h(Z)\), and \(v=\operatorname{Var}(h(Z))\), where \(Z\sim\mathcal N(0,1)\). Numerically, \(c\simeq0.374567\) and \(v\simeq0.189767\). For a bending parameter \(b\ge0\), define</p>
-
-$$
-S_b(u,w)=\bigl(u,\,w+b(h(u)-c)\bigr),
-\qquad \pi_b=(S_b)_\#\mathcal N(0,I_2).
-$$
-
-<p>The pushforward means applying \(S_b\) to a Gaussian random vector. Its Jacobian determinant is one, so the target density is explicit:</p>
+<p>A diffusion can quickly settle inside one well and still take a long time to explore the others. Start with a small, translated Gaussian cloud and let it evolve towards an equally weighted mixture of \(k\) Gaussians. The controls change the number of components and move their centers from overlapping to separated positions.</p>
 
 $$
-\pi_b(x,y)=\frac1{2\pi}e^{-V_b(x,y)},\qquad
-V_b(x,y)=\frac12\left[x^2+\bigl(y-b(h(x)-c)\bigr)^2\right].
+\pi_{k,R}=\frac1k\sum_{j=0}^{k-1}\mathcal N(\mu_j,\sigma^2I_2),
+\qquad \mu_j=R\left(\cos\theta_j,\sin\theta_j\right),
+\qquad \theta_j=\pi+\frac{2\pi j}{k}.
 $$
 
-<p id="proposition-2"><strong>Proposition 2 (bending weakens the best constant).</strong> Let \(\lambda_b\) be the largest constant such that \(\mathcal I(\rho\mid\pi_b)\ge2\lambda_b\operatorname{KL}(\rho\mid\pi_b)\). Then</p>
+<p>Here \(\sigma=0.65\) is fixed, while the position slider changes \(R\). For \(k=1\), the single center moves along the negative horizontal axis; for larger \(k\), the centers form a regular polygon. At \(R=0\), every choice of \(k\) gives exactly the same Gaussian target.</p>
+
+<p>With \(V=-\log\pi_{k,R}\), the Langevin equation is \(dX_t=\nabla\log\pi_{k,R}(X_t)\,dt+\sqrt2\,dB_t\). Its drift averages the component centers using the local responsibilities:</p>
 
 $$
-\frac{4}{\bigl(\sqrt{b^2+4}+b\bigr)^2}
-\le \lambda_b
-\le \frac{1}{1+b^2v}.
+\nabla\log\pi_{k,R}(x)
+ =\frac{\sum_j w_j(x)\mu_j-x}{\sigma^2},
+\qquad
+w_j(x)=\frac{e^{-|x-\mu_j|^2/(2\sigma^2)}}
+ {\sum_\ell e^{-|x-\mu_\ell|^2/(2\sigma^2)}}.
 $$
 
-<p>Every finite bend still satisfies a log-Sobolev inequality, but its best constant has order \(b^{-2}\) as \(b\to\infty\). These are bounds, not an exact formula or a claim of strict monotonicity in \(b\).</p>
+<p>Every run starts from the <em>same</em> narrow distribution \(\rho_0=\mathcal N(m_0,\tau^2I_2)\), with \(m_0=(-2.2,-0.35)\) and \(\tau=0.3\). Noise strength, physical time, spatial axes, and density colors are identical across settings. Unlike the initial distribution itself, its relative entropy to the target changes with \(k\) and \(R\).</p>
+
+<iframe class="idea-experiment" data-experiment="gaussian-mixture-langevin" src="{{ '/blog/preparations/assets/gaussian-mixture-langevin/index.html' | relative_url }}" title="One Langevin density plot with target contours, time, Gaussian component count and position sliders" loading="lazy" style="height:1100px"></iframe>
+
+<p>For one component, the exact solution stays Gaussian. Its mean and variance are</p>
+
+$$
+m_t=\mu_0+(m_0-\mu_0)e^{-t/\sigma^2},
+\qquad s_t^2=\sigma^2+(\tau^2-\sigma^2)e^{-2t/\sigma^2}.
+$$
+
+<p>This gives an independent check of the numerical evolution. For separated components, low-density passages create a different challenge: a cloud can look equilibrated around its starting mode while still missing much of the target mass.</p>
+
+<p id="proposition-2"><strong>Proposition 2 (separating the modes weakens log-Sobolev).</strong> For fixed \(k\), the optimal log-Sobolev rate \(\lambda_{k,R}\) is nonincreasing in \(R\). It also satisfies</p>
+
+$$
+\lambda_{k,R}\le
+ \frac{1}{\sigma^2+\lambda_{\max}(\operatorname{Cov}(\mu_J))},
+\qquad J\sim\operatorname{Unif}\{0,\ldots,k-1\}.
+$$
+
+<p>For \(k=1\), the exact constant is \(\sigma^{-2}\). The upper bound is \((\sigma^2+R^2)^{-1}\) for \(k=2\), and \((\sigma^2+R^2/2)^{-1}\) for \(k\ge3\). These upper bounds are not formulas for the observed decay. Finite Gaussian mixtures do satisfy a positive log-Sobolev inequality; quantitative bounds for Gaussian convolutions are developed in <a href="#ref-mixture-lsi">[8]</a>.</p>
 
 <details class="blog-proof">
 
-<summary>Proof: push the Gaussian inequality forward, then test one coordinate</summary>
+<summary>Proof: a linear test and an extra Gaussian smoothing</summary>
 
 <div class="blog-proof-body" markdown="1">
 
-<p>Since \(|h'|=|\tanh|\le1\), the shear \(S_b\) is Lipschitz with constant at most \(L_b=(\sqrt{b^2+4}+b)/2\). Apply the Gaussian function-form inequality to \(g\circ S_b\) and use the chain rule:</p>
+<p><em>The upper bound.</em> Log-Sobolev implies \(\lambda_{k,R}\operatorname{Var}_{\pi_{k,R}}(g)\le\int|\nabla g|^2d\pi_{k,R}\). Test \(g(x)=a\cdot x\) with a unit vector \(a\) maximizing the variance. Since a mixture sample is \(\mu_J+\sigma Z\), its covariance is \(\operatorname{Cov}(\mu_J)+\sigma^2I_2\). This proves the bound, by smooth truncation if needed.</p>
+
+<p><em>Monotonicity in the separation.</em> Write \(C_R=1/\lambda_{k,R}\), and fix \(0\le R_1\le R_2\), with \(R_2&gt;0\). If \(r=R_1/R_2\), \(X\sim\pi_{k,R_2}\), and \(Z'\sim\mathcal N(0,I_2)\) is independent, then</p>
 
 $$
-\operatorname{Ent}_{\pi_b}(g^2)
-\le2\int|\nabla(g\circ S_b)|^2\,d\mathcal N(0,I_2)
-\le2L_b^2\int|\nabla g|^2\,d\pi_b.
+rX+\sigma\sqrt{1-r^2}\,Z'\sim\pi_{k,R_1}.
 $$
 
-<p>This gives \(\lambda_b\ge L_b^{-2}\). Conversely, linearizing the log-Sobolev inequality around a constant gives the Poincaré inequality \(\lambda_b\operatorname{Var}_{\pi_b}(g)\le\int|\nabla g|^2d\pi_b\). Use \(g(x,y)=y\): its squared gradient is one and its variance is \(1+b^2v\), because the two original Gaussian coordinates are independent. Smooth truncation justifies this unbounded test. \(\square\)</p>
+<p>Apply the product log-Sobolev inequality to \(g(rX+\sigma\sqrt{1-r^2}Z')\). The chain rule gives</p>
+
+$$
+C_{R_1}\le r^2C_{R_2}+(1-r^2)\sigma^2
+ \le C_{R_2}.
+$$
+
+<p>The last inequality uses \(C_{R_2}\ge\sigma^2\), already implied by the linear test. When both radii are zero there is nothing to prove. \(\square\)</p>
 
 </div>
 
 </details>
 
-<p>The dynamics we solve is the <em>physical-space</em> Langevin diffusion</p>
+<aside class="note"><p>Increasing the <em>number</em> of modes is not the same as separating a fixed set of modes. There is no claimed ordering between the \(k=2\) and \(k=3\) trajectories: their distances, passages, and initial errors differ. This is precisely why the figure exposes both controls. See also <a href="#ref-schlichting">[9]</a> for the subtleties of functional inequalities for mixtures.</p></aside>
 
-$$
-dX_t=-\nabla V_b(X_t)\,dt+\sqrt2\,dB_t,
-\qquad \partial_t\rho_t=\Delta\rho_t+\nabla\cdot(\rho_t\nabla V_b).
-$$
-
-<p>We start at \(\rho_{0,b}=(S_b)_\#\mathcal N((-1.5,0),I_2)\). Invariance of relative entropy under an invertible change of variables gives \(\operatorname{KL}(\rho_{0,b}\mid\pi_b)=1.5^2/2=1.125\), independently of bending. When \(b=0\), the exact solution is \(\mathcal N((-1.5e^{-t},0),I_2)\), with entropy \(1.125e^{-2t}\). For a bent target, the density must instead redistribute along the curved arms.</p>
-
-<iframe class="idea-experiment" data-experiment="banana-langevin" src="{{ '/blog/preparations/assets/banana-langevin/index.html' | relative_url }}" title="Two-dimensional Langevin density and target contours, with time and banana-bending controls" loading="lazy" style="height:1250px"></iframe>
-
-<p>The figure solves the Fokker–Planck equation deterministically, using target-preserving Scharfetter–Gummel fluxes and positive implicit steps; see <a href="#ref-sg">[7]</a> for related finite-volume entropy analysis. The calculation uses a large reflecting box, not the whole plane. The displayed log-Sobolev bounds concern the whole-plane model; the observed entropy curves are numerical trajectories, not estimates of its optimal constant. In particular, the calculation does <em>not</em> obtain a bent diffusion by simply bending Gaussian trajectories: that would change the noise and answer a different question.</p>
-
-<aside class="note"><p>Why \(\log\cosh\), rather than the usual quadratic banana shear? Replacing \(h(u)\) by \(u^2\) creates exponential, rather than sub-Gaussian, tails in the second coordinate. For every nonzero bend that target has no positive Euclidean log-Sobolev constant at all. The bounded derivative of \(\log\cosh\) lets us illustrate a genuine deterioration while keeping the inequality valid.</p></aside>
+<p>The plot solves the physical-space Fokker–Planck equation deterministically, using target-preserving Scharfetter–Gummel fluxes and positive implicit steps; see <a href="#ref-sg">[7]</a> for related finite-volume entropy analysis. It uses a large reflecting box. The full-space mathematical statements above and these finite-domain numerical trajectories should not be confused; the plot does not measure the optimal log-Sobolev constant.</p>
 
 ## References
 <ol class="references">
@@ -313,4 +331,6 @@ $$
 <li id="ref-book">Gabriel Peyré. <a href="https://www.gpeyre.com/ot4ml/"><em>Optimal Transport for Machine Learners</em></a>. Book manuscript, 2025–2026.</li>
 <li id="ref-pl">Hamed Karimi, Julie Nutini, and Mark Schmidt. <a href="https://arxiv.org/abs/1608.04636"><em>Linear Convergence of Gradient and Proximal-Gradient Methods Under the Polyak–Łojasiewicz Condition</em></a>. ECML PKDD, 2016.</li>
 <li id="ref-sg">Claire Chainais-Hillairet and Maxime Herda. <a href="https://doi.org/10.1093/imanum/drz037"><em>Large-time behaviour of a family of finite volume schemes for boundary-driven convection–diffusion equations</em></a>. IMA Journal of Numerical Analysis 40(4), 2473–2504, 2020.</li>
+<li id="ref-mixture-lsi">Jean-Baptiste Bardet, Nathaël Gozlan, Florent Malrieu, and Pierre-André Zitt. <a href="https://arxiv.org/abs/1507.02389"><em>Functional inequalities for Gaussian convolutions of compactly supported measures: explicit bounds and dimension dependence</em></a>. 2015.</li>
+<li id="ref-schlichting">André Schlichting. <a href="https://doi.org/10.3390/e21010089"><em>Poincaré and log-Sobolev inequalities for mixtures</em></a>. Entropy 21(1), 89, 2019.</li>
 </ol>

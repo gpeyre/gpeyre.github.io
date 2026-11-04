@@ -1759,8 +1759,10 @@ window.BLOG_SEARCH_RECORDS = [
       "information de Fisher",
       "Raphaël Barboni",
       "Langevin diffusion",
-      "banana distribution",
-      "Lipschitz pushforward",
+      "Gaussian mixture",
+      "multimodal sampling",
+      "metastability",
+      "mixture score",
       "Scharfetter Gummel scheme"
     ]
   },

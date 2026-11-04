@@ -401,28 +401,35 @@
     "logarithmic-sobolev-wasserstein-pl": {
       "path": "/blog/imgs/summaries/logarithmic-sobolev-wasserstein-pl.jpg",
       "width": 1200,
-      "height": 850,
-      "alt": "At the same physical time, an unbent Gaussian Langevin density is nearly equilibrated while a bent banana density remains concentrated in its left arm; dashed contours mark the targets.",
-      "source": "/blog/preparations/assets/banana-langevin/index.html",
+      "height": 560,
+      "alt": "The same narrow initial Gaussian evolves towards targets with one, two, or three Gaussian components; colored densities and white level sets are overlaid with dashed target contours on identical axes.",
+      "source": "/blog/preparations/assets/gaussian-mixture-langevin/index.html",
       "settings": {
-        "bends": [
-          0,
-          4
+        "components": [
+          1,
+          2,
+          3
         ],
+        "spread": 2,
         "time": 4,
-        "nx": 121,
-        "ny": 321,
+        "sigma": 0.65,
+        "initialMean": [
+          -2.2,
+          -0.35
+        ],
+        "initialSigma": 0.3,
+        "nx": 151,
+        "ny": 151,
         "dt": 0.0125,
-        "a": -1.5,
         "domain": {
           "xMin": -4.5,
           "xMax": 4.5,
-          "yMin": -4,
-          "yMax": 11.5
+          "yMin": -4.5,
+          "yMax": 4.5
         },
-        "renderer": "shared banana-langevin core.js and view.js, native canvas comparison layout"
+        "renderer": "shared gaussian-mixture-langevin core.js and view.js, native canvas comparison layout"
       },
-      "sha256": "9ce70bb85737b54eb47fcd1dd0a432025c3967a1d771443a860f2bd95eb98520"
+      "sha256": "54e012836c5fabb4d2fb483c0d064867418799feb51ba290c51520cef9bf5e75"
     },
     "monge-gap-inversions": {
       "path": "/blog/imgs/summaries/monge-gap-inversions.jpg",

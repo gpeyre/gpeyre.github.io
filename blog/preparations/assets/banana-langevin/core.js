@@ -75,13 +75,21 @@
       !Number.isFinite(o.a)) throw new RangeError("Invalid Langevin parameters");
     const grid = makeGrid(o), { nx, ny, dx, dy } = grid, size = nx * ny;
     const V = new Float64Array(size), target = new Float64Array(size), density = new Float64Array(size);
+    // Optional callbacks let other smooth targets reuse this same checked
+    // physical-space SG engine without changing the historical banana API.
+    const potentialAt = typeof o.potentialFunction === "function" ? o.potentialFunction :
+      (x, y) => potential(x, y, bend);
     for (let j = 0, k = 0; j < ny; j++) for (let i = 0; i < nx; i++, k++) {
-      V[k] = potential(grid.x[i], grid.y[j], bend);
+      V[k] = potentialAt(grid.x[i], grid.y[j]);
       target[k] = Math.exp(-V[k]);
       if (!(target[k] > 0)) throw new RangeError("Domain produces underflow: shorten it or reduce bending");
     }
     const targetNormalizer = normalize(target, grid);
-    for (let j = 0, k = 0; j < ny; j++) for (let i = 0; i < nx; i++, k++) density[k] = target[k] * Math.exp(o.a * grid.x[i] - o.a * o.a / 2);
+    for (let j = 0, k = 0; j < ny; j++) for (let i = 0; i < nx; i++, k++) {
+      density[k] = typeof o.initialDensityFunction === "function" ? o.initialDensityFunction(grid.x[i], grid.y[j]) :
+        target[k] * Math.exp(o.a * grid.x[i] - o.a * o.a / 2);
+      if (!(density[k] >= 0) || !Number.isFinite(density[k])) throw new RangeError("Invalid initial density");
+    }
     normalize(density, grid);
     const xForward = new Float64Array(size), xBackward = new Float64Array(size);
     const yForward = new Float64Array(size), yBackward = new Float64Array(size);
