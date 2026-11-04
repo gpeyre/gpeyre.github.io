@@ -498,6 +498,32 @@
         "mime_type": "image/jpeg",
         "size": 70321
       }
+    },
+    {
+      "slug": "logarithmic-sobolev-wasserstein-pl",
+      "title": "Logarithmic Sobolev is a Wasserstein P–L inequality",
+      "date": "2026-11-04",
+      "url": "https://www.gpeyre.com/blog/2026/11/04/logarithmic-sobolev-wasserstein-pl/",
+      "message": "Logarithmic Sobolev is a Polyak–Łojasiewicz inequality for entropy in Wasserstein geometry. A finite-length argument turns entropy decay into convergence of distributions. https://www.gpeyre.com/blog/2026/11/04/logarithmic-sobolev-wasserstein-pl/",
+      "status": "prepared",
+      "source_sha256": "0f148d8c2a27a7b1f390f52dbe8037eedb877b5916fe4f3619a287cb05b95ca5",
+      "base_commit": "71b67d549350e703e2aa570bed98f9f67c5d762c",
+      "files": [
+        "blog/_posts/2026-11-04-logarithmic-sobolev-wasserstein-pl.md",
+        "blog/preparations/logarithmic-sobolev-wasserstein-pl.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null,
+      "working_sha256": {
+        "blog/_posts/2026-11-04-logarithmic-sobolev-wasserstein-pl.md": "d7c14911f7f1da154708c19f154e8bb727c8508b088f231121c0b49e8c7760c4",
+        "blog/preparations/logarithmic-sobolev-wasserstein-pl.html": "8acb5de174887332e556e5919945724243ad36e9b491da29fa9c541cdce7e230",
+        "blog/preparations/index.html": "ba9e6f702957f572870eb33ad91035b6852fda6fa6539e8f2da94cd329549f1b",
+        "js/blog-search-index.js": "1360089d8af280aa8e74cfc20f979d51dd78b69b8403822d2dd86e4f4e5c09c6"
+      }
     }
   ]
 }
