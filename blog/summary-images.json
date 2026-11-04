@@ -1,6 +1,24 @@
 {
   "version": 1,
   "images": {
+    "logarithmic-sobolev-wasserstein-pl": {
+      "path": "/blog/imgs/summaries/logarithmic-sobolev-wasserstein-pl.jpg",
+      "width": 1200,
+      "height": 850,
+      "alt": "At the same physical time, an unbent Gaussian Langevin density is nearly equilibrated while a bent banana density remains concentrated in its left arm; dashed contours mark the targets.",
+      "source": "/blog/preparations/assets/banana-langevin/index.html",
+      "settings": {
+        "bends": [0, 4],
+        "time": 4,
+        "nx": 121,
+        "ny": 321,
+        "dt": 0.0125,
+        "a": -1.5,
+        "domain": {"xMin": -4.5, "xMax": 4.5, "yMin": -4, "yMax": 11.5},
+        "renderer": "shared banana-langevin core.js and view.js, native canvas comparison layout"
+      },
+      "sha256": "9ce70bb85737b54eb47fcd1dd0a432025c3967a1d771443a860f2bd95eb98520"
+    },
     "quantum-pinsker-sign-observable": {
       "path": "/blog/imgs/summaries/quantum-pinsker-sign-observable.jpg",
       "width": 1200,

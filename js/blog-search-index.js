@@ -1757,7 +1757,11 @@ window.BLOG_SEARCH_RECORDS = [
       "inégalité de Sobolev logarithmique",
       "flot de gradient",
       "information de Fisher",
-      "Raphaël Barboni"
+      "Raphaël Barboni",
+      "Langevin diffusion",
+      "banana distribution",
+      "Lipschitz pushforward",
+      "Scharfetter Gummel scheme"
     ]
   },
   {

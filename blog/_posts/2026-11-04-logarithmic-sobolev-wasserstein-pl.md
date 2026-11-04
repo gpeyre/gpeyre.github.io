@@ -3,6 +3,7 @@ title: "Logarithmic Sobolev is a Wasserstein P–L inequality"
 subtitle: "An entropy inequality controls both the objective and the distance travelled by a distribution."
 description: "Logarithmic Sobolev is the Polyak–Łojasiewicz inequality for entropy in Wasserstein geometry. A finite-length proof turns entropy decay into convergence of distributions."
 date: "2026-11-04"
+last_modified_at: "2026-11-04T08:18:20Z"
 topic: "Wasserstein gradient flows"
 keywords:
 - "logarithmic Sobolev inequality"
@@ -38,7 +39,12 @@ keywords:
 - "flot de gradient"
 - "information de Fisher"
 - "Raphaël Barboni"
+- "Langevin diffusion"
+- "banana distribution"
+- "Lipschitz pushforward"
+- "Scharfetter Gummel scheme"
 proofs: true
+embedded_experiment: true
 ---
 
 <p>I learned this Wasserstein P–L viewpoint from Raphaël Barboni. In particular, he taught me the useful distinction at the heart of this post: the condition can control convergence of the gradient-flow trajectory itself, not merely decay of its objective value.</p>
@@ -235,6 +241,69 @@ $$
 
 <p>is \(\lambda\)-displacement convex and satisfies Wasserstein P–L with constant \(\lambda\). Indeed, its geodesic subgradient inequality bounds the energy gap by \(|\partial\mathcal G|r-\lambda r^2/2\le|\partial\mathcal G|^2/(2\lambda)\), where \(r\) is the distance to a minimizer. Convexity supplies one route to P–L; the finite-length argument needs only P–L itself. See <em>Optimal Transport for Machine Learners</em> <a href="#ref-book">[5]</a>.</p>
 
+## Numerical experimentation: bending the route to equilibrium
+
+<p>What does a weaker log-Sobolev inequality look like? Start with a two-dimensional Gaussian and bend it into a banana. To make the comparison meaningful, we keep the same isotropic noise, the same physical clock, and the same initial relative entropy.</p>
+
+<p>Here is a smooth deformation whose effect on the inequality can actually be proved. Set \(h(u)=\log\cosh u\), \(c=\mathbb E h(Z)\), and \(v=\operatorname{Var}(h(Z))\), where \(Z\sim\mathcal N(0,1)\). Numerically, \(c\simeq0.374567\) and \(v\simeq0.189767\). For a bending parameter \(b\ge0\), define</p>
+
+$$
+S_b(u,w)=\bigl(u,\,w+b(h(u)-c)\bigr),
+\qquad \pi_b=(S_b)_\#\mathcal N(0,I_2).
+$$
+
+<p>The pushforward means applying \(S_b\) to a Gaussian random vector. Its Jacobian determinant is one, so the target density is explicit:</p>
+
+$$
+\pi_b(x,y)=\frac1{2\pi}e^{-V_b(x,y)},\qquad
+V_b(x,y)=\frac12\left[x^2+\bigl(y-b(h(x)-c)\bigr)^2\right].
+$$
+
+<p id="proposition-2"><strong>Proposition 2 (bending weakens the best constant).</strong> Let \(\lambda_b\) be the largest constant such that \(\mathcal I(\rho\mid\pi_b)\ge2\lambda_b\operatorname{KL}(\rho\mid\pi_b)\). Then</p>
+
+$$
+\frac{4}{\bigl(\sqrt{b^2+4}+b\bigr)^2}
+\le \lambda_b
+\le \frac{1}{1+b^2v}.
+$$
+
+<p>Every finite bend still satisfies a log-Sobolev inequality, but its best constant has order \(b^{-2}\) as \(b\to\infty\). These are bounds, not an exact formula or a claim of strict monotonicity in \(b\).</p>
+
+<details class="blog-proof">
+
+<summary>Proof: push the Gaussian inequality forward, then test one coordinate</summary>
+
+<div class="blog-proof-body" markdown="1">
+
+<p>Since \(|h'|=|\tanh|\le1\), the shear \(S_b\) is Lipschitz with constant at most \(L_b=(\sqrt{b^2+4}+b)/2\). Apply the Gaussian function-form inequality to \(g\circ S_b\) and use the chain rule:</p>
+
+$$
+\operatorname{Ent}_{\pi_b}(g^2)
+\le2\int|\nabla(g\circ S_b)|^2\,d\mathcal N(0,I_2)
+\le2L_b^2\int|\nabla g|^2\,d\pi_b.
+$$
+
+<p>This gives \(\lambda_b\ge L_b^{-2}\). Conversely, linearizing the log-Sobolev inequality around a constant gives the Poincaré inequality \(\lambda_b\operatorname{Var}_{\pi_b}(g)\le\int|\nabla g|^2d\pi_b\). Use \(g(x,y)=y\): its squared gradient is one and its variance is \(1+b^2v\), because the two original Gaussian coordinates are independent. Smooth truncation justifies this unbounded test. \(\square\)</p>
+
+</div>
+
+</details>
+
+<p>The dynamics we solve is the <em>physical-space</em> Langevin diffusion</p>
+
+$$
+dX_t=-\nabla V_b(X_t)\,dt+\sqrt2\,dB_t,
+\qquad \partial_t\rho_t=\Delta\rho_t+\nabla\cdot(\rho_t\nabla V_b).
+$$
+
+<p>We start at \(\rho_{0,b}=(S_b)_\#\mathcal N((-1.5,0),I_2)\). Invariance of relative entropy under an invertible change of variables gives \(\operatorname{KL}(\rho_{0,b}\mid\pi_b)=1.5^2/2=1.125\), independently of bending. When \(b=0\), the exact solution is \(\mathcal N((-1.5e^{-t},0),I_2)\), with entropy \(1.125e^{-2t}\). For a bent target, the density must instead redistribute along the curved arms.</p>
+
+<iframe class="idea-experiment" data-experiment="banana-langevin" src="{{ '/blog/preparations/assets/banana-langevin/index.html' | relative_url }}" title="Two-dimensional Langevin density and target contours, with time and banana-bending controls" loading="lazy" style="height:1250px"></iframe>
+
+<p>The figure solves the Fokker–Planck equation deterministically, using target-preserving Scharfetter–Gummel fluxes and positive implicit steps; see <a href="#ref-sg">[7]</a> for related finite-volume entropy analysis. The calculation uses a large reflecting box, not the whole plane. The displayed log-Sobolev bounds concern the whole-plane model; the observed entropy curves are numerical trajectories, not estimates of its optimal constant. In particular, the calculation does <em>not</em> obtain a bent diffusion by simply bending Gaussian trajectories: that would change the noise and answer a different question.</p>
+
+<aside class="note"><p>Why \(\log\cosh\), rather than the usual quadratic banana shear? Replacing \(h(u)\) by \(u^2\) creates exponential, rather than sub-Gaussian, tails in the second coordinate. For every nonzero bend that target has no positive Euclidean log-Sobolev constant at all. The bounded derivative of \(\log\cosh\) lets us illustrate a genuine deterioration while keeping the inequality valid.</p></aside>
+
 ## References
 <ol class="references">
 <li id="ref-ov">Felix Otto and Cédric Villani. <a href="https://doi.org/10.1006/jfan.1999.3557"><em>Generalization of an Inequality by Talagrand and Links with the Logarithmic Sobolev Inequality</em></a>. Journal of Functional Analysis 173(2), 361–400, 2000.</li>
@@ -243,4 +312,5 @@ $$
 <li id="ref-be">Dominique Bakry and Michel Émery. <a href="https://www.numdam.org/item/SPS_1985__19__177_0/"><em>Diffusions hypercontractives</em></a>. Séminaire de Probabilités XIX, 177–206, 1985.</li>
 <li id="ref-book">Gabriel Peyré. <a href="https://www.gpeyre.com/ot4ml/"><em>Optimal Transport for Machine Learners</em></a>. Book manuscript, 2025–2026.</li>
 <li id="ref-pl">Hamed Karimi, Julie Nutini, and Mark Schmidt. <a href="https://arxiv.org/abs/1608.04636"><em>Linear Convergence of Gradient and Proximal-Gradient Methods Under the Polyak–Łojasiewicz Condition</em></a>. ECML PKDD, 2016.</li>
+<li id="ref-sg">Claire Chainais-Hillairet and Maxime Herda. <a href="https://doi.org/10.1093/imanum/drz037"><em>Large-time behaviour of a family of finite volume schemes for boundary-driven convection–diffusion equations</em></a>. IMA Journal of Numerical Analysis 40(4), 2473–2504, 2020.</li>
 </ol>
