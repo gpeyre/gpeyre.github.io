@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,follow">
+<meta name="description" content="Positive semidefinite and entrywise nonnegative is not enough for a nonnegative Gram factorization. Concrete matrix examples, a five-cycle obstruction, copositive certificates, and constructive positive features for Gaussian and generalized Gaussian kernels.">
+<meta name="keywords" content="doubly nonnegative matrix, completely positive matrix, DNN cone, CP cone, positive semidefinite matrix, entrywise nonnegative matrix, nonnegative Gram factorization, nonnegative features, Gram matrix, principal square root, Cholesky factorization, cp rank, conic Caratheodory theorem, closed convex cone, five cycle, pentagon graph, copositive matrix, Horn matrix, separating certificate, Motzkin Straus theorem, Maxfield Minc theorem, positive kernel, Gaussian kernel, generalized Gaussian kernel, Laplace kernel, Schoenberg theorem, positive stable law, Bernstein functions, Gaussian scale mixture, random features, infinite variance, Sinkhorn sketching, low rank optimal transport, Meyer Scetbon, Marco Cuturi, Gabriel Peyre, matrice doublement nonnegative, matrice completement positive, factorisation nonnegative">
+<title>Doubly nonnegative and completely positive matrices — Alpha preview — Gabriel Peyré</title>
+<link rel="canonical" href="https://www.gpeyre.com/blog/preparations/doubly-nonnegative-completely-positive.html"><link rel="stylesheet" href="assets/drafts.css"><script defer src="assets/drafts.js"></script><script defer src="../../js/site-analytics.js"></script>
+<script type="text/x-mathjax-config">MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+</head><body>
+<header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Doubly nonnegative and completely positive matrices</h1><p class="subtitle">Nonnegative entries, nonnegative quadratic forms, and nonnegative features are three different requirements.</p><p class="byline">Gabriel Peyré</p></div></header>
+<main class="wrap"><article class="blog-prose">
+<p>I learned about this distinction from <a href="https://meyerscetbon.github.io/">Meyer Scetbon</a>, and I am grateful to him for introducing it to me, as well as for the work we did together with Marco Cuturi on factorizing optimal transport couplings <a href="#ref-lowrank">[1]</a>. It is a small piece of matrix geometry with surprisingly concrete consequences.</p>
+<p>When we say that a matrix is <em>positive</em>, do we mean that its entries are positive, that its quadratic form is nonnegative, or that it can be built from nonnegative features? These properties sound similar, but they answer different questions. The last requirement is stronger than the first two combined.</p>
+<p>This post develops the matrix distinction behind the discussion of positive features in Section 10.4 of my book <a href="#ref-book">[2]</a>. We will keep matrices center stage, build explicit examples and counterexamples, and only at the end turn to kernels and a constructive proof for generalized Gaussians.</p>
+
+<h2>Two kinds of nonnegativity</h2>
+<p>We study real symmetric matrices \(A\); their factors need not be square. Write \(A\succeq0\) when \(A\) is <em>positive semidefinite</em> (PSD):</p>
+\[
+ z^\top Az\ge0\qquad\text{for every }z\in\mathbb R^n.
+\]
+<p>This is a spectral condition: every eigenvalue is nonnegative. It is different from <em>entrywise nonnegativity</em>, written \(A\ge0\), which means \(A_{ij}\ge0\) for every entry. For example,</p>
+\[
+ \begin{pmatrix}1&2\\2&1\end{pmatrix}\ge0
+ \quad\text{but has eigenvalue }-1,
+\]
+\[
+ \begin{pmatrix}1&-1\\-1&1\end{pmatrix}\succeq0
+ \quad\text{but has negative entries}.
+\]
+<p>A matrix satisfying both conditions is <em>doubly nonnegative</em>:</p>
+\[
+ \mathrm{DNN}_n=\{A\in\mathbb S^n:A\succeq0,\ A\ge0\}.
+\]
+<p>The word “doubly” refers to these two orders, not to row and column sums as in a <a href="orthostochastic-matrices.html">doubly stochastic matrix</a>. Checking membership in \(\mathrm{DNN}_n\) is straightforward: inspect the entries and the eigenvalues.</p>
+
+<h2>Nonnegative features: a stronger requirement</h2>
+<p>A PSD matrix is a Gram matrix: \(A=BB^\top\) for some real \(B\), whose rows are feature vectors. A matrix is <em>completely positive</em> if these features can all be chosen nonnegative:</p>
+\[
+ \mathrm{CP}_n=\{BB^\top:B\in\mathbb R_+^{n\times r},\ r\text{ finite}\}.
+\]
+<p>Equivalently, \(A\) is a finite sum of nonnegative rank-one Gram matrices,</p>
+\[
+ A=\sum_{\ell=1}^r b_\ell b_\ell^\top,\qquad b_\ell\ge0.
+\]
+<p>Each feature contributes a nonnegative interaction between every pair of objects that share it. No cancellation is possible. Immediately,</p>
+\[
+ \mathrm{CP}_n\subseteq\mathrm{DNN}_n:
+ \qquad z^\top Az=\|B^\top z\|^2\ge0,
+ \quad A_{ij}=\sum_\ell B_{i\ell}B_{j\ell}\ge0.
+\]
+<p>Here is a completely explicit example:</p>
+\[
+ B=\begin{pmatrix}1&0\\1&1\\0&1\end{pmatrix},\qquad
+ A=BB^\top=\begin{pmatrix}1&1&0\\1&2&1\\0&1&1\end{pmatrix}.
+\]
+<p>The first and third objects do not interact, while the middle object shares one feature with each. The factor may be rectangular; its smallest possible width is the <em>cp-rank</em>. It need not be the principal spectral square root. Indeed, for this same example,</p>
+\[
+ (A^{1/2})_{13}=\frac{\sqrt3-3}{6}&lt;0.
+\]
+<p>A negative entry in one chosen square root or Cholesky factor therefore does <em>not</em> disprove complete positivity. One must rule out <em>every</em> nonnegative Gram factorization. Nor is this just ordinary nonnegative matrix factorization \(A=UV^\top\): the <em>same</em> factor is required on both sides. Every nonnegative matrix trivially factors as \(AI\), which says nothing about complete positivity. This matrix notion is also distinct from completely positive <em>linear maps</em> in quantum information.</p>
+<p>In dimension two the two cones coincide. For \(A=\left(\begin{smallmatrix}a&b\\b&c\end{smallmatrix}\right)\in\mathrm{DNN}_2\) with \(a>0\), the factor</p>
+\[
+ B=\begin{pmatrix}\sqrt a&0\\b/\sqrt a&\sqrt{c-b^2/a}\end{pmatrix}\ge0
+\]
+<p>satisfies \(BB^\top=A\). If \(a=0\), positive semidefiniteness forces \(b=0\), and the factorization is immediate. A classical, substantially less elementary theorem says that \(\mathrm{CP}_n=\mathrm{DNN}_n\) for every \(n\le4\) <a href="#ref-maxfield">[3]</a>. The first obstruction occurs at five.</p>
+
+<h2>A useful closure calculus</h2>
+<p id="proposition-1"><strong>Proposition 1 (constructing more completely positive matrices).</strong> The cone \(\mathrm{CP}_n\) is convex, closed, and stable under entrywise products. If \(A\in\mathrm{CP}_n\) and \(R\in\mathbb R_+^{m\times n}\), then \(RAR^\top\in\mathrm{CP}_m\).</p>
+<details class="blog-proof"><summary>Proof: concatenate features, multiply features, and normalize their trace</summary><div class="blog-proof-body">
+<p>If \(A=BB^\top\) and \(D=CC^\top\), then \(sA+tD\), for \(s,t\ge0\), is factored by the concatenation \([\sqrt sB\ \sqrt tC]\). Also \(RAR^\top=(RB)(RB)^\top\), with \(RB\ge0\). For the entrywise product, pair every column of \(B\) with every column of \(C\):</p>
+\[
+ A\odot D=\sum_{\ell,m}(b_\ell\odot c_m)(b_\ell\odot c_m)^\top.
+\]
+<p>To prove closedness, consider the compact set</p>
+\[
+ \mathcal K=\{uu^\top:u\ge0,\ \|u\|=1\}.
+\]
+<p>The trace-one slice of \(\mathrm{CP}_n\) is exactly \(\operatorname{conv}(\mathcal K)\). In a finite-dimensional space the convex hull of a compact set is compact: Carathéodory’s theorem bounds the number of points needed in a convex combination. Here the trace-one hyperplane has dimension \(n(n+1)/2-1\), so at most \(n(n+1)/2\) rank-one terms suffice.</p>
+<p>For a convergent sequence of CP matrices, normalize by the trace and use this compact slice. If the limiting trace is zero, the PSD limit is the zero matrix, which is also CP. This proves closedness. In particular, an integrable nonnegative mixture of CP matrices is CP. \(\square\)</p>
+</div></details>
+<p>The width bound is an existence result, not a promise that a small or useful factor is easy to find <a href="#ref-cp-book">[4]</a>. Complete positivity imposes an extra geometric constraint, not just another easy spectral check.</p>
+
+<h2>Five points are enough to separate the cones</h2>
+<p>Let \(C\) be the adjacency matrix of a cycle on five vertices. For \(t\ge0\), set</p>
+\[
+ A_t=I+tC=
+ \begin{pmatrix}
+ 1&t&0&0&t\\
+ t&1&t&0&0\\
+ 0&t&1&t&0\\
+ 0&0&t&1&t\\
+ t&0&0&t&1
+ \end{pmatrix}.
+\]
+<figure><img src="assets/cp-matrices/five-cycle.svg" width="360" height="330" style="display:block;margin:0 auto" alt="A five-cycle: a nonnegative feature cannot be positive on two nonadjacent vertices. Each feature therefore occupies at most one edge, forcing diagonal mass at least twice the total edge mass."><figcaption>Zero entries cannot be produced by cancellation between nonnegative features. They force every feature to live on a vertex or one edge of this pentagon.</figcaption></figure>
+<p id="theorem-1"><strong>Theorem 1 (an explicit gap).</strong> With \(\varphi=(1+\sqrt5)/2\),</p>
+\[
+ A_t\in\mathrm{DNN}_5\ \Longleftrightarrow\ 0\le t\le\varphi^{-1},
+\]
+\[
+ A_t\in\mathrm{CP}_5\ \Longleftrightarrow\ 0\le t\le\tfrac12.
+\]
+<p>Thus \(A_{3/5}\) is positive definite and entrywise nonnegative, but not completely positive.</p>
+<details class="blog-proof"><summary>Proof: compare an eigenvalue test with a diagonal-mass budget</summary><div class="blog-proof-body">
+<p><em>The spectral test.</em> The Fourier vectors on the cycle give the eigenvalues \(2\cos(2\pi k/5)\) of \(C\). Their minimum is \(-\varphi\), so the smallest eigenvalue of \(A_t\) is \(1-\varphi t\). Entrywise nonnegativity already holds for \(t\ge0\).</p>
+<p><em>The positive factorization when \(t\le1/2\).</em> Writing \(E\) for the five undirected edges and \(e_i\) for coordinate vectors,</p>
+\[
+ A_t=t\sum_{\{i,j\}\in E}(e_i+e_j)(e_i+e_j)^\top+(1-2t)I.
+\]
+<p>Every term is CP, with nonnegative coefficients.</p>
+<p><em>The obstruction when \(t>1/2\).</em> Suppose \(A_t=\sum_\ell b_\ell b_\ell^\top\), with \(b_\ell\ge0\). A zero entry between nonadjacent vertices forces \((b_\ell)_i(b_\ell)_j=0\) for every column. Thus each column’s support is a clique of the cycle: a single vertex or a single edge, never three vertices. For an edge-supported column, \(a^2+b^2\ge2ab\). Summing over all columns gives</p>
+\[
+ 5=\operatorname{tr}A_t
+ \ge2\sum_{\{i,j\}\in E}(A_t)_{ij}=10t.
+\]
+<p>Hence \(t\le1/2\). Finally, \(3/5&lt;\varphi^{-1}\), so the counterexample is strictly positive definite. \(\square\)</p>
+</div></details>
+<p>A block diagonal copy with an identity matrix gives counterexamples in every larger dimension. The gap between the cones is a classical topic in matrix optimization <a href="#ref-five">[5]</a>; this particular cycle family makes the reason visible without solving a factorization problem.</p>
+
+<h2>Even strictly positive entries do not suffice</h2>
+<p>Perhaps the zero entries caused the problem? They made it easy to prove, but they are not essential. Let \(J=\mathbf1\mathbf1^\top\) and define</p>
+\[
+ \overline A=I+\tfrac35C+\tfrac1{10}J.
+\]
+<p>Its entries are \(1.1\) on the diagonal, \(0.7\) on cycle edges, and \(0.1\) elsewhere. It is positive definite, since \(I+\frac35C\) is and \(J\succeq0\). Yet it is not CP.</p>
+<p>A convenient separating witness is the <em>Horn matrix</em>,</p>
+\[
+ H=J-2C.
+\]
+<p>It is <em>copositive</em>: \(z^\top Hz\ge0\) for all \(z\ge0\). Therefore every \(A=\sum b_\ell b_\ell^\top\in\mathrm{CP}_5\) satisfies \(\langle H,A\rangle=\sum b_\ell^\top Hb_\ell\ge0\), where \(\langle H,A\rangle=\operatorname{tr}(H^\top A)\). But</p>
+\[
+ \langle H,\overline A\rangle=5-6+\tfrac12=-\tfrac12.
+\]
+<details class="blog-proof"><summary>Proof that the Horn witness is copositive</summary><div class="blog-proof-body">
+<p>It suffices to prove \(\sum_{\{i,j\}\in E}z_i z_j\le(\sum_i z_i)^2/4\). Normalize \(\sum_i z_i=1\). Choose a maximizer of the edge sum on the probability simplex with as few nonzero coordinates as possible.</p>
+<p>If two positive coordinates lie at nonadjacent vertices, keep their sum fixed and move mass between them. The edge objective is affine in this redistribution, since there is no edge between them. Moving all their mass to one endpoint cannot decrease the objective and reduces the support, a contradiction. The support must therefore be a clique. It has at most two vertices, where the edge sum is at most \(s(1-s)\le1/4\). This is the simple cycle case of the Motzkin–Straus argument <a href="#ref-motzkin">[6]</a>.</p>
+\[
+ z^\top Hz=(\textstyle\sum_i z_i)^2
+             -4\sum_{\{i,j\}\in E}z_i z_j\ge0.
+\]
+<p>The case \(z=0\) is immediate. The displayed negative pairing then excludes a nonnegative Gram factorization of \(\overline A\). \(\square\)</p>
+</div></details>
+<p>Entrywise positivity and spectral positivity are tests on the matrix we see. Complete positivity asks for a common nonnegative latent representation. The latter can fail even when both former tests hold strictly.</p>
+
+<h2 id="kernels">Finally: the associated kernel notions</h2>
+<p>A real symmetric kernel \(k(x,y)\) is <em>doubly nonnegative</em> if every finite Gram matrix \(K_{ij}=k(x_i,x_j)\) is DNN, and <em>completely positive</em> if every such matrix is CP. The first property is just the combination of a PSD kernel and pointwise nonnegative values. For the second, a constructive sufficient condition is a nonnegative feature representation</p>
+\[
+ k(x,y)=\int\phi(x,z)\phi(y,z)\,d\mu(z),\qquad \phi(x,z)\ge0.
+\]
+<p>Indeed, on any finite point cloud, this is an integral of nonnegative rank-one matrices, hence a CP matrix by Proposition 1. The same closure rules allow nonnegative sums, products, and finite-valued nonnegative mixtures of such kernels. A finite matrix has a finite factor, but one should not expect a single finite-dimensional exact feature map for a kernel on an entire continuum.</p>
+
+<h3>A positive kernel which still has no positive features</h3>
+<p>The matrix obstruction has a smooth kernel counterpart from the book. On the circle, set</p>
+\[
+ k_\lambda(x,y)=\lambda+\cos^2\!\big((x-y)/2\big),\qquad\lambda=\tfrac1{20}.
+\]
+<p>It is strictly positive pointwise and PSD, since</p>
+\[
+ k_\lambda(x,y)=\lambda+\tfrac12
+      +\tfrac12\cos x\cos y+\tfrac12\sin x\sin y.
+\]
+<p>The trigonometric features are signed. On five equally spaced angles \(x_i=2\pi i/5\), the same Horn witness gives</p>
+\[
+ \langle H,K\rangle=5\lambda+5-\frac{5\sqrt5}{2}
+                 =\frac{21}{4}-\frac{5\sqrt5}{2}&lt;0.
+\]
+<p>To check the value, note that \(\sum_{i,j}K_{ij}=25(\lambda+1/2)\), while \(\langle C,K\rangle=10(\lambda+\cos^2(\pi/5))\). Thus this finite Gram matrix is not CP, and the kernel cannot have nonnegative features. A positive PSD kernel is not automatically positively factorable.</p>
+
+<h3>Gaussian features, then generalized Gaussians</h3>
+<figure class="portrait-single"><img src="../imgs/schoenberg-1971.jpg" width="277" height="400" loading="lazy" decoding="async" alt="Isaac Jacob Schoenberg, photographed in 1971 by Konrad Jacobs"><figcaption>Isaac Jacob Schoenberg, 1971. Konrad Jacobs, Archives of the Mathematisches Forschungsinstitut Oberwolfach, <a href="https://opc.mfo.de/detail?photo_id=3723">photo 3723</a>. Unmodified image from <a href="https://commons.wikimedia.org/wiki/File:SchoenbergIJ.jpeg">Wikimedia Commons</a>, licensed <a href="https://creativecommons.org/licenses/sa/1.0/">CC ShareAlike 1.0</a>.</figcaption></figure>
+<p>Gaussian kernels are better behaved: they have genuinely positive features. More generally, the same is true of</p>
+\[
+ k_{p,\epsilon}(x,y)=\exp\!\left(-\frac{\|x-y\|^p}{\epsilon}\right),
+ \qquad 0&lt;p\le2,\quad\epsilon>0.
+\]
+<p>This includes the Gaussian at \(p=2\) and the Laplace kernel at \(p=1\). The scale-mixture mechanism is classical, going back to Schoenberg’s theory <a href="#ref-schoenberg">[7]</a>. Here is a direct proof of the stronger positive-feature statement, spelling out the generalized Gaussian construction in the book.</p>
+<p id="theorem-2"><strong>Theorem 2 (constructive complete positivity of generalized Gaussians).</strong> Put \(a=p/2\). Choose a nonnegative random variable \(\Lambda\) with Laplace transform</p>
+\[
+ \mathbb E e^{-t\Lambda}=e^{-t^a/\epsilon}\qquad(t\ge0),
+\]
+<p>independently of \(Z\sim\mathcal N(0,I_d)\). For any fixed origin \(x_0\), define</p>
+\[
+ \phi(x;\Lambda,Z)=
+ \exp\!\left(\sqrt{2\Lambda}\,Z^\top(x-x_0)-2\Lambda\|x-x_0\|^2\right)>0.
+\]
+<p>Then</p>
+\[
+ k_{p,\epsilon}(x,y)=\mathbb E[\phi(x;\Lambda,Z)\phi(y;\Lambda,Z)].
+\]
+<p>Consequently every finite generalized-Gaussian Gram matrix is completely positive, in every Euclidean dimension.</p>
+<details class="blog-proof"><summary>Proof: a Gaussian moment calculation and a positive scale mixture</summary><div class="blog-proof-body">
+<p><em>First, hold the scale fixed.</em> Write \(u=x-x_0\), \(v=y-x_0\). Conditional on \(\Lambda=\lambda\), the Gaussian moment-generating formula gives</p>
+\[
+ \begin{aligned}
+ \mathbb E_Z[\phi(x)\phi(y)\mid\Lambda=\lambda]
+ &=e^{\lambda\|u+v\|^2-2\lambda(\|u\|^2+\|v\|^2)}\\
+ &=e^{-\lambda\|x-y\|^2}.
+ \end{aligned}
+\]
+<p><em>Then randomize the scale.</em> Taking \(t=\|x-y\|^2\) in the Laplace transform gives exactly \(e^{-\|x-y\|^p/\epsilon}\). When \(p=2\), there is no mixing at all: simply use \(\Lambda=1/\epsilon\).</p>
+<details class="blog-proof"><summary>Lemma 1: why the positive mixing variable exists for p between zero and two</summary><div class="blog-proof-body">
+<p>For \(0&lt;a&lt;1\), consider Poisson jumps on \((0,\infty)\) with intensity</p>
+\[
+ \nu(ds)=\frac{a}{\epsilon\Gamma(1-a)}s^{-1-a}\,ds.
+\]
+<p>These can be constructed independently on dyadic intervals. There are almost surely finitely many jumps larger than one, because \(\nu((1,\infty))&lt;\infty\). The sum of smaller jumps is finite almost surely, because its expectation \(\int_0^1s\,\nu(ds)\) is finite. Let \(\Lambda\) be the sum of all jump sizes.</p>
+<p>Keeping only jumps larger than \(\delta>0\) gives a compound Poisson variable. Its Laplace transform is \(\exp(-\int_\delta^\infty(1-e^{-ts})\nu(ds))\): condition on the Poisson number of jumps and sum its generating series. As \(\delta\downarrow0\), bounded convergence and integration by parts give</p>
+\[
+ \int_0^\infty(1-e^{-ts})s^{-1-a}\,ds
+   =\frac{\Gamma(1-a)}a\,t^a,
+\]
+<p>hence \(\mathbb E e^{-t\Lambda}=e^{-t^a/\epsilon}\). Equivalently, \(\Lambda=\epsilon^{-1/a}S_a\), where \(S_a\) is a normalized positive stable variable. This is the Bernstein-function representation of the power \(t^a\) <a href="#ref-bernstein">[8]</a>. \(\square\)</p>
+</div></details>
+<p>All feature products are nonnegative, so averaging is justified by Tonelli’s theorem. Their expectations are the finite kernel values computed above. The resulting finite Gram matrices belong to the closed CP cone by Proposition 1. \(\square\)</p>
+</div></details>
+<p>The same argument works after replacing \(x\) by \(Lx\). In particular, the anisotropic Gaussian \(e^{-(x-y)^\top M(x-y)/\epsilon}\), for any \(M\succeq0\), is CP: take \(L=M^{1/2}\).</p>
+<p>The restriction \(p\le2\) is sharp. For \(p>2\), take three points \((-h,0,h)\) on the line and \(v=(1,-2,1)\). Their Gram matrix satisfies</p>
+\[
+ v^\top Kv=6-8e^{-h^p/\epsilon}+2e^{-(2h)^p/\epsilon}
+ =\frac{2(4-2^p)}{\epsilon}h^p+O(h^{2p})&lt;0
+\]
+<p>for sufficiently small \(h>0\). It is not even PSD. Concretely, \(p=4\), \(\epsilon=1\), and \(h=1/2\) give \(v^\top Kv\approx-0.7795\).</p>
+<p>Finally, an exact positive representation is not automatically a fast approximation. Sampling \(r\) independent features gives an unbiased, entrywise-positive Gram approximation \(\widetilde K=BB^\top\), with \(B_{i\ell}=\phi(x_i;\Lambda_\ell,Z_\ell)/\sqrt r\). But the Monte Carlo summands, the products \(\phi(x)\phi(y)\), can have enormous or even infinite variance. At \(x=y\ne x_0\), their second moment is \(\mathbb E e^{8\Lambda\|x-x_0\|^2}\), which is infinite for \(p&lt;2\). Complete positivity guarantees the geometry, not a useful rank-versus-accuracy bound. The controlled positive features of Scetbon and Cuturi address that additional approximation question <a href="#ref-features">[9]</a>.</p>
+
+<h2>Bibliography</h2>
+<ol class="references">
+<li id="ref-lowrank">Meyer Scetbon, Marco Cuturi, and Gabriel Peyré. <em>Low-Rank Sinkhorn Factorization</em>. ICML, PMLR 139, 9344–9354, 2021. <a href="https://proceedings.mlr.press/v139/scetbon21a.html">Paper</a>.</li>
+<li id="ref-book">Gabriel Peyré. <em>Optimal Transport for Machine Learners</em>. Section 10.4, “Sketching Sinkhorn in Linear Time,” paragraph “Positive features and complete positivity.” <a href="https://www.gpeyre.com/ot4ml/">Book</a> · <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#page=215">Relevant pages</a>.</li>
+<li id="ref-maxfield">John E. Maxfield and Henryk Minc. <em>On the Matrix Equation X′X=A</em>. Proceedings of the Edinburgh Mathematical Society 13(2), 125–129, 1962. <a href="https://doi.org/10.1017/S0013091500014681">Paper</a>.</li>
+<li id="ref-cp-book">Abraham Berman and Naomi Shaked-Monderer. <em>Completely Positive Matrices</em>. World Scientific, 2003. <a href="https://doi.org/10.1142/5273">Book</a>.</li>
+<li id="ref-five">Samuel Burer, Kurt M. Anstreicher, and Mirjam Dür. <em>The difference between 5 × 5 doubly nonnegative and completely positive matrices</em>. Linear Algebra and its Applications 431(9), 1539–1552, 2009. <a href="https://doi.org/10.1016/j.laa.2009.05.021">Paper</a>.</li>
+<li id="ref-motzkin">Theodore S. Motzkin and Ernst G. Straus. <em>Maxima for graphs and a new proof of a theorem of Turán</em>. Canadian Journal of Mathematics 17, 533–540, 1965. <a href="https://doi.org/10.4153/CJM-1965-053-6">Paper</a>.</li>
+<li id="ref-schoenberg">Isaac J. Schoenberg. <em>Metric Spaces and Positive Definite Functions</em>. Transactions of the American Mathematical Society 44(3), 522–536, 1938. <a href="https://doi.org/10.1090/S0002-9947-1938-1501980-0">Paper</a> · <a href="https://www.math.ucdavis.edu/~saito/data/high-dimensions/schoenberg.pdf">Scan</a>.</li>
+<li id="ref-bernstein">René L. Schilling, Renming Song, and Zoran Vondraček. <em>Bernstein Functions: Theory and Applications</em>. Second edition, De Gruyter, 2012. <a href="https://doi.org/10.1515/9783110269338">Book</a>.</li>
+<li id="ref-features">Meyer Scetbon and Marco Cuturi. <em>Linear Time Sinkhorn Divergences using Positive Features</em>. Advances in Neural Information Processing Systems 33, 2020. <a href="https://proceedings.neurips.cc/paper_files/paper/2020/hash/9bde76f262285bb1eaeb7b40c758b53e-Abstract.html">Paper</a>.</li>
+</ol>
+</article></main><footer class="draft-footer"><div class="wrap">Forthcoming post · Alpha preview · <a href="index.html">All forthcoming posts</a> · <a href="/blog/">Published blog</a> · <a href="/privacy/">Privacy &amp; audience measurement</a></div></footer>
+</body></html>

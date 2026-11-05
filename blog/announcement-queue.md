@@ -1,6 +1,6 @@
 # Blog publication and announcement queue
 
-Last reconciled on 5 November 2026. All 26 forthcoming posts are included below; 7 are explicitly approved, in the requested order. Completed posts are archived in [published.md](published.md), with their dates and final article links. `publication-log.json` remains the authoritative retry and deduplication record.
+Last reconciled on 5 November 2026. All 27 forthcoming posts are included below; 7 are explicitly approved, in the requested order. Completed posts are archived in [published.md](published.md), with their dates and final article links. `publication-log.json` remains the authoritative retry and deduplication record.
 
 Explicit publication order approved on 1 November 2026 (this order takes precedence over topic alternation):
 
@@ -231,3 +231,11 @@ Topic: OT / Wasserstein geometry
 - [ ] Ready to publish
 
 > Can squaring an orthogonal matrix solve optimal transport? The optimum is unchanged, but a gradient flow can get trapped. Signed square roots explain the geometry. https://www.gpeyre.com/blog/preparations/orthostochastic-matrices.html
+
+## 27. Doubly nonnegative and completely positive matrices
+
+Topic: Other topics
+
+- [ ] Ready to publish
+
+> Positive entries and positive eigenvalues do not guarantee nonnegative features. A five-cycle exposes the gap; Gaussian scale mixtures show when positive features do exist. https://www.gpeyre.com/blog/preparations/doubly-nonnegative-completely-positive.html

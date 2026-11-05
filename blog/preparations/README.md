@@ -24,6 +24,27 @@ New standalone articles must include the shared analytics loader
 It counts only top-level visits on the production domain, not local tests or
 embedded experiments. See the audience-measurement section in `../README.md`.
 
+## Doubly nonnegative and completely positive matrices
+
+`doubly-nonnegative-completely-positive.html` develops the matrix distinction
+between PSD and entrywise nonnegativity and the stronger nonnegative Gram
+factorization. Explicit examples cover a negative principal square-root entry,
+the exact five-cycle DNN/CP thresholds, and a strictly positive definite,
+entrywise-positive counterexample separated by the Horn copositive matrix.
+The static `assets/cp-matrices/five-cycle.svg` illustrates the proof's support
+and diagonal-mass budget; it is not a numerical experiment.
+
+Only the final mathematical section passes to kernels. It proves positive
+Gaussian features and the generalized Gaussian extension for 0 < p <= 2,
+including a nested Poisson-jump proof of the positive stable mixing law.
+It distinguishes exact complete positivity from controlled finite-rank
+approximation and gives a three-point failure beyond p=2.
+The opening acknowledges Meyer Scetbon and the joint coupling-factorization
+work with Marco Cuturi. The Schoenberg portrait is an unmodified Konrad Jacobs
+photograph, MFO, licensed CC ShareAlike 1.0, with source and license links.
+Run `node tests/blog-completely-positive-presentation.test.js` and the NumPy
+audit `tests/blog-completely-positive-math.test.py`.
+
 ## Orthostochastic matrices and optimal transport
 
 `orthostochastic-matrices.html` defines bistochastic and real orthostochastic

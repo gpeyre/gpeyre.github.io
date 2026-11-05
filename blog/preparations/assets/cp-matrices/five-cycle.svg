@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 330" role="img" aria-labelledby="title desc">
+  <title id="title">The five-cycle obstruction to nonnegative Gram factors</title>
+  <desc id="desc">Five vertices have diagonal mass one, and their five cycle edges have entry t. All other entries vanish. A nonnegative feature must live on one vertex or one edge, requiring trace at least 10t, while the matrix trace is five.</desc>
+  <rect width="360" height="330" fill="#f5f9f8"/>
+  <g fill="none" stroke="#006f7e" stroke-width="3.2"><path d="M175 43L281 120L241 244L109 244L69 120Z"/></g>
+  <g fill="#fff" stroke="#006f7e" stroke-width="2.2"><circle cx="175" cy="43" r="17"/><circle cx="281" cy="120" r="17"/><circle cx="241" cy="244" r="17"/><circle cx="109" cy="244" r="17"/><circle cx="69" cy="120" r="17"/></g>
+  <g fill="#24333b" text-anchor="middle" font-family="system-ui,sans-serif" font-size="17"><text x="175" y="49">1</text><text x="281" y="126">2</text><text x="241" y="250">3</text><text x="109" y="250">4</text><text x="69" y="126">5</text></g>
+  <g fill="#006f7e" text-anchor="middle" font-family="Georgia,serif" font-size="23" font-style="italic"><text x="245" y="68">t</text><text x="283" y="197">t</text><text x="175" y="276">t</text><text x="67" y="197">t</text><text x="105" y="68">t</text></g>
+  <text x="180" y="311" text-anchor="middle" fill="#617078" font-family="system-ui,sans-serif" font-size="13">Each feature occupies at most one edge.</text>
+</svg>
