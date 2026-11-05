@@ -531,7 +531,7 @@
       "date": "2026-11-05",
       "url": "https://www.gpeyre.com/blog/2026/11/05/quantum-pinsker-sign-observable/",
       "message": "How does entropy control the distance between quantum states? A direct proof of quantum Pinsker tests entropy curvature against a sign observable. The sharp constant survives noncommutativity. https://www.gpeyre.com/blog/2026/11/05/quantum-pinsker-sign-observable/",
-      "status": "prepared",
+      "status": "announced",
       "source_sha256": "9e2064f8bf5c703515140fa52eccc7fdef9d1571401fc535fd751483e613687d",
       "base_commit": "fae957a6a9ed968cf57df6cfdeea6b78a21cce82",
       "files": [
@@ -541,14 +541,23 @@
         "js/blog-search-index.js",
         "blog/publication-log.json"
       ],
-      "publication_commit": null,
-      "bluesky_uri": null,
-      "bluesky_cid": null,
+      "publication_commit": "d55890031b5c48848111a683a251438118292584",
+      "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3mzjkqnzk22je",
+      "bluesky_cid": "bafyreiemswvjve7u2pvhpg3uvsevqiihabdojwokqiafmf6uvddc4b32iu",
       "working_sha256": {
         "blog/_posts/2026-11-05-quantum-pinsker-sign-observable.md": "452639deccd0055813a044a2f0b60130e39b1758ae10e660fba890011e69d51b",
         "blog/preparations/quantum-pinsker-sign-observable.html": "be013a82dd72b4ae7ab9a67f559b1bffcf85b974150251d65e0c65ab7566fbcc",
         "blog/preparations/index.html": "a89f20c3e53659cadd88a1462e29a395ad4ec544e9ea6e21a8b7a959e8bbe68c",
         "js/blog-search-index.js": "db6a4a3d411ee50aff08fce0dfcaa6475d238b82b0a0a1f42a99cb00ebf2003c"
+      },
+      "announcement_image": {
+        "path": "/blog/imgs/summaries/quantum-pinsker-sign-observable.jpg",
+        "alt": "Three probability-simplex triangles show relative entropy, total variation, and the nonnegative Pinsker gap for the same interior target, marked by a rust-colored dot.",
+        "width": 1200,
+        "height": 550,
+        "sha256": "634bf19ba7f0caa208ab67a609383bd42ee625fe78bd6c99e627b36a2b95f765",
+        "mime_type": "image/jpeg",
+        "size": 66788
       }
     }
   ]
