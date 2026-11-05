@@ -494,6 +494,24 @@
       },
       "sha256": "db56e4f52b53be08b58a4fecc8b5dfce985b5dcad3d015f699ca439bf2daa239"
     },
+    "orthostochastic-matrices": {
+      "path": "/blog/imgs/summaries/orthostochastic-matrices.jpg",
+      "width": 1200,
+      "height": 590,
+      "alt": "An orthostochastic coupling between two irregular point clouds, with the exact assignment dashed; the matching transport-energy trajectory is compared with the dashed Kantorovich optimum.",
+      "source": "/blog/preparations/assets/orthostochastic-ot/index.html",
+      "settings": {
+        "n": 12,
+        "motion": 0.35,
+        "tMax": 30,
+        "snapshotCount": 121,
+        "maxStep": 0.02,
+        "preset": "clouds",
+        "snapshotIndex": 6,
+        "renderer": "shared orthostochastic-ot core.js and view.js, native canvas"
+      },
+      "sha256": "5dcbf76345869a1a6eb88f573d2b10808f8ae21fdae3d200f2cfbf85b0738421"
+    },
     "perron-frobenius-and-sinkhorn": {
       "path": "/blog/imgs/summaries/perron-frobenius-and-sinkhorn.jpg",
       "alt": "Successive red-to-blue curved triangular images of positive scaling vectors under normalized Sinkhorn updates, at regularization 0.22 and eight iterations.",

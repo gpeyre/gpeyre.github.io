@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,follow">
+<meta name="description" content="Square the entries of an orthogonal matrix to obtain a bistochastic transport plan. Characterizations, short proofs, exact assignment costs, and a gradient-flow experiment reveal both the power and the traps of this nonconvex parametrization.">
+<meta name="keywords" content="orthostochastic matrix, bistochastic matrix, doubly stochastic matrix, Birkhoff polytope, Birkhoff von Neumann theorem, Garrett Birkhoff, John von Neumann, orthogonal group, special orthogonal group, Hadamard square, entrywise square, signed square roots, three by three matrices, degenerate triangle, unistochastic matrix, permutation matrix, assignment problem, Hungarian algorithm, Harold Kuhn, Kantorovich problem, uniform empirical measures, discrete optimal transport, squared Euclidean cost, nonconvex optimization, Riemannian gradient flow, tangent projection, polar retraction, Cayley transform, Armijo line search, spurious local minimum, Roger Brockett, Wing Shing Wong, Zaiwen Wen, Wotao Yin, transport coupling, orthogonality constraint, matrice orthostochastique, matrice bistochastique">
+<title>Orthostochastic matrices and optimal transport — Alpha preview — Gabriel Peyré</title>
+<link rel="canonical" href="https://www.gpeyre.com/blog/preparations/orthostochastic-matrices.html"><link rel="stylesheet" href="assets/drafts.css"><script defer src="assets/drafts.js"></script><script defer src="assets/idea-experiments.js"></script><script defer src="../../js/site-analytics.js"></script>
+<script type="text/x-mathjax-config">MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+
+<!-- Generated numerical summary image: start -->
+<meta property="og:image" content="https://www.gpeyre.com/blog/imgs/summaries/orthostochastic-matrices.jpg">
+<meta property="og:image:alt" content="An orthostochastic coupling between two irregular point clouds, with the exact assignment dashed; the matching transport-energy trajectory is compared with the dashed Kantorovich optimum.">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="590">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.gpeyre.com/blog/imgs/summaries/orthostochastic-matrices.jpg">
+<meta name="twitter:image:alt" content="An orthostochastic coupling between two irregular point clouds, with the exact assignment dashed; the matching transport-energy trajectory is compared with the dashed Kantorovich optimum.">
+<!-- Generated numerical summary image: end -->
+</head><body>
+<header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Orthostochastic matrices and optimal transport</h1><p class="subtitle">A convex transport problem, a nonconvex parametrization, and a warning from three points.</p><p class="byline">Gabriel Peyré</p></div></header>
+<main class="wrap"><article class="blog-prose">
+<p>I learned about orthostochastic matrices from <strong>Peyman Milanfar</strong>. They offer a beautiful bridge between orthogonal geometry, probability, and optimal transport.</p>
+<p>A permutation matches each source point to exactly one target point. A doubly stochastic matrix allows a softer matching, splitting each point among several destinations. There is a less familiar way to build such matrices: take an orthogonal matrix and square each of its entries. The result is <em>orthostochastic</em>.</p>
+<p>This construction automatically enforces positivity and the two marginal constraints of uniform discrete transport. Surprisingly, although it describes only a small nonconvex subset of all couplings, it preserves the optimal value of every linear transport objective. What it does <em>not</em> preserve is the friendly optimization landscape: an orthogonal gradient flow can settle at a genuinely suboptimal local minimum.</p>
+
+<h2>From probabilities to orthogonal amplitudes</h2>
+<p>Write \(\mathbf1=(1,\ldots,1)^\top\). An \(n\times n\) real matrix \(P\) is <em>bistochastic</em>, or <em>doubly stochastic</em>, when</p>
+\[
+ P_{ij}\ge0,\qquad P\mathbf1=\mathbf1,\qquad P^\top\mathbf1=\mathbf1.
+\]
+<p>Denote this set by \(\mathcal B_n\). Each row and column is a probability vector. Thus \(P\) describes a Markov transition that preserves the uniform distribution. The set \(\mathcal B_n\) is a compact convex polytope: its constraints are linear, closed, and force \(0\le P_{ij}\le1\).</p>
+<p>An <em>orthostochastic</em> matrix has the form</p>
+\[
+ P=Q\odot Q,\qquad Q\in\mathrm O(n),\qquad Q^\top Q=I,
+\]
+<p>where \(\odot\) means entrywise multiplication: \(P_{ij}=Q_{ij}^2\), <em>not</em> matrix multiplication \(Q^2\). Write \(\mathcal O_n\) for the resulting set of matrices. Orthogonality provides the normalization: \(\sum_j Q_{ij}^2=\sum_i Q_{ij}^2=1\). Consequently,</p>
+\[
+ \mathcal O_n\subseteq\mathcal B_n.
+\]
+<p>Both sets are invariant under transposition and independent row or column permutations. The set \(\mathcal O_n\) is compact, as the continuous image of the compact group \(\mathrm O(n)\). Changing signs of rows or columns of \(Q\) leaves \(P\) unchanged. In particular, one may restrict \(Q\) to \(\mathrm{SO}(n)\), the determinant-one component, without losing any \(P\): if necessary, flip one row.</p>
+<p>In the complex analogue, \(P_{ij}=|U_{ij}|^2\) for a unitary \(U\); this is called <em>unistochastic</em>. Real signs and complex phases give different classes. We use the real convention throughout <a href="#ref-bengtsson">[2]</a>.</p>
+
+<h2>The convex hull is much larger</h2>
+<figure class="portrait-single"><img src="../imgs/garrett-birkhoff.jpg" width="271" height="400" loading="lazy" decoding="async" alt="Mathematician Garrett Birkhoff, photographed by Konrad Jacobs"><figcaption>Garrett Birkhoff. Photograph: Konrad Jacobs, Archives of the Mathematisches Forschungsinstitut Oberwolfach, <a href="https://opc.mfo.de/detail?photo_id=346">photo 346</a>; <a href="https://creativecommons.org/licenses/by-sa/2.0/de/deed.en">CC BY-SA 2.0 Germany</a>. Unmodified image from the <a href="https://commons.wikimedia.org/wiki/File:Garrett_Birkhoff.jpeg">licensed source</a>.</figcaption></figure>
+<p>A permutation \(\sigma\) corresponds to \(P^\sigma_{ij}=1\) when \(j=\sigma(i)\), and zero otherwise. Such a matrix is itself orthogonal and orthostochastic. The classical Birkhoff–von Neumann theorem gives a complete convex characterization <a href="#ref-birkhoff">[1]</a>.</p>
+<p id="theorem-1"><strong>Theorem 1 (Birkhoff–von Neumann).</strong> Every bistochastic matrix is a convex combination of permutation matrices. Equivalently,</p>
+\[
+ \mathcal B_n=\operatorname{conv}\{P^\sigma:\sigma\in\mathfrak S_n\}
+              =\operatorname{conv}(\mathcal O_n).
+\]
+<details class="blog-proof"><summary>Proof: repeatedly remove a positive matching</summary><div class="blog-proof-body">
+<p>Join row \(i\) to column \(j\) whenever \(P_{ij}>0\). For a set \(S\) of rows, its total mass is \(|S|\); its neighboring columns can absorb at most one unit each. Hence its neighbor set \(N(S)\) satisfies \(|N(S)|\ge|S|\). Hall’s marriage theorem therefore supplies a permutation supported entirely on positive entries.</p>
+<details class="blog-proof"><summary>Why the matching criterion holds</summary><div class="blog-proof-body">
+<p>Take a maximum matching. If a row is unmatched, follow alternating unmatched/matched edges from it. If an unmatched column is reached, reversing that path increases the matching. Otherwise all reached columns are matched to reached rows other than the starting row. The reached rows \(S\) then have \(|N(S)|=|S|-1\), contradicting the inequality above. Thus every row is matched. \(\square\)</p>
+</div></details>
+<p>For the resulting \(P^\sigma\), put \(a=\min_iP_{i\sigma(i)}>0\). If \(a=1\), then \(P=P^\sigma\). Otherwise,</p>
+\[
+ P=aP^\sigma+(1-a)\widetilde P,\qquad
+ \widetilde P=\frac{P-aP^\sigma}{1-a}\in\mathcal B_n.
+\]
+<p>The remainder has strictly fewer positive entries. Repetition ends after finitely many removals and gives a convex combination. Conversely, convex combinations of permutation matrices are bistochastic. The final equality follows from permutations being orthostochastic and \(\mathcal O_n\subseteq\mathcal B_n\). \(\square\)</p>
+</div></details>
+<p>For \(n=2\), there is no distinction: every bistochastic matrix is</p>
+\[
+ \begin{pmatrix}a&1-a\\1-a&a\end{pmatrix}
+ =\begin{pmatrix}\sqrt a&-\sqrt{1-a}\\\sqrt{1-a}&\sqrt a\end{pmatrix}^{\!\odot2},
+ \qquad 0\le a\le1.
+\]
+<p>Already at \(n=3\), the inclusion is strict and \(\mathcal O_3\) is not convex. For example,</p>
+\[
+ P=\frac12\begin{pmatrix}0&1&1\\1&0&1\\1&1&0\end{pmatrix}
+\]
+<p>is the average of the two cyclic permutation matrices. But the first two rows of any signed entrywise square root overlap in exactly one nonzero coordinate; their inner product can only be \(\pm1/2\), never zero. Thus \(P\notin\mathcal O_3\). A block diagonal copy of this example proves strict inclusion and nonconvexity for every \(n\ge3\).</p>
+
+<h2>A characterization: can the square roots be signed consistently?</h2>
+<p>Squaring has forgotten the signs of the orthogonal matrix. Recovering them is exactly the remaining obstruction.</p>
+<p id="theorem-2"><strong>Theorem 2 (signed square-root criterion).</strong> A bistochastic \(P\) is orthostochastic if and only if there is a <em>single</em> sign matrix \(S\in\{-1,1\}^{n\times n}\) such that, for every pair of distinct rows,</p>
+\[
+ \sum_{j=1}^n S_{ij}S_{kj}\sqrt{P_{ij}P_{kj}}=0
+ \qquad(i\ne k).
+\]
+<details class="blog-proof"><summary>Proof: restore the missing signs</summary><div class="blog-proof-body">
+<p>Necessity follows by writing \(Q_{ij}=S_{ij}\sqrt{P_{ij}}\); choose arbitrary signs at zero entries. Conversely, this formula constructs rows with norm one, since \(P\) has row sums one. The displayed condition makes them pairwise orthogonal. The square matrix \(Q\) therefore satisfies \(QQ^\top=I\), hence is orthogonal and squares entrywise to \(P\). \(\square\)</p>
+</div></details>
+<p>This is a finite exact test, not an efficient recognition algorithm: searching all signs quickly becomes expensive. Allowing a different sign assignment for each pair of rows is only a necessary test in general; the signs must work together. Polynomial descriptions in higher dimensions become substantially more intricate <a href="#ref-chen">[3]</a>.</p>
+<p>In dimension three there is a much sharper and very visual answer.</p>
+<p id="theorem-3"><strong>Theorem 3 (the three-by-three criterion).</strong> For \(P\in\mathcal B_3\), set \(\ell_j=\sqrt{P_{1j}P_{2j}}\). Then \(P\) is orthostochastic if and only if the three lengths form a <em>degenerate triangle</em>:</p>
+\[
+ 2\max(\ell_1,\ell_2,\ell_3)=\ell_1+\ell_2+\ell_3.
+\]
+<p>Equivalently, putting \(a=P_{11}P_{21}\), \(b=P_{12}P_{22}\), and \(c=P_{13}P_{23}\), the condition is \((a+b-c)^2=4ab\).</p>
+<details class="blog-proof"><summary>Proof: two rows determine the third</summary><div class="blog-proof-body">
+<p>The first two rows of an orthogonal lift require signs with \(\pm\ell_1\pm\ell_2\pm\ell_3=0\). For three nonnegative numbers this is equivalent to one being the sum of the other two, including zero-length cases.</p>
+<p>Conversely, use the condition to choose two orthonormal rows \(q_1,q_2\) with the prescribed squared entries. Complete them by \(q_3=q_1\times q_2\). The resulting square matrix is orthogonal, so each column has norm one. Therefore</p>
+\[
+ q_{3j}^2=1-q_{1j}^2-q_{2j}^2
+          =1-P_{1j}-P_{2j}=P_{3j}.
+\]
+<p>It is the required lift. Finally, the polynomial identity says \(c=(\sqrt a\pm\sqrt b)^2\), precisely the same degenerate-triangle condition. \(\square\)</p>
+</div></details>
+<p>For comparison, complex phases can close any triangle, not just a degenerate one: the three-by-three <em>unistochastic</em> criterion is the ordinary triangle inequality for these lengths <a href="#ref-bengtsson">[2]</a>. The flat matrix \(P_{ij}=1/3\) is unistochastic but not orthostochastic: three signed terms of magnitude \(1/3\) cannot sum to zero.</p>
+
+<h2>Why this smaller set still solves uniform Kantorovich transport</h2>
+<p>Let \(x_1,\ldots,x_n\) and \(y_1,\ldots,y_n\) be two point clouds in \(\mathbb R^d\), and consider the equally weighted measures</p>
+\[
+ \alpha=\frac1n\sum_i\delta_{x_i},\qquad
+ \beta=\frac1n\sum_j\delta_{y_j}.
+\]
+<p>A coupling is an array \(\pi_{ij}\ge0\) with every row and column sum equal to \(1/n\). Thus \(P=n\pi\) is bistochastic. For a cost matrix \(C_{ij}=c(x_i,y_j)\), the discrete Kantorovich problem is <a href="#ref-ot">[4]</a></p>
+\[
+ \operatorname{OT}_C(\alpha,\beta)
+ =\min_{P\in\mathcal B_n}\frac1n\sum_{i,j}C_{ij}P_{ij}.
+\]
+<p id="corollary-1"><strong>Corollary 1 (same value, fewer feasible couplings).</strong> For every real cost matrix,</p>
+\[
+ \min_{P\in\mathcal B_n}\frac{\langle C,P\rangle}{n}
+ =\min_{Q\in\mathrm O(n)}E(Q)
+ =\min_{\sigma\in\mathfrak S_n}\frac1n\sum_i C_{i\sigma(i)},
+ \qquad E(Q)=\frac1n\sum_{i,j}C_{ij}Q_{ij}^2.
+\]
+<details class="blog-proof"><summary>Proof: a linear objective attains its minimum at a permutation</summary><div class="blog-proof-body">
+<p>By Theorem 1, the cost of any bistochastic matrix is an average of permutation costs, and cannot be smaller than their minimum. A minimizing permutation is orthostochastic. The inclusions \(\{P^\sigma\}\subseteq\mathcal O_n\subseteq\mathcal B_n\) now sandwich the three minima. \(\square\)</p>
+</div></details>
+<p>The feasible sets, and in the presence of ties the sets of minimizers, are <em>not</em> identical. When \(C=0\), every bistochastic matrix is optimal, including matrices with no orthogonal lift. The argument relies on a linear objective and two uniform clouds of the same cardinality; it is not a statement about entropically regularized transport or arbitrary masses. Nor does it make nonconvex optimization easier than the classical assignment problem, which already has efficient algorithms such as the Hungarian method <a href="#ref-kuhn">[5]</a>.</p>
+
+<h2>Projected descent and an orthogonal gradient flow</h2>
+<p>The benefit of the parametrization is exact feasibility: \(\pi_{ij}=Q_{ij}^2/n\) is automatically a coupling. To optimize it, one must move <em>along</em> the orthogonal group, not normalize rows and hope the columns follow. Orthogonal flows for assignment were studied by Brockett and Wong <a href="#ref-brockett">[6]</a>.</p>
+<p>Use the normalized Frobenius metric \(\langle U,V\rangle_n=\operatorname{tr}(U^\top V)/n\). This choice only rescales time relative to the ordinary Frobenius metric. The ambient gradient of \(E\) is \(G=2C\odot Q\). Writing \(\operatorname{sym}(A)=(A+A^\top)/2\) and \(\operatorname{skew}(A)=(A-A^\top)/2\), its tangent projection is</p>
+\[
+ \mathcal G(Q)=G-Q\operatorname{sym}(Q^\top G)
+              =Q\operatorname{skew}(Q^\top G).
+\]
+<p id="proposition-1"><strong>Proposition 1 (feasible descent).</strong> The flow</p>
+\[
+ \dot Q_t=-\mathcal G(Q_t),\qquad Q_0\in\mathrm O(n),
+\]
+<p>remains orthogonal and dissipates its transport energy:</p>
+\[
+ \frac{d}{dt}E(Q_t)=-\frac1n\|\mathcal G(Q_t)\|_{\mathrm F}^2\le0.
+\]
+<details class="blog-proof"><summary>Proof: tangent velocities preserve orthogonality</summary><div class="blog-proof-body">
+<p>Differentiating \(Q^\top Q=I\) identifies the tangent vectors as \(Q\Omega\), with \(\Omega^\top=-\Omega\). The orthogonal projection of an ambient matrix \(G\) onto these vectors is \(Q\operatorname{skew}(Q^\top G)\). Thus \(\dot Q=-Q\Omega\) gives \(\frac d{dt}(Q^\top Q)=-\Omega^\top-\Omega=0\). The chain rule and orthogonality of the tangent projection give</p>
+\[
+ \frac d{dt}E(Q)=\langle G,-\mathcal G(Q)\rangle_n
+                =-\langle\mathcal G(Q),\mathcal G(Q)\rangle_n.
+\]
+<p>The smooth vector field on the compact orthogonal group has a global forward solution. \(\square\)</p>
+</div></details>
+<p>A projected-gradient step first moves in the ambient space, then returns to the closest orthogonal matrix:</p>
+\[
+ Q^+=\operatorname{polar}(Q-hG),\qquad
+ \operatorname{polar}(X)=X(X^\top X)^{-1/2}.
+\]
+<p>For sufficiently small \(h\), \(X\) is invertible and this is the unique Frobenius-nearest orthogonal matrix. Its first-order expansion is \(Q^+=Q-h\mathcal G(Q)+O(h^2)\), yielding the flow above. This is a standard instance of manifold optimization <a href="#ref-boumal">[8]</a>.</p>
+<p>The numerical panel instead uses an equivalent first-order, constraint-preserving <em>Cayley retraction</em>, avoiding a matrix square root at every step <a href="#ref-wen">[7]</a>:</p>
+\[
+ Q^+=Q(I+\tfrac h2\Omega)^{-1}(I-\tfrac h2\Omega),
+ \qquad \Omega=\operatorname{skew}(Q^\top G).
+\]
+<p>The Cayley factor is orthogonal because \(\Omega\) is skew-symmetric. An Armijo backtracking test accepts only sufficient energy decrease. Finite steps approximate the continuous flow; they are not its exact solution.</p>
+
+<h2>A genuine trap, even for squared Euclidean transport</h2>
+<p>Equality of global minima does not imply that a gradient flow reaches them. In fact, <em>every signed permutation is stationary</em>: at such a \(Q\), the matrix \(Q^\top G\) is diagonal. Initializing at the identity would therefore prevent any motion, even if its matching is terrible.</p>
+<p>There are also strict suboptimal local minima, not just unstable stationary points. Here is an explicit planar example.</p>
+<p id="proposition-2"><strong>Proposition 2 (a three-point local minimum).</strong> Let \(x_i\) be the vertices of a unit equilateral triangle and let \(y_i=R_\theta x_i\), where \(R_\theta\) is planar rotation and \(\theta=75^\circ\). For \(C_{ij}=\|x_i-y_j\|^2\), the matrix \(Q=I\) is a strict local minimum of \(E\), but it is not globally optimal.</p>
+<details class="blog-proof"><summary>Proof: pairwise swaps are uphill, but a three-cycle is downhill</summary><div class="blog-proof-body">
+<p>For a small skew-symmetric \(\Omega\), expansion around the identity gives</p>
+\[
+ E(e^\Omega)-E(I)
+ =\frac13\sum_{i&lt;j}(C_{ij}+C_{ji}-C_{ii}-C_{jj})\Omega_{ij}^2
+   +O(\|\Omega\|_{\mathrm F}^3).
+\]
+<p>For these triangles every coefficient is \(6\cos\theta>0\). The Hessian is therefore positive definite on the tangent space, making \(I\) a strict local minimum. But its cost is \(2-2\cos75^\circ\), whereas the cyclic assignment with relative angle \(75^\circ-120^\circ=-45^\circ\) costs \(2-2\cos45^\circ\), which is strictly smaller. \(\square\)</p>
+</div></details>
+<p>The example separates two notions that are easy to confuse: a <em>global exact reformulation</em> and a <em>globally convergent algorithm</em>. Orthostochastic transport gives the first, not the second.</p>
+
+<h2>Numerical experimentation: watch the coupling and its cost</h2>
+<p>Use the time control to follow one orthogonal descent trajectory. The left panel shows blue source points, rust target points, and the current coupling \(\pi_t=Q_t\odot Q_t/n\). Dashed segments show an exact Kantorovich assignment, computed independently by the Hungarian algorithm. On the right, the solid curve is \(E(Q_t)\); the dashed horizontal line is the certified assignment cost.</p>
+<iframe class="idea-experiment" data-experiment="orthostochastic-ot" src="assets/orthostochastic-ot/index.html" title="Orthostochastic transport gradient flow: current coupling, exact Kantorovich matching, and transport energy over time" loading="lazy" style="width:100%;height:850px;border:0"></iframe>
+<p class="caption">Change the number of points in <em>each</em> cloud or move the target cloud to restart the solve. Playback starts paused. The local-minimum preset uses Proposition 2 with an initialization close to, but not exactly at, the identity: its persistent gap is real, not a plotting artifact. The regular cloud preset starts from a dense orthogonal matrix. Line opacity represents coupling mass; very small segments may be omitted from drawing, never from the energy or marginal computations. Time selects saved orthogonal iterates, without linearly blending matrices or couplings. The reported orthogonality residual checks numerical feasibility; the cost gap checks optimality. A small residual does not imply a small gap.</p>
+
+<h2>Bibliography</h2>
+<ol class="references">
+<li id="ref-birkhoff">Diane M. Johnson, A. L. Dulmage, and N. S. Mendelsohn. <em>On an Algorithm of G. Birkhoff Concerning Doubly Stochastic Matrices</em>. Canadian Mathematical Bulletin 3(3), 237–242, 1960. <a href="https://doi.org/10.4153/CMB-1960-029-5">Paper</a>. Birkhoff’s original theorem appeared in <em>Tres observaciones sobre el algebra lineal</em>, Universidad Nacional de Tucumán, Revista A 5, 1946.</li>
+<li id="ref-bengtsson">Ingemar Bengtsson, Åsa Ericsson, Marek Kuś, Wojciech Tadej, and Karol Życzkowski. <em>Birkhoff’s polytope and unistochastic matrices, N=3 and N=4</em>. Communications in Mathematical Physics 259, 307–324, 2005. <a href="https://arxiv.org/abs/math/0402325">Paper</a>.</li>
+<li id="ref-chen">Justin Chen and Papri Dey. <em>The 4 × 4 orthostochastic variety</em>. 2020. <a href="https://arxiv.org/abs/2001.10691">Paper</a>.</li>
+<li id="ref-ot">Gabriel Peyré and Marco Cuturi. <em>Computational Optimal Transport</em>. Foundations and Trends in Machine Learning 11(5–6), 355–607, 2019. <a href="https://arxiv.org/abs/1803.00567">Book</a>.</li>
+<li id="ref-kuhn">Harold W. Kuhn. <em>The Hungarian method for the assignment problem</em>. Naval Research Logistics Quarterly 2(1–2), 83–97, 1955. <a href="https://doi.org/10.1002/nav.3800020109">Paper</a>.</li>
+<li id="ref-brockett">Roger W. Brockett and Wing Shing Wong. <em>A Gradient Flow for the Assignment Problem</em>. New Trends in Systems Theory, Progress in Systems and Control Theory 7, 170–177, 1991. <a href="https://doi.org/10.1007/978-1-4612-0439-8_20">Chapter</a>.</li>
+<li id="ref-wen">Zaiwen Wen and Wotao Yin. <em>A feasible method for optimization with orthogonality constraints</em>. Mathematical Programming 142, 397–434, 2013. <a href="https://doi.org/10.1007/s10107-012-0584-1">Paper</a> · <a href="https://ww3.math.ucla.edu/camreport/cam10-77.pdf">Author manuscript</a>.</li>
+<li id="ref-boumal">Nicolas Boumal. <em>An Introduction to Optimization on Smooth Manifolds</em>. Cambridge University Press, 2023. <a href="https://www.nicolasboumal.net/book/">Open book</a>.</li>
+</ol>
+</article></main>
+<footer class="draft-footer"><div class="wrap">Forthcoming post · Alpha preview · <a href="index.html">All forthcoming posts</a> · <a href="/blog/">Published blog</a> · <a href="/privacy/">Privacy &amp; audience measurement</a></div></footer>
+</body></html>

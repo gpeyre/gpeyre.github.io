@@ -24,6 +24,28 @@ New standalone articles must include the shared analytics loader
 It counts only top-level visits on the production domain, not local tests or
 embedded experiments. See the audience-measurement section in `../README.md`.
 
+## Orthostochastic matrices and optimal transport
+
+`orthostochastic-matrices.html` defines bistochastic and real orthostochastic
+matrices, proves the convex-hull theorem and signed-square-root criterion,
+and gives the explicit three-by-three degenerate-triangle characterization.
+Uniform, equal-cardinality, unregularized transport has the same global value
+over either class, but the orthogonal parametrization has genuine suboptimal
+local minima, including a proved rotated-equilateral-triangle example.
+
+`assets/orthostochastic-ot/` uses a certified Hungarian assignment and an actual
+normalized-Frobenius gradient flow, discretized with Cayley retractions and
+Armijo backtracking. Time selects saved orthogonal matrices without blending.
+Only drawing is sparsified (five largest masses per row); all entries contribute
+to the energy and marginal constraints. Three controls change time, point count,
+and cloud geometry. A separate preset reproduces the strict local-minimum example.
+The default maximum step is 0.02; physical time runs from 0 to 30.
+Run `node tests/blog-orthostochastic.test.js` and
+`node tests/blog-orthostochastic-presentation.test.js`. Reproduce its numerical
+summary with `node scripts/render-blog-orthostochastic-summary.cjs`.
+The unmodified Garrett Birkhoff portrait is by Konrad Jacobs, MFO, licensed
+CC BY-SA 2.0 Germany, with source and license links in the article.
+
 ## Averaging Positive Symmetric Matrices
 
 `averaging-positive-symmetric-matrices.html` distinguishes log-Euclidean

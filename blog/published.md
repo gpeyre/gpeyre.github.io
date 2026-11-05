@@ -133,3 +133,43 @@ Topic: Other topics
 Published: 2026-11-01 · [Read post](https://www.gpeyre.com/blog/2026/11/01/arithmetico-geometric-means/)
 
 > Iterate two means to get a third. Arithmetic + harmonic gives geometric; arithmetic + geometric gives AGM. When is the limit quasi-arithmetic? A rigidity theorem answers exactly. https://www.gpeyre.com/blog/preparations/arithmetico-geometric-means.html
+
+## 15. Optimal Planar Matching and Crossings
+
+Topic: OT / Wasserstein geometry
+
+- [x] Ready to publish
+
+Published: 2026-11-02 · [Read post](https://www.gpeyre.com/blog/2026/11/02/noncrossing-matchings-catalan/)
+
+> Optimal Euclidean matchings cannot cross. But removing crossings still leaves exponentially many candidates! Catalan numbers explain why uncrossing alone does not solve the problem. https://www.gpeyre.com/blog/preparations/noncrossing-matchings-catalan.html
+
+## 16. Averaging Positive Symmetric Matrices
+
+Topic: Other topics
+
+- [x] Ready to publish
+
+Published: 2026-11-03 · [Read post](https://www.gpeyre.com/blog/2026/11/03/averaging-positive-symmetric-matrices/)
+
+> How should we average positive matrices? Compare log-Euclidean and Kubo–Ando geometric means—and the different logarithmic mean obtained by averaging a path. https://www.gpeyre.com/blog/preparations/averaging-positive-symmetric-matrices.html
+
+## 17. Logarithmic Sobolev is a Wasserstein P–L inequality
+
+Topic: OT / Wasserstein geometry
+
+- [x] Ready to publish
+
+Published: 2026-11-04 · [Read post](https://www.gpeyre.com/blog/2026/11/04/logarithmic-sobolev-wasserstein-pl/)
+
+> Logarithmic Sobolev is a Polyak–Łojasiewicz inequality for entropy in Wasserstein geometry. A finite-length argument turns entropy decay into convergence of distributions. https://www.gpeyre.com/blog/preparations/logarithmic-sobolev-wasserstein-pl.html
+
+## 18. From Classical to Quantum Pinsker Inequality
+
+Topic: Other topics
+
+- [x] Ready to publish
+
+Published: 2026-11-05 · [Read post](https://www.gpeyre.com/blog/2026/11/05/quantum-pinsker-sign-observable/)
+
+> How does entropy control the distance between quantum states? A direct proof of quantum Pinsker tests entropy curvature against a sign observable. The sharp constant survives noncommutativity. https://www.gpeyre.com/blog/preparations/quantum-pinsker-sign-observable.html

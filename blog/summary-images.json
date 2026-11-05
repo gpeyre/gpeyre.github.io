@@ -1,6 +1,24 @@
 {
   "version": 1,
   "images": {
+    "orthostochastic-matrices": {
+      "path": "/blog/imgs/summaries/orthostochastic-matrices.jpg",
+      "width": 1200,
+      "height": 590,
+      "alt": "An orthostochastic coupling between two irregular point clouds, with the exact assignment dashed; the matching transport-energy trajectory is compared with the dashed Kantorovich optimum.",
+      "source": "/blog/preparations/assets/orthostochastic-ot/index.html",
+      "settings": {
+        "n": 12,
+        "motion": 0.35,
+        "tMax": 30,
+        "snapshotCount": 121,
+        "maxStep": 0.02,
+        "preset": "clouds",
+        "snapshotIndex": 6,
+        "renderer": "shared orthostochastic-ot core.js and view.js, native canvas"
+      },
+      "sha256": "5dcbf76345869a1a6eb88f573d2b10808f8ae21fdae3d200f2cfbf85b0738421"
+    },
     "logarithmic-sobolev-wasserstein-pl": {
       "path": "/blog/imgs/summaries/logarithmic-sobolev-wasserstein-pl.jpg",
       "width": 1200,
