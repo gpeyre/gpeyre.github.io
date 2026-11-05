@@ -524,6 +524,32 @@
         "blog/preparations/index.html": "ba9e6f702957f572870eb33ad91035b6852fda6fa6539e8f2da94cd329549f1b",
         "js/blog-search-index.js": "1360089d8af280aa8e74cfc20f979d51dd78b69b8403822d2dd86e4f4e5c09c6"
       }
+    },
+    {
+      "slug": "quantum-pinsker-sign-observable",
+      "title": "From Classical to Quantum Pinsker Inequality",
+      "date": "2026-11-05",
+      "url": "https://www.gpeyre.com/blog/2026/11/05/quantum-pinsker-sign-observable/",
+      "message": "How does entropy control the distance between quantum states? A direct proof of quantum Pinsker tests entropy curvature against a sign observable. The sharp constant survives noncommutativity. https://www.gpeyre.com/blog/2026/11/05/quantum-pinsker-sign-observable/",
+      "status": "prepared",
+      "source_sha256": "9e2064f8bf5c703515140fa52eccc7fdef9d1571401fc535fd751483e613687d",
+      "base_commit": "fae957a6a9ed968cf57df6cfdeea6b78a21cce82",
+      "files": [
+        "blog/_posts/2026-11-05-quantum-pinsker-sign-observable.md",
+        "blog/preparations/quantum-pinsker-sign-observable.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null,
+      "working_sha256": {
+        "blog/_posts/2026-11-05-quantum-pinsker-sign-observable.md": "452639deccd0055813a044a2f0b60130e39b1758ae10e660fba890011e69d51b",
+        "blog/preparations/quantum-pinsker-sign-observable.html": "be013a82dd72b4ae7ab9a67f559b1bffcf85b974150251d65e0c65ab7566fbcc",
+        "blog/preparations/index.html": "a89f20c3e53659cadd88a1462e29a395ad4ec544e9ea6e21a8b7a959e8bbe68c",
+        "js/blog-search-index.js": "db6a4a3d411ee50aff08fce0dfcaa6475d238b82b0a0a1f42a99cb00ebf2003c"
+      }
     }
   ]
 }
