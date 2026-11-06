@@ -566,7 +566,7 @@
       "date": "2026-11-06",
       "url": "https://www.gpeyre.com/blog/2026/11/06/wasserstein-singular-vectors/",
       "message": "How can transport compare histograms with no given ground geometry? Wasserstein singular vectors learn sample and feature distances from each other. A fixed-point argument closes the loop. https://www.gpeyre.com/blog/2026/11/06/wasserstein-singular-vectors/",
-      "status": "prepared",
+      "status": "announced",
       "source_sha256": "98d797e5f6eb36d7d1e11326448e063f54176e4c5d91d72fb1c7b24e9d12e894",
       "base_commit": "297070c425b5401eee046e77410e1ebdf8226d23",
       "files": [
@@ -576,14 +576,23 @@
         "js/blog-search-index.js",
         "blog/publication-log.json"
       ],
-      "publication_commit": null,
-      "bluesky_uri": null,
-      "bluesky_cid": null,
+      "publication_commit": "4dbc72917f4dac914f331ee5358f6dd17f7b6167",
+      "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3mzm37lic22az",
+      "bluesky_cid": "bafyreiepihtazivilcs7mgsuqbgfx2w53y2awqn7zci6saorg4m6ndgslq",
       "working_sha256": {
         "blog/_posts/2026-11-06-wasserstein-singular-vectors.md": "3c138cd1957b410a675e123d924bb9a81bca452de37b4337c0e0c1f3bb31d9f2",
         "blog/preparations/wasserstein-singular-vectors.html": "49263224e9bd04344c8d9408a164834f53dd50e029e61e292809e92949ceb0e4",
         "blog/preparations/index.html": "959f50057b9905e576d61cb5ed34a1edea9af40cc162d0b41ad78e8d7110ead5",
         "js/blog-search-index.js": "db67adc8907ef96fea6b7e6f0ec24bb2fd33d72e2eb5ec56e32beb21e33552fe"
+      },
+      "announcement_image": {
+        "path": "/blog/imgs/summaries/wasserstein-singular-vectors.jpg",
+        "alt": "Input translated histograms, the learned circular feature geometry, and feature/sample cost matrices after sixteen exact transport-transform cycles.",
+        "width": 1200,
+        "height": 430,
+        "sha256": "cf81e40d543f0d8cc08d5699ad1e9d4a793b42012e8ba5a5794621a7b1e6d8d2",
+        "mime_type": "image/jpeg",
+        "size": 61312
       }
     }
   ]
