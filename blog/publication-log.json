@@ -559,6 +559,32 @@
         "mime_type": "image/jpeg",
         "size": 66788
       }
+    },
+    {
+      "slug": "wasserstein-singular-vectors",
+      "title": "Wasserstein singular vectors: a distance that defines itself",
+      "date": "2026-11-06",
+      "url": "https://www.gpeyre.com/blog/2026/11/06/wasserstein-singular-vectors/",
+      "message": "How can transport compare histograms with no given ground geometry? Wasserstein singular vectors learn sample and feature distances from each other. A fixed-point argument closes the loop. https://www.gpeyre.com/blog/2026/11/06/wasserstein-singular-vectors/",
+      "status": "prepared",
+      "source_sha256": "98d797e5f6eb36d7d1e11326448e063f54176e4c5d91d72fb1c7b24e9d12e894",
+      "base_commit": "297070c425b5401eee046e77410e1ebdf8226d23",
+      "files": [
+        "blog/_posts/2026-11-06-wasserstein-singular-vectors.md",
+        "blog/preparations/wasserstein-singular-vectors.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null,
+      "working_sha256": {
+        "blog/_posts/2026-11-06-wasserstein-singular-vectors.md": "3c138cd1957b410a675e123d924bb9a81bca452de37b4337c0e0c1f3bb31d9f2",
+        "blog/preparations/wasserstein-singular-vectors.html": "49263224e9bd04344c8d9408a164834f53dd50e029e61e292809e92949ceb0e4",
+        "blog/preparations/index.html": "959f50057b9905e576d61cb5ed34a1edea9af40cc162d0b41ad78e8d7110ead5",
+        "js/blog-search-index.js": "db67adc8907ef96fea6b7e6f0ec24bb2fd33d72e2eb5ec56e32beb21e33552fe"
+      }
     }
   ]
 }
