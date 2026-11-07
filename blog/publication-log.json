@@ -594,6 +594,32 @@
         "mime_type": "image/jpeg",
         "size": 61312
       }
+    },
+    {
+      "slug": "divergences-and-bregman-geometry",
+      "title": "Why KL belongs to two divergence families",
+      "date": "2026-11-07",
+      "url": "https://www.gpeyre.com/blog/2026/11/07/divergences-and-bregman-geometry/",
+      "message": "KL compares density ratios and gaps above entropy tangent planes. Under smoothness assumptions, it is the only measure-level divergence in both families, up to scale. https://www.gpeyre.com/blog/2026/11/07/divergences-and-bregman-geometry/",
+      "status": "prepared",
+      "source_sha256": "ccf19ce0676b7c9ed52accbcbc82dfaafccdcde5589e96bfa29543173784319a",
+      "base_commit": "2c4aca865f4aa1d8b488f7003a702991af8252cf",
+      "files": [
+        "blog/_posts/2026-11-07-divergences-and-bregman-geometry.md",
+        "blog/preparations/divergences-and-bregman-geometry.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null,
+      "working_sha256": {
+        "blog/_posts/2026-11-07-divergences-and-bregman-geometry.md": "ba2ae4493c62656076cd3fc911ac73c85f0bb26185d9f49125b03d1333de36de",
+        "blog/preparations/divergences-and-bregman-geometry.html": "612ea3274790a41fe589fe3db79b32f2b16a6545552c0e289574e8b95660c917",
+        "blog/preparations/index.html": "708603ac6799e16208adaa33188c6aa685e425cf41ec2e4dc6e97a4f7ddb77f1",
+        "js/blog-search-index.js": "b49a8c3dc21c04205881eed1134e8af16059c4291197922d319d585195049dd6"
+      }
     }
   ]
 }
