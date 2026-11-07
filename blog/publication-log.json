@@ -601,7 +601,7 @@
       "date": "2026-11-07",
       "url": "https://www.gpeyre.com/blog/2026/11/07/divergences-and-bregman-geometry/",
       "message": "KL compares density ratios and gaps above entropy tangent planes. Under smoothness assumptions, it is the only measure-level divergence in both families, up to scale. https://www.gpeyre.com/blog/2026/11/07/divergences-and-bregman-geometry/",
-      "status": "prepared",
+      "status": "announced",
       "source_sha256": "ccf19ce0676b7c9ed52accbcbc82dfaafccdcde5589e96bfa29543173784319a",
       "base_commit": "2c4aca865f4aa1d8b488f7003a702991af8252cf",
       "files": [
@@ -611,14 +611,23 @@
         "js/blog-search-index.js",
         "blog/publication-log.json"
       ],
-      "publication_commit": null,
-      "bluesky_uri": null,
-      "bluesky_cid": null,
+      "publication_commit": "4d86ec45b62e65979ddadda27c139270ec876588",
+      "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3mzoloix222s7",
+      "bluesky_cid": "bafyreiezfamkhuhpp523q4xgrc6cthcr6n2gvwozmkvdg2m6r4jwp2iebe",
       "working_sha256": {
         "blog/_posts/2026-11-07-divergences-and-bregman-geometry.md": "ba2ae4493c62656076cd3fc911ac73c85f0bb26185d9f49125b03d1333de36de",
         "blog/preparations/divergences-and-bregman-geometry.html": "612ea3274790a41fe589fe3db79b32f2b16a6545552c0e289574e8b95660c917",
         "blog/preparations/index.html": "708603ac6799e16208adaa33188c6aa685e425cf41ec2e4dc6e97a4f7ddb77f1",
         "js/blog-search-index.js": "b49a8c3dc21c04205881eed1134e8af16059c4291197922d319d585195049dd6"
+      },
+      "announcement_image": {
+        "path": "/blog/imgs/summaries/divergences-and-bregman-geometry.jpg",
+        "alt": "Reverse-KL and half-Pearson divergence heatmaps on the same three-probability simplex, with a shared off-center target and color scale.",
+        "width": 1200,
+        "height": 650,
+        "sha256": "0ec3cf570ae81577a9d05a4e580e80f40d9fa14138e70ef6bbc73a847dcbbe4a",
+        "mime_type": "image/jpeg",
+        "size": 72254
       }
     }
   ]
