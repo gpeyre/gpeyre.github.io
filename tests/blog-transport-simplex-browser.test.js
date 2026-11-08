@@ -90,10 +90,13 @@ const article = "/blog/2026/11/08/optimal-transport-convex-extension/";
     assert.equal(await frame.getByRole("checkbox", { name: "Lock color scale", exact: true }).isChecked(), false);
     await page.waitForFunction(() => document.querySelectorAll(".MathJax_SVG").length > 100);
     assert.equal(await page.locator(".MathJax_Error, .merror").count(), 0);
-    const proofs = page.locator("details.blog-proof"); assert.equal(await proofs.count(), 5);
+    assert.ok((await page.locator('#proposition-2 script[type^="math/tex"]').allTextContents()).includes("p=1"));
+    const proofs = page.locator("details.blog-proof"); assert.equal(await proofs.count(), 6);
     assert.equal(await page.locator("details.blog-proof[open]").count(), 0);
     await proofs.last().locator("summary").click(); assert.ok(await proofs.last().getAttribute("open") !== null);
-    await proofs.last().locator(".MathJax_SVG_Display").waitFor({ state: "visible" });
+    await page.waitForFunction(() => !document.querySelector("details.blog-proof:last-of-type[aria-busy]"));
+    await page.evaluate(() => new Promise(resolve => MathJax.Hub.Queue(resolve)));
+    await proofs.last().locator(".MathJax_SVG_Display").first().waitFor({ state: "visible" });
     assert.equal(await page.locator(".MathJax_Error, .merror").count(), 0);
     await iframe.scrollIntoViewIfNeeded();
     if (process.env.BLOG_SCREENSHOT_DIR) await iframe.screenshot({ path: process.env.BLOG_SCREENSHOT_DIR + "/transport-simplex-desktop.png" });
@@ -150,6 +153,6 @@ const article = "/blog/2026/11/08/optimal-transport-convex-extension/";
       await touchFrame.getByRole("button", { name: "Reset", exact: true }).tap(); assert.deepEqual(await touchState(), initial);
     } finally { await touchContext.close(); }
     assert.deepEqual(errors, []);
-    console.log("Transport simplex browser: positive exponent slider/field/presets, invalid-power guards, mouse/keyboard drags, pinned alpha inspection, scale locking/saturation, real mobile touch taps, 375/320px overflow checks, five folded proofs, MathJax, responsive iframe sizing and social image pass.");
+    console.log("Transport simplex browser: positive exponent slider/field/presets, invalid-power guards, mouse/keyboard drags, pinned alpha inspection, scale locking/saturation, real mobile touch taps, 375/320px overflow checks, six folded proofs, explicit p=1 proposition, MathJax, responsive iframe sizing and social image pass.");
   } finally { await browser.close(); }
 })().catch(e => { console.error(e); process.exitCode = 1; });

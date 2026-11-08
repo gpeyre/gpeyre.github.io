@@ -314,7 +314,7 @@ $$
 
 <p>The strict triangle inequalities give \(w_i&gt;0\), and \(d_{ij}=w_i+w_j\) for \(i\ne j\). These are the branch lengths of an abstract three-leaf tree with the same pairwise distances; its junction need not correspond to a point in the Euclidean triangle.</p>
 
-<p id="proposition-2"><strong>Proposition 2 (three-site transport).</strong> For any two weight vectors \(a,b\in\Delta_2\),</p>
+<p id="proposition-2"><strong>Proposition 2 (three-site \(W_1\) transport).</strong> With the Euclidean ground cost \(d_{ij}=|x_i-x_j|\), that is, at \(p=1\), any two weight vectors \(a,b\in\Delta_2\) satisfy</p>
 
 $$
 W_1(\alpha_a,\beta_b)=\sum_{i=1}^3 w_i|a_i-b_i|.
@@ -340,9 +340,52 @@ $$
 
 </details>
 
-<p>The formula is affine on each region where the signs of \(a_i-b_i\) are fixed. For an interior target, its small positive level sets are hexagons, not ellipses; larger ones meet the simplex boundary. The same argument applies for \(0&lt;p&lt;1\) after replacing each \(d_{ij}\) by \(d_{ij}^p\), since these powered distances still satisfy the triangle inequality.</p>
+<p>The formula is affine on each region where the signs of \(a_i-b_i\) are fixed. For an interior target, its small positive level sets are hexagons, not ellipses; larger ones meet the simplex boundary.</p>
+<p><strong>Which exponents does this cover?</strong> The proposition as written is a formula for \(W_1\), not for \(W_p\) at arbitrary \(p\). The underlying condition, however, is that the <em>ground costs</em> satisfy the triangle inequality. Thus the same proof gives \(T_p=\sum_i w_i(p)|a_i-b_i|\), with \(w_i(p)=(d_{ij}^p+d_{ik}^p-d_{jk}^p)/2\), whenever these three weights are nonnegative. This always holds for \(0&lt;p\le1\), because \((u+v)^p\le u^p+v^p\); it can also hold for particular triangles with \(p&gt;1\), for instance an equilateral triangle. For \(p\ge1\), remember that this computes \(W_p^p\), not \(W_p\) itself.</p>
 <p>For \(p&gt;1\), that inequality may fail, and keeping all common mass in place need no longer be optimal. For example, take \(x_1=(-1,0)\), \(x_2=(0,0.1)\), \(x_3=(1,0)\), and \(p=2\). Between \(a=(1/2,1/2,0)\) and \(b=(0,1/2,1/2)\), sending half the mass directly from \(x_1\) to \(x_3\) costs \(2\). Instead, exchanging half a unit along each of \(x_1\to x_2\) and \(x_2\to x_3\) costs only \(1.01\). This uses the mass already present at \(x_2\); it is not free transshipment. Between the two endpoint Dirac masses, the cost is still \(4\).</p>
-<p>The renderer therefore evaluates the full three-by-three coupling problem for every exponent, not the metric shortcut outside its range of validity. Its cost is the maximum of finitely many affine dual functions, so the contour segments remain straight even when their arrangement changes. The polygonal corners are real features of the transport cost, not a smoothing or meshing artifact.</p>
+
+### Beyond p = 1: an equally fast exact computation
+
+<p>Fortunately, even when the triangle inequality fails, three-site transport has a closed form. Write \(c_{ij}=d_{ij}^p\). At most one edge can violate the triangle inequality; relabel its endpoints \(i,j\), with \(k\) the remaining site, and put</p>
+
+$$
+A=c_{ik},\qquad B=c_{jk},\qquad e=c_{ij}-A-B>0.
+$$
+
+<p>The exact coupling cost is then</p>
+
+$$
+T_p(\alpha_a,\beta_b)
+=A|a_i-b_i|+B|a_j-b_j|
++e\max\{0,a_i+b_j-1,a_j+b_i-1\}.
+$$
+
+<p>The first two terms are the cost for the shorter path through \(k\). The last term accounts for the mass that must nevertheless cross the expensive edge: a coupling has only the available marginal mass at \(k\), so it cannot use that site as an unlimited relay.</p>
+
+<details class="blog-proof">
+
+<summary>Proof: identify the unavoidable mass on the expensive edge</summary>
+
+<div class="blog-proof-body" markdown="1">
+
+<p>For any coupling, subtract the excess \(e\) from the cost of the two directed edges between \(i\) and \(j\). The remaining costs form a three-leaf metric tree with branch lengths \(A,B,0\). The preceding proof therefore gives the lower bound \(A|a_i-b_i|+B|a_j-b_j|\). Also, the row and column constraints force \(\pi_{ij}\ge a_i+b_j-1\) and \(\pi_{ji}\ge a_j+b_i-1\). Their two right-hand sides cannot both be positive, since their sum is \(-a_k-b_k\). This proves the displayed lower bound.</p>
+<p>To attain it, first consider opposite imbalances, say \(a_i-b_i=s\ge0\) and \(a_j-b_j=-r\le0\). Set \(t=\max(0,r-a_k)\). Because \(r-a_k=a_i+b_j-1\), this is exactly the forced mass on the expensive edge. Also, \(b_k=a_k+s-r\ge0\) gives \(0\le t\le\min(s,r)\). In row and column order \((i,j,k)\), choose</p>
+
+$$
+\pi=\begin{pmatrix}
+b_i & t & s-t\\
+0 & a_j & 0\\
+0 & r-t & a_k-r+t
+\end{pmatrix}.
+$$
+
+<p>Its entries are nonnegative and have marginals \(a,b\); its cost is \(As+Br+et\), as required. Reverse \(i,j\) for the other orientation. If both imbalances have the same sign, retain common mass and move only between \(k\) and the other two sites; the maximum term is then zero. \(\square\)</p>
+
+</div>
+
+</details>
+
+<p>This is the formula used by the experiment whenever the powered costs are nonmetric. Evaluating it takes only a fixed number of arithmetic operations, independently of \(p\): no iterative solver and no entropic approximation are needed. Expanding the absolute values and the maximum gives at most twelve affine functions of \(a\) for fixed \(b\). The renderer computes their polygonal regions and straight contour segments directly, rather than solving a transport problem at every pixel. The corners are real features of the cost, not a smoothing or meshing artifact.</p>
 <p>This is a slice \(a\mapsto T_c(\alpha_a,\beta_b)\) of the <em>joint</em> convex extension in Theorem 1. It should not be confused with the convex roof of the three vertex heights with \(b\) already fixed: that roof would simply be an affine plane. The coupling problem retains the information from <em>all pairs</em> of Dirac masses before we take the slice.</p>
 
 ## References
