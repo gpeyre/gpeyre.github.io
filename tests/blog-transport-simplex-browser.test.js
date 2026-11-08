@@ -16,7 +16,7 @@ const article = "/blog/2026/11/08/optimal-transport-convex-extension/";
     await frame.waitForFunction(() => window.TransportSimplexApp && document.getElementById("target").style.left);
     const state = () => frame.evaluate(() => window.TransportSimplexApp.getState());
     const initial = await state(); initial.b.forEach(v => assert.ok(Math.abs(v - 1 / 3) < 1e-12));
-    assert.equal(initial.mode, "target"); assert.equal(initial.colorCap, null);
+    assert.equal(initial.mode, "target"); assert.equal(initial.colorCap, null); assert.equal(initial.p, 1);
     assert.equal(await frame.locator('button.handle').count(), 4);
     async function simplexPosition(targetFrame, weights) {
       return targetFrame.evaluate(a => {
@@ -47,13 +47,37 @@ const article = "/blog/2026/11/08/optimal-transport-convex-extension/";
     await frame.locator("#simplex").click({ position: await simplexPosition(frame, alpha) });
     let inspection = await state(); assert.equal(inspection.mode, "inspect"); assert.deepEqual(inspection.b, targetBeforeInspect);
     inspection.probe.forEach((v, i) => assert.ok(Math.abs(v - alpha[i]) < .004)); // Real pointer coordinates are pixel-quantized.
-    assert.match(await frame.locator("#probe").innerText(), /pinned/); assert.match(await frame.locator("#probe-cost").innerText(), /W₁ = [0-9]/);
+    assert.match(await frame.locator("#probe").innerText(), /pinned/); assert.match(await frame.locator("#probe-cost").innerText(), /Tₚ = [0-9]/);
     await page.mouse.move(5, 5); assert.deepEqual((await state()).probe, inspection.probe);
     await drag("vertex-0", 15, -6); assert.deepEqual((await state()).probe, inspection.probe); assert.deepEqual((await state()).b, targetBeforeInspect);
     await frame.locator("#simplex").press("ArrowRight"); assert.notDeepEqual((await state()).probe, inspection.probe); assert.deepEqual((await state()).b, targetBeforeInspect);
     await frame.locator("#simplex").press("Home"); assert.deepEqual((await state()).probe, (await state()).b);
     await frame.locator("#vertex-1").click(); assert.deepEqual((await state()).probe, [0, 1, 0]);
     await frame.getByRole("button", { name: "Reset", exact: true }).click();
+
+    // Both ends of the logarithmic slider work; an editable field reaches
+    // positive exponents beyond its initial range without moving either law.
+    await frame.getByRole("button", { name: "Inspect α", exact: true }).click();
+    await frame.locator("#simplex").click({ position: await simplexPosition(frame, [.2, .3, .5]) });
+    const beforePower = await state();
+    await frame.getByRole("checkbox", { name: "Lock color scale", exact: true }).check();
+    await frame.locator("#exponent").press("Home"); assert.ok(Math.abs((await state()).p - .05) < 1e-8); assert.equal((await state()).colorCap, null);
+    await frame.locator("#exponent").press("End"); assert.ok(Math.abs((await state()).p - 20) < 1e-8);
+    for (const p of [.5, 2, 5, 25]) {
+      await frame.locator("#exponent-number").fill(String(p)); await frame.locator("#exponent-number").press("Tab");
+      const s = await state(); assert.equal(s.p, p); assert.deepEqual(s.b, beforePower.b); assert.deepEqual(s.probe, beforePower.probe); assert.deepEqual(s.vertices, beforePower.vertices);
+      assert.match(await frame.locator("#probe-cost").innerText(), /^Tₚ = /);
+    }
+    const validPower = await state();
+    for (const invalid of ["0", "-1", "1e308"]) {
+      await frame.locator("#exponent-number").fill(invalid); await frame.locator("#exponent-number").press("Tab");
+      assert.deepEqual(await state(), validPower); assert.ok((await frame.locator("#exponent-error").innerText()).length > 0);
+    }
+    await frame.locator("#power-half").click(); assert.equal((await state()).p, .5);
+    await frame.locator("#power-two").click(); assert.equal((await state()).p, 2);
+    await frame.locator("#power-one").click(); assert.equal((await state()).p, 1);
+    assert.equal(await frame.locator("#exponent-error").innerText(), "");
+    await frame.getByRole("button", { name: "Reset", exact: true }).click(); assert.deepEqual(await state(), initial);
 
     // A fixed legend allows comparisons; saturation is explicit instead of hidden.
     await frame.getByRole("checkbox", { name: "Lock color scale", exact: true }).check();
@@ -106,6 +130,12 @@ const article = "/blog/2026/11/08/optimal-transport-convex-extension/";
       await touchFrame.getByRole("checkbox", { name: "Lock color scale", exact: true }).tap();
       assert.deepEqual((await touchState()).probe, pinnedTouchAlpha); assert.deepEqual((await touchState()).b, betaBeforeTouch);
       assert.match(await touchFrame.locator("#probe").innerText(), /pinned/);
+      const slider = touchFrame.locator("#exponent"); await slider.scrollIntoViewIfNeeded(); const sliderBox = await slider.boundingBox();
+      await touchPage.touchscreen.tap(sliderBox.x + sliderBox.width * .25, sliderBox.y + sliderBox.height / 2);
+      assert.ok((await touchState()).p > 0 && (await touchState()).p < 1); assert.equal((await touchState()).colorCap, null);
+      assert.deepEqual((await touchState()).b, betaBeforeTouch); assert.deepEqual((await touchState()).probe, pinnedTouchAlpha);
+      await touchFrame.locator("#power-half").tap(); assert.equal((await touchState()).p, .5);
+      await touchFrame.locator("#power-two").tap(); assert.equal((await touchState()).p, 2);
       for (const width of [375, 320]) {
         await touchPage.setViewportSize({ width, height: 900 }); await touchIframe.scrollIntoViewIfNeeded();
         await touchFrame.waitForFunction(() => document.getElementById("simplex").getBoundingClientRect().width < 400);
@@ -120,6 +150,6 @@ const article = "/blog/2026/11/08/optimal-transport-convex-extension/";
       await touchFrame.getByRole("button", { name: "Reset", exact: true }).tap(); assert.deepEqual(await touchState(), initial);
     } finally { await touchContext.close(); }
     assert.deepEqual(errors, []);
-    console.log("Transport simplex browser: mouse/keyboard drags, pinned alpha inspection, scale locking/saturation, real mobile touch taps, 375/320px overflow checks, five folded proofs, MathJax, responsive iframe sizing and social image pass.");
+    console.log("Transport simplex browser: positive exponent slider/field/presets, invalid-power guards, mouse/keyboard drags, pinned alpha inspection, scale locking/saturation, real mobile touch taps, 375/320px overflow checks, five folded proofs, MathJax, responsive iframe sizing and social image pass.");
   } finally { await browser.close(); }
 })().catch(e => { console.error(e); process.exitCode = 1; });

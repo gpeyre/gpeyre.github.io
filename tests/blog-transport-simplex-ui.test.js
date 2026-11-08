@@ -7,8 +7,9 @@ function close(a, b, tolerance = 2e-11) { assertions++; assert.ok(Number.isFinit
 function same(a, b) { assert.deepEqual(JSON.parse(JSON.stringify(a)), JSON.parse(JSON.stringify(b))); assertions++; }
 function finite(values, name) { for (const value of values) if (typeof value === "number") { assert.ok(Number.isFinite(value), `${name} received ${value}`); assertions++; } }
 function context() {
-  const ctx = { fills: [], gradients: [], marks: 0, currentPath: [] };
-  for (const name of ["clearRect", "fillRect", "stroke", "scale", "fillText", "arc"]) ctx[name] = (...values) => { finite(values, name); ctx.marks++; };
+  const ctx = { fills: [], gradients: [], texts: [], marks: 0, currentPath: [] };
+  for (const name of ["clearRect", "fillRect", "stroke", "scale", "arc"]) ctx[name] = (...values) => { finite(values, name); ctx.marks++; };
+  ctx.fillText = (...values) => { finite(values, "fillText"); ctx.texts.push(values); ctx.marks++; };
   ctx.beginPath = () => { ctx.currentPath = []; };
   ctx.moveTo = ctx.lineTo = (...xy) => { finite(xy, "path"); ctx.currentPath.push(xy); ctx.marks++; };
   ctx.closePath = () => {};
@@ -35,16 +36,16 @@ for (const width of [280, 375, 800, 1200]) {
   assert.ok(box.scale > 0);
   for (const xy of [[0, 0], [3.2, 2.6], [1.2, 1.7]]) box.toWorld(box.toScreen(xy)).forEach((v, i) => close(v, xy[i]));
   const xstep = box.toScreen([1, 0])[0] - box.toScreen([0, 0])[0], ystep = box.toScreen([0, 0])[1] - box.toScreen([0, 1])[1]; close(xstep, ystep);
-  for (const vertices of shapes) for (const b of targets) for (const colorCap of [null, .5, 4]) {
-    const ctx = context(), draw = V.draw(ctx, width, height, { vertices, b, probe: [.2, .3, .5], colorCap });
-    close(draw.maxCost, Math.max(...vertices.map((_, i) => M.cost([0, 1, 2].map(j => +(i === j)), b, vertices))));
+  for (const vertices of shapes) for (const b of targets) for (const p of [.1, .5, 1, 2, 5, 20]) for (const colorCap of p > 5 ? [null] : [null, .5, 4]) {
+    const model = M.model(vertices, p), ctx = context(), draw = V.draw(ctx, width, height, { vertices, b, probe: [.2, .3, .5], colorCap, p });
+    close(draw.maxCost, Math.max(...vertices.map((_, i) => M.cost([0, 1, 2].map(j => +(i === j)), b, vertices, p))));
     close(draw.colorCap, colorCap || V.scaleFor(draw.maxCost).cap); close(draw.step, V.scaleFor(draw.colorCap).step);
     assert.ok(ctx.marks > 70); assert.ok(draw.levels.length >= 4 && draw.levels.length <= 12);
     draw.levels.forEach((v, i) => { close(v, (i + 1) * draw.step); assert.ok(v < draw.colorCap); });
     const polygons = ctx.fills.filter(fill => fill.style && fill.style.axis);
-    assert.equal(polygons.length, M.signCells(b).length);
-    // Each sign-cell fill must encode the exact affine scalar field: projecting
-    // a point on its gradient axis yields W1/colorCap, not a triangulation
+    assert.equal(polygons.length, M.cells(model, b).length);
+    // Each cell fill must encode the exact affine scalar field: projecting
+    // a point on its gradient axis yields Tp/colorCap, not a triangulation
     // surrogate. A fraction above one legitimately saturates a frozen scale.
     for (const fill of polygons) {
       assert.ok(fill.points.length >= 3); assert.equal(fill.style.stops.length, V.palette.length);
@@ -53,10 +54,19 @@ for (const width of [280, 375, 800, 1200]) {
       for (const pixel of [...fill.points, centroid]) {
         const fraction = ((pixel[0] - x0) * dx + (pixel[1] - y0) * dy) / (dx * dx + dy * dy);
         const a = M.barycentric(box.toWorld(pixel), vertices);
-        close(fraction, M.cost(a, b, vertices) / draw.colorCap, 1e-9);
+        close(fraction, M.cost(a, b, vertices, p) / draw.colorCap, 5e-8);
       }
     }
+    // Numeric values remain on the colorbar only: no contour labels in the plot.
+    assert.equal(ctx.texts.filter(([text, , y]) => /^[\d.]+(?:e[+-]?\d+)?$/i.test(text) && y < height - 65).length, 0);
   }
+}
+// The field also accepts exponents beyond the slider's initial interval.
+// At extreme dynamic ranges, subpixel transitions may saturate; they must never
+// introduce nonfinite Canvas coordinates or corrupt the finite cost readouts.
+for (const p of [25, 100, 500, 800]) {
+  const ctx = context(), draw = V.draw(ctx, 375, 360, { vertices: M.defaults.vertices, b: M.defaults.b, p });
+  assert.ok(Number.isFinite(draw.maxCost) && Number.isFinite(draw.colorCap)); assert.ok(ctx.marks > 50);
 }
 
 const html = fs.readFileSync(path.join(directory, "index.html"), "utf8"), css = fs.readFileSync(path.join(directory, "style.css"), "utf8");
@@ -71,6 +81,10 @@ function node(id) {
   };
 }
 for (const hit of html.matchAll(/id="([^"]+)"/g)) nodes[hit[1]] = node(hit[1]);
+for (const tag of html.matchAll(/<input\b[^>]*>/g)) {
+  const id = tag[0].match(/\bid="([^"]+)"/)?.[1]; if (!id) continue;
+  for (const hit of tag[0].matchAll(/\b(min|max|step|value)="([^"]+)"/g)) nodes[id][hit[1]] = hit[2];
+}
 const main = node("main"); main.clientHeight = 1060;
 const parent = { postMessage(message, origin) { messages.push({ message, origin }); } };
 const window = { TransportSimplex: M, TransportSimplexView: V, devicePixelRatio: 3, parent,
@@ -83,7 +97,7 @@ function state() { return window.TransportSimplexApp.getState(); }
 function eventAt(xy, extra = {}) { const box = V.layout(nodes.simplex.clientWidth, nodes.simplex.clientHeight), pixel = box.toScreen(xy), r = nodes.simplex.getBoundingClientRect(); return { clientX: pixel[0] + r.left, clientY: pixel[1] + r.top, ...extra }; }
 function press(id, key, extra = {}) { nodes[id].dispatch("keydown", { key, ...extra }); flush(); }
 function drag(id, from, to, pointerId = 1) { nodes[id].dispatch("pointerdown", eventAt(from, { pointerId, button: 0 })); nodes[id].dispatch("pointermove", eventAt(to, { pointerId })); nodes[id].dispatch("pointerup", { pointerId }); flush(); }
-flush(); same(state().b, M.defaults.b); same(state().vertices, M.defaults.vertices); assert.equal(state().mode, "target"); assert.equal(state().colorCap, null);
+flush(); same(state().b, M.defaults.b); same(state().vertices, M.defaults.vertices); assert.equal(state().mode, "target"); assert.equal(state().colorCap, null); close(state().p, 1);
 assert.equal(nodes.simplex.width, 1600); assert.equal(nodes.simplex.height, 1400); // DPR cap.
 for (const id of ["vertex-0", "vertex-1", "vertex-2", "target"]) { assert.match(nodes[id].getAttribute("aria-label"), /arrow keys/); assert.ok(Number.isFinite(parseFloat(nodes[id].style.left))); }
 assert.match(html, /class="handle/); assert.match(css, /touch-action:none/); assert.match(css, /focus-visible/); assert.match(html, /aria-live="polite"/);
@@ -91,7 +105,7 @@ assert.match(html, /class="handle/); assert.match(css, /touch-action:none/); ass
 // Target clicks, interior and exterior hover, direct drag, and exact centering.
 const chosen = [.15, .55, .3]; nodes.simplex.dispatch("click", eventAt(M.point(chosen, state().vertices))); flush(); state().b.forEach((v, i) => close(v, chosen[i]));
 const outsideBefore = state().b; nodes.simplex.dispatch("click", eventAt([.01, 2.59])); flush(); same(state().b, outsideBefore);
-nodes.simplex.dispatch("pointermove", eventAt(M.point([.2, .2, .6], state().vertices))); flush(); assert.match(nodes["probe-cost"].textContent, /W₁ = [0-9]/); close(state().probe[2], .6);
+nodes.simplex.dispatch("pointermove", eventAt(M.point([.2, .2, .6], state().vertices))); flush(); assert.match(nodes["probe-cost"].textContent, /Tₚ = [0-9]/); close(state().probe[2], .6);
 nodes.simplex.dispatch("pointerleave"); flush(); assert.equal(state().probe, null);
 drag("target", M.point(state().b, state().vertices), M.point([.4, .2, .4], state().vertices)); state().b.forEach((v, i) => close(v, [.4, .2, .4][i]));
 drag("target", M.point(state().b, state().vertices), [-2, -2]); assert.ok(state().b.every(v => v >= 0)); close(state().b.reduce((s, v) => s + v, 0), 1);
@@ -101,7 +115,8 @@ nodes.center.dispatch("click"); flush(); same(state().b, M.defaults.b);
 nodes["mode-inspect"].dispatch("click"); flush(); assert.equal(state().mode, "inspect"); same(state().probe, state().b); assert.equal(nodes["mode-inspect"].getAttribute("aria-pressed"), "true");
 const inspected = [.22, .31, .47], betaBeforeInspect = state().b;
 nodes.simplex.dispatch("click", eventAt(M.point(inspected, state().vertices), { pointerType: "touch" })); flush(); state().probe.forEach((v, i) => close(v, inspected[i])); same(state().b, betaBeforeInspect);
-assert.match(nodes.probe.textContent, /pinned/); assert.equal(nodes["probe-cost"].textContent, "W₁ = " + M.cost(inspected, state().b, state().vertices).toFixed(4));
+assert.match(nodes.probe.textContent, /pinned/); assert.match(nodes["probe-cost"].textContent, /^Tₚ = /);
+close(Number(nodes["probe-cost"].textContent.replace(/^Tₚ = /, "")), M.cost(inspected, state().b, state().vertices), 1e-3);
 nodes.simplex.dispatch("pointermove", eventAt(M.point([.1, .8, .1], state().vertices))); nodes.simplex.dispatch("pointerleave"); flush(); state().probe.forEach((v, i) => close(v, inspected[i]));
 let pointBefore = M.point(state().probe, state().vertices); press("simplex", "ArrowRight"); close(M.point(state().probe, state().vertices)[0], pointBefore[0] + .035); same(state().b, betaBeforeInspect);
 pointBefore = M.point(state().probe, state().vertices); press("simplex", "ArrowUp", { shiftKey: true }); close(M.point(state().probe, state().vertices)[1], pointBefore[1] + .12);
@@ -146,6 +161,35 @@ nodes["mode-inspect"].dispatch("click"); flush(); nodes.reset.dispatch("click");
 nodes["lock-scale"].checked = true; nodes["lock-scale"].dispatch("change"); flush(); nodes["lock-scale"].checked = false; nodes["lock-scale"].dispatch("change"); flush(); assert.equal(state().colorCap, null);
 for (let i = 0; i < 3; i++) { close(parseFloat(nodes["mass-" + i].style.width), 100 / 3); assert.equal(nodes["mass-value-" + i].textContent, "33.3%"); }
 
+// Positive exponents include the snowflake range p<1 and nonmetric powered costs.
+// Slider changes preserve both distributions and the support; units change, so
+// a locked color range is intentionally reset rather than compared silently.
+nodes["mode-inspect"].dispatch("click"); flush();
+nodes.simplex.dispatch("click", eventAt(M.point([.2, .3, .5], state().vertices))); flush();
+const beforePower = state();
+nodes["lock-scale"].checked = true; nodes["lock-scale"].dispatch("change"); flush(); assert.ok(state().colorCap > 0);
+for (const exponent of [.1, .5, 1, 2, 5, 20]) {
+  nodes.exponent.value = String(Math.log10(exponent)); nodes.exponent.dispatch("input"); flush();
+  close(state().p, exponent); same(state().b, beforePower.b); same(state().vertices, beforePower.vertices); same(state().probe, beforePower.probe);
+  assert.equal(state().colorCap, null); assert.equal(nodes["lock-scale"].checked, false);
+  close(Number(nodes["exponent-number"].value), exponent); assert.match(nodes["probe-cost"].textContent, /^Tₚ = /);
+}
+for (const [id, exponent] of [["power-half", .5], ["power-one", 1], ["power-two", 2]]) {
+  nodes[id].dispatch("click"); flush(); close(state().p, exponent); same(state().probe, beforePower.probe);
+}
+for (const exponent of [.001, 25]) {
+  nodes["exponent-number"].value = String(exponent); nodes["exponent-number"].dispatch("change"); flush(); close(state().p, exponent);
+  assert.ok(Number(nodes.exponent.min) <= Math.log10(exponent)); assert.ok(Number(nodes.exponent.max) >= Math.log10(exponent));
+  same(state().vertices, beforePower.vertices); same(state().b, beforePower.b); same(state().probe, beforePower.probe);
+}
+for (const invalid of ["0", "-1", "NaN", "", "Infinity", "1e308"]) {
+  const previousPower = state(); nodes["exponent-number"].value = invalid; nodes["exponent-number"].dispatch("change"); flush();
+  same(state(), previousPower); assert.ok(nodes["exponent-error"].textContent.length > 0);
+}
+nodes["power-one"].dispatch("click"); flush(); close(state().p, 1); assert.equal(nodes["exponent-error"].textContent, "");
+nodes["power-two"].dispatch("click"); flush(); nodes.reset.dispatch("click"); flush(); close(state().p, 1);
+assert.equal(state().mode, "target"); assert.equal(state().colorCap, null); assert.equal(state().probe, null);
+
 // Mobile resize, finite handle positions, and iframe-height message filtering.
 nodes.simplex.clientWidth = 320; nodes.simplex.clientHeight = 280; windowEvents.resize(); flush(); assert.equal(nodes.simplex.width, 640);
 for (const id of ["vertex-0", "vertex-1", "vertex-2", "target"]) { assert.ok(parseFloat(nodes[id].style.left) > 0 && parseFloat(nodes[id].style.left) < 320); assert.ok(parseFloat(nodes[id].style.top) > 0 && parseFloat(nodes[id].style.top) < 280); }
@@ -153,4 +197,4 @@ assert.ok(messages.length > 0); for (const { message, origin } of messages) { as
 let count = messages.length; windowEvents.message({ source: parent, origin: "https://unrelated.example", data: { type: "ot-experiment-measure" } }); assert.equal(messages.length, count);
 windowEvents.message({ source: {}, origin: sandbox.location.origin, data: { type: "ot-experiment-measure" } }); assert.equal(messages.length, count);
 windowEvents.message({ source: parent, origin: sandbox.location.origin, data: { type: "ot-experiment-measure" } }); assert.equal(messages.length, count + 1);
-console.log(`Transport simplex UI: ${assertions} finite-coordinate/affine-gradient checks; nice/frozen scales, saturation, boundary targets, pinned touch inspection, mouse/keyboard drags, geometry guards, preserved weights, mobile layout and safe frame sizing pass.`);
+console.log(`Transport simplex UI: ${assertions} finite-coordinate/affine-gradient checks; positive-power slider/input, unlabelled exact contours, nice/frozen scales, saturation, boundary targets, pinned touch inspection, mouse/keyboard drags, geometry guards, preserved weights, mobile layout and safe frame sizing pass.`);

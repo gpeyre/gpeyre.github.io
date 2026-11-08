@@ -42,6 +42,9 @@ keywords:
   - "barycentric coordinates"
   - "three-point Wasserstein distance"
   - "polyhedral transport balls"
+  - "power ground costs"
+  - "snowflake metrics"
+  - "sublinear transport cost"
 proofs: true
 embedded_experiment: true
 ---
@@ -263,42 +266,45 @@ $$
 
 ## Numerical experimentation: a triangle of distributions
 
-<p>Here is a two-dimensional slice of this convex extension that we can explore directly. Choose three non-collinear sites \(x_1,x_2,x_3\in\mathbb R^2\), and use their ordinary Euclidean distances as the ground costs:</p>
+<p>Here is a two-dimensional slice of this convex extension that we can explore directly. Choose three non-collinear sites \(x_1,x_2,x_3\in\mathbb R^2\), and raise their Euclidean distances to a positive exponent \(p\):</p>
 
 $$
-c_{ij}=|x_i-x_j|,\qquad
+c^{(p)}_{ij}=|x_i-x_j|^p,\qquad
 \alpha_a=\sum_{i=1}^3 a_i\delta_{x_i},\qquad
 \beta_b=\sum_{i=1}^3 b_i\delta_{x_i},
 \qquad a,b\in\Delta_2,
 $$
 
-<p>where \(\Delta_2=\{a\in\mathbb R_+^3:a_1+a_2+a_3=1\}\) is the probability simplex. With this <em>unsquared</em> ground cost, \(T_c\) is the Wasserstein-1 distance, denoted \(W_1\) below:</p>
+<p>where \(\Delta_2=\{a\in\mathbb R_+^3:a_1+a_2+a_3=1\}\) is the probability simplex. The figure displays the <em>raw transport cost</em>, without taking a \(p\)-th root:</p>
 
 $$
-W_1(\alpha_a,\beta_b)
+T_p(\alpha_a,\beta_b)
 =\min_{\substack{\pi_{ij}\ge0\\\sum_j\pi_{ij}=a_i\\\sum_i\pi_{ij}=b_j}}
-\sum_{i,j=1}^3 |x_i-x_j|\,\pi_{ij}.
+\sum_{i,j=1}^3 |x_i-x_j|^p\,\pi_{ij}.
 $$
+
+<p>For \(p\ge1\), this is \(W_p^p\); at the default \(p=1\), it is simply \(W_1\). Exponents \(0&lt;p&lt;1\) are allowed too: \(|x-y|^p\) is then a metric, and \(T_p\) is its Wasserstein-1 distance. In contrast, \(T_p\) need not itself satisfy the triangle inequality when \(p&gt;1\). For every positive \(p\), however, the coupling problem is still a linear program and its value is jointly convex in the weights.</p>
 
 <p><strong>One triangle has two roles.</strong> Its vertices are the actual sites where mass lives. The filled triangle also gives coordinates for <em>all distributions on those three sites</em>: we draw the weight vector \(a\) at the point \(z(a)=a_1x_1+a_2x_2+a_3x_3\). Non-collinearity makes this correspondence one-to-one. At a vertex, \(\alpha_a\) is a Dirac mass; on an edge, one weight vanishes; at the centroid, all three weights are \(1/3\).</p>
 
-<iframe class="idea-experiment" data-experiment="transport-simplex" src="{{ '/blog/preparations/assets/transport-simplex/index.html?v=polish-2' | relative_url }}" title="Exact Wasserstein-1 level sets on a probability simplex with draggable support points and target weights" loading="lazy" style="width:100%;height:1100px;border:0"></iframe>
+<iframe class="idea-experiment" data-experiment="transport-simplex" src="{{ '/blog/preparations/assets/transport-simplex/index.html?v=power-3' | relative_url }}" title="Transport-cost level sets with adjustable positive exponent, draggable support points, and target weights" loading="lazy" style="width:100%;height:1250px;border:0"></iframe>
 
 <p><strong>How to read and manipulate the figure.</strong></p>
 
 <ul>
 <li><em>The dark target represents a distribution.</em> It sits at \(z(b)\), initially the centroid with \(b=(1/3,1/3,1/3)\). It is not a fourth support point, nor does \(\beta_b\) put all its mass there: its three masses remain at the vertices. Dragging this marker changes their proportions.</li>
-<li><em>Every colored location represents another distribution.</em> At \(z(a)\), the color is \(W_1(\alpha_a,\beta_b)\). Hover to read the weights \(a\) and the cost, or choose <em>Inspect α</em> and tap to pin a distribution without moving the target. The pinned weights stay fixed as you change the geometry. The target is the unique zero; labeled contour lines join distributions with equal transport cost.</li>
+<li><em>Every colored location represents another distribution.</em> At \(z(a)\), the color is \(T_p(\alpha_a,\beta_b)\). Hover to read the weights \(a\) and the cost, or choose <em>Inspect α</em> and tap to pin a distribution without moving the target. The pinned weights stay fixed as you change the geometry or exponent. The target is the unique zero; the unlabeled contour lines join distributions with equal transport cost.</li>
+<li><em>Change how strongly long moves are penalized.</em> The logarithmic slider explores positive exponents on either side of \(1\); the number field accepts other positive values within floating-point range. Smaller \(p\) reduces the contrast between long and short moves, while larger \(p\) increases it. The color scale resets when \(p\) changes, since the cost units change too. Extremely large exponents can exceed numerical range or make fine contours unresolvable.</li>
 <li><em>Keep the same colors when comparing costs.</em> The automatic color scale uses rounded bounds enclosing all current values. Select <em>Lock color scale</em> to freeze it while moving the vertices or target. Costs beyond the locked upper bound use the darkest color; a warning and the actual maximum make this saturation explicit.</li>
 <li><em>Dragging a vertex changes the problem itself.</em> It changes the distances \(c_{ij}\), and hence the price of moving mass between sites. The target weights \(b\) stay fixed during this operation, so its displayed position \(z(b)\) follows the moving triangle. A small geometric guard keeps the three sites distinct and non-collinear.</li>
-<li><em>Try the equilateral and thin triangles.</em> In the equilateral case, all off-diagonal costs equal the side length \(d\), so \(W_1=(d/2)\sum_i|a_i-b_i|\): transport is just scaled total variation. Changing the geometry changes the contour directions and their relative spacing. Moving the target translates the underlying polygonal balls, which are then clipped by the simplex boundary.</li>
+<li><em>Try the equilateral and thin triangles.</em> In the equilateral case, all off-diagonal costs equal \(d^p\), where \(d\) is the side length, so \(T_p=(d^p/2)\sum_i|a_i-b_i|\): transport is just scaled total variation. Changing the geometry changes the contour directions and their relative spacing. At \(p=1\), moving the target translates polygonal balls, which are then clipped by the simplex boundary; for \(p&gt;1\), the geometry can be more complicated.</li>
 </ul>
 
-<p>Although \(z(a)\) is the mean of \(\alpha_a\), the displayed cost is <em>not</em> just the Euclidean distance \(|z(a)-z(b)|\) between the two means. That distance is only a lower bound, by the triangle inequality applied to any coupling. The plot measures the actual cost of redistributing mass among the three sites. Nor is it a spatial density plot: there is no mass spread over the colored interior.</p>
+<p>Although \(z(a)\) is the mean of \(\alpha_a\), the displayed cost is <em>not</em> just a distance between the two means. At \(p=1\), \(|z(a)-z(b)|\) is only a lower bound, by the triangle inequality applied to any coupling. The plot measures the actual cost of redistributing mass among the three sites. Nor is it a spatial density plot: there is no mass spread over the colored interior.</p>
 
-### Why the contours are polygonal—and exact
+### An exact formula at p = 1
 
-<p>No regularization or iterative transport solver is needed for this small example. Write \(d_{ij}=|x_i-x_j|\), and define</p>
+<p>No regularization or iterative transport solver is needed for this small example. At \(p=1\), the formula is particularly simple. Write \(d_{ij}=|x_i-x_j|\), and define</p>
 
 $$
 w_1=\frac{d_{12}+d_{13}-d_{23}}2,\qquad
@@ -334,7 +340,9 @@ $$
 
 </details>
 
-<p>The formula is affine on each region where the signs of \(a_i-b_i\) are fixed. For an interior target, its small positive level sets are hexagons, not ellipses; larger ones meet the simplex boundary. The renderer uses these affine pieces for both its colors and its straight contour segments, so the corners are real features of the distance, not discretization artifacts.</p>
+<p>The formula is affine on each region where the signs of \(a_i-b_i\) are fixed. For an interior target, its small positive level sets are hexagons, not ellipses; larger ones meet the simplex boundary. The same argument applies for \(0&lt;p&lt;1\) after replacing each \(d_{ij}\) by \(d_{ij}^p\), since these powered distances still satisfy the triangle inequality.</p>
+<p>For \(p&gt;1\), that inequality may fail, and keeping all common mass in place need no longer be optimal. For example, take \(x_1=(-1,0)\), \(x_2=(0,0.1)\), \(x_3=(1,0)\), and \(p=2\). Between \(a=(1/2,1/2,0)\) and \(b=(0,1/2,1/2)\), sending half the mass directly from \(x_1\) to \(x_3\) costs \(2\). Instead, exchanging half a unit along each of \(x_1\to x_2\) and \(x_2\to x_3\) costs only \(1.01\). This uses the mass already present at \(x_2\); it is not free transshipment. Between the two endpoint Dirac masses, the cost is still \(4\).</p>
+<p>The renderer therefore evaluates the full three-by-three coupling problem for every exponent, not the metric shortcut outside its range of validity. Its cost is the maximum of finitely many affine dual functions, so the contour segments remain straight even when their arrangement changes. The polygonal corners are real features of the transport cost, not a smoothing or meshing artifact.</p>
 <p>This is a slice \(a\mapsto T_c(\alpha_a,\beta_b)\) of the <em>joint</em> convex extension in Theorem 1. It should not be confused with the convex roof of the three vertex heights with \(b\) already fixed: that roof would simply be an affine plane. The coupling problem retains the information from <em>all pairs</em> of Dirac masses before we take the slice.</p>
 
 ## References

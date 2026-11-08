@@ -520,9 +520,10 @@
           0.3333333333333333,
           0.3333333333333333
         ],
-        "renderer": "shared transport-simplex core.js and view.js; exact affine cells and contours, native canvas"
+        "p": 1,
+        "renderer": "shared transport-simplex core.js and view.js; exact transport affine cells and unlabeled contours, native canvas"
       },
-      "sha256": "63bbf5e157a501bde250e060847bbba6a3263ae0fffcd2d89fb64ea53208e038"
+      "sha256": "c0545351c03b0369302c2dafa677c2446eb61deb30eb8706e86e7b3d1be3d0dd"
     },
     "orthostochastic-matrices": {
       "path": "/blog/imgs/summaries/orthostochastic-matrices.jpg",

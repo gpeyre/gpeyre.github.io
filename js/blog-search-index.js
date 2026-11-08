@@ -1949,7 +1949,10 @@ window.BLOG_SEARCH_RECORDS = [
       "probability simplex",
       "barycentric coordinates",
       "three-point Wasserstein distance",
-      "polyhedral transport balls"
+      "polyhedral transport balls",
+      "power ground costs",
+      "snowflake metrics",
+      "sublinear transport cost"
     ]
   },
   {
