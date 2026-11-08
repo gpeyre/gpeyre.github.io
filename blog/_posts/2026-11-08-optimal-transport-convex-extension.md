@@ -1,7 +1,7 @@
 ---
 title: "An Axiomatic Definition of the Wasserstein Distance"
 subtitle: "A transport plan is a convex decomposition of two distributions into pairs of points."
-description: "Kantorovich transport is the largest jointly convex lower-semicontinuous extension of a pointwise cost, with a short proof and a complete two-point example."
+description: "Kantorovich transport is the largest jointly convex lower-semicontinuous extension of a pointwise cost, with a short proof and interactive transport contours on a three-point probability simplex."
 date: "2026-11-08"
 topic: "Convex relaxation and optimal transport"
 keywords:
@@ -38,7 +38,12 @@ keywords:
   - "semi-continuité inférieure"
   - "décomposition convexe"
   - "dualité de Kantorovich"
+  - "probability simplex"
+  - "barycentric coordinates"
+  - "three-point Wasserstein distance"
+  - "polyhedral transport balls"
 proofs: true
+embedded_experiment: true
 ---
 
 <p>Suppose a cost \(c(x,y)\) tells us how expensive it is to move one point to another. How should we extend it to compare two probability distributions? Optimal transport answers by introducing a coupling and minimizing an average cost. But there is another way to arrive at the same construction: ask for the largest extension compatible with convexity and stability under weak limits.</p>
@@ -255,6 +260,81 @@ $$
 </details>
 
 <p>Savaré and Sodini use this perspective to obtain duality for more general spaces and lower-semicontinuous costs. Their formulation uses sublinearity on finite nonnegative measures; our compact probability version removes that extra machinery while preserving the central idea <a href="#ref-savare">[1]</a>. For the classical theory of transport duality, see also <a href="#ref-villani">[4]</a>.</p>
+
+## Numerical experimentation: a triangle of distributions
+
+<p>Here is a two-dimensional slice of this convex extension that we can explore directly. Choose three non-collinear sites \(x_1,x_2,x_3\in\mathbb R^2\), and use their ordinary Euclidean distances as the ground costs:</p>
+
+$$
+c_{ij}=|x_i-x_j|,\qquad
+\alpha_a=\sum_{i=1}^3 a_i\delta_{x_i},\qquad
+\beta_b=\sum_{i=1}^3 b_i\delta_{x_i},
+\qquad a,b\in\Delta_2,
+$$
+
+<p>where \(\Delta_2=\{a\in\mathbb R_+^3:a_1+a_2+a_3=1\}\) is the probability simplex. With this <em>unsquared</em> ground cost, \(T_c\) is the Wasserstein-1 distance, denoted \(W_1\) below:</p>
+
+$$
+W_1(\alpha_a,\beta_b)
+=\min_{\substack{\pi_{ij}\ge0\\\sum_j\pi_{ij}=a_i\\\sum_i\pi_{ij}=b_j}}
+\sum_{i,j=1}^3 |x_i-x_j|\,\pi_{ij}.
+$$
+
+<p><strong>One triangle has two roles.</strong> Its vertices are the actual sites where mass lives. The filled triangle also gives coordinates for <em>all distributions on those three sites</em>: we draw the weight vector \(a\) at the point \(z(a)=a_1x_1+a_2x_2+a_3x_3\). Non-collinearity makes this correspondence one-to-one. At a vertex, \(\alpha_a\) is a Dirac mass; on an edge, one weight vanishes; at the centroid, all three weights are \(1/3\).</p>
+
+<iframe class="idea-experiment" data-experiment="transport-simplex" src="{{ '/blog/preparations/assets/transport-simplex/index.html' | relative_url }}" title="Exact Wasserstein-1 level sets on a probability simplex with draggable support points and target weights" loading="lazy" style="width:100%;height:1100px;border:0"></iframe>
+
+<p><strong>How to read and manipulate the figure.</strong></p>
+
+<ul>
+<li><em>The dark target represents a distribution.</em> It sits at \(z(b)\), initially the centroid with \(b=(1/3,1/3,1/3)\). It is not a fourth support point, nor does \(\beta_b\) put all its mass there: its three masses remain at the vertices. Dragging this marker changes their proportions.</li>
+<li><em>Every colored location represents another distribution.</em> At \(z(a)\), the color is \(W_1(\alpha_a,\beta_b)\). Hover to read the weights \(a\) and the cost. The target is the unique zero; the contour lines join distributions with equal transport cost. Colors and contour spacing rescale to the current maximum, whose numerical value appears on the color bar.</li>
+<li><em>Dragging a vertex changes the problem itself.</em> It changes the distances \(c_{ij}\), and hence the price of moving mass between sites. The target weights \(b\) stay fixed during this operation, so its displayed position \(z(b)\) follows the moving triangle. A small geometric guard keeps the three sites distinct and non-collinear.</li>
+<li><em>Try the equilateral and thin triangles.</em> In the equilateral case, all off-diagonal costs equal the side length \(d\), so \(W_1=(d/2)\sum_i|a_i-b_i|\): transport is just scaled total variation. Changing the geometry changes the contour directions and their relative spacing. Moving the target translates the underlying polygonal balls, which are then clipped by the simplex boundary.</li>
+</ul>
+
+<p>Although \(z(a)\) is the mean of \(\alpha_a\), the displayed cost is <em>not</em> just the Euclidean distance \(|z(a)-z(b)|\) between the two means. That distance is only a lower bound, by the triangle inequality applied to any coupling. The plot measures the actual cost of redistributing mass among the three sites. Nor is it a spatial density plot: there is no mass spread over the colored interior.</p>
+
+### Why the contours are polygonal—and exact
+
+<p>No regularization or iterative transport solver is needed for this small example. Write \(d_{ij}=|x_i-x_j|\), and define</p>
+
+$$
+w_1=\frac{d_{12}+d_{13}-d_{23}}2,\qquad
+w_2=\frac{d_{12}+d_{23}-d_{13}}2,\qquad
+w_3=\frac{d_{13}+d_{23}-d_{12}}2.
+$$
+
+<p>The strict triangle inequalities give \(w_i&gt;0\), and \(d_{ij}=w_i+w_j\) for \(i\ne j\). These are the branch lengths of an abstract three-leaf tree with the same pairwise distances; its junction need not correspond to a point in the Euclidean triangle.</p>
+
+<p id="proposition-2"><strong>Proposition 2 (three-site transport).</strong> For any two weight vectors \(a,b\in\Delta_2\),</p>
+
+$$
+W_1(\alpha_a,\beta_b)=\sum_{i=1}^3 w_i|a_i-b_i|.
+$$
+
+<details class="blog-proof">
+
+<summary>Proof: retain common mass and move only the surplus</summary>
+
+<div class="blog-proof-body" markdown="1">
+
+<p>For any admissible coupling, the identity \(d_{ij}=w_i+w_j\) off the diagonal gives</p>
+
+$$
+\sum_{i,j}d_{ij}\pi_{ij}
+=\sum_i w_i(a_i+b_i-2\pi_{ii})
+\ge\sum_i w_i|a_i-b_i|,
+$$
+
+<p>since \(\pi_{ii}\le\min(a_i,b_i)\). This lower bound is attained: keep \(\min(a_i,b_i)\) at each site, then send the remaining surplus from sites with \(a_i&gt;b_i\) to those with \(a_i&lt;b_i\). Total surplus equals total deficit, so this completes a feasible coupling with all the desired diagonal entries. \(\square\)</p>
+
+</div>
+
+</details>
+
+<p>The formula is affine on each region where the signs of \(a_i-b_i\) are fixed. For an interior target, its small positive level sets are hexagons, not ellipses; larger ones meet the simplex boundary. The renderer uses these affine pieces for both its colors and its straight contour segments, so the corners are real features of the distance, not discretization artifacts.</p>
+<p>This is a slice \(a\mapsto T_c(\alpha_a,\beta_b)\) of the <em>joint</em> convex extension in Theorem 1. It should not be confused with the convex roof of the three vertex heights with \(b\) already fixed: that roof would simply be an affine plane. The coupling problem retains the information from <em>all pairs</em> of Dirac masses before we take the slice.</p>
 
 ## References
 

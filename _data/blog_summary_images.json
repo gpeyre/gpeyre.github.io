@@ -494,6 +494,36 @@
       },
       "sha256": "db56e4f52b53be08b58a4fecc8b5dfce985b5dcad3d015f699ca439bf2daa239"
     },
+    "optimal-transport-convex-extension": {
+      "path": "/blog/imgs/summaries/optimal-transport-convex-extension.jpg",
+      "width": 1200,
+      "height": 900,
+      "alt": "Exact polygonal Wasserstein-1 cost contours on a three-site probability simplex, with a central equal-weight target and Euclidean distances between the triangle's vertices.",
+      "source": "/blog/preparations/assets/transport-simplex/index.html",
+      "settings": {
+        "vertices": [
+          [
+            0.45,
+            0.4
+          ],
+          [
+            2.8,
+            0.55
+          ],
+          [
+            1.35,
+            2.25
+          ]
+        ],
+        "target": [
+          0.3333333333333333,
+          0.3333333333333333,
+          0.3333333333333333
+        ],
+        "renderer": "shared transport-simplex core.js and view.js; exact affine cells and contours, native canvas"
+      },
+      "sha256": "18178a2df7683a21f385bfbcc4b997a26d465f3f00c38d63feef21c62f6e7a47"
+    },
     "orthostochastic-matrices": {
       "path": "/blog/imgs/summaries/orthostochastic-matrices.jpg",
       "width": 1200,

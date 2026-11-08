@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Transport geometry on a three-point simplex</title><link rel="stylesheet" href="style.css"><script defer src="core.js"></script><script defer src="view.js"></script><script defer src="app.js"></script></head>
+<body><main>
+<p class="eyebrow">Three sites · all probability weights · exact transport</p>
+<h2>A triangle of distributions</h2>
+<p class="intro">Drag the three white vertices to change the transport costs. Drag the dark target β, or click inside the triangle, to change its weights. Colors show the cost of transporting every distribution α to β.</p>
+<div class="toolbar" aria-label="Triangle presets"><button id="reset" type="button">Reset</button><button id="equilateral" type="button">Equilateral</button><button id="thin" type="button">Thin triangle</button><button id="center" type="button">Center target</button></div>
+<div class="plot">
+<canvas id="simplex" width="800" height="700" role="img" aria-label="Exact Wasserstein-1 cost contours on a draggable triangle. The four labelled handle buttons can also be moved with arrow keys.">A colored triangle of probability distributions. Use the labelled handles to change the three support points and the target.</canvas>
+<button class="handle" id="vertex-0" type="button" aria-label="Move support point x1 with arrow keys"><span class="sr-only">Support x₁</span></button>
+<button class="handle" id="vertex-1" type="button" aria-label="Move support point x2 with arrow keys"><span class="sr-only">Support x₂</span></button>
+<button class="handle" id="vertex-2" type="button" aria-label="Move support point x3 with arrow keys"><span class="sr-only">Support x₃</span></button>
+<button class="handle target" id="target" type="button" aria-label="Move target beta with arrow keys"><span class="sr-only">Target β</span></button>
+</div>
+<div class="readouts"><p><span class="caption">Target weights b</span><output id="weights">(⅓, ⅓, ⅓)</output></p><p><span class="caption">Ground distances (c₁₂, c₁₃, c₂₃)</span><output id="distances"></output></p></div>
+<p id="probe" class="probe">Hover over the triangle to inspect α and its transport cost.</p>
+<p id="status" class="status" role="status" aria-live="polite"></p>
+<p class="method">Each interior point represents three weights, not a fourth support point. Contours are exact, spaced by <output id="spacing"></output>; colors rescale to the current maximum. The grid uses equal physical units on both axes. Vertex moves keep b fixed; the target follows its barycentric position. A small area and separation guard prevents the triangle from collapsing. Keyboard: Tab to a handle, then use arrows (Shift for larger steps); Home restores that handle.</p>
+</main></body></html>

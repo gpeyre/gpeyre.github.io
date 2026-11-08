@@ -1911,7 +1911,7 @@ window.BLOG_SEARCH_RECORDS = [
     "status": "published",
     "date": "2026-11-08",
     "title": "An Axiomatic Definition of the Wasserstein Distance",
-    "description": "Kantorovich transport is the largest jointly convex lower-semicontinuous extension of a pointwise cost, with a short proof and a complete two-point example.",
+    "description": "Kantorovich transport is the largest jointly convex lower-semicontinuous extension of a pointwise cost, with a short proof and interactive transport contours on a three-point probability simplex.",
     "keywords": [
       "optimal transport convex extension",
       "Kantorovich transport",
@@ -1945,7 +1945,11 @@ window.BLOG_SEARCH_RECORDS = [
       "enveloppe convexe",
       "semi-continuité inférieure",
       "décomposition convexe",
-      "dualité de Kantorovich"
+      "dualité de Kantorovich",
+      "probability simplex",
+      "barycentric coordinates",
+      "three-point Wasserstein distance",
+      "polyhedral transport balls"
     ]
   },
   {
