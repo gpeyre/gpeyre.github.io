@@ -629,6 +629,32 @@
         "mime_type": "image/jpeg",
         "size": 72254
       }
+    },
+    {
+      "slug": "optimal-transport-convex-extension",
+      "title": "An Axiomatic Definition of the Wasserstein Distance",
+      "date": "2026-11-08",
+      "url": "https://www.gpeyre.com/blog/2026/11/08/optimal-transport-convex-extension/",
+      "message": "On compact spaces, Kantorovich transport is the largest jointly convex, lower-semicontinuous extension of a continuous pointwise cost to measures. A short geometric proof. https://www.gpeyre.com/blog/2026/11/08/optimal-transport-convex-extension/",
+      "status": "prepared",
+      "source_sha256": "24450c8ee33a7e7f7f6ba33270a253b3af37e4eada2e0217b1a09024aaa6c522",
+      "base_commit": "f83df2dd8fc59ffa4470ee4eb1ee28ca1919ff9c",
+      "files": [
+        "blog/_posts/2026-11-08-optimal-transport-convex-extension.md",
+        "blog/preparations/optimal-transport-convex-extension.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null,
+      "working_sha256": {
+        "blog/_posts/2026-11-08-optimal-transport-convex-extension.md": "d85872efac2b4d1be57247005356cddde5d2f16d3a822179c6b4c88522b19ef5",
+        "blog/preparations/optimal-transport-convex-extension.html": "7ce9981b9489e6499fda785dafd7b54fa5de298eb6905f0ca3dd4f3675ba8f42",
+        "blog/preparations/index.html": "079e8a7528de44a9d95f835f416e2063fd2f2b38f728288bb5386ee97065a49b",
+        "js/blog-search-index.js": "8230a5cb5fbefa8946299da0267be49ecfaa627c648710651f6c1a94e518b64f"
+      }
     }
   ]
 }
