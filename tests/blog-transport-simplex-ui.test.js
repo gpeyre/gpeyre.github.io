@@ -23,19 +23,29 @@ function context() {
 
 const shapes = [M.defaults.vertices, [[.45, .4], [2.75, .4], [1.6, .4 + 2.3 * Math.sqrt(3) / 2]], [[.35, .6], [2.85, .6], [1.15, 1.02]]];
 const targets = [M.defaults.b, [.1, .2, .7], [0, .6, .4], [1, 0, 0], [0, 1, 0], [0, 0, 1], [1e-9, .3, .7 - 1e-9]];
+same(V.scaleFor(0), { cap: 1, step: .1 });
+for (const max of [1e-7, .019, .18, .999, 1, 1.5000001, 2.4, 20, 100, 1e6]) {
+  const scale = V.scaleFor(max); assert.ok(scale.cap >= max); assert.ok(scale.cap - max <= scale.step * (1 + 1e-10));
+  close(scale.cap / scale.step, Math.round(scale.cap / scale.step));
+  const normalized = scale.step / 10 ** Math.floor(Math.log10(scale.step)); assert.ok([1, 2, 2.5, 5, 10].some(v => Math.abs(v - normalized) < 1e-10));
+}
+for (const invalid of [-1, NaN, Infinity]) assert.throws(() => V.scaleFor(invalid), RangeError);
 for (const width of [280, 375, 800, 1200]) {
   const height = width * 7 / 8, box = V.layout(width, height);
   assert.ok(box.scale > 0);
   for (const xy of [[0, 0], [3.2, 2.6], [1.2, 1.7]]) box.toWorld(box.toScreen(xy)).forEach((v, i) => close(v, xy[i]));
   const xstep = box.toScreen([1, 0])[0] - box.toScreen([0, 0])[0], ystep = box.toScreen([0, 0])[1] - box.toScreen([0, 1])[1]; close(xstep, ystep);
-  for (const vertices of shapes) for (const b of targets) {
-    const ctx = context(), draw = V.draw(ctx, width, height, { vertices, b, probe: [.2, .3, .5] });
+  for (const vertices of shapes) for (const b of targets) for (const colorCap of [null, .5, 4]) {
+    const ctx = context(), draw = V.draw(ctx, width, height, { vertices, b, probe: [.2, .3, .5], colorCap });
     close(draw.maxCost, Math.max(...vertices.map((_, i) => M.cost([0, 1, 2].map(j => +(i === j)), b, vertices))));
-    assert.ok(ctx.marks > 100); assert.equal(draw.levels.length, 9);
+    close(draw.colorCap, colorCap || V.scaleFor(draw.maxCost).cap); close(draw.step, V.scaleFor(draw.colorCap).step);
+    assert.ok(ctx.marks > 70); assert.ok(draw.levels.length >= 4 && draw.levels.length <= 12);
+    draw.levels.forEach((v, i) => { close(v, (i + 1) * draw.step); assert.ok(v < draw.colorCap); });
     const polygons = ctx.fills.filter(fill => fill.style && fill.style.axis);
     assert.equal(polygons.length, M.signCells(b).length);
     // Each sign-cell fill must encode the exact affine scalar field: projecting
-    // a point on its gradient axis yields W1/maxCost, not a triangulation surrogate.
+    // a point on its gradient axis yields W1/colorCap, not a triangulation
+    // surrogate. A fraction above one legitimately saturates a frozen scale.
     for (const fill of polygons) {
       assert.ok(fill.points.length >= 3); assert.equal(fill.style.stops.length, V.palette.length);
       const [x0, y0, x1, y1] = fill.style.axis, dx = x1 - x0, dy = y1 - y0;
@@ -43,7 +53,7 @@ for (const width of [280, 375, 800, 1200]) {
       for (const pixel of [...fill.points, centroid]) {
         const fraction = ((pixel[0] - x0) * dx + (pixel[1] - y0) * dy) / (dx * dx + dy * dy);
         const a = M.barycentric(box.toWorld(pixel), vertices);
-        close(fraction, M.cost(a, b, vertices) / draw.maxCost, 1e-9);
+        close(fraction, M.cost(a, b, vertices) / draw.colorCap, 1e-9);
       }
     }
   }
@@ -73,7 +83,7 @@ function state() { return window.TransportSimplexApp.getState(); }
 function eventAt(xy, extra = {}) { const box = V.layout(nodes.simplex.clientWidth, nodes.simplex.clientHeight), pixel = box.toScreen(xy), r = nodes.simplex.getBoundingClientRect(); return { clientX: pixel[0] + r.left, clientY: pixel[1] + r.top, ...extra }; }
 function press(id, key, extra = {}) { nodes[id].dispatch("keydown", { key, ...extra }); flush(); }
 function drag(id, from, to, pointerId = 1) { nodes[id].dispatch("pointerdown", eventAt(from, { pointerId, button: 0 })); nodes[id].dispatch("pointermove", eventAt(to, { pointerId })); nodes[id].dispatch("pointerup", { pointerId }); flush(); }
-flush(); same(state().b, M.defaults.b); same(state().vertices, M.defaults.vertices);
+flush(); same(state().b, M.defaults.b); same(state().vertices, M.defaults.vertices); assert.equal(state().mode, "target"); assert.equal(state().colorCap, null);
 assert.equal(nodes.simplex.width, 1600); assert.equal(nodes.simplex.height, 1400); // DPR cap.
 for (const id of ["vertex-0", "vertex-1", "vertex-2", "target"]) { assert.match(nodes[id].getAttribute("aria-label"), /arrow keys/); assert.ok(Number.isFinite(parseFloat(nodes[id].style.left))); }
 assert.match(html, /class="handle/); assert.match(css, /touch-action:none/); assert.match(css, /focus-visible/); assert.match(html, /aria-live="polite"/);
@@ -81,11 +91,32 @@ assert.match(html, /class="handle/); assert.match(css, /touch-action:none/); ass
 // Target clicks, interior and exterior hover, direct drag, and exact centering.
 const chosen = [.15, .55, .3]; nodes.simplex.dispatch("click", eventAt(M.point(chosen, state().vertices))); flush(); state().b.forEach((v, i) => close(v, chosen[i]));
 const outsideBefore = state().b; nodes.simplex.dispatch("click", eventAt([.01, 2.59])); flush(); same(state().b, outsideBefore);
-nodes.simplex.dispatch("pointermove", eventAt(M.point([.2, .2, .6], state().vertices))); flush(); assert.match(nodes.probe.textContent, /W₁\(α, β\)/); close(state().probe[2], .6);
+nodes.simplex.dispatch("pointermove", eventAt(M.point([.2, .2, .6], state().vertices))); flush(); assert.match(nodes["probe-cost"].textContent, /W₁ = [0-9]/); close(state().probe[2], .6);
 nodes.simplex.dispatch("pointerleave"); flush(); assert.equal(state().probe, null);
 drag("target", M.point(state().b, state().vertices), M.point([.4, .2, .4], state().vertices)); state().b.forEach((v, i) => close(v, [.4, .2, .4][i]));
 drag("target", M.point(state().b, state().vertices), [-2, -2]); assert.ok(state().b.every(v => v >= 0)); close(state().b.reduce((s, v) => s + v, 0), 1);
 nodes.center.dispatch("click"); flush(); same(state().b, M.defaults.b);
+
+// Inspect mode pins alpha without changing beta, including touch and keyboard.
+nodes["mode-inspect"].dispatch("click"); flush(); assert.equal(state().mode, "inspect"); same(state().probe, state().b); assert.equal(nodes["mode-inspect"].getAttribute("aria-pressed"), "true");
+const inspected = [.22, .31, .47], betaBeforeInspect = state().b;
+nodes.simplex.dispatch("click", eventAt(M.point(inspected, state().vertices), { pointerType: "touch" })); flush(); state().probe.forEach((v, i) => close(v, inspected[i])); same(state().b, betaBeforeInspect);
+assert.match(nodes.probe.textContent, /pinned/); assert.equal(nodes["probe-cost"].textContent, "W₁ = " + M.cost(inspected, state().b, state().vertices).toFixed(4));
+nodes.simplex.dispatch("pointermove", eventAt(M.point([.1, .8, .1], state().vertices))); nodes.simplex.dispatch("pointerleave"); flush(); state().probe.forEach((v, i) => close(v, inspected[i]));
+let pointBefore = M.point(state().probe, state().vertices); press("simplex", "ArrowRight"); close(M.point(state().probe, state().vertices)[0], pointBefore[0] + .035); same(state().b, betaBeforeInspect);
+pointBefore = M.point(state().probe, state().vertices); press("simplex", "ArrowUp", { shiftKey: true }); close(M.point(state().probe, state().vertices)[1], pointBefore[1] + .12);
+press("simplex", "Home"); same(state().probe, state().b);
+nodes.simplex.dispatch("click", eventAt(M.point(inspected, state().vertices))); flush(); const pinBefore = state().probe;
+drag("vertex-1", state().vertices[1], [2.65, .6]); same(state().probe, pinBefore); same(state().b, betaBeforeInspect);
+drag("target", M.point(state().b, state().vertices), M.point([.2, .5, .3], state().vertices)); same(state().probe, pinBefore); assert.notDeepEqual(JSON.parse(JSON.stringify(state().b)), JSON.parse(JSON.stringify(betaBeforeInspect)));
+// A handle tap inspects its Dirac mass; a drag must not replace the pinned alpha.
+let tappedVertex = state().vertices[2]; nodes["vertex-2"].dispatch("pointerdown", eventAt(tappedVertex, { pointerId: 20, button: 0 })); nodes["vertex-2"].dispatch("pointerup", { pointerId: 20 }); nodes["vertex-2"].dispatch("click"); flush(); same(state().probe, [0, 0, 1]);
+drag("vertex-2", state().vertices[2], [1.4, 2.2], 21); nodes["vertex-2"].dispatch("click"); flush(); same(state().probe, [0, 0, 1]);
+const targetPoint = M.point(state().b, state().vertices); nodes.target.dispatch("pointerdown", eventAt(targetPoint, { pointerId: 22, button: 0 })); nodes.target.dispatch("pointerup", { pointerId: 22 }); nodes.target.dispatch("click"); flush(); same(state().probe, state().b);
+nodes["mode-target"].dispatch("click"); flush(); assert.equal(state().mode, "target"); assert.equal(state().probe, null); assert.equal(nodes["mode-target"].getAttribute("aria-pressed"), "true");
+const beforeDisabledArrows = state(); press("simplex", "ArrowLeft"); same(state(), beforeDisabledArrows);
+nodes.simplex.dispatch("pointermove", eventAt(M.point(inspected, state().vertices), { pointerType: "touch" })); flush(); assert.equal(state().probe, null);
+nodes.reset.dispatch("click"); flush();
 
 // Moving a support changes costs but preserves target weights, not its drawn position.
 const before = state(), beforeTarget = M.point(before.b, before.vertices), moved = [.6, .48];
@@ -105,6 +136,16 @@ nodes.thin.dispatch("click"); flush(); close(state().vertices[2][1], 1.02); asse
 nodes.reset.dispatch("click"); flush(); same(state().vertices, M.defaults.vertices); same(state().b, M.defaults.b);
 const exported = state(); exported.b[0] = 999; exported.vertices[0][0] = 999; same(state().b, M.defaults.b); same(state().vertices, M.defaults.vertices);
 
+// Locking freezes the scale while target or support changes. Clipping is visible,
+// and Reset restores the automatic scale as well as interaction mode and target.
+const autoMaximum = Math.max(...M.geometry(state().vertices).distances.map(row => row.reduce((s, d, j) => s + d * state().b[j], 0)));
+nodes["lock-scale"].checked = true; nodes["lock-scale"].dispatch("change"); flush(); const locked = state().colorCap; close(locked, V.scaleFor(autoMaximum).cap); assert.match(nodes["scale-status"].textContent, /Locked scale/);
+nodes.simplex.dispatch("click", eventAt(M.point([.98, .01, .01], state().vertices))); flush(); close(state().colorCap, locked); assert.match(nodes["scale-status"].textContent, /saturated/);
+nodes.thin.dispatch("click"); flush(); close(state().colorCap, locked);
+nodes["mode-inspect"].dispatch("click"); flush(); nodes.reset.dispatch("click"); flush(); assert.equal(state().colorCap, null); assert.equal(nodes["lock-scale"].checked, false); assert.equal(state().mode, "target"); assert.match(nodes["scale-status"].textContent, /Automatic scale/); same(state().b, M.defaults.b);
+nodes["lock-scale"].checked = true; nodes["lock-scale"].dispatch("change"); flush(); nodes["lock-scale"].checked = false; nodes["lock-scale"].dispatch("change"); flush(); assert.equal(state().colorCap, null);
+for (let i = 0; i < 3; i++) { close(parseFloat(nodes["mass-" + i].style.width), 100 / 3); assert.equal(nodes["mass-value-" + i].textContent, "33.3%"); }
+
 // Mobile resize, finite handle positions, and iframe-height message filtering.
 nodes.simplex.clientWidth = 320; nodes.simplex.clientHeight = 280; windowEvents.resize(); flush(); assert.equal(nodes.simplex.width, 640);
 for (const id of ["vertex-0", "vertex-1", "vertex-2", "target"]) { assert.ok(parseFloat(nodes[id].style.left) > 0 && parseFloat(nodes[id].style.left) < 320); assert.ok(parseFloat(nodes[id].style.top) > 0 && parseFloat(nodes[id].style.top) < 280); }
@@ -112,4 +153,4 @@ assert.ok(messages.length > 0); for (const { message, origin } of messages) { as
 let count = messages.length; windowEvents.message({ source: parent, origin: "https://unrelated.example", data: { type: "ot-experiment-measure" } }); assert.equal(messages.length, count);
 windowEvents.message({ source: {}, origin: sandbox.location.origin, data: { type: "ot-experiment-measure" } }); assert.equal(messages.length, count);
 windowEvents.message({ source: parent, origin: sandbox.location.origin, data: { type: "ot-experiment-measure" } }); assert.equal(messages.length, count + 1);
-console.log(`Transport simplex UI: ${assertions} finite-coordinate/affine-gradient checks; exact fills, boundary targets, presets, mouse/keyboard drags, geometry guards, preserved weights, mobile layout and safe frame sizing pass.`);
+console.log(`Transport simplex UI: ${assertions} finite-coordinate/affine-gradient checks; nice/frozen scales, saturation, boundary targets, pinned touch inspection, mouse/keyboard drags, geometry guards, preserved weights, mobile layout and safe frame sizing pass.`);
