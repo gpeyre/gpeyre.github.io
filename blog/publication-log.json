@@ -662,7 +662,7 @@
       "date": "2026-11-09",
       "url": "https://www.gpeyre.com/blog/2026/11/09/perspective-transform-on-measures/",
       "message": "A small convexity trick connects f-divergences and dynamic optimal transport: the perspective transform. It turns density ratios into convex functionals of mass and momentum. https://www.gpeyre.com/blog/2026/11/09/perspective-transform-on-measures/",
-      "status": "prepared",
+      "status": "announced",
       "source_sha256": "6be3a29fd0a391c0f40fe68781c8e9f50cc9f7f4ca83754949f1181aac53d159",
       "base_commit": "da2bd78f16fb8d9b25fd78734f7426e0db898a62",
       "files": [
@@ -678,9 +678,18 @@
         "blog/preparations/index.html": "5747d02bcb63e3554b1c093624f24cb9543f7e9a86d4ac7424937b059ba70d8a",
         "js/blog-search-index.js": "9ff63defbc3df88d104a81373f69273abe2df6bd5a27861b72a5a8068a9ab8df"
       },
-      "publication_commit": null,
-      "bluesky_uri": null,
-      "bluesky_cid": null
+      "publication_commit": "4bcf0bec38fd8b42a239383d60d679785fc43e02",
+      "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3mztmmduk227j",
+      "bluesky_cid": "bafyreihkov74h5ugtmkgurmmm4ti53qj45xhzyfpmzz3b57abxniodi7em",
+      "announcement_image": {
+        "path": "/blog/imgs/summaries/perspective-transform-on-measures.jpg",
+        "alt": "Colored level sets of the quadratic perspective z squared over twice the mass, with exact white contours and the dashed unit-mass slice recovering the original function.",
+        "width": 1200,
+        "height": 720,
+        "sha256": "3a76025315bf690e4314b6eb3b424c76e97217e6551117c18ef221f569771183",
+        "mime_type": "image/jpeg",
+        "size": 98765
+      }
     }
   ]
 }
