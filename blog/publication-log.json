@@ -655,6 +655,32 @@
         "blog/preparations/index.html": "079e8a7528de44a9d95f835f416e2063fd2f2b38f728288bb5386ee97065a49b",
         "js/blog-search-index.js": "8230a5cb5fbefa8946299da0267be49ecfaa627c648710651f6c1a94e518b64f"
       }
+    },
+    {
+      "slug": "perspective-transform-on-measures",
+      "title": "The perspective transform: convexity on measures",
+      "date": "2026-11-09",
+      "url": "https://www.gpeyre.com/blog/2026/11/09/perspective-transform-on-measures/",
+      "message": "A small convexity trick connects f-divergences and dynamic optimal transport: the perspective transform. It turns density ratios into convex functionals of mass and momentum. https://www.gpeyre.com/blog/2026/11/09/perspective-transform-on-measures/",
+      "status": "prepared",
+      "source_sha256": "6be3a29fd0a391c0f40fe68781c8e9f50cc9f7f4ca83754949f1181aac53d159",
+      "base_commit": "da2bd78f16fb8d9b25fd78734f7426e0db898a62",
+      "files": [
+        "blog/_posts/2026-11-09-perspective-transform-on-measures.md",
+        "blog/preparations/perspective-transform-on-measures.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "working_sha256": {
+        "blog/_posts/2026-11-09-perspective-transform-on-measures.md": "272e5bf0203927f5deccff0c8c9768d9677af1b42afdcc46d172cfc0daee2fe5",
+        "blog/preparations/perspective-transform-on-measures.html": "90f384c8ccadd5b64cf34c0b6f1f70af8155c542ffc8ad04ff6422527532f33e",
+        "blog/preparations/index.html": "5747d02bcb63e3554b1c093624f24cb9543f7e9a86d4ac7424937b059ba70d8a",
+        "js/blog-search-index.js": "9ff63defbc3df88d104a81373f69273abe2df6bd5a27861b72a5a8068a9ab8df"
+      },
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null
     }
   ]
 }
