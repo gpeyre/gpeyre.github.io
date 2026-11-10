@@ -43,7 +43,7 @@ embedded_experiment: true
 
 Two pictures of a probability distribution suggest two different ways to interpolate it. One can blend their densities, as in a cross-fade. Or one can move the particles, carrying every bit of mass from its starting point to a destination. Can these pictures describe exactly the same evolution?
 
-Moser’s construction gives a beautiful affirmative answer for smooth, strictly positive densities. Prescribe the density path, solve a divergence equation for its flux, then divide by the density to recover a velocity. The nonlinear-looking transport problem reduces to one Poisson solve and an ordinary differential equation. The idea originates in Moser’s theorem on volume forms [[1]](#ref-moser); Dacorogna and Moser developed the prescribed-Jacobian problem further [[2]](#ref-dm).
+Moser’s construction does this for smooth, strictly positive densities. Prescribe the density path, solve a divergence equation for its flux, then divide by the density to recover a velocity. This reduces the transport problem to a Poisson solve and an ordinary differential equation. The idea originates in Moser’s theorem on volume forms [[1]](#ref-moser); Dacorogna and Moser developed the prescribed-Jacobian problem further [[2]](#ref-dm).
 
 <!--more-->
 
@@ -113,7 +113,7 @@ In particular, $$T_1$$ transports the first prescribed density to the second.
 
 <div class="blog-proof-body" markdown="1">
 
-The lower bound $$\rho_t\ge c$$ makes $$v_t$$ smooth on the compact torus, so its flow exists globally on this time interval and is a diffeomorphism. The crucial identity is only one line:
+The lower bound $$\rho_t\ge c$$ makes $$v_t$$ smooth on the compact torus, so its flow exists globally on this time interval and is a diffeomorphism. Differentiating along the flow gives
 
 $$
 \partial_t\rho_t+\nabla\cdot(\rho_tv_t)

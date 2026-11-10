@@ -132,7 +132,7 @@ function weak() {
 }
 
 function clt(){
-  setup("6 / Same Gaussian limit, different powers of n",
+  setup("6 / Wasserstein central-limit rates",
     "Blue: symmetric Bernoulli. Red: continuous uniform. Select the number of summands. On the right, multiply the CDF errors by √n and n respectively to reveal their different leading shapes.",
     "Bernoulli is evaluated from binomial masses; the uniform law uses a continuous Irwin-Hall spline CDF. Numerical integration is refined independently. Neither rate is estimated from a discretized uniform input.",2);
   const s=slider("Number of summands n",0,D.clt.profiles.length-1,0);
@@ -177,7 +177,7 @@ function energy(){
 }
 
 function composition(){
-  setup("13 / Two optimal steps need not compose optimally",
+  setup("13 / Composition of Gaussian optimal transport maps",
     "Rotate the eigenbasis of the second symmetric positive-definite matrix. Each factor is a Brenier map, but their product need not be a gradient.",
     "The first two panels share the same continuous Gaussian target law. Their plotted endpoints need not coincide: these are different couplings, not permutations of a fixed target cloud. The last panel shows the exact expected excess cost, which is small but strictly positive away from the commuting angles.");
   const s=slider("Eigenbasis angle (degrees)",0,90,35);
@@ -232,7 +232,7 @@ function cdf(){
 }
 
 function matchings(){
-  setup("21 / A noncrossing matching is not an optimality certificate",
+  setup("21 / Sampling and local descent for noncrossing matchings",
     "Alternate red and blue vertices on a convex ellipse. Explore the Catalan family uniformly, or take feasible pair swaps that decrease mean Euclidean length.",
     "The uncrossing theorem and this experiment use Euclidean length, not arbitrary powers of it. Greedy feasible swaps have no global-optimality guarantee. Uniform global proposals visit the entire noncrossing family; each displayed configuration is checked.",2);
   const s=slider("Pairs",3,16,10);const random=M.rng(21);let x,y,p,best,opt,current,history=[];
@@ -283,7 +283,7 @@ function bernstein(){
 }
 
 function quantization(){
-  setup("34 / Deliberate placement versus random placement",
+  setup("34 / Optimal particle placement and independent sampling",
     "The target is uniform on [0,1]. Deterministic equal-weight optimizers are interval midpoints. The blue empirical law uses i.i.d. uniform points.",
     "The blue error is one realization, not its expectation. The exact expected squared error is 1/(6n); the optimal deterministic error is 1/(12n^2). The power comparison is for this regular one-dimensional setting.",2);
   const s=slider("Particle count n",2,150,18);let seed=34;
@@ -322,7 +322,7 @@ function monge(){
 }
 
 function moments(){
-  setup("2 / Different clouds, one autonomous moment",
+  setup("2 / Autonomous signed-distance moments",
     "The observable is signed distance to the unit circle, phi(x) = |x| - 1. Both clouds have initial mean signed distance 0.2. Their shapes differ but their moment follows the same scalar equation.",
     "For f(alpha) = (integral phi d alpha)^2 / 2, the exact velocity is minus the moment times the radial unit vector. Here m(t) = 0.2 exp(-t). These analytic trajectories stay inside a smooth annulus; no global signed-distance regularity is assumed.");
   const s=slider("Time",0,5,0,.025);
@@ -342,7 +342,7 @@ function moments(){
 }
 
 function caps(){
-  setup("5 / A constant density cap survives a Wasserstein geodesic",
+  setup("5 / Density bounds along Wasserstein geodesics",
     "Interpolate two increasing quantile functions. Endpoint density peaks saturate their common cap; intermediate densities remain below it without an extra constraint in the solver.",
     "This is an exact one-dimensional example on a convex Euclidean domain. Q0(r) = r + a sin(2 pi r)/(2 pi), Q1(r) = 0.6 + r - a sin(2 pi r)/(2 pi). The cap is kappa = 1/(1-a). Obstacles or spatially varying caps are different problems.",2);
   const s=slider("Geodesic time",0,1,.5,.01),amp=slider("Quantile modulation a",0,.8,.5,.01);

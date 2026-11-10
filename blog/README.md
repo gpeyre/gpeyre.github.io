@@ -308,6 +308,25 @@ keywords:
 The date comes from the filename. Future-dated posts are included in builds
 (`future: true`), so the chosen date is not a publication schedule. Use
 `published: false` for a post that is not ready to publish.
+
+Use direct, specific prose and conventional mathematical section headings.
+Subtitles should describe the subject, rather than advertise it. Avoid slogan-like
+sentence fragments, forced three-part summaries, and stock phrases such as
+“a surprisingly rich landscape” or “a beautiful result hidden inside”. Keep
+personal anecdotes, acknowledgments, and concrete pedagogical explanations;
+do not replace them with uniformly impersonal prose. Editorial changes must
+preserve mathematical assumptions, statements, proofs, notation, and citations.
+Retain existing section anchors when renaming headings.
+
+The shared published-post layout adds the endnote linking to
+`/blog/ai-disclosure/`. Every standalone forthcoming article must include the
+same `p.blog-ai-disclosure` endnote immediately after `</article>`, outside the
+article and before `</main>`, linking to `../ai-disclosure/`. Keeping it outside
+the article prevents duplication when the preview is promoted and the published
+layout supplies its own endnote. Do not put it in redirect stubs or embedded
+experiment pages. Run `ruby tests/blog-ai-disclosure.test.rb /path/to/build`
+to check every published article and forthcoming preview.
+
 Write two or three opening paragraphs, then
 place <!--more--> on its own line. That opening becomes the archive’s fading,
 math-rendered preview. The full article follows. Avoid figures, headings, and

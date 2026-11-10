@@ -37,7 +37,7 @@ keywords:
 figure: diffusion
 ---
 
-A centered Gaussian can be transformed into three Gaussian clouds in many ways. Two particularly interesting constructions are the **deterministic diffusion map**, obtained by reversing a score-based probability-flow ODE, and the **optimal transport map**, which minimizes the total squared displacement.
+A centered Gaussian can be transformed into three Gaussian clouds in many ways. Here we compare the **deterministic diffusion map**, obtained by reversing a score-based probability-flow ODE, with the **optimal transport map**, which minimizes the total squared displacement.
 
 Both produce the same target distribution in the continuous model. But matching distributions does not mean matching individual particles. Coloring each particle by its destination makes this distinction visible.
 
@@ -99,7 +99,7 @@ To generate data, integrate this ODE **backward**, from the Gaussian end toward 
 
 An important factor-of-two warning: simply deleting the Brownian term from the *reverse SDE* does not give this ODE. For the normalization above, the forward-time probability-flow drift is $$-x-\nabla\log p_t$$, whereas the reverse-SDE drift, expressed in decreasing forward time, is $$-x-2\nabla\log p_t$$.
 
-### A map starting from an exact Gaussian
+### Reparametrization from an exact Gaussian {#a-map-starting-from-an-exact-gaussian}
 
 The OU process reaches its Gaussian equilibrium only as $$t\to\infty$$. To avoid pretending that a finite noising time is exactly Gaussian, set $$r=e^{-t}$$ and run $$r$$ from $$0$$ to $$1$$. Write
 
@@ -190,7 +190,7 @@ The offsets $$\lambda_j$$ enforce the prescribed masses. Subtracting the two squ
 
 ## Trajectories and endpoint assignments {#curved-paths-versus-different-maps}
 
-Curved diffusion trajectories and straight OT trajectories are visually striking, but **curvature alone does not prove that the endpoint maps differ**. One could follow a curved route and still reach the optimal endpoint.
+Diffusion trajectories can be curved while OT trajectories are straight, but **curvature alone does not prove that the endpoint maps differ**. One could follow a curved route and still reach the optimal endpoint.
 
 The stronger distinction is the assignment. Diffusion transports mass along a prescribed path of densities; OT chooses the coupling that minimizes endpoint displacement. Although the diffusion velocity is a gradient at each instant, composing its infinitesimal maps need not produce the gradient of a convex function. In several dimensions, the Hessians encountered along a trajectory need not commute.
 

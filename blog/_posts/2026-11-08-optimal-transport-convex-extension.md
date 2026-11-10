@@ -50,7 +50,7 @@ embedded_experiment: true
 ---
 
 <p>Suppose a cost \(c(x,y)\) tells us how expensive it is to move one point to another. How should we extend it to compare two probability distributions? Optimal transport answers by introducing a coupling and minimizing an average cost. But there is another way to arrive at the same construction: ask for the largest extension compatible with convexity and stability under weak limits.</p>
-<p>This viewpoint makes the transport plan almost inevitable. A coupling records a way to express a pair of distributions as an average of point-pairs, and convexity puts an upper bound on the cost of every such decomposition. The best of those bounds is precisely the Kantorovich value. Savaré and Sodini develop this relaxation approach in a much more general setting <a href="#ref-savare">[1]</a>; the compact probability version is <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.3.3.35">Theorem 3.35 of my book</a> <a href="#ref-book">[2]</a>.</p>
+<p>A coupling expresses a pair of distributions as an average of point-pairs. Convexity puts an upper bound on the cost of every such decomposition, and the best of those bounds is precisely the Kantorovich value. Savaré and Sodini develop this relaxation approach in a more general setting <a href="#ref-savare">[1]</a>; the compact probability version is <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.3.3.35">Theorem 3.35 of my book</a> <a href="#ref-book">[2]</a>.</p>
 
 <!--more-->
 
@@ -221,10 +221,10 @@ $$
 
 <p>If one also wants nonnegative values, use \(\max(F_\varepsilon,0)\). The maximum of two convex lower-semicontinuous functions has the same properties, and the Dirac values remain unchanged because \(c\ge0\).</p>
 
-## Couplings as certificates of convex decomposition
+## Couplings and convex decompositions {#couplings-as-certificates-of-convex-decomposition}
 
 <p>Assign cost \(c(x,y)\) to the pairs \((\delta_x,\delta_y)\), and \(+\infty\) to every other pair of laws. Taking the convex lower-semicontinuous envelope of this function produces \(T_c\). On finite spaces, this is the familiar operation of taking the lower convex roof of finitely many points. On general compact spaces, weak limits complete that construction.</p>
-<p>The coupling is therefore more than an auxiliary variable introduced to relax a matching constraint. It is the certificate of a convex decomposition. Its marginal constraints say exactly that the decomposition averages to the two distributions we started with. This is one reason linear programming appears so naturally in optimal transport <a href="#ref-computational">[3]</a>.</p>
+<p>The coupling certifies a convex decomposition. Its marginal constraints ensure that the decomposition averages to the two prescribed distributions, which explains the linear-programming formulation of optimal transport <a href="#ref-computational">[3]</a>.</p>
 
 ## Kantorovich duality and supporting affine functions {#the-dual-potentials-are-the-supporting-affine-functions}
 
@@ -264,7 +264,7 @@ $$
 
 <p>Savaré and Sodini use this perspective to obtain duality for more general spaces and lower-semicontinuous costs. Their formulation uses sublinearity on finite nonnegative measures; our compact probability version removes that extra machinery while preserving the central idea <a href="#ref-savare">[1]</a>. For the classical theory of transport duality, see also <a href="#ref-villani">[4]</a>.</p>
 
-## Numerical experimentation: a triangle of distributions
+## Numerical experimentation: three-site transport {#numerical-experimentation-a-triangle-of-distributions}
 
 <p>Here is a two-dimensional slice of this convex extension that we can explore directly. Choose three non-collinear sites \(x_1,x_2,x_3\in\mathbb R^2\), and raise their Euclidean distances to a positive exponent \(p\):</p>
 

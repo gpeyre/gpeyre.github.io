@@ -53,7 +53,7 @@ proofs: true
 embedded_experiment: true
 ---
 
-<p>When designing an optimization problem over measures, a familiar difficulty is that the natural quantity is a ratio. A divergence compares one density to another. A transport model divides momentum by mass to recover velocity. Ratios look nonlinear, but the right combination of a ratio and a weight has a remarkably simple convex structure.</p>
+<p>Optimization problems over measures often involve ratios. A divergence compares one density to another; a transport model divides momentum by mass to recover velocity. The perspective transform combines such a ratio with a mass weight in a way that preserves convexity.</p>
 
 <!--more-->
 
@@ -109,11 +109,11 @@ $$
 
 </details>
 
-<p>This is the whole mechanism. Mixing two populations means averaging their per-unit quantities according to mass. The same ratio \(z/r\) is unchanged when both quantities are scaled, while the total cost scales linearly.</p>
+<p>Mixing two populations means averaging their per-unit quantities according to mass. The ratio \(z/r\) is unchanged when both quantities are scaled, while the total cost scales linearly.</p>
 
 ## Extension to zero mass and recession functions {#what-should-happen-at-zero-mass}
 
-<p>Dividing by zero is not a definition. The correct extension is determined by the growth of \(f\) at infinity. Its <em>recession function</em> is</p>
+<p>The extension to zero mass is determined by the growth of \(f\) at infinity. Its <em>recession function</em> is</p>
 
 $$
  f^\infty(z)=\lim_{t\to\infty}
@@ -190,7 +190,7 @@ $$
 
 </details>
 
-## From a pointwise cost to a functional on measures
+## Integral functionals on measures {#from-a-pointwise-cost-to-a-functional-on-measures}
 
 <p>Let \(X\) be a measurable space, \(\rho\) a finite nonnegative measure, and \(m\) a finite \(\mathbb R^k\)-valued measure. Choose any finite positive measure \(\lambda\) dominating both, for instance \(\lambda=\rho+|m|\), where \(|m|\) is the total variation measure. Define</p>
 
@@ -509,9 +509,9 @@ $$
 $$
 
 <p>This is a rotated second-order cone constraint, including vacuum exactly. Alternatively, proximal and primal–dual methods exploit the local perspective terms and the global linear continuity equation; see Papadakis, Peyré, and Oudet <a href="#ref-proximal">[11]</a> and Combettes and Müller <a href="#ref-prox-calculus">[12]</a>.</p>
-<p>The most useful feature is that the same finite-dimensional convex construction survives passage to measures. Ratios describe local geometry; one-homogeneity makes that geometry independent of coordinates; integrating produces a convex variational model.</p>
+<p>The perspective construction remains convex after passage from finite-dimensional variables to measures. One-homogeneity makes the integral independent of the reference measure used to express the densities.</p>
 
-## Numerical experimentation: a family of convex perspectives
+## Numerical experimentation: perspectives of power functions {#numerical-experimentation-a-family-of-convex-perspectives}
 
 <p>To see the geometry directly, take the convex power costs</p>
 

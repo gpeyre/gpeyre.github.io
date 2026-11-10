@@ -39,7 +39,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <main class="wrap"><article class="blog-prose">
 <p>Quadratic optimal transport minimizes the average squared distance traveled by mass. But two movements can have the same average energy and very different geometry: one may spread its effort evenly across directions, while the other concentrates it along a single axis. The usual Wasserstein distance adds all these contributions together.</p>
 <p>In <em>Muon Dynamics as a Spectral Wasserstein Flow</em> <a href="#ref-muon">[1]</a>, I keep the entire matrix of displacement second moments and apply a matrix gauge to it. This gives the <em>spectral Wasserstein distance</em> \(\mathsf W_\gamma\). It connects a static coupling problem, an adversary choosing a quadratic ground cost, and a Benamou–Brenier action for moving distributions.</p>
-<p>The construction extends the subspace robust Wasserstein distances of François-Pierre Paty and Marco Cuturi <a href="#ref-paty">[2]</a>. We will prove the robust and dynamic formulations, then explore the Schatten family numerically. There is a useful subtlety: the distance and dynamic formula remain meaningful down to \(p=1/2\), even though the convex robust-cost interpretation stops at \(p=1\).</p>
+<p>The construction extends the subspace robust Wasserstein distances of François-Pierre Paty and Marco Cuturi <a href="#ref-paty">[2]</a>. We will prove the robust and dynamic formulations, then explore the Schatten family numerically. The range of admissible exponents differs between the results: the distance and dynamic formula remain meaningful down to \(p=1/2\), even though the convex robust-cost interpretation stops at \(p=1\).</p>
 
 <h2>Displacement matrices and spectral transport costs</h2>
 <p>Let \(\mu,\nu\in\mathcal P_2(\mathbb R^d)\): probability measures with finite second moments. A coupling \(\pi\in\Pi(\mu,\nu)\) is a joint law of \((X,Y)\) with these marginals. Define</p>
@@ -53,7 +53,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
  =\min_{\pi\in\Pi(\mu,\nu)}\gamma(S_\pi).
 \]
 <p>For the main theory, \(\gamma\) is convex and monotone in the Loewner order: \(0\preceq A\preceq B\) implies \(\gamma(A)\le\gamma(B)\). The monotone matrix norms in the paper satisfy these assumptions. The minimum exists: couplings with fixed marginals are weakly compact, and their displacement matrices vary continuously under weak convergence, since those marginals have fixed finite second moments.</p>
-<p>The Schatten family is especially transparent. If \(\lambda_1,\ldots,\lambda_d\) are the eigenvalues of \(S\succeq0\), define</p>
+<p>Consider the Schatten family. If \(\lambda_1,\ldots,\lambda_d\) are the eigenvalues of \(S\succeq0\), define</p>
 \[
  \gamma_p(S)=\left(\sum_i\lambda_i^p\right)^{1/p},
  \qquad 0\lt p\lt \infty,
@@ -189,10 +189,10 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p>Each integrand is a quadratic perspective. Taking their supremum gives a convex action in mass and momentum, while continuity becomes \(\partial_t\rho+\nabla\cdot m=0\), linear in the unknowns. The closed perspective extends the formula to measures; for singular \(Q\), the local vacuum cost is zero on \(\ker Q\) and infinite in the other directions. The full action still forces finite-energy momentum to be absolutely continuous with respect to mass, because \(\gamma\) bounds Euclidean kinetic energy from below.</p>
 
 <h2>Schatten exponents below one</h2>
-<p>Yes, with a precise change of scope. The paper's main theory uses matrix norms, hence \(p\ge1\); Appendix E.4 of its October 2026 revision develops the extension below <a href="#ref-muon">[1]</a>. For \(0\lt p\lt 1\), \(\gamma_p\) is a Schatten anti-norm on positive matrices: it is monotone and concave rather than convex <a href="#ref-antinorm">[8]</a>. The robust-cost theorem and convex coupling formulation above no longer apply. Nevertheless, the distance and dynamic statements extend further.</p>
+<p>Exponents below one require different assumptions. The paper's main theory uses matrix norms, hence \(p\ge1\); Appendix E.4 of its October 2026 revision develops the extension below <a href="#ref-muon">[1]</a>. For \(0\lt p\lt 1\), \(\gamma_p\) is a Schatten anti-norm on positive matrices: it is monotone and concave rather than convex <a href="#ref-antinorm">[8]</a>. The robust-cost theorem and convex coupling formulation above no longer apply. Nevertheless, the distance and dynamic statements extend further.</p>
 <p id="theorem-3"><strong>Theorem 3 (the half-Schatten threshold).</strong> Define \(\mathsf W_{\gamma_p}\) by the same static formula. For every \(p\in[1/2,\infty]\), it is a distance and satisfies the same Benamou–Brenier formula with action \(\mathcal E_{\gamma_p}\). In dimension \(d\ge2\), for every \(0\lt p\lt 1/2\), the triangle inequality can fail. In dimension one, \(\gamma_p(s)=s\) for every \(p>0\), so all these choices simply give \(W_2\) and its usual dynamic formula.</p>
 <details class="blog-proof"><summary>Proof: the square root lifts to a Schatten-2p norm</summary><div class="blog-proof-body">
-<p><em>The norm hidden inside the covariance.</em> For a square-integrable random vector \(Z\) on a probability space \(\Omega\), define</p>
+<p><em>The norm associated with the second moment.</em> For a square-integrable random vector \(Z\) on a probability space \(\Omega\), define</p>
 \[
  A_Z:L^2(\Omega)\longrightarrow\mathbb R^d,
  \qquad A_Zh=\mathbb E[Zh].
@@ -266,6 +266,8 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <li id="ref-ags">Luigi Ambrosio, Nicola Gigli, and Giuseppe Savaré. <a href="https://link.springer.com/book/10.1007/978-3-7643-8722-8"><em>Gradient Flows in Metric Spaces and in the Space of Probability Measures</em></a>. Second edition, Birkhäuser, 2008. Theorem 8.2.1.</li>
 <li id="ref-antinorm">Jean-Christophe Bourin and Fumio Hiai. <a href="https://arxiv.org/abs/1012.5171"><em>Norm and Anti-Norm Inequalities for Positive Semi-Definite Matrices</em></a>. 2011 preprint revision.</li>
 </ol>
-</article></main>
+</article>
+<p class="blog-ai-disclosure">How these posts and numerical experiments were prepared: <a href="../ai-disclosure/">AI disclosure</a>.</p>
+</main>
 <footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Published blog</a> · <a href="/privacy/">Privacy &amp; audience measurement</a></div></footer>
 </body></html>

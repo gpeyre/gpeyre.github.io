@@ -10,14 +10,14 @@
 <body>
 <main id="flow-lab">
   <p class="eyebrow">Experiment 01 · a flow of linear maps</p>
-  <h2>Let the vector field change with time</h2>
-  <p class="intro">Every particle follows ẋ(t) = A(t)x(t). The same fundamental matrix Φ(t) moves all initial points: x(t) = Φ(t)x(0). Can one exponential describe the result?</p>
+  <h2>Linear ODEs with time-dependent coefficients</h2>
+  <p class="intro">Every particle follows ẋ(t) = A(t)x(t). The same fundamental matrix Φ(t) moves all initial points: x(t) = Φ(t)x(0). Compare this solution with the exponential of the integrated coefficient matrix.</p>
   <div class="choices">
     <label for="flow-mode">Matrix schedule
       <select id="flow-mode">
         <option value="constant">Constant growth, rotation &amp; shear</option>
         <option value="strain" selected>Smoothly rotating strain</option>
-        <option value="shears">Two shears: order matters</option>
+        <option value="shears">Successive shears</option>
       </select>
     </label>
     <label for="flow-seeds">Starting points
@@ -52,7 +52,7 @@
   </div>
   <div class="experiment">
     <section class="plot-panel" aria-labelledby="flow-plot-title">
-      <div class="panel-heading"><h3 id="flow-plot-title">One family, one linear map</h3><span id="flow-time-label">t = 1.20</span></div>
+      <div class="panel-heading"><h3 id="flow-plot-title">Image of the initial conditions</h3><span id="flow-time-label">t = 1.20</span></div>
       <canvas id="flow-canvas" role="img" aria-label="Trajectories of a family of initial points under a two-dimensional time-varying linear flow."></canvas>
       <div class="legend"><span><i class="initial"></i>Initial circle</span><span><i class="true-flow"></i>Φ(t) circle</span><span id="flow-naive-key"><i class="naive-flow"></i>exp(∫A) circle</span></div>
       <p class="plot-note" id="flow-scale-note">Equal axis scales; the view stays fixed during playback.</p>

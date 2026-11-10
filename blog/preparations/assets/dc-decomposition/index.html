@@ -14,8 +14,8 @@
 <main>
   <header>
     <p class="eyebrow">Numerical experimentation · one dimension</p>
-    <h1>Split the curvature, keep the function</h1>
-    <p class="intro">Every positive bend goes into <span class="F">F</span>; every negative bend goes into <span class="G">G</span>. Their difference recovers the same target <span class="phi">Φ</span>. Move the oscillations and watch the convex pieces change.</p>
+    <h1>One-dimensional DC decomposition</h1>
+    <p class="intro">The positive part of the curvature defines <span class="F">F</span>; the negative part defines <span class="G">G</span>. Their difference is the target <span class="phi">Φ</span>. Adjust the oscillations to compare the resulting convex functions.</p>
   </header>
   <section class="controls" aria-label="Function parameters">
     <label for="amplitude"><span>Oscillation amplitude A <output id="amplitude-value" for="amplitude"></output></span><input id="amplitude" type="range" min="0" max="1" step="0.01" value="0.35"></label>
@@ -25,9 +25,9 @@
   </section>
   <div class="formula"><span>Φ(x) = x²/2 + A cos(πx + θ)</span><strong>Φ = F − G</strong><span class="badge" id="convexity"></span></div>
   <div class="plots">
-    <section class="panel"><h2>The target stays the same when λ changes</h2><p class="plot-description">A quadratic with movable oscillations.</p><canvas id="target" role="img" aria-label="Target function Phi on the interval minus two to two"></canvas></section>
+    <section class="panel"><h2>Target function</h2><p class="plot-description">A quadratic with movable oscillations.</p><canvas id="target" role="img" aria-label="Target function Phi on the interval minus two to two"></canvas></section>
     <section class="panel"><h2>Two convex functions</h2><p class="plot-description"><span class="key F">F</span><span class="key G">G</span> <span class="quiet">Both use the same vertical scale.</span></p><canvas id="pieces" role="img" aria-label="The convex functions F and G, whose difference is Phi"></canvas></section>
-    <section class="panel curvature"><h2>The split is visible in the second derivatives</h2><p class="plot-description"><span class="key phi dashed">Φ″</span><span class="key F">F″ = max(Φ″, 0) + λ</span><span class="key G">G″ = max(−Φ″, 0) + λ</span></p><canvas id="curvature" role="img" aria-label="Signed curvature of Phi and the two nonnegative convex curvatures"></canvas><p class="caption">Vertical guides mark the exact zeros of Φ″. Adding λ raises both convex curvatures equally; their difference is unchanged.</p></section>
+    <section class="panel curvature"><h2>Curvature decomposition</h2><p class="plot-description"><span class="key phi dashed">Φ″</span><span class="key F">F″ = max(Φ″, 0) + λ</span><span class="key G">G″ = max(−Φ″, 0) + λ</span></p><canvas id="curvature" role="img" aria-label="Signed curvature of Phi and the two nonnegative convex curvatures"></canvas><p class="caption">Vertical guides mark the exact zeros of Φ″. Adding λ raises both convex curvatures equally; their difference is unchanged.</p></section>
   </div>
   <div class="metrics" aria-live="polite" aria-atomic="true"><p id="identity"></p><p id="curvature-budget"></p></div>
   <details><summary>How the decomposition is computed</summary><div class="details-body">

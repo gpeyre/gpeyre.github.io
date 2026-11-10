@@ -51,7 +51,7 @@ embedded_experiment: true
 
 <p>I learned this Wasserstein P–L viewpoint from Raphaël Barboni. In particular, he taught me the useful distinction at the heart of this post: the condition can control convergence of the gradient-flow trajectory itself, not merely decay of its objective value.</p>
 <p>A small gradient is reassuring only if it means that the objective is nearly minimized. The Polyak–Łojasiewicz condition supplies precisely this guarantee <a href="#ref-pl">[6]</a>. It can yield exponential convergence even without convexity, as in <a href="{{ '/blog/2026/08/14/polyak-lojasiewicz-gradient-flows/' | relative_url }}">Fast gradient flows without convexity</a>.</p>
-<p>Now replace a point by a probability distribution, Euclidean distance by quadratic Wasserstein distance, and the objective by relative entropy. The same condition becomes the <em>logarithmic Sobolev inequality</em>. This is more than a dictionary: one short argument shows that the entire distribution converges, not just its entropy. It also explains the implication from logarithmic Sobolev to Talagrand’s transport inequality <a href="#ref-ov">[1]</a>.</p>
+<p>Replace a point by a probability distribution, Euclidean distance by quadratic Wasserstein distance, and the objective by relative entropy. The P–L condition then becomes the <em>logarithmic Sobolev inequality</em>. A finite-length argument proves convergence of the distribution itself, in addition to decay of its entropy. It also explains the implication from logarithmic Sobolev to Talagrand’s transport inequality <a href="#ref-ov">[1]</a>.</p>
 
 <!--more-->
 
@@ -179,7 +179,7 @@ $$
 
 <p>This is Talagrand’s quadratic transportation inequality, with the same constant. The calculation proves it for initial data admitting the stated dissipative flow; standard approximation extends it to all finite-entropy data under the usual hypotheses. The full logarithmic-Sobolev-to-transport implication is due to Otto and Villani <a href="#ref-ov">[1]</a>.</p>
 
-## A Gaussian example attaining both rates
+## Sharp rates for a Gaussian target {#a-gaussian-example-attaining-both-rates}
 
 <p>Take \(\pi=\mathcal N(0,I)\) and \(\rho_0=\mathcal N(m_0,I)\). The exact flow is \(\rho_t=\mathcal N(e^{-t}m_0,I)\). Hence</p>
 

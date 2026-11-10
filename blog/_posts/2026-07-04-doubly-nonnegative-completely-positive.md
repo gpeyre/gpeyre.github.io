@@ -43,7 +43,7 @@ A seemingly similar condition is to ask for a Gram factorization with nonnegativ
 
 <!--more-->
 
-## The two cones
+## Doubly nonnegative and completely positive cones {#the-two-cones}
 
 Write
 

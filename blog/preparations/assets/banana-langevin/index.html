@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,follow"><title>Langevin diffusion in a bending banana</title><link rel="stylesheet" href="style.css"></head>
 <body><main>
-<header><p class="eyebrow">A curved route to equilibrium</p><h1>Same noise. Same clock. A slower journey.</h1><p>A Gaussian is bent into a banana without changing its area density. The diffusion below uses ordinary, isotropic Brownian noise—not a bent Gaussian movie.</p></header>
+<header><p class="eyebrow">Langevin diffusion with a curved target</p><h1>Effect of target curvature on convergence</h1><p>A Gaussian is bent into a banana without changing its area density. The diffusion uses isotropic Brownian noise; its evolving density is computed numerically.</p></header>
 <div class="controls">
 <div><label for="time">Physical time <output id="time-value" for="time">0.00</output></label><input id="time" type="range" min="0" max="20" step="0.05" value="0"><div class="ends"><span>Initial distribution</span><span>t = 20</span></div></div>
 <div><label for="bend">Banana bending <output id="bend-value" for="bend">3.00</output></label><input id="bend" type="range" min="0" max="4" step="0.25" value="3"><div class="ends"><span>0 · Gaussian</span><span>4 · strongly bent</span></div></div>

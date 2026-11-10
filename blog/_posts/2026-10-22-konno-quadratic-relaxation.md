@@ -43,15 +43,15 @@ keywords:
 proofs: true
 ---
 
-When an optimization problem is difficult because a variable interacts with itself, a tempting idea is to introduce a second copy. Replace a quadratic term $$x^{\mathsf T}Qx$$ by a bilinear term $$x^{\mathsf T}Qy$$, and optimize alternately over $$x$$ and $$y$$. Each step is much simpler. But have we changed the problem? What prevents the two copies from exploiting their new freedom?
+A possible way to simplify a quadratic optimization problem is to introduce a second copy of the variable. Replace a quadratic term $$x^{\mathsf T}Qx$$ by a bilinear term $$x^{\mathsf T}Qy$$, and optimize alternately over $$x$$ and $$y$$. This simplifies each update, but the two copies may produce a lower value than the original problem.
 
-Hiroshi Konno identified a particularly elegant answer for convex quadratic maximization, or equivalently concave quadratic minimization [[1]](#ref-1). Under the appropriate sign condition, releasing the equality $$x=y$$ does not change the optimal value. Better still, either component of an optimal pair solves the original problem. The reason fits in a single quadratic identity.
+Hiroshi Konno established exactness for convex quadratic maximization, or equivalently concave quadratic minimization [[1]](#ref-1). Under the appropriate sign condition, releasing the equality $$x=y$$ does not change the optimal value, and either component of an optimal pair solves the original problem. A quadratic identity proves both statements.
 
 With Thibault Séjourné and François-Xavier Vialard, we used an extension of this idea in our work on unbalanced Gromov–Wasserstein transport [[3]](#ref-3). The extension permits a general additional term, including entropy. Let us first isolate the elementary principle, then see what it does—and does not—say for transport algorithms.
 
 <!--more-->
 
-## Splitting a quadratic interaction
+## Bilinear relaxation of quadratic objectives {#splitting-a-quadratic-interaction}
 
 Let $$C\subset\mathbb R^d$$ be a nonempty convex feasible set, let $$Q=Q^{\mathsf T}$$, and let $$r:C\to\mathbb R$$. Consider
 
@@ -277,7 +277,7 @@ Thus the quadratic distortion is nonpositive on feasible differences. Apply Theo
 
 The transport polytope is compact and these objectives are continuous, so the minima here are attained. The entropy forces agreement between the two copies at a global optimum; it does not establish uniqueness of the original transport plan or convexity of the joint objective.
 
-## The unbalanced case {#what-changes-when-mass-is-unbalanced}
+## Unbalanced Gromov–Wasserstein transport {#what-changes-when-mass-is-unbalanced}
 
 In unbalanced transport the marginal constraints are penalized rather than imposed. For arbitrary nonnegative masses $$u$$ and a strictly positive reference $$v$$, the appropriate KL divergence includes the mass corrections:
 
@@ -336,7 +336,7 @@ Substitute $$S(u)=\mathrm{KL}(u\mid a)+M-1$$ and $$T(v)=\mathrm{KL}(v\mid b)+N-1
 
 However, $$\pi-\gamma$$ no longer has zero marginals, so the cancellation in Theorem 2 is unavailable. Moreover, tensorized marginal penalties are not simply a sum $$r(\pi)+r(\gamma)$$. The general exactness theorem must therefore not be applied automatically. Our paper proves tightness for balanced entropic GW and for its separate conic formulation under the stated kernel conditions; it leaves tightness of the general unbalanced divergence relaxation open [[3, Section 3.1]](#ref-3).
 
-Konno’s identity provides an exactness guarantee, while convexity of the separate terms provides tractable updates. Neither property makes a local search globally reliable. Keeping those distinctions clear lets us use the splitting confidently where its hypotheses hold—and recognize what remains to be proved elsewhere.
+Konno’s identity provides an exactness guarantee, while convexity of the separate terms provides tractable updates. Neither property makes a local search globally reliable. Exactness of the relaxation and convergence of an algorithm must be checked separately.
 
 ## References
 

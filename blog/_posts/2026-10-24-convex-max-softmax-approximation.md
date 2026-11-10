@@ -45,7 +45,7 @@ proofs: true
 
 When learning an energy, it is often worth building its geometry into the model. A convex objective has no spurious local minima on a convex domain, and many algorithms can exploit that structure. In quadratic optimal transport, the optimal map is the gradient of a convex potential when the source measure has a density and both measures have finite second moments. These are good reasons to use neural architectures that represent convex functions by construction [[7]](#ref-icnn), [[8]](#ref-ot).
 
-One architecture is especially transparent: compute several affine functions, then take their maximum. To approximate a convex target, choose these functions as supporting planes; their maximum forms a polyhedral surface beneath the graph. Replacing the maximum by a log-sum-exp gives a smooth surface. We will separate three questions: can these networks approximate every convex function, how many planes are needed, and what does smoothing cost?
+One option is to compute several affine functions and take their maximum. To approximate a convex target, choose these functions as supporting planes; their maximum forms a polyhedral surface beneath the graph. Replacing the maximum by a log-sum-exp gives a smooth surface. The questions are whether these networks approximate every convex function, how many planes are needed, and how smoothing affects the error.
 
 <!--more-->
 
@@ -72,7 +72,7 @@ $$
 $$
 
 <details class="blog-proof">
-<summary>Proof: one good plane near each point, then compactness</summary>
+<summary>Proof: affine minorants and a finite subcover</summary>
 
 <div class="blog-proof-body" markdown="1">
 
@@ -240,7 +240,7 @@ The two-sided estimate follows by combining $$f-\delta_N\le M_N\le f$$ with Lemm
 
 The normalization convention matters: replacing the sum by its average gives $$S_{N,\tau}-\tau\log N$$. This is just a constant shift, absorbable into every bias $$b_i$$, so it does not change the approximation class at fixed $$N,\tau$$. It does change the graph when the same tangent planes are used without refitting.
 
-## Temperature, curvature, and the size of the weights
+## Curvature bounds and parameter constraints {#temperature-curvature-and-the-size-of-the-weights}
 
 The estimate above proves universality by decreasing temperature as width grows; the bound $$\tau\log N$$ alone proves nothing at fixed temperature. A separate, quantitative obstruction appears if both the temperature and the permitted slopes are fixed: there is then not enough curvature to resolve a corner.
 
@@ -345,7 +345,7 @@ For conditioning, hard-max and low-temperature fits use free plane centers and f
 </style>
 
 <section class="experiment" id="max-experiment" aria-label="Interactive max and softmax approximation">
-<h3>Learning the affine pieces</h3>
+<h3>Fitting the affine parameters</h3>
 <noscript>Enable JavaScript for the interactive plots. The 1D reference uses tangent planes; the two 2D networks are fitted with Adam.</noscript>
 <div class="controls">
 <label for="max-width">Width parameter n

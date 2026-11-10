@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,follow">
 <meta name="keywords" content="alternating projections, POCS, convex feasibility, best approximation, metric projection, Euclidean projection, Dykstra algorithm, correction vectors, Douglas–Rachford, reflected projections, reflection operator, averaged operator, nonexpansive map, Fejér monotonicity, fixed point, product-space reformulation, consensus constraint, Sudoku, one-hot encoding, nonconvex feasibility, constraint satisfaction, deterministic restarts, shadow sequence, halfplane counterexample, John von Neumann, Richard Dykstra, Jim Douglas, Henry Rachford, Boyle Dykstra, Jonathan Borwein, Matthew Tam, Francisco Aragón Artacho, projections alternées">
-<meta name="description" content="Alternating projections find feasibility; Dykstra finds the nearest point; Douglas–Rachford uses reflections. A halfplane counterexample and a genuine five-set Sudoku experiment make the distinctions visible.">
+<meta name="description" content="Feasibility and nearest-point projection with alternating projections, Dykstra’s algorithm, and Douglas–Rachford splitting, illustrated on two halfplanes and a five-set Sudoku formulation.">
 <title>Iterative projections: Dykstra and Douglas–Rachford — Alpha preview — Gabriel Peyré</title><link rel="canonical" href="https://www.gpeyre.com/blog/preparations/projections-corrections-reflections.html"><link rel="stylesheet" href="assets/drafts.css"><script defer src="assets/drafts.js"></script><script defer src="assets/idea-experiments.js"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script><script defer src="../../js/site-analytics.js"></script>
 
 <!-- Generated numerical summary image: start -->
@@ -16,8 +16,8 @@
 </head>
 <body><header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Iterative projections: Dykstra and Douglas–Rachford</h1><p class="subtitle">Feasibility, best approximation, and a Sudoku solved by reflections.</p><p class="byline">Gabriel Peyré</p></div></header><main class="wrap"><article class="blog-prose">
 <p>Suppose a point must satisfy several constraints, and projecting onto each constraint separately is easy. Can we project onto their intersection by alternating these elementary operations? This is an attractive idea in imaging, statistics, optimization—and even Sudoku.</p>
-<p>The answer depends on what we mean by “project.” Reaching <em>some</em> feasible point and reaching the <em>nearest</em> feasible point are different tasks. A picture with two halfplanes is enough to separate them. It also introduces three beautiful algorithms: alternating projections, Dykstra’s corrections, and Douglas–Rachford reflections.</p>
-<p>We will first work with closed convex sets, where convergence is understood, then keep the same operations and venture into a nonconvex puzzle. In that second setting, a successful animation is an experiment, not a convergence theorem.</p>
+<p>The answer depends on what we mean by “project.” Reaching <em>some</em> feasible point and reaching the <em>nearest</em> feasible point are different tasks. A picture with two halfplanes is enough to separate them. We will compare three algorithms: alternating projections, Dykstra’s corrections, and Douglas–Rachford reflections.</p>
+<p>We will first work with closed convex sets, where convergence is understood, then apply the same operations to a nonconvex puzzle. In that second setting, a successful animation is an experiment, not a convergence theorem.</p>
 
 <h2>Euclidean projections onto convex sets</h2>
 <p>For a nonempty closed convex set \(A\subset\mathbb R^d\), its Euclidean projection is the unique nearest point</p>
@@ -51,7 +51,7 @@
 \]
 <p>This is alternating projection, often called POCS: projection onto convex sets. The subspace case is associated with von Neumann <a href="#ref-vonneumann">[1]</a>; the general feasibility theory is reviewed by Bauschke and Borwein <a href="#ref-pocs">[2]</a>.</p>
 <p id="theorem-1"><strong>Theorem 1 (finite-dimensional alternating projections).</strong> Under the convex assumptions above, \(z_k\) converges to a point of \(A\cap B\). This limit need not be \(P_{A\cap B}z_0\).</p>
-<details class="blog-proof"><summary>Proof of convergence: every projection spends squared distance</summary><div class="blog-proof-body">
+<details class="blog-proof"><summary>Proof of convergence: Fejér monotonicity and asymptotic regularity</summary><div class="blog-proof-body">
 <p>Set \(y_k=P_Az_k\), and fix any \(a\in A\cap B\). Lemma 1 twice gives</p>
 \[
  \lVert z_{k+1}-a\rVert^2
@@ -83,7 +83,7 @@
  \end{aligned}
 \]
 <p>The old displacement is added back before the next projection onto the same set. Unlike plain alternation, the algorithm retains the information needed to solve the original distance-minimization problem.</p>
-<details class="blog-proof"><summary>Why the corrections remember the starting point</summary><div class="blog-proof-body">
+<details class="blog-proof"><summary>Dual interpretation of Dykstra’s corrections</summary><div class="blog-proof-body">
 <p>After each full cycle, a direct addition of the update formulas gives the invariant</p>
 \[
  z+p+q=z_0.
@@ -160,7 +160,7 @@
 <h2>Numerical experimentation</h2>
 <iframe class="idea-experiment" data-experiment="projections" src="assets/projection-lab/index.html" title="Halfplane projections and product-space Douglas–Rachford Sudoku experiment" loading="lazy" style="width:100%;height:1800px;border:0"></iframe>
 <p>First compare the three trajectories on the halfplanes. Then advance Sudoku one iteration at a time, or play the reflections. Red marks unit conflicts; faint digits show ambiguous score choices. Both residual traces may jump, and the rounded board may get worse before getting better. Restarting the same seed reproduces the same experiment; changing the seed can change the outcome.</p>
-<p>No backtracking solver or stored solution drives the animation. The experiment stops after 5,000 iterations if it has not certified a solution. This is not a claim that a restart will always succeed. The contrast is the point: exact elementary projections give rigorous convex algorithms, but the same formulas become heuristics when the constraints are nonconvex.</p>
+<p>No backtracking solver or stored solution drives the animation. The experiment stops after 5,000 iterations if it has not certified a solution. This is not a claim that a restart will always succeed. Exact projections give convergent algorithms under the stated convexity assumptions; the same formulas are heuristics for the nonconvex constraints used here.</p>
 
 <h2>Bibliography</h2><ol class="references">
 <li id="ref-vonneumann">John von Neumann. <em>Functional Operators, Volume II: The Geometry of Orthogonal Spaces</em>. Annals of Mathematics Studies 22, Princeton University Press, 1950. <a href="https://press.princeton.edu/books/paperback/9780691095790/functional-operators-volume-2">Book</a>.</li>
@@ -171,4 +171,6 @@
 <li id="ref-original-dr">Jim Douglas Jr. and Henry H. Rachford Jr. <em>On the numerical solution of heat conduction problems in two and three space variables</em>. Transactions of the American Mathematical Society 82, 421–439, 1956. <a href="https://doi.org/10.1090/S0002-9947-1956-0084194-4">Paper</a>.</li>
 <li id="ref-dr">Francisco J. Aragón Artacho, Jonathan M. Borwein, and Matthew K. Tam. <em>Recent Results on Douglas–Rachford Methods for Combinatorial Optimization Problems</em>. Journal of Optimization Theory and Applications 163, 1–30, 2014. <a href="https://arxiv.org/abs/1305.2657">Paper</a>.</li>
 </ol>
-</article></main><footer class="draft-footer"><div class="wrap">Forthcoming post · Alpha preview · <a href="index.html">All forthcoming posts</a> · <a href="../">Published blog</a> · <a href="/privacy/">Privacy &amp; audience measurement</a></div></footer></body></html>
+</article>
+<p class="blog-ai-disclosure">How these posts and numerical experiments were prepared: <a href="../ai-disclosure/">AI disclosure</a>.</p>
+</main><footer class="draft-footer"><div class="wrap">Forthcoming post · Alpha preview · <a href="index.html">All forthcoming posts</a> · <a href="../">Published blog</a> · <a href="/privacy/">Privacy &amp; audience measurement</a></div></footer></body></html>

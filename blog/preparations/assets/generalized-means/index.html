@@ -9,9 +9,9 @@
 </head>
 <body>
 <main>
-  <p class="eyebrow">Numerical experimentation · from two means to a new mean</p>
-  <h2>Let two means meet</h2>
-  <p class="intro">Choose two powers, then drag the dot. Updating both coordinates simultaneously squeezes a bracket around their common limit.</p>
+  <p class="eyebrow">Numerical experimentation · generalized means</p>
+  <h2>Gauss composition of power means</h2>
+  <p class="intro">Choose two powers, then drag the dot. The simultaneous updates bound the common limit between the two iterates.</p>
   <div class="controls">
     <label for="power-p">First power <i>p</i> <output id="p-value" for="power-p">1 · arithmetic</output>
       <input id="power-p" type="range" min="-2" max="2" step="0.05" value="1">
@@ -45,7 +45,7 @@
       <p class="panel-note">Common-limit estimate <output id="composed-value">—</output></p>
     </section>
     <section class="panel" aria-labelledby="trace-title">
-      <div class="heading"><h3 id="trace-title">A closing bracket</h3><span id="iteration-count">—</span></div>
+      <div class="heading"><h3 id="trace-title">Convergence of the iterates</h3><span id="iteration-count">—</span></div>
       <canvas id="trace-plot" role="img" aria-label="The lower and upper endpoints of the bracket after each simultaneous update."></canvas>
       <p class="panel-note"><span class="legend"><b class="lower-key"></b>lower <b class="upper-key"></b>upper</span><span>iteration n →</span></p>
     </section>

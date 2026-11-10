@@ -36,7 +36,7 @@ figure: ode
 proofs: true
 ---
 
-It is intuitively clear that straighter trajectories should be easier to integrate numerically. This intuition is especially appealing in flow matching, where one would like to generate samples with as few velocity evaluations as possible.
+Straighter trajectories should be easier to integrate numerically. In flow matching, this suggests a way to generate samples with fewer velocity evaluations, but it helps to make the dependence precise.
 
 I wanted a precise estimate that exhibits this dependence directly. Rewriting the usual stability argument behind Cauchy–Lipschitz gives one: Euler’s global error is controlled by the **material acceleration** along the exact trajectory, multiplied by a stability factor.
 
@@ -203,7 +203,7 @@ $$
 
 Here $$L=0$$ and $$A_X=b\pi^2$$. The error bound is explicit, and lowering $$b$$ decreases both the bending and the bound, until Euler is exact at $$b=0$$.
 
-## The connection to flow matching
+## Euler discretization in flow matching {#the-connection-to-flow-matching}
 
 This estimate explains a numerical motivation for [rectified flow](https://arxiv.org/abs/2209.03003): trajectories with small material acceleration have small local Euler defects. It does not, by itself, bound statistical error, velocity-estimation error, or the discrepancy between a learned model and the target distribution. It isolates the discretization error for a given velocity field.
 

@@ -107,6 +107,7 @@
 .blog-pagination div:last-child { text-align: right; }
 .blog-pagination small { display: block; color: #78817b; font-size: 11px; margin-bottom: 9px; text-transform: uppercase; letter-spacing: 1px; }
 .blog-colophon { color: #68726e; font-size: 12px; margin: 32px 0 48px; line-height: 1.7; }
+.blog-ai-disclosure { border-top: 1px solid #d8e4e4; color: #62665f; font: 13px/1.7 'Open Sans', sans-serif; margin: 30px 0 40px; padding-top: 18px; }
 .blog-skip { position: fixed; left: 12px; top: -100px; z-index: 10000; background: white; padding: 12px; }
 .blog-skip:focus { top: 10px; }
 .interactive-figure { background: #f7f9f8; border: 1px solid #d6e0dc; border-radius: 8px; padding: 22px; }

@@ -15,6 +15,7 @@ layout: default
     <article class="blog-prose">
         {{ content }}
     </article>
+    {% include blog-ai-disclosure.html %}
     {% assign blog_posts = site.categories.blog | sort: 'date' | reverse %}
     {% for post in blog_posts %}
         {% if post.id == page.id %}

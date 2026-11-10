@@ -20,8 +20,8 @@
 </head><body>
 <header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Optimal conditioning of low-rank adaptation</h1><p class="subtitle">Balancing removes avoidable ill-conditioning from a redundant representation.</p><p class="byline">Gabriel Peyré</p></div></header>
 <main class="wrap"><article class="blog-prose">
-<p>Low-rank adaptation, or LoRA, trains a small matrix correction in factored form instead of updating every weight of a large model <a href="#ref-lora">[1]</a>. If this correction is \(AB\), replacing \((A,B)\) by \((sA,s^{-1}B)\) leaves it unchanged. The model is identical. Its Euclidean optimization geometry is not.</p>
-<p>Our work with Valérie Castin, Kimia Nadjahi, and Pierre Ablin <a href="#ref-balora">[2]</a> studies this redundancy through local conditioning and proposes a balancing method. Here is a particularly clean result: for exact low-rank matrix recovery, every balanced factorization has the best possible positive Hessian condition number. The proof needs only a Jacobian, a Sylvester operator, and two singular-value inequalities.</p>
+<p>Low-rank adaptation, or LoRA, trains a small matrix correction in factored form instead of updating every weight of a large model <a href="#ref-lora">[1]</a>. If this correction is \(AB\), replacing \((A,B)\) by \((sA,s^{-1}B)\) leaves it unchanged. However, its Euclidean optimization geometry depends on the factors.</p>
+<p>Our work with Valérie Castin, Kimia Nadjahi, and Pierre Ablin <a href="#ref-balora">[2]</a> studies this redundancy through local conditioning and proposes a balancing method. For exact low-rank matrix recovery, every balanced factorization has the best possible positive Hessian condition number. The proof uses the Jacobian, a Sylvester operator, and two singular-value inequalities.</p>
 
 <h2>Conditioning transverse to factorization symmetries</h2>
 <p>Fix a matrix \(Y\in\mathbb R^{n\times m}\) of rank \(1\le r&lt;\min(n,m)\), and consider</p>
@@ -104,7 +104,7 @@
 <p>The minimum is at \(s=1\), and the degradation grows as \(s^4\) or \(s^{-4}\). Even a moderate mismatch of scales can have a substantial effect on the local condition number.</p>
 
 <h2>Numerical experimentation</h2>
-<p>Use \(Y=\operatorname{diag}(4,1,0)\), represented by two rank-two factors. The left panel is the exact Hessian condition number. The right runs <em>actual</em> factor gradient descent near each minimizer, starting with the same tiny perturbation norm and comparing it with the Hessian linearization.</p>
+<p>Use \(Y=\operatorname{diag}(4,1,0)\), represented by two rank-two factors. The left panel is the exact Hessian condition number. The right runs <em>actual</em> factor gradient descent near each minimizer, starting with the same small perturbation norm and comparing it with the Hessian linearization.</p>
 <figure><iframe class="idea-experiment" data-experiment="lowrank" src="assets/optimization-geometry/index.html?topic=lowrank" title="Interactive low-rank factor conditioning and local gradient descent" loading="lazy" style="width:100%;height:820px;border:0;"></iframe><figcaption>The learning rate is \(0.8/L_s\), where \(L_s\) is the largest Hessian eigenvalue at the corresponding exact factorization. Each factor-space perturbation has norm \(10^{-3}\); losses are normalized separately because the same parameter displacement need not induce the same initial prediction error. The dashed Hessian curves are local models, not global guarantees.</figcaption></figure>
 
 <h2>Balanced and hyperbalanced factorizations</h2>
@@ -120,5 +120,7 @@
 <li id="ref-du">Simon S. Du, Wei Hu, and Jason D. Lee. <a href="https://arxiv.org/abs/1806.00900"><em>Algorithmic regularization in learning deep homogeneous models: layers are automatically balanced.</em></a> NeurIPS, 2018.</li>
 <li id="ref-gunasekar">Suriya Gunasekar, Blake E. Woodworth, Srinadh Bhojanapalli, Behnam Neyshabur, and Nathan Srebro. <a href="https://arxiv.org/abs/1705.09280"><em>Implicit regularization in matrix factorization.</em></a> NeurIPS, 2017.</li>
 <li id="ref-init">Soufiane Hayou, Nikhil Ghosh, and Bin Yu. <a href="https://arxiv.org/abs/2406.08447"><em>The impact of initialization on LoRA finetuning dynamics.</em></a> NeurIPS, 2024.</li>
-</ol></article></main><footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Published blog</a> · <a href="/privacy/">Privacy &amp; audience measurement</a></div></footer>
+</ol></article>
+<p class="blog-ai-disclosure">How these posts and numerical experiments were prepared: <a href="../ai-disclosure/">AI disclosure</a>.</p>
+</main><footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Published blog</a> · <a href="/privacy/">Privacy &amp; audience measurement</a></div></footer>
 </body></html>

@@ -37,8 +37,8 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p class="byline">Gabriel Peyré</p>
 </div></header>
 <main class="wrap"><article class="blog-prose">
-<p>A probability distribution contains infinitely many degrees of freedom. Its mean is just a vector; its covariance is just a matrix. This compression is useful only if we understand what it loses. When the distribution evolves, can a retained statistic follow a closed equation without tracking everything else?</p>
-<p>Usually a moment equation introduces a new moment, which introduces another, creating an endless hierarchy. But a particularly clean class of Wasserstein flows admits an exact answer. The criterion is geometric: the squared norm of the statistic's gradient must be affine in the statistic itself. It includes familiar first and second moments, but also nonpolynomial observables built from curved distance functions. The scalar result appears in <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.16.5.30">Proposition 16.30 of <em>Optimal Transport for Machine Learners</em></a> <a href="#ref-book">[1]</a>.</p>
+<p>Means and covariances summarize a distribution with finitely many numbers. When the distribution evolves, can a chosen statistic follow a closed equation without tracking the full law?</p>
+<p>Usually a moment equation introduces a new moment, which introduces another, creating an endless hierarchy. For the class of Wasserstein flows considered here, an exact criterion is available: the squared norm of the statistic's gradient must be affine in the statistic itself. It includes familiar first and second moments, but also nonpolynomial observables built from curved distance functions. The scalar result appears in <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.16.5.30">Proposition 16.30 of <em>Optimal Transport for Machine Learners</em></a> <a href="#ref-book">[1]</a>.</p>
 
 <h2>Energy functionals depending on one statistic</h2>
 <p>Let \(\Omega\subset\mathbb R^d\) be connected and open, and let \(\varphi\in C^2(\Omega)\). For a probability law \(\alpha\), define</p>
@@ -62,7 +62,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 \]
 <p>The difficulty is now visible. The energy depends on \(m_t\), but the derivative also depends on the average of \(|\nabla\varphi|^2\). When is that extra average already determined by \(m_t\)?</p>
 
-<h2>The exact closure criterion</h2>
+<h2>Closure criterion for a single statistic</h2>
 <p>By <em>autonomous closure</em>, we mean that for each energy \(g\), there is a function \(b_g\) such that \(\dot m=b_g(m)\) for every compactly supported initial law. Thus any two laws with the same moment must have the same instantaneous moment derivative. The right-hand side may depend on \(g\), but not on the rest of the distribution.</p>
 <p id="theorem-1"><strong>Theorem 1 (scalar closure).</strong> The instantaneous equation for \(m\) closes for every smooth \(g\) and every compactly supported probability measure on \(\Omega\) if and only if there are constants \(a,b\in\mathbb R\) such that</p>
 \[
@@ -112,7 +112,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <h2>Examples and counterexamples</h2>
 <p>For \(\varphi(x)=u\cdot x\), closure holds with \(a=|u|^2,b=0\). Particles translate along \(u\). For \(\varphi(x)=|x|^2\), one has \(a=0,b=4\); particles undergo a common radial scaling. Neither assertion requires a Gaussian initial law.</p>
 <p>Now take an oriented smooth hypersurface \(\mathcal S\), or a local oriented patch. Its signed distance \(r_\mathcal S\) satisfies \(|\nabla r_\mathcal S|=1\) in a smooth tubular neighborhood. Thus \(r_\mathcal S+\lambda r_\mathcal S^2/2\) is another exactly closed statistic, for as long as the particles stay in that neighborhood. The normal direction varies from particle to particle, but each trajectory follows a straight normal line, and a single scalar governs the retained moment.</p>
-<p>A counterexample is just as instructive. On the line, \(\varphi(x)=x^4\) has \(|\varphi'(x)|^2=16x^6\), which is not affine in \(x^4\). The laws</p>
+<p>The fourth moment provides a counterexample. On the line, \(\varphi(x)=x^4\) has \(|\varphi'(x)|^2=16x^6\), which is not affine in \(x^4\). The laws</p>
 \[
  \alpha=\delta_1,\qquad
  \beta=\tfrac12\delta_0+\tfrac12\delta_{2^{1/4}}
@@ -127,7 +127,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p>The experiment starts with two distinct clouds whose mean radius offset is \(m_0=0.2\). Their shapes stay different, yet their displayed statistics agree. All radii remain positive, so the signed-distance field is smooth throughout the displayed evolution.</p>
 <figure><iframe class="idea-experiment" data-experiment="moments" title="Two particle clouds with the same exactly closed moment" src="assets/ot-lab/index.html?topic=moments" loading="lazy"></iframe><figcaption>These trajectories use the exact characteristic formula, not a time-stepping approximation. Closure preserves the evolution of one statistic; it does not identify the distributions.</figcaption></figure>
 
-<h2>Several statistics: a finite algebra of gradients</h2>
+<h2>Finite-dimensional closure for several statistics</h2>
 <p>For \(m_i=\int\varphi_i\,d\alpha\) and energy \(g(m_1,\ldots,m_k)\), the same calculation gives</p>
 \[
  \dot m_i
@@ -144,7 +144,9 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <li id="ref-jko">Richard Jordan, David Kinderlehrer, and Felix Otto. <a href="https://doi.org/10.1137/S0036141096303359"><em>The Variational Formulation of the Fokker–Planck Equation</em></a>. SIAM Journal on Mathematical Analysis 29(1), 1–17, 1998.</li>
 </ol>
 <p class="caption">The general gradient-flow viewpoint underlying the calculation has its classical variational formulation in <a href="#ref-jko">[3]</a>; the elementary closure proof above is specific to energies depending on finitely many observables.</p>
-</article></main>
+</article>
+<p class="blog-ai-disclosure">How these posts and numerical experiments were prepared: <a href="../ai-disclosure/">AI disclosure</a>.</p>
+</main>
 <footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Blog</a> · <a href="/privacy/">Privacy &amp; audience measurement</a></div></footer>
 </body>
 </html>

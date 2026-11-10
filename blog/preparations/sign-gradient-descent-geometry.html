@@ -21,7 +21,7 @@
 <header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Conditioning of Non-Euclidean Gradient Descent</h1><p class="subtitle">Why rotating a quadratic can change the convergence of sign gradient descent.</p><p class="byline">Gabriel Peyré</p></div></header>
 <main class="wrap"><article class="blog-prose">
 <p>Rotating a quadratic preserves every eigenvalue of its Hessian. It also preserves the behavior of ordinary gradient descent, provided we rotate the initial point along with the objective. A coordinatewise optimizer can behave very differently: taking signs is not invariant under a rotation.</p>
-<p>How should we then measure conditioning? Not by switching arbitrarily to a different matrix norm. The clean route is to define steepest descent in a chosen vector norm, derive the two constants in its convergence theorem, and <em>then</em> take their ratio. This viewpoint is useful in our work on balanced low-rank adaptation <a href="#ref-balora">[1]</a>, and belongs to the broader study of optimization geometry <a href="#ref-geometry">[2]</a>.</p>
+<p>How should we then measure conditioning? Not by switching arbitrarily to a different matrix norm. We define steepest descent in a chosen vector norm, derive the two constants in its convergence theorem, and <em>then</em> take their ratio. This viewpoint is useful in our work on balanced low-rank adaptation <a href="#ref-balora">[1]</a>, and belongs to the broader study of optimization geometry <a href="#ref-geometry">[2]</a>.</p>
 
 <h2>Steepest descent in a chosen norm</h2>
 <p>Fix \(1\leq p\leq\infty\), and let \(q\) be the dual exponent: \(1/p+1/q=1\). For a gradient covector \(g\), define</p>
@@ -172,5 +172,7 @@
 <li id="ref-signsgd">Jeremy Bernstein, Yu-Xiang Wang, Kamyar Azizzadenesheli, and Anima Anandkumar. <a href="https://arxiv.org/abs/1802.04434"><em>signSGD: compressed optimisation for non-convex problems.</em></a> ICML, 2018.</li>
 <li id="ref-pl">Hamed Karimi, Julie Nutini, and Mark Schmidt. <a href="https://arxiv.org/abs/1608.04636"><em>Linear convergence of gradient and proximal-gradient methods under the Polyak–Łojasiewicz condition.</em></a> ECML PKDD, 2016.</li>
 <li id="ref-boyd">Stephen Boyd and Lieven Vandenberghe. <a href="https://web.stanford.edu/~boyd/cvxbook/"><em>Convex optimization.</em></a> Cambridge University Press, 2004.</li>
-</ol></article></main><footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Published blog</a> · <a href="/privacy/">Privacy &amp; audience measurement</a></div></footer>
+</ol></article>
+<p class="blog-ai-disclosure">How these posts and numerical experiments were prepared: <a href="../ai-disclosure/">AI disclosure</a>.</p>
+</main><footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Published blog</a> · <a href="/privacy/">Privacy &amp; audience measurement</a></div></footer>
 </body></html>

@@ -181,7 +181,7 @@ $$
 <p>Each cycle is a collection of transport problems. Starting inside the metric cone keeps every iterate there. At \(\tau=0\), the paper exhibits special cases with many self-consistent geometries; existence and uniqueness cannot be inferred from the raw nonexpansive estimate alone. At large \(\tau\), the histogram-norm term increasingly determines the learned geometry. These are useful checks on what the method can learn from the data.</p>
 
 
-## Translations, scales, and an exact reference geometry
+## Translation invariance and reference cost profiles {#translations-scales-and-an-exact-reference-geometry}
 
 <p>For periodic translated bumps, use \(X_{ik}=h((i-k)/N)\). With a translation-invariant initialization, the transforms stay circulant. A row of the learned cost matrix is then a cost profile versus circular displacement. The original paper explores this symmetry in its translated-histogram experiments <a href="#ref-wsv">[1]</a>. A distance-like profile is plausible; a quadratic profile should be tested rather than assumed.</p>
 <p>A second family varies both location and scale. Let \(h\) have mean zero and variance one, and set \(\rho_{m,s}(x)=s^{-1}h((x-m)/s)\), for \(s&gt;0\). Its quantile is \(m+sQ_h\), so the one-dimensional quantile formula gives</p>

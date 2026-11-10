@@ -10,8 +10,8 @@ proofs: true
 embedded_experiment: true
 ---
 
-<p>A positive matrix records a shape, not just a list of numbers. A covariance describes uncertainty; a diffusion tensor describes preferred directions of motion; a feature covariance summarizes an image region. Averaging these objects is how we pool noisy estimates, interpolate measurements, or build a representative template. Which average respects what the matrices mean?</p>
-<p>For positive numbers, arithmetic and geometric averaging already answer different questions. For matrices, there is an additional twist: multiplication does not commute. Even the phrase <em>geometric mean</em> has several natural meanings. We will distinguish three objects carefully: the <em>log-Euclidean geometric mean</em>, the <em>Kubo–Ando geometric mean</em>, and the <em>logarithmic mean</em>. The last two words do not name the first object!</p>
+<p>Positive semidefinite matrices encode shapes and directional information. A covariance describes uncertainty; a diffusion tensor describes preferred directions of motion; a feature covariance summarizes an image region. Averaging these objects is how we pool noisy estimates, interpolate measurements, or build a representative template. Different means preserve different geometric properties.</p>
+<p>For positive numbers, arithmetic and geometric averaging already answer different questions. For matrices, noncommutativity gives several distinct extensions of the <em>geometric mean</em>. We will compare the <em>log-Euclidean geometric mean</em>, the <em>Kubo–Ando geometric mean</em>, and the <em>logarithmic mean</em>, which is different from either geometric mean.</p>
 
 <!--more-->
 
@@ -297,7 +297,7 @@ $$
 M(A^{-1},B^{-1})=M(A,B)^{-1}.
 $$
 
-<p>These express <em>congruence equivariance</em>, <em>symmetry</em>, and <em>inverse compatibility</em> (also called self-duality). Remarkably, positivity of the output and these identities suffice: normalization, continuity, and monotonicity need not be assumed for this uniqueness statement. They follow because the resulting operation is the geometric mean.</p>
+<p>These express <em>congruence equivariance</em>, <em>symmetry</em>, and <em>inverse compatibility</em> (also called self-duality). Positivity of the output and these identities suffice: normalization, continuity, and monotonicity need not be assumed for this uniqueness statement. They follow because the resulting operation is the geometric mean.</p>
 
 <details class="blog-proof">
 
@@ -446,7 +446,7 @@ $$
 
 </details>
 
-<p>Notice the roles: \(A^{-1}\#B\) is a <em>map</em>, whereas \(A\#B\) is an averaged covariance. The Bures covariance path \(((1-t)I+tT)A((1-t)I+tT)\) is yet another interpolation. Even for scalar variances \(a,b\), it is \(((1-t)\sqrt a+t\sqrt b)^2\), not \(a^{1-t}b^t\). Geometry chooses the average.</p>
+<p>Notice the roles: \(A^{-1}\#B\) is a <em>map</em>, whereas \(A\#B\) is an averaged covariance. The Bures covariance path \(((1-t)I+tT)A((1-t)I+tT)\) is yet another interpolation. Even for scalar variances \(a,b\), it is \(((1-t)\sqrt a+t\sqrt b)^2\), not \(a^{1-t}b^t\).</p>
 
 ## Numerical experimentation
 

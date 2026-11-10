@@ -31,7 +31,7 @@
 <article class="blog-prose">
 <p>A dataset is often better represented by a probability measure than by a vector. A point cloud may contain ten points or ten thousand; its ordering should not matter. A population in a mean field game has the same feature: what matters is the distribution of states, rather than a list of named individuals. This raises a basic approximation question: what are the analogues of polynomials when the input is a whole probability distribution?</p>
 
-<p>The answer is pleasantly concrete. Start with expectations of continuous features, multiply a finite number of them, and take linear combinations. On a compact ground space, these expressions approximate <em>every continuous functional of a probability measure</em>, uniformly over all measures. The proof is a direct application of Stone–Weierstrass. It explains why averaging features can be a universal architecture, and why finite-particle interactions are useful coordinates for an infinite-dimensional space. This is also the subject of the “Measure-to-Vector Maps on Wasserstein Space” section of my book <a href="#ref-book">[1]</a>.</p>
+<p>One can form polynomials from expectations of continuous features, taking finite products and linear combinations. On a compact ground space, these expressions approximate <em>every continuous functional of a probability measure</em>, uniformly over all measures. The proof is a direct application of Stone–Weierstrass. It explains why averaging features can be a universal architecture, and why finite-particle interactions are useful coordinates for an infinite-dimensional space. This is also the subject of the “Measure-to-Vector Maps on Wasserstein Space” section of my book <a href="#ref-book">[1]</a>.</p>
 
 <figure class="portrait-pair">
   <div class="portrait-pair-images">
@@ -141,7 +141,7 @@ B_nF(\mu_t)=\sum_{k=0}^{n}F(\mu_{k/n})
 </div>
 </details>
 
-<p>The error has a familiar face. For variance on a compact subset of \(\mathbb R\),</p>
+<p>The construction recovers a familiar statistical bias. For variance on a compact subset of \(\mathbb R\),</p>
 \[
 B_n\operatorname{Var}(\mu)=\left(1-\frac1n\right)\operatorname{Var}(\mu).
 \]
@@ -153,7 +153,7 @@ B_n\operatorname{Var}(\mu)=\left(1-\frac1n\right)\operatorname{Var}(\mu).
 \]
 <p>For \(K\subset\mathbb R^d\), empirical Wasserstein estimates such as those of Fournier and Guillin <a href="#ref-fournier">[5]</a> therefore become approximation estimates. Their dimension dependence matters; arbitrary compact metric spaces require bounds adapted to their geometry. Neither Theorem 1 nor a bound on the interaction order makes an arbitrary kernel on \(K^n\) inexpensive to evaluate or learn.</p>
 
-<h2>From moments to neural networks</h2>
+<h2>Neural approximation using moment features</h2>
 <p>A moment polynomial only uses finitely many features. It can therefore be written</p>
 \[
 P(\mu)=q\!\left(\int_K\phi(x)\,d\mu(x)\right),
@@ -192,7 +192,7 @@ P(\mu)=q\!\left(\int_K\phi(x)\,d\mu(x)\right),
 <p>The statement is uniform over \(\mathcal P(K)\) because \(K\) is compact. On the full noncompact space \(\mathcal P_p(\mathbb R^d)\), this global conclusion does not follow. It does hold on every <em>fixed \(W_p\)-compact subset</em>: bounded continuous test functions still give continuous observables, separate measures, and generate a unital algebra. Apply Stone–Weierstrass to that compact subset.</p>
 <p>The restriction is genuine. Polynomials made from bounded features are bounded, so they cannot uniformly approximate the continuous, unbounded functional \(\mu\mapsto\int |x|^p\,d\mu(x)\) over all of \(\mathcal P_p(\mathbb R^d)\).</p>
 
-<p>Continuity is equally essential. Point mass \(\mu\mapsto\mu(\{x_0\})\) is discontinuous when \(x_0\) is not isolated; moving a Dirac mass towards \(x_0\) exhibits the jump. Such a functional cannot be a uniform limit of continuous polynomials. Likewise, density-based quantities such as entropy require a more restricted domain or regularization. Universality is powerful once the input space and its topology match the quantity we want to learn.</p>
+<p>Continuity is equally essential. Point mass \(\mu\mapsto\mu(\{x_0\})\) is discontinuous when \(x_0\) is not isolated; moving a Dirac mass towards \(x_0\) exhibits the jump. Such a functional cannot be a uniform limit of continuous polynomials. Likewise, density-based quantities such as entropy require a more restricted domain or regularization. The approximation results therefore require a topology in which the target functional is continuous.</p>
 
 <h2>References</h2>
 <ol class="references">
@@ -209,6 +209,8 @@ P(\mu)=q\!\left(\int_K\phi(x)\,d\mu(x)\right),
   <li id="ref-hewitt">Edwin Hewitt and Leonard J. Savage. <a href="https://doi.org/10.1090/S0002-9947-1955-0076206-8">Symmetric measures on Cartesian products</a>. <em>Transactions of the American Mathematical Society</em> 80(2), 470–501, 1955.</li>
 </ol>
 </article>
+<p class="blog-ai-disclosure">How these posts and numerical experiments were prepared: <a href="../ai-disclosure/">AI disclosure</a>.</p>
+
 </main>
 <footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Blog</a> · <a href="/privacy/">Privacy &amp; audience measurement</a></div></footer>
 </body>

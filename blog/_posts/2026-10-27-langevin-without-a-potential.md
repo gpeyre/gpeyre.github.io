@@ -45,13 +45,13 @@ embedded_experiment: true
 
 The usual recipe for Langevin sampling is to follow the negative gradient of a potential and add Brownian noise. The gradient pulls particles towards low energy; the noise prevents them from collapsing to a minimizer. Their balance produces a Gibbs distribution.
 
-But a vector field does not have to be a gradient. Can a swirling, nongradient dynamics still settle into an equilibrium? Yes—and the distinction is instructive: *confinement* produces an invariant distribution, whereas *reversibility* is an additional property. A stationary distribution can carry a permanent probability current.
+A nongradient diffusion can also have an equilibrium. The relevant distinction is between *confinement*, which produces an invariant distribution, and *reversibility*, which is an additional property. A stationary distribution can carry a permanent probability current.
 
 <!--more-->
 
 <figure class="portrait-single"><img src="{{ '/blog/preparations/assets/new-dynamics/paul-langevin.jpg' | relative_url }}" alt="Portrait of Paul Langevin by Henri Manuel" width="818" height="1054" loading="lazy"><figcaption>Paul Langevin (1872–1946). Photograph by Henri Manuel, Wellcome Collection, via <a href="https://commons.wikimedia.org/wiki/File:Paul_Langevin_Wellcome2.jpg">Wikimedia Commons</a>; <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Image unchanged.</figcaption></figure>
 
-## A diffusion and its probability current
+## The Fokker–Planck equation and probability current {#a-diffusion-and-its-probability-current}
 
 Fix a noise strength $$\varepsilon>0$$, a smooth vector field $$v:\mathbb R^d\to\mathbb R^d$$, and a standard Brownian motion $$B_t$$. Our sign convention is
 
@@ -96,7 +96,7 @@ $$
 
 which has infinite integral. At a fixed temperature, a lower bound $$f(x)\ge(d+\delta)\varepsilon\log(1+\lvert x\rvert )-C$$, with $$\delta>0$$, guarantees integrability. One must still check that the diffusion does not explode.
 
-## Confinement without a gradient
+## Lyapunov conditions for invariant measures {#confinement-without-a-gradient}
 
 A Lyapunov function measures how hard it is for a particle to escape. The simplest choice is $$W(x)=1+\lvert x\rvert ^2$$, for which
 

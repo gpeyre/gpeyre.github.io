@@ -9,9 +9,9 @@ proofs: true
 embedded_experiment: true
 ---
 
-Gaussian bumps are useful building blocks for signals and images: each has a location, a width, and an amplitude. Adding them creates complicated shapes. Multiplying them does something equally pleasant: two Gaussian bumps give another Gaussian bump, with a smaller width and an amplitude measuring their overlap.
+Gaussian bumps are useful building blocks for signals and images: each has a location, a width, and an amplitude. Their sums describe more complicated shapes, while the product of two Gaussian bumps is another Gaussian bump, with a smaller width and an amplitude measuring their overlap.
 
-<p>Yves Meyer took this elementary observation seriously. Allow absolutely summable superpositions of translated and rescaled Gaussians, and measure a function by the least total amplitude needed to represent it. The resulting <em>hump algebra</em>, or <em>algèbre des bosses</em>, is a Banach algebra. Its connection to Besov spaces reveals that this apparently geometric description is also a precise measure of regularity across scales <a href="#ref-meyer">[1]</a>.</p>
+<p>Yves Meyer used these Gaussians to define a function space. Allow absolutely summable superpositions of translated and rescaled Gaussians, and measure a function by the least total amplitude needed to represent it. The resulting <em>hump algebra</em>, or <em>algèbre des bosses</em>, is a Banach algebra. Its connection to Besov spaces relates this representation to regularity across scales <a href="#ref-meyer">[1]</a>.</p>
 
 <!--more-->
 
@@ -92,7 +92,7 @@ This inequality is the seed of the Banach-algebra norm.
 
 <aside class="note"><p><strong>Mixtures versus an algebra.</strong> Positive coefficients give nonnegative mixtures. To obtain a vector space, we must also allow negative coefficients. If one instead uses probability-density Gaussians and weights summing to one, a product needs a further normalization to become a probability density. Here we study ordinary pointwise products of functions, without renormalizing them.</p></aside>
 
-## From finite mixtures to the hump algebra
+## Definition of the hump algebra {#from-finite-mixtures-to-the-hump-algebra}
 
 Let $$C_0(\mathbb R^d)$$ denote the continuous functions tending to zero at infinity. The *hump algebra* $$\mathcal H$$ consists of all functions that admit a representation
 
@@ -170,9 +170,9 @@ $$
 
 This completion is not the uniform closure of finite mixtures. That closure is all of $$C_0$$, by the locally compact version of Stone–Weierstrass: Gaussian sums form an algebra, separate points, and vanish nowhere simultaneously. The hump norm imposes extra control on how much amplitude is distributed across locations and scales. It is also important not to restrict its infimum to finite exact representations and then complete: that is a different construction.
 
-## An explicit norm: differences across scales
+## Finite-difference characterization of the hump norm {#an-explicit-norm-differences-across-scales}
 
-Meyer's striking identification is that $$\mathcal H$$ is the homogeneous Besov space $$\dot B^d_{1,1}(\mathbb R^d)$$, realized as functions in $$C_0$$ <a href="#ref-meyer">[1]</a>, <a href="#ref-brandolese">[3]</a>. The superscript $$d$$ is the smoothness index; the two subscripts mean summation in space and over scales. This is the critical index at which dilation preserves the norm.
+Meyer identified $$\mathcal H$$ with the homogeneous Besov space $$\dot B^d_{1,1}(\mathbb R^d)$$, realized as functions in $$C_0$$ <a href="#ref-meyer">[1]</a>, <a href="#ref-brandolese">[3]</a>. The superscript $$d$$ is the smoothness index; the two subscripts mean summation in space and over scales. This is the critical index at which dilation preserves the norm.
 
 There is an explicit version involving only differences of function values. Define $$\Delta_hf(x)=f(x+h)-f(x)$$, and choose an integer $$q>d$$, for instance $$q=d+1$$. Set
 

@@ -312,7 +312,7 @@ The slider replays saved, energy-checked numerical iterates. In one dimension, r
 </figcaption>
 </figure>
 
-The useful lesson is geometric: convexity in mixture coordinates, convexity of a pointwise kernel, and convexity along Wasserstein geodesics are different properties. Here the last one is recovered by changing coordinates to quantiles—and is genuinely lost in dimension two.
+Convexity in mixture coordinates, convexity of a pointwise kernel, and convexity along Wasserstein geodesics are different properties. For energy distance, quantile coordinates establish the last property on the line, while the planar counterexample rules it out in dimension two.
 
 ## References
 

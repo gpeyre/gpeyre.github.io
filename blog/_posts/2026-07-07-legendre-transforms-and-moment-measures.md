@@ -38,7 +38,7 @@ $$
 f^*(y)=\sup_x\{\langle x,y\rangle-f(x)\}
 $$
 
-for its Legendre transform. A beautiful consequence of Prékopa–Leindler is that the functional
+for its Legendre transform. A consequence of Prékopa–Leindler is that the functional
 
 $$
 \Phi(f)=-\log\int_{\mathbb R^d}e^{-f^*(y)}\,\mathrm dy

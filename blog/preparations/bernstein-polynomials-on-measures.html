@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,follow">
   <meta name="keywords" content="Bernstein polynomials, Bernstein–Schnabl operators, polynomials of probability measures, Wasserstein polynomials, constructive approximation, uniform approximation, empirical measures, sampling error, interaction order, compact metric spaces, Stone–Weierstrass theorem, binomial distribution, Hölder continuity, Wasserstein distance, convergence rates, dyadic partitions, multiscale transport, intrinsic dimension, Monte Carlo bias, mean field games, Sergei Bernstein, Roman Schnabl, Pierre Cardaliaguet, Nicolas Fournier, Arnaud Guillin, Jonathan Weed, Francis Bach, Gwendoline de Bie, Marco Cuturi, Gabriel Peyré, polynômes de mesures, approximation uniforme, mesure empirique, erreur d'échantillonnage">
-  <meta name="description" content="Sample, evaluate, average: an explicit polynomial approximation of functionals of probability measures, with a uniform proof and dimension-dependent rates.">
+<meta name="description" content="Polynomial approximation of functionals of probability measures through empirical sampling, with uniform convergence and dimension-dependent rates.">
   <title>Bernstein polynomials on probability measures — Alpha preview — Gabriel Peyré</title>
   <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/bernstein-polynomials-on-measures.html">
   <link rel="stylesheet" href="assets/drafts.css">
@@ -37,8 +37,8 @@
   <p class="byline">Gabriel Peyré</p>
 </div></header>
 <main class="wrap"><article class="blog-prose">
-<p>Suppose the input of a learning problem is a whole distribution: a population, a point cloud, or a collection of tokens of arbitrary size. We would like to approximate a continuous functional \(F(\mu)\) of that distribution by something finite. There is a remarkably direct recipe: draw \(n\) points from \(\mu\), evaluate \(F\) on their empirical distribution, and average the answer.</p>
-<p>This recipe produces a <em>polynomial of the measure</em>. As \(n\) grows, it approximates every continuous functional, uniformly over all distributions on a compact space. Sampling error becomes approximation error. Bernstein’s probabilistic proof of the Weierstrass theorem <a href="#ref-bernstein">[1]</a> already contains the idea; its extension to probability measures belongs to the Bernstein–Schnabl construction <a href="#ref-schnabl">[2]</a>.</p>
+<p>Suppose the input of a learning problem is a whole distribution: a population, a point cloud, or a collection of tokens of arbitrary size. We would like to approximate a continuous functional \(F(\mu)\) of that distribution by something finite. One construction is to draw \(n\) points from \(\mu\), evaluate \(F\) on their empirical distribution, and average the answer.</p>
+<p>This recipe produces a <em>polynomial of the measure</em>. As \(n\) grows, it approximates every continuous functional, uniformly over all distributions on a compact space. Its approximation error is controlled by the sampling error of the empirical measure. Bernstein’s probabilistic proof of the Weierstrass theorem <a href="#ref-bernstein">[1]</a> already contains the idea; its extension to probability measures belongs to the Bernstein–Schnabl construction <a href="#ref-schnabl">[2]</a>.</p>
 <p>The companion post <a href="wasserstein-polynomials.html">Polynomials of probability measures</a> explains the Stone–Weierstrass argument and its links to neural networks. Here the emphasis is constructive: which polynomial should we choose, why does it converge uniformly, and what determines its rate?</p>
 <aside class="note"><p>In my book <a href="#ref-book">[3]</a>, see §4.4, especially <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.4.4.36">Proposition 4.36, printed p. 81</a>, for particle polynomials and their approximation rates. Chapter 10 discusses empirical Wasserstein estimates.</p></aside>
 
@@ -190,7 +190,7 @@
  \sum_{k=0}^n f(k/n)\binom nk a^k(1-a)^{n-k}.
 \]
 <p>This is precisely the classical Bernstein polynomial. It averages nearby values of \(f\), with a window whose width is \(\sqrt{a(1-a)/n}\).</p>
-<p>Three examples make the mechanism visible. For \(f(a)=a\), the approximation is exact. For \(f(a)=a^2\),</p>
+<p>Consider three examples. For \(f(a)=a\), the approximation is exact. For \(f(a)=a^2\),</p>
 \[
  B_nf(a)=a^2+\frac{a(1-a)}n.
 \]
@@ -212,7 +212,7 @@
 <h2>Interaction order and representation complexity</h2>
 <p>The construction is explicit, but the kernel \(\varphi_n\) lives on \(K^n\), a space of dimension \(dn\) in Euclidean coordinates. Representing a completely general kernel can be expensive. The rate in \(n\) is therefore a rate in <em>interaction order</em>, not automatically a rate in the number of network parameters or operations.</p>
 <p>There are two separate approximations if one evaluates \(B_nF\) by averaging \(R\) independent empirical clouds. The bias is \(B_nF-F\), studied above. The additional Monte Carlo fluctuation has root-mean-square size at most \(\|F\|_\infty/\sqrt R\). Increasing \(R\) reduces the second error, but does not remove the first.</p>
-<p>Useful architectures exploit additional structure: low-order interactions, a small family of features, or compositional rules acting on the law. This connects with <em>Stochastic Deep Networks</em> <a href="#ref-debie">[7]</a> and the pooling constructions in the <a href="wasserstein-polynomials.html">companion post</a>. The Bernstein operator gives a clean baseline against which those more economical representations can be understood.</p>
+<p>Useful architectures exploit additional structure: low-order interactions, a small family of features, or compositional rules acting on the law. This connects with <em>Stochastic Deep Networks</em> <a href="#ref-debie">[7]</a> and the pooling constructions in the <a href="wasserstein-polynomials.html">companion post</a>. The Bernstein operator provides a baseline for comparing these more economical representations.</p>
 
 <h2>References</h2>
 <ol class="references">
@@ -224,7 +224,9 @@
   <li id="ref-weed">Jonathan Weed and Francis Bach. <a href="https://arxiv.org/abs/1707.00087"><em>Sharp asymptotic and finite-sample rates of convergence of empirical measures in Wasserstein distance</em></a>. Bernoulli 25(4A), 2620–2648, 2019.</li>
   <li id="ref-debie">Gwendoline de Bie, Gabriel Peyré, and Marco Cuturi. <a href="https://proceedings.mlr.press/v97/de-bie19a.html"><em>Stochastic Deep Networks</em></a>. ICML, PMLR 97, 1556–1565, 2019.</li>
 </ol>
-</article></main>
+</article>
+<p class="blog-ai-disclosure">How these posts and numerical experiments were prepared: <a href="../ai-disclosure/">AI disclosure</a>.</p>
+</main>
 <footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Blog</a> · <a href="/privacy/">Privacy &amp; audience measurement</a></div></footer>
 </body>
 </html>

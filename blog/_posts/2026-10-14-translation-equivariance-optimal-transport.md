@@ -37,7 +37,7 @@ proofs: true
 
 If we translate two point clouds by the same vector, should their optimal transport plan simply translate along with them? For a cost such as the squared Euclidean distance, the answer is immediate: every pairwise displacement stays the same. But this is only one way for the optimal matching to be preserved.
 
-The more interesting question is to characterize **all costs whose optimal plans commute with translations**. A cost may change without changing its minimizers: multiplying it by a positive constant or adding terms that depend on the source point alone or the target point alone has no effect on the optimizer. Under suitable nondegeneracy assumptions, these two freedoms give the complete answer.
+We would like to characterize **all costs whose optimal plans commute with translations**. A cost may change without changing its minimizers: multiplying it by a positive constant or adding terms that depend on the source point alone or the target point alone has no effect on the optimizer. Under suitable nondegeneracy assumptions, these two freedoms give the complete answer.
 
 <!--more-->
 

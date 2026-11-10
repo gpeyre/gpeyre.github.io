@@ -1,7 +1,7 @@
 <figure class="interactive-figure" data-figure="{{ include.kind }}" aria-labelledby="figure-{{ include.kind }}-title">
 {% case include.kind %}
 {% when 'pl' %}
-  <h3 id="figure-pl-title">Explore the banana valley</h3>
+  <h3 id="figure-pl-title">Gradient flow for a banana-shaped objective</h3>
   <canvas width="840" height="500" role="img" aria-label="Gradient-flow trajectories descend toward a parabolic arc of minimizers. Increasing the bend curves the valley."></canvas>
   <div class="figure-controls">
     <label for="pl-bend">Bend b <output for="pl-bend" data-value="bend">1.00</output><input id="pl-bend" data-param="bend" type="range" min="0" max="2" step="0.05" value="1"></label>
@@ -12,7 +12,7 @@
   <p class="figure-legend">Teal curve: minimizers. Orange dots: evolving particles. Pale blue curves: positive energy levels.</p>
   <figcaption>Change the bend, then play or scrub time to follow the gradient flow. The trajectories use fourth-order Runge–Kutta integration.</figcaption>
 {% when 'sinkhorn' %}
-  <h3 id="figure-sinkhorn-title">Two ways to contract a simplex</h3>
+  <h3 id="figure-sinkhorn-title">Markov and Sinkhorn contractions on the simplex</h3>
   <canvas width="840" height="800" role="img" aria-label="Top: linear Markov mixing contracts probability vectors to a stationary point. Bottom: normalized Sinkhorn updates bend and contract positive scaling vectors toward a fixed ray."></canvas>
   <div class="figure-controls">
     <label for="sinkhorn-epsilon">OT regularization ε <output for="sinkhorn-epsilon" data-value="epsilon">0.22</output><input id="sinkhorn-epsilon" data-param="epsilon" type="range" min="0.18" max="0.5" step="0.01" value="0.22"></label>
@@ -28,7 +28,7 @@
   <p class="figure-legend">Red to blue: successive images of the triangle. Thick blue boundary: the current image. Dark outlined dot: the limiting fixed point. The Markov matrix stays fixed as ε changes.</p>
   <figcaption>Use Step or slow playback to inspect the curved Sinkhorn triangles. Each outline is a full, unmodified iteration. Smaller ε gives slower contraction. The lower triangle parametrizes scaling vectors, not transport plans.</figcaption>
 {% when 'gaussian' %}
-  <h3 id="figure-gaussian-title">Interpolate two Gaussian distributions</h3>
+  <h3 id="figure-gaussian-title">Gaussian KL barycenter interpolation</h3>
   <canvas width="840" height="530" role="img" aria-label="Two input Gaussian ellipses and their reverse-KL barycenter. Changing the weight moves and reshapes the barycenter by averaging precision matrices."></canvas>
   <div class="figure-controls">
     <label for="gaussian-weight">Weight λ of Gaussian 2 <output for="gaussian-weight" data-value="weight">0.50</output><input id="gaussian-weight" data-param="weight" type="range" min="0" max="1" step="0.01" value="0.5"></label>
@@ -39,7 +39,7 @@
   <p class="figure-legend">Blue: Gaussian 1. Orange: Gaussian 2. Solid teal: KL barycenter. Dotted teal: path of its mean. Gray dashed: straight segment between input means.</p>
   <figcaption>Ellipses are contours at Mahalanobis radius 2, not density-height contours. The weights are (1 − λ, λ).</figcaption>
 {% when 'gaussian-flow' %}
-  <h3 id="figure-gaussian-flow-title">A Gaussian relaxing toward a Gaussian target</h3>
+  <h3 id="figure-gaussian-flow-title">Gaussian Wasserstein gradient flow of KL</h3>
   <canvas width="840" height="560" role="img" aria-label="A solid teal ellipse evolves from the dotted gray initial Gaussian toward the dashed blue target Gaussian. Change the target orientation and axis ratio, then play the exact Wasserstein KL flow."></canvas>
   <div class="figure-controls">
     <label for="gaussian-flow-angle">Target orientation θ <output for="gaussian-flow-angle" data-value="angle">110°</output><input id="gaussian-flow-angle" data-param="angle" type="range" min="0" max="180" step="1" value="110"></label>
@@ -53,7 +53,7 @@
   <p class="figure-legend">Gray dotted: initial α₀. Teal solid: evolving αₜ. Blue dashed: target β. Faint teal ellipses: earlier states. Dotted teal curve: path of the mean.</p>
   <figcaption>Ellipsoids are shown here as two-dimensional ellipses at Mahalanobis radius 2, with equal scales on both axes. The target axis ratio changes at fixed determinant. Playback takes 12 seconds and slows the early transient; t is the actual flow time. Every state is evaluated from the closed form, without numerical time stepping.</figcaption>
 {% when 'ode' %}
-  <h3 id="figure-ode-title">Bending a flow, measuring its error</h3>
+  <h3 id="figure-ode-title">Euler error and material acceleration</h3>
   <canvas width="840" height="470" role="img" aria-label="Compare the exact sinusoidal flow with its Euler polygon. Reducing the bending or increasing the step count reduces the discretization error."></canvas>
   <div class="figure-controls">
     <label for="ode-bend">Bend b <output for="ode-bend" data-value="bend">0.70</output><input id="ode-bend" data-param="bend" type="range" min="0" max="1.2" step="0.05" value="0.7"></label>
@@ -65,7 +65,7 @@
   <p class="figure-legend">Teal curve: exact solution. Orange polygon and dots: explicit Euler. The error and bound below are evaluated at the grid points over the full interval.</p>
   <figcaption>The velocity is v(t, x) = (1, bπ cos(πt)). Try b = 0: the path has constant velocity and Euler becomes exact.</figcaption>
 {% when 'diffusion' %}
-  <h3 id="figure-diffusion-title">One Gaussian, three destinations, two maps</h3>
+  <h3 id="figure-diffusion-title">Diffusion and optimal transport to a Gaussian mixture</h3>
   <div class="diffusion-panels">
     <div>
       <h4>Diffusion <span>Deterministic score ODE</span></h4>
@@ -88,10 +88,10 @@
   <p class="figure-legend diffusion-legend"><span><i class="mode-a" aria-hidden="true"></i>A · blue</span><span><i class="mode-b" aria-hidden="true"></i>B · cyan</span><span><i class="mode-c" aria-hidden="true"></i>C · brown</span></p>
   <figcaption>Colors follow the destination, not the starting particle. Pale lines show the complete routes; dots show the current positions. Black dots mark the three means. Set σ = 0 for the three-Dirac limit, or highlight particles whose destination mode changes between the maps. Playback takes 10 seconds.</figcaption>
 {% when 'inverse' %}
-  <h3 id="figure-inverse-title">Learn a transport cost between two Gaussian mixtures</h3>
+  <h3 id="figure-inverse-title">Inverse transport between Gaussian mixtures</h3>
   <div class="inverse-panels">
     <div>
-      <h4>Marginals and optimal pairing <span>Same points, changing cost</span></h4>
+      <h4>Marginals and optimal pairing <span>Point clouds for the selected cost slice</span></h4>
       <canvas data-panel="marginals" width="600" height="510" role="img" aria-label="Blue source circles and orange target squares, with a subsample of the optimal transport pairing in teal. The point-count slider changes both marginal clouds."></canvas>
     </div>
     <div>
@@ -112,7 +112,7 @@
   <p class="figure-legend">Blue circles: source αₙ. Orange squares: target βₙ. Each marginal is sampled from a mixture of two Gaussians. Teal lines: optimal pairing for the current θ. Gray dashed lines, when enabled: reference pairing at θ = 1.</p>
   <figcaption>The logarithmic point-count slider runs from 10 to 400 points per marginal. The loss panel compares n = 30, 100, 300, 400 using nested marginal samples; teal is the active n. Each reference pairing is recomputed at θ = 1 for that n, then held fixed as θ varies. All n points per marginal enter the exact, unregularized OT problem and mean gap loss; up to 120 pairing segments are drawn. For n &gt; 200, the adaptive piecewise-linear trace has certified absolute error at most 0.001 in mean gap. No entropy or spline smoothing is used.</figcaption>
 {% when 'barycentric' %}
-  <h3 id="figure-barycentric-title">From a many-to-many coupling to a map</h3>
+  <h3 id="figure-barycentric-title">Barycentric projection of a transport coupling</h3>
   <canvas width="900" height="540" role="img" aria-label="Blue source points and many orange target points, joined by faint gray transport-coupling segments. Solid black arrows send each source to its conditional barycenter."></canvas>
   <div class="figure-controls">
     <label for="barycentric-source">Source points n <output for="barycentric-source" data-value="source">12</output><input id="barycentric-source" data-param="source" type="range" min="3" max="40" step="1" value="12"></label>
@@ -127,7 +127,7 @@
   <p class="figure-legend">Blue circles: source α. Orange squares: target β. Faint gray segments: coupling π, with opacity weighted by mass. Solid black arrows and dots: x ↦ Tπ(x).</p>
   <figcaption>Uniform masses are 1/n and 1/m; no equal-cardinality matching approximation is used. Change n and m independently, move the target cloud, or switch between entropic and unregularized quadratic OT. Log-domain Sinkhorn is checked against the marginal constraints; the unregularized solver uses min-cost flow with a dual optimality certificate. Gray segments below 0.5% of the largest coupling entry are omitted for readability. All entries still enter the black conditional barycenters. Spatial scales are equal on both axes.</figcaption>
 {% when 'icnn' %}
-  <h3 id="figure-icnn-title">Where the approximation misses the target</h3>
+  <h3 id="figure-icnn-title">Approximation errors for fixed-depth ICNNs</h3>
   <div class="figure-controls">
     <label for="icnn-width">Neurons per hidden layer N <output for="icnn-width" data-value="width">64</output><input id="icnn-width" data-param="width" type="range" min="0" max="6" step="1" value="6" aria-valuetext="64 neurons per hidden layer"></label>
     <label for="icnn-view">Planar view<select id="icnn-view" data-param="view"><option value="residual" selected>Signed error h − target</option><option value="values">Function values and contours</option></select></label>
@@ -137,24 +137,24 @@
   <p class="figure-legend" data-icnn-legend>Signed error: blue below the target, red above, white at zero. Black lines mark the target's creases. Purple marks the diagonal section shown below.</p>
   <div class="icnn-panels">
     <div class="icnn-panel">
-      <h4>2D · the three-plane maximum <span data-architecture="two">Target max(0, x, y) · one hidden layer (L = 2)</span></h4>
+      <h4>Three-plane target in two dimensions <span data-architecture="two">Target max(0, x, y) · one hidden layer (L = 2)</span></h4>
       <canvas data-panel="two" width="500" height="505" role="img" aria-label="Signed error of a fitted one-hidden-layer ICNN, with target crease lines. Blue is below the target, red above."></canvas>
       <p class="icnn-error" data-error="two"></p>
       <p class="icnn-clipping" data-clipping="two" aria-live="polite"></p>
     </div>
     <div class="icnn-panel">
-      <h4>2D · the four-plane maximum <span data-architecture="three">Target max(0, x, y, −x−y−½) · two hidden layers (L = 3)</span></h4>
+      <h4>Four-plane target in two dimensions <span data-architecture="three">Target max(0, x, y, −x−y−½) · two hidden layers (L = 3)</span></h4>
       <canvas data-panel="three" width="500" height="505" role="img" aria-label="Signed error near the target's zero triangle. The fitted corners rise above zero while the interior dips below it."></canvas>
       <p class="icnn-error" data-error="three"></p>
       <p class="icnn-clipping" data-clipping="three" aria-live="polite"></p>
     </div>
     <div class="icnn-panel icnn-wide">
-      <h4>A section through the flat triangle <span>x = y = t, −¼ ≤ t ≤ 0 · restriction of the network trained in 2D</span></h4>
+      <h4>Diagonal restriction of the two-dimensional fit <span>x = y = t, −¼ ≤ t ≤ 0 · restriction of the network trained in 2D</span></h4>
       <canvas data-panel="slice" width="840" height="290" role="img" aria-label="The fitted two-dimensional network restricted to a diagonal through the target's zero triangle. Purple is the fit; dashed black is the identically zero target."></canvas>
       <p class="icnn-error" data-slice-status aria-live="polite"></p>
     </div>
     <div class="icnn-panel icnn-wide">
-      <h4>1D control · width alone suffices <span>Target x² · one hidden layer (L = 2)</span></h4>
+      <h4>One-dimensional convex spline approximation <span>Target x² · one hidden layer (L = 2)</span></h4>
       <canvas data-panel="one" width="840" height="230" role="img" aria-label="A convex linear spline approximates the target x squared, with error decreasing as the number of ReLU neurons increases."></canvas>
       <p class="icnn-error" data-error="one"></p>
     </div>

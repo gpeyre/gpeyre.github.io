@@ -151,7 +151,7 @@ A&=\frac{UU^\top}{n},\qquad B=\frac{VV^\top}{n}.
 \end{aligned}
 $$
 
-No mean is subtracted, and no centering assumption is needed. Crucially, $$\Sigma$$ is $$d\times d$$, independently of $$n$$. Its off-diagonal block $$S$$ is the predictor; the diagonal blocks $$A,B$$ describe the hidden weights.
+No mean is subtracted, and no centering assumption is needed. The matrix $$\Sigma$$ is $$d\times d$$, independently of $$n$$. Its off-diagonal block $$S$$ is the predictor; the diagonal blocks $$A,B$$ describe the hidden weights.
 
 Introduce the signature matrix and the symmetric gradient matrix
 

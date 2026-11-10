@@ -36,9 +36,9 @@ keywords:
 figure: sinkhorn
 ---
 
-A positive Markov matrix repeatedly mixes probability vectors until they approach a single stationary distribution. Sinkhorn’s algorithm has a similar visual story: repeated application of a nonlinear map brings positive scaling vectors toward a distinguished ray.
+A positive Markov matrix repeatedly mixes probability vectors until they approach a single stationary distribution. Sinkhorn’s algorithm behaves similarly: repeated application of a nonlinear map brings positive scaling vectors toward a distinguished ray.
 
-The analogy is particularly striking on the simplex of probability vectors with three entries — a triangle. Linear mixing shrinks straight-sided triangles; Sinkhorn bends them as it contracts. The appropriate geometry for the nonlinear picture is projective.
+We can compare the two iterations on the simplex of probability vectors with three entries — a triangle. Linear mixing shrinks straight-sided triangles; Sinkhorn bends them as it contracts. The appropriate geometry for the nonlinear iteration is projective.
 
 <!--more-->
 

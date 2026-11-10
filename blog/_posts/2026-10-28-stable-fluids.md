@@ -51,9 +51,9 @@ embedded_experiment: true
 
 *Stable Fluids* is one of my favorite papers. Its blend of mathematics, numerical analysis, computer graphics, and physics has been a tremendous source of inspiration for me: a few elegant ideas become a simulation one can immediately see and interact with.
 
-A moving cloud of smoke looks complicated. Its solver need not be. Jos Stam’s *Stable Fluids* <a href="#ref-stam">[1]</a> is built from a handful of operations with clear geometric meanings: carry a field along trajectories, smooth it, and enforce incompressibility by an orthogonal projection. Its achievement is an accessible synthesis for interactive graphics, built on a much older numerical-analysis tradition.
+Jos Stam’s *Stable Fluids* <a href="#ref-stam">[1]</a> combines operations with clear geometric meanings: carry a field along trajectories, smooth it, and enforce incompressibility by an orthogonal projection. It brings these methods, drawn from an older numerical-analysis tradition, into an accessible solver for interactive graphics.
 
-The trick is not to solve the entire fluid equation at once. Split it into manageable pieces, and choose each piece to avoid a familiar numerical instability. On a periodic domain, the pressure solve becomes particularly elegant: each Fourier coefficient is projected onto a line perpendicular to its wave vector. Stam’s later implementation notes <a href="#ref-stam2003">[4]</a> and Bridson’s book <a href="#ref-bridson">[5]</a> are useful companions.
+The solver splits the fluid equation into subproblems, each treated by a method chosen for its stability. On a periodic domain, the pressure solve projects each Fourier coefficient onto a line perpendicular to its wave vector. Stam’s later implementation notes <a href="#ref-stam2003">[4]</a> and Bridson’s book <a href="#ref-bridson">[5]</a> give further implementation details.
 
 <!--more-->
 
@@ -139,7 +139,7 @@ Here $$\mathcal I$$ is periodic bilinear interpolation of the grid values. The p
 
 Dye is advected by the resulting projected velocity, with the same backward-tracing operation, then optionally diffused. A mouse drag supplies a localized velocity impulse and a positive dye source. This is an externally forced simulation, not an unforced energy-decay experiment.
 
-## Earlier characteristic methods
+## Characteristic and semi-Lagrangian antecedents {#earlier-characteristic-methods}
 
 Backward tracing also has a substantial pre-1999 history. Robert (1982) combined semi-Lagrangian transport with semi-implicit integration for an atmospheric shallow-water model <a href="#ref-robert">[8]</a>. Staniforth and Côté’s 1991 review documents the wider meteorological use of these methods <a href="#ref-staniforth-cote">[9]</a>: taking large stable steps was already an important motivation, although the equations and stability analyses differ.
 
@@ -183,7 +183,7 @@ The Fourier Poisson equation is $$-\lvert k\rvert^2\widehat\phi=ik\cdot\widehat 
 
 </details>
 
-In practice: transform the two velocity components, apply these multipliers, inverse transform. An FFT makes the cost $$O(M\log M)$$ for $$M$$ grid cells; no iterative pressure solver is hidden inside this step. The experiment uses a genuine mixed-radix FFT on a $$45\times45$$ grid.
+In practice, transform the two velocity components, apply these multipliers, and inverse transform. An FFT makes the cost $$O(M\log M)$$ for $$M$$ grid cells, without an iterative pressure solve. The experiment uses a mixed-radix FFT on a $$45\times45$$ grid.
 
 <aside class="note" markdown="1">
 
@@ -219,7 +219,7 @@ $$
  +\sin^2\frac{\pi j_2}{N}\right)\right]^{-1}.
 $$
 
-The maximum-principle argument is elementary: at a negative minimum of a hypothetical solution of $$(I-h\kappa\Delta_h)a=b\ge0$$, one has $$\Delta_h a\ge0$$, so the left side is negative, a contradiction. This diffusion step also preserves the mean. The *advection* step can still change dye mass; the display reports it honestly rather than renormalizing it away.
+The maximum-principle argument is elementary: at a negative minimum of a hypothetical solution of $$(I-h\kappa\Delta_h)a=b\ge0$$, one has $$\Delta_h a\ge0$$, so the left side is negative, a contradiction. This diffusion step also preserves the mean. The *advection* step can still change dye mass; the display reports this change without renormalizing it.
 
 ## Numerical experimentation
 

@@ -48,7 +48,7 @@ embedded_experiment: true
 ---
 
 <p>A discrepancy between probability distributions can be built in two quite different ways. We can compare their density ratio at each point. Or we can measure how far a convex functional lies above its tangent plane. The first construction comes from statistical information; the second comes from convex geometry and optimization.</p>
-<p>Kullback–Leibler divergence belongs to both families. This is more than a convenient coincidence: under natural smoothness assumptions, it is the <em>only</em> common member, up to scale. A short proof reveals why entropy appears so often when probability models meet convex optimization.</p>
+<p>Kullback–Leibler divergence belongs to both families. Under the smoothness assumptions below, it is the <em>only</em> common member, up to scale. The proof identifies the restrictions imposed by requiring both constructions to agree.</p>
 <p>The finite-alphabet characterization is Theorem 5 of Jiao, Courtade, No, Venkat, and Weissman <a href="#ref-jiao">[1]</a>. The measure-level formulation below follows <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.8.8.34">Proposition 8.34 of <em>Optimal Transport for Machine Learners</em></a> <a href="#ref-book">[2]</a>. We start with the two definitions, because similar-looking quadratic formulas can disguise genuinely different geometries.</p>
 
 <!--more-->
@@ -159,7 +159,7 @@ $$
 
 <p>has divergence \(\frac12|\int\psi\,d\alpha-\int\psi\,d\beta|^2\). It can vanish for different measures with the same features. “Divergence” therefore does not automatically mean a metric, or even a discrepancy separating every pair of laws.</p>
 
-## Characterization of the common divergence {#a-short-rigidity-theorem}
+## Intersection of f-divergences and Bregman divergences {#a-short-rigidity-theorem}
 
 <p>For a precise domain, normalize the finite reference measure so that \(\omega(E)=1\), and assume it has a measurable set \(A\) with \(0&lt;\omega(A)&lt;1\). Let \(\mathcal D\) be all probability densities bounded above and bounded away from zero; the bounds may depend on the density.</p>
 <p id="theorem-1"><strong>Theorem 1 (the smooth intersection is KL).</strong> Suppose \(\phi\in C^2(0,\infty)\) is convex with \(\phi(1)=0\), and \(\Phi\) is convex and twice differentiable along bounded zero-mass density directions. If</p>
@@ -254,7 +254,7 @@ $$
 <p>A Lagrange multiplier for total mass makes \(\log(p_i/q_i)+\eta c_i\) constant, which gives the formula. Entropy geometry turns an additive change in dual coordinates into multiplicative reweighting in probability coordinates.</p>
 <p>The overlap theorem explains why KL simultaneously enjoys a density-ratio interpretation and a tangent-plane interpretation. It does not say that other divergences are inferior. Pearson, Hellinger, squared density error, and feature-mean errors encode different choices. What it rules out is freely exchanging their geometric formulas merely because all of them measure a discrepancy.</p>
 
-## Numerical experimentation: a triangle of probabilities
+## Numerical experimentation: divergences on the probability simplex {#numerical-experimentation-a-triangle-of-probabilities}
 
 <p>Three nonnegative probabilities summing to one form a two-dimensional triangle inside \(\mathbb R^3\):</p>
 

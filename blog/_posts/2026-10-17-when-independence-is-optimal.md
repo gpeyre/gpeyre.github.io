@@ -40,9 +40,9 @@ keywords:
 proofs: true
 ---
 
-The simplest way to couple two distributions is to sample them independently. No matching algorithm, no sorting, no optimization: draw $$X\sim\alpha$$ and $$Y\sim\beta$$ independently. Their joint law $$\alpha\otimes\beta$$ always has the desired marginals.
+One way to couple two distributions is to sample them independently: draw $$X\sim\alpha$$ and $$Y\sim\beta$$ independently. Their joint law $$\alpha\otimes\beta$$ always has the desired marginals, without computing a matching.
 
-Could this effortless coupling already be an optimal transport? Under compactness and continuity assumptions, there is an exact answer: only when every coupling has the same cost. The cost must separate into a source-only term plus a target-only term on the two supports. The statement is [Proposition 3.29 of my book](https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.3.3.29) [[1]](#ref-book). Its proof can be made very short by subtracting the row and column means of the cost.
+When is this independent coupling an optimal transport? Under compactness and continuity assumptions, it is optimal only when every coupling has the same cost. The cost must separate into a source-only term plus a target-only term on the two supports. The statement is [Proposition 3.29 of my book](https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.3.3.29) [[1]](#ref-book). Subtracting the row and column means of the cost gives a short proof.
 
 <!--more-->
 

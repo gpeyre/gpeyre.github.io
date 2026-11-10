@@ -37,9 +37,9 @@
   <p class="byline">Gabriel Peyré</p>
 </div></header>
 <main class="wrap"><article class="blog-prose">
-<p>Sinkhorn’s algorithm is wonderfully simple: alternately correct the two marginals of a coupling. Yet its speed can be surprisingly hard to predict. As the entropic temperature \(\varepsilon\) decreases, the transport plan becomes sharper and convergence usually slows down. How much slower: exponentially in \(1/\varepsilon\), or only proportionally to \(1/\varepsilon\)?</p>
-<p>Gaussians offer a small laboratory in which this question can be answered exactly. For a quadratic cost, the entropic optimal coupling is Gaussian, and Sinkhorn stays within Gaussian distributions. This closed-form structure is studied in our work with Hicham Janati, Boris Muzellec, and Marco Cuturi <a href="#ref-janati">[1]</a>, and in more detail by Akyildiz, Del Moral, and Miguez <a href="#ref-akyildiz">[2]</a>. In one dimension, the entire iteration becomes a fractional-linear map.</p>
-<p>The conclusion is encouraging: for centered Gaussian iterates, the number of full Sinkhorn cycles needed for a fixed relative reduction of a suitable error is of order \(1/\varepsilon\) at low temperature. A recent paper of Lénaïc Chizat, Alex Delalande, and Tomas Vaškevičius <a href="#ref-chizat">[3]</a> explains why favorable temperature dependence extends well beyond Gaussians.</p>
+<p>Sinkhorn’s algorithm alternately corrects the two marginals of a coupling. Its convergence rate depends strongly on the regularization. As the entropic temperature \(\varepsilon\) decreases, the transport plan becomes sharper and convergence usually slows down. How much slower: exponentially in \(1/\varepsilon\), or only proportionally to \(1/\varepsilon\)?</p>
+<p>For Gaussian marginals, this rate can be computed exactly. For a quadratic cost, the entropic optimal coupling is Gaussian, and Sinkhorn stays within Gaussian distributions. This closed-form structure is studied in our work with Hicham Janati, Boris Muzellec, and Marco Cuturi <a href="#ref-janati">[1]</a>, and in more detail by Akyildiz, Del Moral, and Miguez <a href="#ref-akyildiz">[2]</a>. In one dimension, the entire iteration becomes a fractional-linear map.</p>
+<p>For centered Gaussian iterates, the number of full Sinkhorn cycles needed for a fixed relative reduction of a suitable error is of order \(1/\varepsilon\) at low temperature. A recent paper of Lénaïc Chizat, Alex Delalande, and Tomas Vaškevičius <a href="#ref-chizat">[3]</a> explains why favorable temperature dependence extends well beyond Gaussians.</p>
 
 <h2>Entropic transport between centered Gaussians</h2>
 <p>Let \(\alpha=\mathcal N(0,A)\) and \(\beta=\mathcal N(0,B)\), where \(A,B\) are positive-definite \(d\times d\) covariance matrices. We use the cost and regularized objective</p>
@@ -143,7 +143,7 @@
 <p>Equality forces \(\pi=\pi_*\). \(\square\)</p>
 </div></details>
 
-<h2>One dimension: a fractional-linear iteration</h2>
+<h2>Fractional-linear iteration in one dimension</h2>
 <p>Now let \(\alpha=\mathcal N(0,a)\), \(\beta=\mathcal N(0,b)\), where \(a,b&gt;0\) are <em>variances</em>, not standard deviations. Write \(s_k&gt;0\) for the conditional variance. The two inversions collapse to</p>
 \[
  s_{k+1}=F(s_k),\qquad
@@ -259,10 +259,10 @@
 <p>The exponentially small quantity is the <em>improvement</em> \(1-\overline q_{\mathrm H}\), not the contraction factor itself: that factor approaches one. This elementary guarantee can lead to a cycle count of order \(e^{C/\varepsilon}\log(1/\eta)\). For half-squared distance on a common ball of radius \(R\), one can take \(C\le2R^2\).</p>
 <p>This is a worst-case bound, not a prediction that every instance is exponentially slow. It uses extreme kernel ratios and ignores the geometry of the marginals. Moreover, Gaussian supports are unbounded, so the bounded-cost estimate is actually vacuous for them. The exact calculation above is a different, structure-sensitive analysis: its decay exponent is proportional to \(\varepsilon\), not exponentially small in \(1/\varepsilon\).</p>
 
-<h2>Beyond Gaussians</h2>
+<h2>Convergence rates under structural assumptions on the marginals</h2>
 <p>Replacing \(\tfrac12|x-y|^2\) by \(-\langle x,y\rangle\) subtracts fixed marginal integrals, so it preserves the optimizer and the temperature. For this bilinear cost, Chizat, Delalande, and Vaškevičius <a href="#ref-chizat">[3, Theorems 1.1–1.2]</a> prove substantially sharper bounds. With compact supports, a convex source domain, and a log-concave source density, their dual-gap bound has a full-cycle factor of the form \(1-c_0\varepsilon\) at low temperature, where \(c_0&gt;0\) depends on the fixed problem geometry. The target marginal need not have a density.</p>
 <p>For a source density bounded above and below by positive constants on a compact convex domain, they obtain a global \(1-c_1\varepsilon^2\) factor, improving eventually to \(1-c_2\varepsilon\). These are structural assumptions, not a claim that smoothness alone always suffices. Their Gaussian example separately establishes the sharp linear dependence on temperature for the asymptotic dual-gap rate; it is not an application of their compact-support theorem.</p>
-<p>The Gaussian calculation thus captures a useful lesson: the notorious low-temperature slowdown is real, but its severity depends on more than the smallest entry of the Gibbs kernel. Once the distributional structure enters the argument, a much more informative rate becomes visible.</p>
+<p>The Gaussian calculation shows that low-temperature convergence depends on the structure of the marginals, not just on extreme ratios of Gibbs-kernel entries. Using that structure gives a sharper rate than the worst-case contraction estimate.</p>
 
 <h2>References</h2>
 <ol class="references">
@@ -272,6 +272,8 @@
   <li id="ref-franklin">Joel Franklin and Jens Lorenz. <a href="https://doi.org/10.1016/0024-3795(89)90490-4"><em>On the scaling of multidimensional matrices.</em></a> Linear Algebra and its Applications 114–115, 717–735, 1989.</li>
   <li id="ref-book">Gabriel Peyré and Marco Cuturi. <a href="https://arxiv.org/abs/1803.00567"><em>Computational Optimal Transport.</em></a> Foundations and Trends in Machine Learning 11(5–6), 355–607, 2019.</li>
 </ol>
-</article></main>
+</article>
+<p class="blog-ai-disclosure">How these posts and numerical experiments were prepared: <a href="../ai-disclosure/">AI disclosure</a>.</p>
+</main>
 <footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Published blog</a> · <a href="/privacy/">Privacy &amp; audience measurement</a></div></footer>
 </body></html>

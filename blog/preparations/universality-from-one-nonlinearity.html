@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,follow">
   <meta name="keywords" content="universal approximation, universality, Stone-Weierstrass theorem, de Leeuw-Katznelson theorem, Karel de Leeuw, Yitzhak Katznelson, Marshall Stone, Karl Weierstrass, operating functions, nonlinear composition, pointwise operations, non-affine activation, uniform closure, approximate algebra, approximate products, separating points, compact Hausdorff space, continuous functions, real function spaces, Taylor expansion, central differences, polarization identity, mollification, smoothing, absolute value, maximum, lattice approximation, ReLU, neural networks, deep networks, computation graphs, skip connections, nonpolynomial activation, polynomial activation, exponential features, approximation universelle">
-  <meta name="description" content="Stone–Weierstrass beyond products: closure under any one continuous non-affine operation already yields universal approximation. A short proof through Taylor expansion, smoothing, and a careful distinction between deep and shallow networks.">
+<meta name="description" content="A Stone–Weierstrass extension using closure under a continuous non-affine operation, proved by Taylor expansion and smoothing, with applications to deep neural networks.">
   <title>Universal approximation from one nonlinearity — Alpha preview — Gabriel Peyré</title>
   <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/universality-from-one-nonlinearity.html">
   <link rel="stylesheet" href="assets/drafts.css">
@@ -26,9 +26,9 @@
   <p class="byline">Gabriel Peyré</p>
 </div></header>
 <main class="wrap"><article class="blog-prose">
-<p>The Stone–Weierstrass theorem is one of the great shortcuts of approximation theory. Instead of constructing an approximation to each continuous function by hand, check that a linear family contains constants, distinguishes points, and is stable under multiplication. Universality follows.</p>
-<p>But multiplication can feel like the wrong primitive. Neural networks use activations, not products. Other models combine functions using a maximum, an absolute value, or a smooth saturation. Must we build a separate multiplication gadget for each of them?</p>
-<p>A beautiful extension due to Karel de Leeuw and Yitzhak Katznelson says that, in a real linear function space, <em>any continuous non-affine operation is enough</em> <a href="#ref-deleeuw">[2]</a>. Approximate closure under that operation already forces approximate closure under products. The proof explains why: smooth curvature reveals a square, and smoothing reveals curvature even when the original nonlinearity has corners.</p>
+<p>The Stone–Weierstrass theorem gives a structural criterion for uniform approximation. Instead of constructing an approximation to each continuous function by hand, check that a linear family contains constants, distinguishes points, and is stable under multiplication. Universality follows.</p>
+<p>For neural networks, however, the available operation is usually an activation rather than a product. Other models combine functions using a maximum, an absolute value, or a smooth saturation. Must we build a separate multiplication gadget for each of them?</p>
+<p>An extension due to Karel de Leeuw and Yitzhak Katznelson says that, in a real linear function space, <em>any continuous non-affine operation is enough</em> <a href="#ref-deleeuw">[2]</a>. Approximate closure under that operation already forces approximate closure under products. For a smooth nonlinearity, a second-order Taylor expansion recovers squares. A smoothing argument extends the proof to continuous nonlinearities, including those with corners.</p>
 
 <figure class="portrait-pair">
   <div class="portrait-pair-images">
@@ -98,7 +98,7 @@
 \[
   fg=\frac{(f+g)^2-(f-g)^2}{4}.
 \]
-<p>That is the whole mechanism. A small amount of curvature, viewed at the right offset and scale, recovers the algebra structure.</p>
+<p>Thus Taylor expansion supplies squares, and polarization supplies the algebra structure.</p>
 <details class="blog-proof">
 <summary>Why the Taylor limit is uniform</summary>
 <div class="blog-proof-body">
@@ -182,7 +182,7 @@
   \min(f,g)&=\tfrac12(f+g-|f-g|).
   \end{aligned}
 \]
-<p>Conversely, \(|f|=\max(f,-f)\), and ReLU gives \(|f|=f_++(-f)_+\). In a linear space, these three operations provide the same closure property. Their corners encode enough nonlinearity to recover all continuous functions, even though none visibly multiplies two inputs.</p>
+<p>Conversely, \(|f|=\max(f,-f)\), and ReLU gives \(|f|=f_++(-f)_+\). In a linear space, these three operations provide the same closure property, which suffices for uniform approximation without requiring exact multiplication of inputs.</p>
 
 <h2>A universality principle for nonlinear networks</h2>
 <p>Let \(K\subset\mathbb R^d\) be compact and fix a continuous non-affine activation \(\sigma\). Consider finite feedforward computation graphs built from the coordinates \(x_1,\ldots,x_d\), constants, real affine combinations, and scalar gates \(z\mapsto\sigma(z)\). Earlier signals may be reused: skip connections are allowed, as are an affine output and arbitrary finite depth and width.</p>
@@ -199,7 +199,7 @@
 <p>Non-affinity cannot be dropped: affine functions on \([0,1]\) contain constants and separate points, and every affine operation preserves them. They are nevertheless a closed proper subspace of \(C([0,1])\).</p>
 <p>Constants cannot be dropped either. The closed linear space of continuous functions vanishing at \(0\) separates points of \([0,1]\) and is stable under squaring, but can never approximate the constant \(1\). Linearity is also essential: continuous nondecreasing functions contain all constants and separate points, and exponentiation preserves them, but they are not dense in all continuous functions.</p>
 <p>Finally, this is a qualitative theorem in the uniform norm. It says nothing by itself about the number of neurons, training, approximation rates, or coefficient bounds. The factor \(t^{-2}\) in the curvature argument warns that the proof may amplify weights considerably.</p>
-<p>The useful lesson is structural: once constants and linear combinations are available, multiplication is not a privileged source of expressivity. Closure under <em>one</em> continuous non-affine operation already contains an algebra in disguise.</p>
+<p>With constants and linear combinations available, approximate closure under any one continuous non-affine operation implies approximate closure under multiplication.</p>
 
 <h2>References</h2>
 <ol class="references">
@@ -209,7 +209,9 @@
   <li id="ref-hatori">Osamu Hatori. <em>Non-Lipschitz functions which operate on function spaces.</em> Scientiae Mathematicae 1(1) (1998), 7–14. <a href="https://www.jams.jp/scm/contents/Vol-1-1/1-1-2.pdf">Paper</a>.</li>
   <li id="ref-leshno">Moshe Leshno, Vladimir Ya. Lin, Allan Pinkus, and Shimon Schocken. <em>Multilayer feedforward networks with a nonpolynomial activation function can approximate any function.</em> Neural Networks 6(6) (1993), 861–867. <a href="https://doi.org/10.1016/S0893-6080(05)80131-5">Paper</a> · <a href="https://pinkus.net.technion.ac.il/files/2021/02/neural.pdf">Author-hosted PDF</a>.</li>
 </ol>
-</article></main>
+</article>
+<p class="blog-ai-disclosure">How these posts and numerical experiments were prepared: <a href="../ai-disclosure/">AI disclosure</a>.</p>
+</main>
 <footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">All forthcoming posts</a> · <a href="/blog/">Blog</a> · <a href="/privacy/">Privacy &amp; audience measurement</a></div></footer>
 </body>
 </html>

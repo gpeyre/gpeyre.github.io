@@ -38,7 +38,7 @@ $$
 \min_\mu\sum_i\lambda_i\,\mathrm{KL}(\mu\mid\nu_i)
 $$
 
-is again Gaussian. The striking point is that we average the **precision matrices** $$\Sigma_i^{-1}$$, rather than the covariances themselves.
+is again Gaussian. Its formula averages the **precision matrices** $$\Sigma_i^{-1}$$, rather than the covariances themselves.
 
 <!--more-->
 
@@ -124,6 +124,6 @@ $$
 
 More concentrated inputs exert a stronger pull on the mean. In several dimensions, that pull depends on direction, which is why the mean in the animation need not follow the straight segment between the input means.
 
-## The direction of KL matters
+## Dependence on the orientation of KL {#the-direction-of-kl-matters}
 
 If we reverse the arguments and instead minimize $$\sum_i\lambda_i\mathrm{KL}(\nu_i\mid\mu)$$ over all probability laws, the optimizer is the **mixture** $$\sum_i\lambda_i\nu_i$$. That mixture is generally not Gaussian. The Gaussian closure above is specific to the stated orientation of KL.

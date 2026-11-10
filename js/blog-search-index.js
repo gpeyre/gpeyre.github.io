@@ -2142,7 +2142,7 @@ window.BLOG_SEARCH_RECORDS = [
     "status": "forthcoming",
     "date": null,
     "title": "Bernstein polynomials on probability measures",
-    "description": "Sample, evaluate, average: an explicit polynomial approximation of functionals of probability measures, with a uniform proof and dimension-dependent rates.",
+    "description": "Polynomial approximation of functionals of probability measures through empirical sampling, with uniform convergence and dimension-dependent rates.",
     "keywords": [
       "Bernstein polynomials",
       "Bernstein–Schnabl operators",
@@ -2493,7 +2493,7 @@ window.BLOG_SEARCH_RECORDS = [
     "status": "forthcoming",
     "date": null,
     "title": "Orthostochastic matrices and optimal transport",
-    "description": "Square the entries of an orthogonal matrix to obtain a bistochastic transport plan. Characterizations, short proofs, exact assignment costs, and a gradient-flow experiment reveal both the power and the traps of this nonconvex parametrization.",
+    "description": "Bistochastic transport plans obtained by squaring orthogonal matrix entries: characterizations, equality of optimal assignment costs, and suboptimal local minima of the nonconvex parametrization.",
     "keywords": [
       "orthostochastic matrix",
       "bistochastic matrix",
@@ -2541,7 +2541,7 @@ window.BLOG_SEARCH_RECORDS = [
     "status": "forthcoming",
     "date": null,
     "title": "Iterative projections: Dykstra and Douglas–Rachford",
-    "description": "Alternating projections find feasibility; Dykstra finds the nearest point; Douglas–Rachford uses reflections. A halfplane counterexample and a genuine five-set Sudoku experiment make the distinctions visible.",
+    "description": "Feasibility and nearest-point projection with alternating projections, Dykstra’s algorithm, and Douglas–Rachford splitting, illustrated on two halfplanes and a five-set Sudoku formulation.",
     "keywords": [
       "alternating projections",
       "POCS",
@@ -2808,7 +2808,7 @@ window.BLOG_SEARCH_RECORDS = [
     "status": "forthcoming",
     "date": null,
     "title": "Universal approximation from one nonlinearity",
-    "description": "Stone–Weierstrass beyond products: closure under any one continuous non-affine operation already yields universal approximation. A short proof through Taylor expansion, smoothing, and a careful distinction between deep and shallow networks.",
+    "description": "A Stone–Weierstrass extension using closure under a continuous non-affine operation, proved by Taylor expansion and smoothing, with applications to deep neural networks.",
     "keywords": [
       "universal approximation",
       "universality",
@@ -2897,7 +2897,7 @@ window.BLOG_SEARCH_RECORDS = [
     "status": "forthcoming",
     "date": null,
     "title": "Why optimal transport respects a density cap",
-    "description": "A pedagogical proof that a constant upper density bound is preserved along quadratic Wasserstein geodesics, with exact one-dimensional experiments.",
+    "description": "Preservation of a constant upper density bound along quadratic Wasserstein geodesics, with a determinant-based proof and exact one-dimensional experiments.",
     "keywords": [
       "Wasserstein geodesics",
       "density cap",

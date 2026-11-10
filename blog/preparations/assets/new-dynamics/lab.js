@@ -89,7 +89,7 @@
   document.addEventListener("visibilitychange", () => { if (document.hidden) pause("Paused because this tab was hidden."); });
   window.addEventListener("pagehide", () => pause());
   if (topic === "langevin") {
-    $("title").textContent = "A stationary cloud can circulate";
+    $("title").textContent = "Stationary distributions with nonzero probability current";
     $("intro").textContent = "Follow 180 particles from a square on the left towards a Gaussian centered at (2, 0). Circulation changes the motion, while noise changes the equilibrium cloud itself.";
     let circulation = 1.4, epsilon = 0.55; const h = 0.025, count = 180;
     slider("circulation", "Circulation a", -3, 3, 0.05, circulation, x => x.toFixed(2), x => { circulation = x; restart(); });
@@ -145,7 +145,7 @@
     };
     $("method").textContent = "Exact linear transitions with h = 0.025, not Euler–Maruyama. Every reset restores the same uniform square and random stream. Finite-sample mean/covariance errors need not decrease monotonically and do not vanish at equilibrium. The initial uniform law is not Gaussian at finite time. At ε = 0, the target is a point.";
   } else if (topic === "moser") {
-    $("title").textContent = "Choose the densities; recover the trajectories";
+    $("title").textContent = "Moser interpolation and particle trajectories";
     $("intro").textContent = "A fixed flux transports one periodic three-bump density into another. The prescribed density changes linearly; individual particle paths usually do not. Lower the positive background to see the velocity rise in nearly empty regions.";
     let background = 0.14; const count = 420, h = 1 / 240;
     slider("background", "Uniform background", 0.025, 0.5, 0.005, background, x => `${(100 * x).toFixed(1)}%`, x => { background = x; restart(); });
@@ -184,8 +184,8 @@
     };
     $("method").textContent = "A 63 × 63 odd periodic grid, one mixed-radix Fourier Poisson solve for sampled wrapped-Gaussian densities, bilinear flux/density interpolation, and fourth-order Runge–Kutta particle steps h = 1/240. The grid continuity equation is solved to roundoff; particle transport additionally has spatial/ODE discretization and sampling error. Colors saturate at their stated fixed scales. This is a Moser interpolation, not an optimal-transport geodesic.";
   } else if (topic === "fluids") {
-    $("title").textContent = "Stir, diffuse, project";
-    $("intro").textContent = "Drag on the dye panel to inject dye and push the fluid. Play to let it evolve, or take one step at a time. The neighboring panel exposes vorticity and the velocity field rather than hiding the incompressibility constraint.";
+    $("title").textContent = "Semi-Lagrangian fluid simulation";
+    $("intro").textContent = "Drag on the dye panel to inject dye and push the fluid. Play to let it evolve, or take one step at a time. The neighboring panel shows vorticity and the velocity field.";
     let viscosity = 0.0008, diffusivity = 0.00015, h = 0.035, radius = 0.042, force = 1, project = true, steps = 0;
     slider("viscosity", "Viscosity ν", 0, 0.006, 0.0001, viscosity, x => x.toFixed(4), x => { viscosity = x; });
     slider("diffusivity", "Dye diffusion κ", 0, 0.002, 0.00005, diffusivity, x => x.toFixed(5), x => { diffusivity = x; });

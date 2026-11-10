@@ -171,7 +171,7 @@ Some conventions call $$F_{\mathrm{root}}^2$$ the fidelity. For commuting diagon
 
 ## Linear optimal transport with an isotropic reference {#fix-the-alignment-linear-optimal-transport}
 
-<p>One can also use the ordinary Frobenius distance \(\|A-B\|_{\mathrm F}\), but this is <em>not</em> the linear optimal transport distance in this story. The latter is</p>
+<p>The ordinary Frobenius distance \(\|A-B\|_{\mathrm F}\) compares the covariance matrices directly. The linear optimal transport distance instead compares their square roots:</p>
 
 $$
 d_{\mathrm{root}}(A,B)=\|A^{1/2}-B^{1/2}\|_{\mathrm F}.
@@ -334,7 +334,7 @@ Diagonalize $$P-Q$$ with eigenvalues $$\eta_i$$. Rotational invariance makes the
 
 </details>
 
-Their theorem therefore gives exactly the lower bound of Theorem 3. The striking generalization is that the potential inequality survives well beyond quadratic potentials and Gaussian target measures.
+Their theorem therefore gives exactly the lower bound of Theorem 3. More generally, the potential inequality applies beyond quadratic potentials and Gaussian target measures.
 
 ## Bures and square-root interpolations {#two-barycentric-interpolations}
 

@@ -33,7 +33,7 @@ keywords:
 proofs: true
 ---
 
-Fun fact: a linear operator on matrices may mix all their entries, but preserving the rank of **every** matrix leaves remarkably little freedom. It must be a change of basis on the left and on the right.
+Fun fact: a linear operator on matrices may mix all their entries, but preserving the rank of **every** matrix leaves very little freedom. It must be a change of basis on the left and on the right.
 
 There is just one additional possibility for square matrices: transposition, followed by those same changes of basis. The proof comes from understanding the linear subspaces made entirely of matrices of rank at most one.
 
@@ -247,7 +247,7 @@ If $$m=1$$ or $$n=1$$, a nonzero matrix has rank one. Rank preservation is then 
 </div>
 </details>
 
-## The field and the scope of the statement
+## Field and linearity assumptions {#the-field-and-the-scope-of-the-statement}
 
 Over $$\mathbb C$$, linearity means **complex** linearity. The transpose in the theorem is the ordinary transpose, not the conjugate transpose. If we allowed real-linear operators on complex matrices, entrywise conjugation would be another rank-preserving operation.
 
@@ -255,6 +255,6 @@ Finally, rank preservation does not imply preservation of singular values, deter
 
 ## Geometry of rank-one subspaces {#the-geometric-reason}
 
-Rank-one matrices form the simplest possible products: one column direction times one row direction. Their maximal linear pieces come in exactly two families. An invertible linear map preserving rank must preserve this two-family structure, or exchange the families when their dimensions agree.
+Every rank-one matrix is the product of a column vector and a row vector. Their maximal linear pieces come in exactly two families. An invertible linear map preserving rank must preserve this two-family structure, or exchange the families when their dimensions agree.
 
-That is why an apparently unrestricted transformation of $$mn$$ entries collapses to two changes of basis, with transposition as the only extra symmetry.
+This two-family structure restricts a linear transformation of $$mn$$ entries to two changes of basis, with transposition as the only extra symmetry.

@@ -10,7 +10,7 @@ embedded_experiment: true
 ---
 
 <p>Draw straight lines matching red points to blue points. If two lines cross, swapping their destinations often looks like an obvious improvement. For ordinary Euclidean length, this intuition is correct: a shortest matching has no proper crossings.</p>
-<p>It is tempting to imagine that eliminating crossings almost solves the problem. Yet even on a convex polygon, there remain exponentially many noncrossing matchings. Their exact number is a Catalan number. The connection is useful both conceptually and algorithmically: it gives a short counting proof, an exact uniform sampler, and a clean distinction between feasible, locally improved, and globally optimal matchings. The geometric starting point is <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.1.1.5">Proposition 1.5 of my book</a> <a href="#ref-book">[1]</a>.</p>
+<p>Eliminating crossings still leaves many possible matchings. Even on a convex polygon, their number grows exponentially and is given exactly by a Catalan number. The counting argument also gives an exact uniform sampler. Finding the cheapest matching is a separate task, and a locally improved matching need not be globally optimal. The geometric starting point is <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.1.1.5">Proposition 1.5 of my book</a> <a href="#ref-book">[1]</a>.</p>
 
 <!--more-->
 
@@ -225,7 +225,7 @@ $$
   <iframe class="idea-experiment" data-experiment="matchings" title="Catalan matching sampler, greedy swaps, and the exact minimum cost" src="{{ '/blog/preparations/assets/ot-lab/index.html?topic=matchings' | relative_url }}" loading="lazy"></iframe>
   <figcaption>Change the number of pairs to see the Catalan family grow. Every displayed configuration is checked for proper crossings. Uniform exploration can increase the current cost while improving the best cost seen; the downhill button only accepts feasible improvements. The blue reference is an independently solved transport optimum, not the best matching found by random search.</figcaption>
 </figure>
-<p>The geometry gives a useful necessary condition, the recursion counts and samples its solutions, and optimization still has to choose among them. Keeping these three tasks distinct prevents a visually pleasing noncrossing drawing from being mistaken for a proof of optimality.</p>
+<p>Noncrossing is a necessary geometric condition for optimality. The Catalan recursion counts and samples the matchings satisfying it; minimizing cost still requires a separate optimization.</p>
 
 ## References
 

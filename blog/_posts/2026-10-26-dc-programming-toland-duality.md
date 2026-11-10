@@ -59,9 +59,9 @@ embedded_experiment: true
 
 Convex optimization is appealing because a local supporting plane contains global information. But many interesting objectives combine competing effects: a fidelity term and a sparsity incentive, attraction and repulsion, or positive and negative contributions to a transport energy. Subtracting two convex functions is already enough to leave the convex world.
 
-The resulting class is called *difference-of-convex*, or *DC*, optimization. It retains enough structure to admit a beautiful duality: conjugate both convex functions, reverse their order, and minimize again. This is Toland duality [[1]](#ref-1), [[2]](#ref-2). Following the viewpoint of Guillaume Carlier [[3]](#ref-3), I want to explain both its elementary mechanism and a particularly pleasant possibility: a genuinely nonconvex objective can have a fully convex dual.
+The resulting class is called *difference-of-convex*, or *DC*, optimization. Toland duality consists in conjugating both convex functions, reversing their order, and minimizing again [[1]](#ref-1), [[2]](#ref-2). Following the viewpoint of Guillaume Carlier [[3]](#ref-3), I want to explain how this duality works and when it turns a nonconvex objective into a convex dual problem.
 
-The same construction also gives an algorithm. The key is to introduce a slope as an additional variable. Minimizing jointly gives the duality theorem; minimizing alternately gives the DC algorithm. But when the dual is convex, there is a third option: solve that convex problem directly, then recover a global solution of the original problem. This is the real prize—not merely another way to write the same stationary-point equations.
+The same construction also gives an algorithm. Introduce a slope as an additional variable: minimizing jointly gives the duality theorem, while minimizing alternately gives the DC algorithm. When the dual is convex, one can instead solve that convex problem directly, then recover a global solution of the original problem.
 
 <!--more-->
 
@@ -74,7 +74,7 @@ $$
     \qquad \Phi(x)=F(x)-G(x).
 $$
 
-The assumption that both functions are finite keeps the domain bookkeeping simple. They are then continuous. Their conjugates can still take the value $$+\infty$$, which we will handle explicitly.
+Assuming both functions are finite simplifies the domain conditions and ensures continuity. Their conjugates can still take the value $$+\infty$$, which we will handle explicitly.
 
 This class is large. For example, if a twice differentiable function $$f$$ satisfies $$\nabla^2f\succeq-\rho I$$, then
 
@@ -83,7 +83,7 @@ f(x)=\left(f(x)+\frac{\rho}{2}\|x\|^2\right)
     -\frac{\rho}{2}\|x\|^2
 $$
 
-is a DC decomposition. An indefinite quadratic form can likewise be split using the positive and negative parts of its matrix. Decompositions are not unique: adding the same convex function to $$F$$ and $$G$$ preserves $$\Phi$$, but changes the algorithm built from the decomposition [[4]](#ref-4), [[5]](#ref-5). Can we remove all unnecessary shared curvature and obtain a canonical split? We will see that the answer is particularly clean in one dimension, and more subtle in higher dimensions.
+is a DC decomposition. An indefinite quadratic form can likewise be split using the positive and negative parts of its matrix. Decompositions are not unique: adding the same convex function to $$F$$ and $$G$$ preserves $$\Phi$$, but changes the algorithm built from the decomposition [[4]](#ref-4), [[5]](#ref-5). Removing shared curvature gives a canonical split in one dimension, but generally not in higher dimensions.
 
 The convex conjugate records the cost of a supporting slope:
 
@@ -173,7 +173,7 @@ At such a minimizing pair, both Fenchel inequalities are equalities, so $$p_\sta
 
 </details>
 
-## The DC algorithm is alternating minimization
+## Alternating minimization and the DC algorithm {#the-dc-algorithm-is-alternating-minimization}
 
 Instead of minimizing $$B$$ globally, alternate its two convex subproblems:
 
@@ -702,7 +702,7 @@ where some coefficients are negative. Positive coefficients encourage closeness 
 
 Gallouët, Natale and Todeschi [[11]](#ref-11) establish two convex dual formulations when exactly one coefficient is positive: one uses Brenier potentials, the other a projection under convex-order constraints. They also study the general signed case and develop particle algorithms using entropic regularization. The special sign pattern matters: their general case need not have the same convexity or uniqueness properties.
 
-These transport results show why the elementary duality is useful beyond finite-dimensional toy examples. It gives a systematic question to ask of a nonconvex model: does exchanging positions for supporting slopes reveal a better geometry?
+These transport results extend the use of Toland duality beyond finite-dimensional examples. They show how supporting slopes and convex potentials can provide convex formulations of otherwise nonconvex problems.
 
 ## References
 

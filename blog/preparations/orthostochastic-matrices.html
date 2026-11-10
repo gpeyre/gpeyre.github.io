@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,follow">
-<meta name="description" content="Square the entries of an orthogonal matrix to obtain a bistochastic transport plan. Characterizations, short proofs, exact assignment costs, and a gradient-flow experiment reveal both the power and the traps of this nonconvex parametrization.">
+<meta name="description" content="Bistochastic transport plans obtained by squaring orthogonal matrix entries: characterizations, equality of optimal assignment costs, and suboptimal local minima of the nonconvex parametrization.">
 <meta name="keywords" content="orthostochastic matrix, bistochastic matrix, doubly stochastic matrix, Birkhoff polytope, Birkhoff von Neumann theorem, Garrett Birkhoff, John von Neumann, orthogonal group, special orthogonal group, Hadamard square, entrywise square, signed square roots, three by three matrices, degenerate triangle, unistochastic matrix, permutation matrix, assignment problem, Hungarian algorithm, Harold Kuhn, Kantorovich problem, uniform empirical measures, discrete optimal transport, squared Euclidean cost, nonconvex optimization, Riemannian gradient flow, tangent projection, polar retraction, Cayley transform, Armijo line search, spurious local minimum, Roger Brockett, Wing Shing Wong, Zaiwen Wen, Wotao Yin, transport coupling, orthogonality constraint, matrice orthostochastique, matrice bistochastique">
 <title>Orthostochastic matrices and optimal transport — Alpha preview — Gabriel Peyré</title>
 <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/orthostochastic-matrices.html"><link rel="stylesheet" href="assets/drafts.css"><script defer src="assets/drafts.js"></script><script defer src="assets/idea-experiments.js"></script><script defer src="../../js/site-analytics.js"></script>
@@ -19,9 +19,9 @@
 </head><body>
 <header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Orthostochastic matrices and optimal transport</h1><p class="subtitle">An orthogonal parametrization preserves the optimal transport cost, but can introduce bad local minima.</p><p class="byline">Gabriel Peyré</p></div></header>
 <main class="wrap"><article class="blog-prose">
-<p>I learned about orthostochastic matrices from <strong>Peyman Milanfar</strong>. They offer a beautiful bridge between orthogonal geometry, probability, and optimal transport.</p>
+<p>I learned about orthostochastic matrices from <strong>Peyman Milanfar</strong>. They connect orthogonal matrices with probability couplings and optimal transport.</p>
 <p>A permutation matches each source point to exactly one target point. A doubly stochastic matrix allows a softer matching, splitting each point among several destinations. There is a less familiar way to build such matrices: take an orthogonal matrix and square each of its entries. The result is <em>orthostochastic</em>.</p>
-<p>This construction automatically enforces positivity and the two marginal constraints of uniform discrete transport. Surprisingly, although it describes only a small nonconvex subset of all couplings, it preserves the optimal value of every linear transport objective. What it does <em>not</em> preserve is the friendly optimization landscape: an orthogonal gradient flow can settle at a genuinely suboptimal local minimum.</p>
+<p>This construction automatically enforces positivity and the two marginal constraints of uniform discrete transport. Although it describes only a nonconvex subset of all couplings, it preserves the optimal value of every linear transport objective. The nonconvex parametrization can, however, introduce suboptimal local minima where an orthogonal gradient flow can stop.</p>
 
 <h2>Bistochastic and orthostochastic matrices</h2>
 <p>Write \(\mathbf1=(1,\ldots,1)^\top\). An \(n\times n\) real matrix \(P\) is <em>bistochastic</em>, or <em>doubly stochastic</em>, when</p>
@@ -73,7 +73,7 @@
 <p>is the average of the two cyclic permutation matrices. But the first two rows of any signed entrywise square root overlap in exactly one nonzero coordinate; their inner product can only be \(\pm1/2\), never zero. Thus \(P\notin\mathcal O_3\). A block diagonal copy of this example proves strict inclusion and nonconvexity for every \(n\ge3\).</p>
 
 <h2>The signed square-root characterization</h2>
-<p>Squaring has forgotten the signs of the orthogonal matrix. Recovering them is exactly the remaining obstruction.</p>
+<p>Squaring discards the signs of the orthogonal matrix. Recognition therefore requires recovering a consistent choice of signs.</p>
 <p id="theorem-2"><strong>Theorem 2 (signed square-root criterion).</strong> A bistochastic \(P\) is orthostochastic if and only if there is a <em>single</em> sign matrix \(S\in\{-1,1\}^{n\times n}\) such that, for every pair of distinct rows,</p>
 \[
  \sum_{j=1}^n S_{ij}S_{kj}\sqrt{P_{ij}P_{kj}}=0
@@ -83,7 +83,7 @@
 <p>Necessity follows by writing \(Q_{ij}=S_{ij}\sqrt{P_{ij}}\); choose arbitrary signs at zero entries. Conversely, this formula constructs rows with norm one, since \(P\) has row sums one. The displayed condition makes them pairwise orthogonal. The square matrix \(Q\) therefore satisfies \(QQ^\top=I\), hence is orthogonal and squares entrywise to \(P\). \(\square\)</p>
 </div></details>
 <p>This is a finite exact test, not an efficient recognition algorithm: searching all signs quickly becomes expensive. Allowing a different sign assignment for each pair of rows is only a necessary test in general; the signs must work together. Polynomial descriptions in higher dimensions become substantially more intricate <a href="#ref-chen">[3]</a>.</p>
-<p>In dimension three there is a much sharper and very visual answer.</p>
+<p>In dimension three the criterion reduces to a condition on three lengths.</p>
 <p id="theorem-3"><strong>Theorem 3 (the three-by-three criterion).</strong> For \(P\in\mathcal B_3\), set \(\ell_j=\sqrt{P_{1j}P_{2j}}\). Then \(P\) is orthostochastic if and only if the three lengths form a <em>degenerate triangle</em>:</p>
 \[
  2\max(\ell_1,\ell_2,\ell_3)=\ell_1+\ell_2+\ell_3.
@@ -160,7 +160,7 @@
 <p>The Cayley factor is orthogonal because \(\Omega\) is skew-symmetric. An Armijo backtracking test accepts only sufficient energy decrease. Finite steps approximate the continuous flow; they are not its exact solution.</p>
 
 <h2>Suboptimal local minima for squared Euclidean costs</h2>
-<p>Equality of global minima does not imply that a gradient flow reaches them. In fact, <em>every signed permutation is stationary</em>: at such a \(Q\), the matrix \(Q^\top G\) is diagonal. Initializing at the identity would therefore prevent any motion, even if its matching is terrible.</p>
+<p>Equality of global minima does not imply that a gradient flow reaches them. In fact, <em>every signed permutation is stationary</em>: at such a \(Q\), the matrix \(Q^\top G\) is diagonal. Initializing at the identity would therefore prevent any motion, even if its matching has a large cost.</p>
 <p>There are also strict suboptimal local minima, not just unstable stationary points. Here is an explicit planar example.</p>
 <p id="proposition-2"><strong>Proposition 2 (a three-point local minimum).</strong> Let \(x_i\) be the vertices of a unit equilateral triangle and let \(y_i=R_\theta x_i\), where \(R_\theta\) is planar rotation and \(\theta=75^\circ\). For \(C_{ij}=\|x_i-y_j\|^2\), the matrix \(Q=I\) is a strict local minimum of \(E\), but it is not globally optimal.</p>
 <details class="blog-proof"><summary>Proof: pairwise swaps are uphill, but a three-cycle is downhill</summary><div class="blog-proof-body">
@@ -190,6 +190,8 @@
 <li id="ref-wen">Zaiwen Wen and Wotao Yin. <em>A feasible method for optimization with orthogonality constraints</em>. Mathematical Programming 142, 397–434, 2013. <a href="https://doi.org/10.1007/s10107-012-0584-1">Paper</a> · <a href="https://ww3.math.ucla.edu/camreport/cam10-77.pdf">Author manuscript</a>.</li>
 <li id="ref-boumal">Nicolas Boumal. <em>An Introduction to Optimization on Smooth Manifolds</em>. Cambridge University Press, 2023. <a href="https://www.nicolasboumal.net/book/">Open book</a>.</li>
 </ol>
-</article></main>
+</article>
+<p class="blog-ai-disclosure">How these posts and numerical experiments were prepared: <a href="../ai-disclosure/">AI disclosure</a>.</p>
+</main>
 <footer class="draft-footer"><div class="wrap">Forthcoming post · Alpha preview · <a href="index.html">All forthcoming posts</a> · <a href="/blog/">Published blog</a> · <a href="/privacy/">Privacy &amp; audience measurement</a></div></footer>
 </body></html>

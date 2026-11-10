@@ -33,7 +33,7 @@ proofs: true
 
 For positive numbers, solving $$uyu=x$$ is easy: $$u=\sqrt{x/y}$$. What remains true when the variables are matrices, which need not commute?
 
-If $$X$$ and $$Y$$ are symmetric positive definite, there is still exactly one symmetric positive definite solution of $$UYU=X$$. More surprisingly, for fixed $$Y$$, the correspondence between $$U$$ and $$X$$ is a global smooth change of coordinates on the positive definite cone.
+If $$X$$ and $$Y$$ are symmetric positive definite, there is still exactly one symmetric positive definite solution of $$UYU=X$$. For fixed $$Y$$, the correspondence between $$U$$ and $$X$$ is also a global smooth change of coordinates on the positive definite cone.
 
 <!--more-->
 
@@ -192,7 +192,7 @@ $$
 
 The inverse formula recovers $$U$$ exactly. By contrast, the tempting expression $$X^{1/2}Y^{-1/2}$$ is generally not even symmetric. It is valid when $$X$$ and $$Y$$ commute, because they can then be diagonalized together and the problem reduces coordinatewise to the scalar equation.
 
-## Covariances and the role of positivity
+## Covariance transformations and positive definiteness {#covariances-and-the-role-of-positivity}
 
 If a centered random vector $$z$$ has covariance $$Y$$, then
 
@@ -204,4 +204,4 @@ The theorem therefore selects a unique symmetric positive definite linear transf
 
 Positive definiteness is essential to the statement. Without positivity of $$U$$, uniqueness already fails for $$Y=X=I$$: both $$U=I$$ and $$U=-I$$ work. At the boundary of the positive semidefinite cone, the inverse need not be smooth: even for scalars with $$y=1$$, the derivative of $$\sqrt{x}$$ diverges at zero.
 
-The useful principle is simple: surround the unknown with $$Y^{1/2}$$, take one positive square root, and undo the congruence.
+The construction consists of applying congruence by $$Y^{1/2}$$, taking the positive square root, and undoing the congruence.

@@ -11,7 +11,7 @@
 <main>
   <article aria-labelledby="title">
     <p class="eyebrow">Numerical experiment · independent Gaussian tokens</p>
-    <h2 id="title">Five finite-token approximations to one straight line</h2>
+    <h2 id="title">Finite-sample attention maps</h2>
     <p class="intro">Each color uses its own i.i.d. sample of tokens <span class="math">Y<sub>i</sub> ∼ N(0, 1)</span>. Increase <span class="math">n</span> to extend the same five samples, or resample to start again.</p>
     <p class="formula" aria-label="Empirical attention is the sum of Y i times exp of tau x Y i, divided by the sum of exp of tau x Y i. Population attention equals tau x."><span>T<sub>n</sub>(x) = <span class="fraction"><span>∑<sub>i=1</sub><sup>n</sup> Y<sub>i</sub> e<sup>τxY<sub>i</sub></sup></span><span>∑<sub>i=1</sub><sup>n</sup> e<sup>τxY<sub>i</sub></sup></span></span></span><span class="population-formula">T(x) = τx</span></p>
     <div class="controls">
@@ -35,7 +35,7 @@
         <p class="plot-caption">Faint bell: query density φ(x), on its own scale. Rug: tokens from draw 1 (only those in [−4, 4]).</p>
       </section>
       <section class="plot error-panel" aria-labelledby="error-title">
-        <h3 id="error-title">Where the query-weighted squared error comes from</h3>
+        <h3 id="error-title">Contribution to the query-weighted squared error</h3>
         <canvas id="error-plot" role="img" aria-label="Query-density-weighted squared errors for the five attention approximations.">The curves show φ(x) times the squared difference between empirical attention and τx.</canvas>
         <p class="plot-caption">φ(x) |T<sub>n</sub>(x) − τx|². Large errors at rare queries receive less weight; area under each curve contributes to the squared norm below. The vertical scale adapts.</p>
       </section>

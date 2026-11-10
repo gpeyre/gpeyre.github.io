@@ -49,7 +49,7 @@ embedded_experiment: true
 
 The heat equation spreads a density through space. In one dimension, there is another way to watch it: follow the median, the first quartile, or any fixed fraction of the mass. These positions trace deterministic, ordered paths, even though heat can also be described by random Brownian motion.
 
-The Jordan–Kinderlehrer–Otto formulation makes this change of viewpoint particularly transparent. Heat is the Wasserstein gradient flow of negative entropy [[1]](#ref-jko). Quantiles turn the one-dimensional Wasserstein distance into an ordinary $$L^2$$ distance. Put these two facts together, and the familiar linear heat equation becomes a nonlinear equation for a single increasing function.
+The Jordan–Kinderlehrer–Otto formulation provides a way to derive these paths. Heat is the Wasserstein gradient flow of negative entropy [[1]](#ref-jko). Quantiles turn the one-dimensional Wasserstein distance into an ordinary $$L^2$$ distance. In quantile coordinates, the linear heat equation becomes a nonlinear equation for a single increasing function.
 
 <!--more-->
 
@@ -134,7 +134,7 @@ $$
 
 There is no transport problem left inside the distance. We have an ordinary $$L^2$$ variational step, with the monotonicity constraint that makes $$q$$ a quantile. When the pulled-back energy is convex, this is convex optimization on a convex set.
 
-## From an internal energy to a quantile PDE
+## Quantile formulation of internal-energy flows {#from-an-internal-energy-to-a-quantile-pde}
 
 Consider an internal energy $$\mathcal E(\rho\,dx)=\int_{\mathbb R}U(\rho(x))\,dx$$, with $$U(0)=0$$ and $$U\in C^2((0,\infty))$$. To compute its differential equation, assume a smooth, positive density and enough decay and integrability to justify the following operations. Set
 

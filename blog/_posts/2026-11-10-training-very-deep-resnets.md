@@ -47,9 +47,9 @@ embedded_experiment: true
 ---
 
 <p>The understanding presented here grew out of Raphaël Barboni’s work on training residual networks. In particular, the beautiful diagonal analysis—using a commuting matrix family to reveal a complex-variable loss—and the resulting two-dimensional plots are due to him.</p>
-<p>A remarkably effective idea in modern AI is to let a layer learn a <em>correction</em>, rather than an entirely new representation. Residual networks keep the current activation and add an update. These skip connections made much deeper networks practical <a href="#ref-he">[1]</a>, <a href="#ref-identity">[2]</a>; they are also central to transformer architectures.</p>
-<p>The identity path helps information and gradients travel through the network. There is a geometric price: within an identity-skip block, the input and output must have the same dimension. This is not a restriction on the width of the whole architecture—projection shortcuts, embeddings, and changes between stages can change dimensions. Here we keep a fixed state space and ask what happens as the number of small residual steps becomes very large.</p>
-<p>The answer connects learning to differential equations and optimal control. But “more stable propagation” does not mean “easy optimization.” We will end with an exactly solvable loss that has no nonglobal local minima, yet develops extraordinarily flat saddles.</p>
+<p>Residual networks let a layer learn a <em>correction</em>: keep the current activation and add an update. These skip connections made much deeper networks practical <a href="#ref-he">[1]</a>, <a href="#ref-identity">[2]</a>; they are also central to transformer architectures.</p>
+<p>The identity path helps information and gradients travel through the network. Within an identity-skip block, the input and output must have the same dimension. This does not fix the width of the whole architecture: projection shortcuts, embeddings, and changes between stages can change dimensions. Here we keep a fixed state space and study the limit of many small residual steps.</p>
+<p>This limit connects network training to differential equations and optimal control. Stable propagation alone, however, does not guarantee easy optimization. An exactly solvable example below has no nonglobal local minima, but its saddles become flatter as depth increases.</p>
 
 <!--more-->
 
@@ -166,7 +166,7 @@ $$
 
 <details class="blog-proof">
 
-<summary>Proof: a single integration by parts</summary>
+<summary>Proof: the adjoint equation and integration by parts</summary>
 
 <div class="blog-proof-body" markdown="1">
 
@@ -234,7 +234,7 @@ $$
 
 <details class="blog-proof">
 
-<summary>Two useful facts: invertibility and volume change</summary>
+<summary>Invertibility and Liouville’s formula</summary>
 
 <div class="blog-proof-body" markdown="1">
 
@@ -261,7 +261,7 @@ $$
 
 <p>For the discrete network, replace the outer product by \(p^i_{\ell+1}(x^i_\ell)^\top\) and multiply by \(h\) to obtain the ordinary Euclidean gradient. Even though the network is linear in its input, its dependence on all the matrices is nonlinear.</p>
 
-## Numerical experimentation: a family of linear flows
+## Numerical experimentation: linear ODE flows {#numerical-experimentation-a-family-of-linear-flows}
 
 <p>Move an entire circle of initial conditions, not just one particle. The explorer runs over \(0\le t\le2\) and offers a constant matrix, a rotating strain, and two shears applied in different orders. The solid teal endpoint curve is the image of the unit circle; compare it with the dashed prediction \(\exp(\int_0^t A)\). These agree in the constant case and can separate when matrices at different times do not commute.</p>
 <div class="resnet-wide"><iframe class="idea-experiment" data-experiment="resnet-flow" src="{{ '/blog/preparations/assets/deep-resnet/flow.html' | relative_url }}" title="Linear ODE flow explorer: rotation, growth, shear and noncommuting time dependence" loading="lazy" style="height:950px"></iframe></div>
@@ -391,7 +391,7 @@ $$
 
 <details class="blog-proof">
 
-<summary>How to trace a flat saddle without missing its contours</summary>
+<summary>Analytic parametrization of loss contours</summary>
 
 <div class="blog-proof-body" markdown="1">
 
@@ -421,7 +421,7 @@ $$
 </div>
 </details>
 
-<p>Residual connections turn composition into a discretized evolution. The adjoint explains how to train that evolution; time ordering explains why even linear blocks interact nontrivially; and this tiny commuting model shows why a well-behaved forward limit can coexist with a delicate optimization landscape.</p>
+<p>The ODE formulation describes forward propagation and gives the adjoint training equations. Even for linear blocks, time ordering matters. The two-dimensional commuting example also shows that a convergent forward model can still have flat saddles or gradient-flow trajectories that fail to reach a minimum.</p>
 
 ## Bibliography
 

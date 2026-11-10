@@ -10,13 +10,13 @@ proofs: true
 
 A fully connected neural network can approximate any continuous function on a compact set, provided its hidden layer is wide enough. What remains of this flexibility when the weights must be shared across space, as in a convolutional network?
 
-The right target is a function with the same symmetry: shifting the input should shift the output. For finite periodic signals, the passage from MLP universality to ConvNet universality is remarkably short. A translation-equivariant map is determined by just *one* of its output coordinates. Approximate that coordinate by an MLP, and convolution applies the same computation at every position.
+The target should have the same symmetry: shifting the input should shift the output. For finite periodic signals, ConvNet universality follows directly from MLP universality. A translation-equivariant map is determined by *one* of its output coordinates. Approximate that coordinate by an MLP, and convolution applies the same computation at every position.
 
 We will first prove shallow MLP universality through exponential networks and Stone–Weierstrass, then turn the proof into a convolutional one. Finally, we will see how to replace a wide hidden layer by a deep network with a constant number of channels.
 
 <!--more-->
 
-## Two-layer MLPs: the role of the activation and the bias
+## Two-layer MLPs with biases {#two-layer-mlps-the-role-of-the-activation-and-the-bias}
 
 A two-layer MLP, with input $$x\in\mathbb R^d$$ and scalar output, has the form
 
@@ -169,7 +169,7 @@ $$
 
 </details>
 
-## Convolution on a periodic one-dimensional signal
+## Circular convolution and translation equivariance {#convolution-on-a-periodic-one-dimensional-signal}
 
 Now regard $$x\in\mathbb R^d$$ as a scalar signal on the cyclic grid $$\mathbb Z/d\mathbb Z$$. Indices $$0,\ldots,d-1$$ are understood modulo $$d$$. For a filter $$u\in\mathbb R^d$$, define the circular convolution and the shift by
 
@@ -261,7 +261,7 @@ uniformly over both $$x$$ and $$j$$. $$\square$$
 
 This is a basic instance of the correspondence developed by Petersen and Voigtlaender, which also transfers approximation rates between fully connected networks and convolutional networks <a href="#ref-petersen">[6]</a>. Group-equivariant approximation has a wider setting, including the work of Yarotsky <a href="#ref-yarotsky">[7]</a>.
 
-## Trading width for depth
+## Depth–width trade-offs {#trading-width-for-depth}
 
 A shallow network computes all its features in parallel and then sums them. A deep network can evaluate the same sum sequentially: compute one feature, add its contribution to a running total, and move on to the next. The key is to retain both the original input and the partial sum. This gives an explicit conversion from width to depth, with *no extra approximation error*.
 
@@ -323,9 +323,9 @@ For $$k=n$$, this is exactly $$F_n(x)$$. Choose the shallow approximant supplied
 
 </details>
 
-### Removing the skip connections
+### Implementation without skip connections {#removing-the-skip-connections}
 
-For ReLU, skip connections are convenient but not essential. A standard feedforward ConvNet with at most five hidden channels can perform the same computation. The trick is to store a signed quantity as the difference of its positive and negative parts: both parts pass through ReLU unchanged.
+For ReLU, skip connections are convenient but not essential. A standard feedforward ConvNet with at most five hidden channels can perform the same computation by storing a signed quantity as the difference of its positive and negative parts: both parts pass through ReLU unchanged.
 
 <details class="blog-proof">
 
@@ -381,7 +381,7 @@ Our short proofs allow filters with full circular support. Width counts channels
 
 Growing depth can overcome this locality constraint. Li, Lin, and Shen prove universality for deep fully convolutional ReLU networks with small kernels and constant channel width, including residual architectures and nonresidual variants <a href="#ref-li">[8]</a>. In their architecture, one intermediate feature channel per residual block suffices, and two suffice without residual connections, with kernel size at least two. Their approximation statements use $$L^p$$ norms, $$1\le p<\infty$$, with respect to Lebesgue measure on compact sets. They should not be read as uniform-norm versions of the same minimal-width claims.
 
-So the depth–width tradeoff is well established. The particularly short argument here proves a precise uniform statement with full-support filters: sharing an MLP across positions gives a shallow ConvNet, and serializing its sum gives a deep one.
+The depth–width tradeoff is well established. The construction here gives a uniform approximation result with full-support filters: sharing an MLP across positions gives a shallow ConvNet, and evaluating its sum sequentially gives a deep one.
 
 ## References
 

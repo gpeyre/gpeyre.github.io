@@ -210,7 +210,7 @@ The cross term vanishes because $$\int(y-T_\pi(x))\,\pi_x(\mathrm dy)=0$$. Jense
 </div>
 </details>
 
-Geometrically, each fiber $$\pi_x$$ collapses to its **nearest Dirac mass**, located at its barycenter. On graph couplings, $$D_\alpha(\rho_S,\rho_R)=\|S-R\|_{L^2(\alpha)}$$, so $$\mathcal M_\alpha$$ is an isometric copy of the space of square-integrable maps. This really is a projection: $$P(P(\pi))=P(\pi)$$.
+Geometrically, each fiber $$\pi_x$$ is replaced by its **nearest Dirac mass**, located at its barycenter. On graph couplings, $$D_\alpha(\rho_S,\rho_R)=\|S-R\|_{L^2(\alpha)}$$, so $$\mathcal M_\alpha$$ is an isometric copy of the space of square-integrable maps. The projection is idempotent: $$P(P(\pi))=P(\pi)$$.
 
 This result holds for **every coupling**, without OT optimality. There is no constraint $$S_\#\alpha=\beta$$: the projected target is $$\widetilde\beta=(T_\pi)_\#\alpha$$. It is also a statement about the fiberwise metric, **not ordinary Wasserstein distance on the product space**, which allows the source coordinate to move. The sufficient conditions below address the separate question of whether $$T_\pi$$ is an optimal transport map to its image.
 
@@ -274,7 +274,7 @@ $$
 \end{aligned}
 $$
 
-Consequently, with finite second moments, $$\widetilde\beta=\beta$$ **if and only if** $$\pi$$ was already induced by a map. There is no cheap recovery of the original target hidden in barycentric projection: it discards the spread of each source's destinations.
+Consequently, with finite second moments, $$\widetilde\beta=\beta$$ **if and only if** $$\pi$$ was already induced by a map. Barycentric projection generally changes the target because it discards the spread of each source's destinations.
 
 ## Entropic OT and the log-sum-exp potential {#entropic-projection-and-log-sum-exp}
 

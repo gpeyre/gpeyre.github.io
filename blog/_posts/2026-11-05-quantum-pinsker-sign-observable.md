@@ -47,8 +47,8 @@ proofs: true
 embedded_experiment: true
 ---
 
-<p>Relative entropy is asymmetric, can be infinite, and is not a distance. Nevertheless, a small relative entropy forces two probability distributions to be close in a very concrete sense: no event can have very different probabilities under the two laws. This is the content of Pinsker’s inequality.</p>
-<p>The same statement survives when probabilities become density matrices, even if the matrices do not commute. The proof below keeps the essential idea visible. In the classical case, collect all positive discrepancies into one event. In the quantum case, collect the positive eigenvalues of the discrepancy into one observable. A weighted Cauchy–Schwarz inequality then does the work.</p>
+<p>Relative entropy is asymmetric, can be infinite, and is not a distance. Nevertheless, a small relative entropy forces two probability distributions to be close in total variation: no event can have very different probabilities under the two laws. This is Pinsker’s inequality.</p>
+<p>Pinsker’s inequality also holds for density matrices, even when they do not commute. The two proofs use the same idea. In the classical case, collect all positive discrepancies into one event; in the quantum case, collect the positive eigenvalues of the discrepancy into one observable. Both arguments then use a weighted Cauchy–Schwarz inequality.</p>
 
 <!--more-->
 
@@ -240,7 +240,7 @@ $$
 <p>As \(\varepsilon\to0\), \(D(\rho_\varepsilon\Vert\sigma)=2\varepsilon^2+O(\varepsilon^4)\), while \(\lVert\rho_\varepsilon-\sigma\rVert_1=2|\varepsilon|\). The ratio tends to \(1/2\), so the constant is sharp. With base-two logarithms it becomes \(1/(2\log2)\).</p>
 <p>The classical and quantum proofs have the same skeleton: entropy has enough curvature along the line connecting the two states, and a sign test measures the entire discrepancy. Quantum data processing gives another short route via the two-outcome measurement <a href="#ref-watrous">[1]</a>; the direct proof above makes the curvature responsible for the constant explicit. Early quantum forms appear in work of Hiai, Ohya, and Tsukada <a href="#ref-hiai">[4]</a>.</p>
 
-## Numerical experimentation: Pinsker on a triangle
+## Numerical experimentation: Pinsker on the probability simplex {#numerical-experimentation-pinsker-on-a-triangle}
 
 <p>The simplex of three-component probabilities is the triangle
 \(\Delta_3=\{q\in\mathbb R_+^3:q_1+q_2+q_3=1\}\): it is two-dimensional, even though its vectors have three coordinates. The three panels below compare, for the same target \(p\),</p>

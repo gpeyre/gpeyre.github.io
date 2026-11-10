@@ -65,7 +65,7 @@ The hypothesis that often looks most restrictive is **stability under products**
   </figcaption>
 </figure>
 
-## The classical theorem
+## The Stone–Weierstrass theorem {#the-classical-theorem}
 
 Let $$K$$ be a compact Hausdorff space, and let $$C(K,\mathbb R)$$ denote its real-valued continuous functions, equipped with the uniform norm
 
@@ -202,7 +202,7 @@ Therefore $$fg\in\overline{\mathcal N}$$. The closure theorem yields the claim.
 
 The networks themselves cannot multiply exactly, but their closure can.
 
-## Two-layer networks
+## Universality for two-layer ReLU networks {#two-layer-networks}
 
 The preceding result is weaker than necessary: the same universality holds with just **two layers**, meaning one ReLU hidden layer followed by an affine readout [[2]](#ref-leshno). The product construction can increase depth, so it does not establish this stronger statement. To keep a single hidden layer, we will construct the approximation directly, using the exponential networks from the first section.
 

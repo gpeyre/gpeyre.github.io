@@ -63,7 +63,7 @@ Convexity encodes the structure of the transport map. ICNN-based approaches lear
 
 Recent work has examined the expressive power of convex ReLU networks compared with ICNNs [[9]](#ref-gagneux), exact depth separations [[10]](#ref-bakaev), and approximation efficiency of alternative convex architectures [[12]](#ref-hyper). These results have different scopes: a separation at a fixed width, an exact-representation obstruction, and a positive uniform-approximation gap are not interchangeable. We will keep this distinction explicit.
 
-To the best of my knowledge, Francis Bach was the first to notice the shallow obstruction; he explained it to me a few years ago (private communication). For a public reference, Pinelis gives a particularly elegant finite-point obstruction to approximation by convex ridge sums [[11]](#ref-pinelis). The first proof below is a concrete version of that argument. The second uses the geometry of a small piecewise-affine convex function, followed by a finite-sample argument to rule out approximation as well as exact representation.
+To the best of my knowledge, Francis Bach was the first to notice the shallow obstruction; he explained it to me a few years ago (private communication). For a public reference, Pinelis gives a finite-point obstruction to approximation by convex ridge sums [[11]](#ref-pinelis). The first proof below is a concrete version of that argument. The second uses the geometry of a small piecewise-affine convex function, followed by a finite-sample argument to rule out approximation as well as exact representation.
 
 ## Two layers: positive sums of hinges
 

@@ -87,7 +87,7 @@ A_1A_2A_3-B_1B_2B_3
 \end{aligned}
 $$
 
-## From local errors to global stability
+## Perturbation bounds for matrix products {#from-local-errors-to-global-stability}
 
 For a submultiplicative matrix norm, the identity immediately yields
 
@@ -111,7 +111,7 @@ $$
 
 For contractions ($$M\leq1$$), the total error is bounded by the sum of the local errors. If instead $$M=1+Lh$$ and $$nh=T$$, the amplification remains at most $$e^{LT}$$. This is the mechanism behind many discrete stability and numerical-integration estimates.
 
-## The continuous analogue
+## The continuous Duhamel formula {#the-continuous-analogue}
 
 For fixed matrices $$A,B$$, differentiate a mixed propagator:
 
@@ -130,6 +130,6 @@ $$
 
 The discrete sum and the continuous integral have the same structure: insert a perturbation at one intermediate time, then propagate it on either side.
 
-## A family connection
+## Duhamel, Bertrand, and Hermite {#a-family-connection}
 
 Duhamel was Joseph Bertrand’s uncle by marriage: his wife Virginie was the sister of Joseph’s father. Charles Hermite married Joseph’s sister Louise, connecting him to the same family. For this mathematical family history, see the [biographical account of Joseph Bertrand](https://www.annales.org/archives/x/jbertrand.html).

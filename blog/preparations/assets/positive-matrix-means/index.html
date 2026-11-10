@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Two geometric means of positive matrices</title><link rel="stylesheet" href="style.css"></head>
 <body><main>
-<header><p class="eyebrow">Same volume. Different geometry.</p><h1>Two ways to interpolate covariance ellipses.</h1><p>Log-Euclidean interpolation averages matrix logarithms; Kubo–Ando interpolation averages after whitening one endpoint. Each outline is a unit-Mahalanobis ellipse: its radii are square roots of covariance eigenvalues.</p></header>
+<header><p class="eyebrow">Geometric interpolation of positive matrices</p><h1>Log-Euclidean and Kubo–Ando interpolations</h1><p>Log-Euclidean interpolation averages matrix logarithms; Kubo–Ando interpolation averages after whitening one endpoint. Each outline is a unit-Mahalanobis ellipse: its radii are square roots of covariance eigenvalues.</p></header>
 <nav class="presets" aria-label="Covariance presets"><button id="preset-commuting" type="button" aria-pressed="false">Commuting axes</button><button id="preset-noncommuting" type="button" aria-pressed="true">Rotated axes</button><button id="preset-thin" type="button" aria-pressed="false">Thin ellipses</button><button id="preset-scalar" type="button" aria-pressed="false">Scalar: I → 4I</button></nav>
 <section class="time-control" aria-label="Interpolation time"><label for="time">Interpolation <span>t = <output id="time-value" for="time">0.50</output></span></label><input id="time" type="range" min="0" max="1" step="0.01" value="0.5"><div class="time-ends"><span>0 · matrix A</span><span>matrix B · 1</span></div></section>
 <div class="plots">

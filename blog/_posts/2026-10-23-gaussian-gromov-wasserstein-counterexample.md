@@ -41,9 +41,9 @@ keywords:
 proofs: true
 ---
 
-Gaussians are wonderfully cooperative in quadratic optimal transport: when the source is nondegenerate, an affine map solves the transport problem, and the answer can be expressed using means and covariance matrices. It is tempting to carry this intuition into Gromov–Wasserstein transport, where the task is to match *relations between pairs of points*.
+Quadratic optimal transport between Gaussians has an explicit solution: when the source is nondegenerate, an affine map solves the transport problem, and the answer can be expressed using means and covariance matrices. Does a comparable Gaussian solution exist for Gromov–Wasserstein transport, where the task is to match *relations between pairs of points*?
 
-That intuition has a limit. A pair of Gaussian marginals need not admit a jointly Gaussian optimal coupling. The example below makes the obstruction explicit: linear correlation has a bounded budget, while correlating the *radii* can exploit fluctuations that grow with dimension.
+In general, it does not. A pair of Gaussian marginals need not admit a jointly Gaussian optimal coupling. The example below makes the obstruction explicit: linear correlation has a bounded budget, while correlating the *radii* can exploit fluctuations that grow with dimension.
 
 The construction is recorded in [Proposition 13.34 of *Optimal Transport for Machine Learners*](https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.13.3.34) [[1]](#ref-book). The Gaussian-constrained problem and the question of unrestricted optimality are studied by Antoine Salmona, Julie Delon, and Agnès Desolneux [[2]](#ref-gaussian). We will prove the strict separation directly, without claiming a formula for the unrestricted optimizer.
 
@@ -239,7 +239,7 @@ $$
 
 This inequality, if established, certifies failure of Gaussian optimality at that $$n$$. It is stronger evidence than finding one non-Gaussian coupling better than one arbitrarily chosen Gaussian coupling: the benchmark $$n+4$$ is the optimum over the *entire* jointly Gaussian class. The asymptotic proof avoids relying on numerical quadrature of the unbounded quantiles near $$u=1$$.
 
-It also does not contradict the exact Gaussian-constrained formulas or the special unrestricted Gaussian-optimality cases in [[2]](#ref-gaussian). Nor does it concern inner-product GW, where the objective has a different dependence on moments. The useful lesson is to keep the optimization domain visible: restricting to Gaussian couplings can give an elegant, computable surrogate without solving the unrestricted problem.
+It also does not contradict the exact Gaussian-constrained formulas or the special unrestricted Gaussian-optimality cases in [[2]](#ref-gaussian). Nor does it concern inner-product GW, where the objective has a different dependence on moments. Restricting to Gaussian couplings gives a computable surrogate, but it need not solve the unrestricted problem.
 
 ## References
 

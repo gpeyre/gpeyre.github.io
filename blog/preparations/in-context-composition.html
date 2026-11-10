@@ -29,7 +29,7 @@
 <article class="blog-prose">
 <p>Composing two functions usually means feeding the output of the first into the second. A transformer layer introduces a small twist: a token is transformed using the other tokens as context, and those other tokens are transformed too. The next layer sees a new point <em>and a new context</em>.</p>
 
-<p>In <em>Transformers are Universal In-context Learners</em>, with Takashi Furuya and Maarten de Hoop, we called the resulting operation <em>in-context composition</em> and denoted it by \(\diamond\) <a href="#ref-universality">[1]</a>. Its definition uses a pushforward of the context measure. There is a simple way to understand the whole construction: enlarge the state to include both the measure and the query. Then this apparently twisted composition becomes ordinary composition. The same viewpoint connects successive layers to particle transport and to an advection equation.</p>
+<p>In <em>Transformers are Universal In-context Learners</em>, with Takashi Furuya and Maarten de Hoop, we called the resulting operation <em>in-context composition</em> and denoted it by \(\diamond\) <a href="#ref-universality">[1]</a>. Its definition uses a pushforward of the context measure. On the enlarged state consisting of the measure and the query, this operation is ordinary composition. The same viewpoint connects successive layers to particle transport and to an advection equation.</p>
 
 <h2>Context-dependent maps</h2>
 <p>A context is a probability measure \(\mu\) on \(\mathbb R^d\). For a finite collection of tokens, its empirical distribution is</p>
@@ -60,7 +60,7 @@
 \[
   T_\#\mu=\frac1n\sum_{i=1}^n\delta_{T(x_i)}.
 \]
-<p>The weights stay the same; the positions move, and some positions may merge. The identity behind everything that follows is</p>
+<p>The weights stay the same; the positions move, and some positions may merge. Pushforwards satisfy the composition identity</p>
 \[
   (S\circ T)_\#\mu=S_\#(T_\#\mu).
 \]
@@ -144,7 +144,7 @@
 \]
 <p>Translating and then centering removes the translation; centering and then translating retains it.</p>
 
-<p>There is a subtle loss of information here. Each spatial map \(c_\mu\) is a bijective translation. Nevertheless, the lifted centering map is not invertible: simultaneously translating the original context and query gives the same centered output. Pointwise invertibility for each fixed context does not guarantee invertibility of the full in-context transformation.</p>
+<p>Centering also loses information about the original context. Each spatial map \(c_\mu\) is a bijective translation. Nevertheless, the lifted centering map is not invertible: simultaneously translating the original context and query gives the same centered output. Pointwise invertibility for each fixed context does not guarantee invertibility of the full in-context transformation.</p>
 
 <h2>Self-attention as a transport rule</h2>
 <p>A single attention head gives a concrete example. Let \(Q,K:\mathbb R^d\to\mathbb R^r\) and \(V:\mathbb R^d\to\mathbb R^d\) be linear maps, and write</p>
@@ -287,6 +287,8 @@
   <li id="ref-sinkformers">Michael E. Sander, Pierre Ablin, Mathieu Blondel, and Gabriel Peyré. <a href="https://proceedings.mlr.press/v151/sander22a.html"><em>Sinkformers: Transformers with Doubly Stochastic Attention</em></a>. AISTATS, PMLR 151, 3515–3530, 2022.</li>
 </ol>
 </article>
+<p class="blog-ai-disclosure">How these posts and numerical experiments were prepared: <a href="../ai-disclosure/">AI disclosure</a>.</p>
+
 </main>
 <footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Blog</a> · <a href="/privacy/">Privacy &amp; audience measurement</a></div></footer>
 </body>

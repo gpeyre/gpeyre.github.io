@@ -38,13 +38,13 @@
 </div></header>
 <main class="wrap"><article class="blog-prose">
 <p>With a fixed learning rate, stochastic gradient descent usually does not settle at a single point. It keeps fluctuating. The size and shape of these fluctuations matter: they determine the residual optimization error, and tell us what is lost when a discrete training algorithm is replaced by a continuous approximation.</p>
-<p>Least squares offers a particularly transparent example. Under constant conditional observation-noise variance, the stationary covariance of SGD is, to first order,</p>
+<p>For least squares, the covariance can be computed explicitly. Under constant conditional observation-noise variance, the stationary covariance of SGD is, to first order,</p>
 \[
  \Sigma_\eta=\eta\sigma^2 I+O(\eta^2).
 \]
 <p>It is isotropic even when the loss has very different curvatures in different directions. The reason is a cancellation: steeper directions both pull more strongly toward the minimizer and receive more stochastic forcing. At the next order, fourth moments of the features break this balance.</p>
 <aside class="note"><p>I thank <a href="https://samuro95.github.io/">Samuel Hurault</a> for bringing this calculation to my attention during our work with <a href="https://tommoral.github.io/">Thomas Moreau</a> on error control for diffusion models.</p></aside>
-<p>The broader picture is developed beautifully by Aymeric Dieuleveut, Alain Durmus, and Francis Bach <a href="#ref-dieuleveut">[1]</a>, who study constant-step SGD through its invariant Markov-chain distribution. Here, a direct least-squares calculation gives exact moment equations and a short proof of the small-step expansion.</p>
+<p>The broader invariant-distribution approach is developed by Aymeric Dieuleveut, Alain Durmus, and Francis Bach <a href="#ref-dieuleveut">[1]</a>, who study constant-step SGD through its invariant Markov-chain distribution. Here, a direct least-squares calculation gives exact moment equations and a short proof of the small-step expansion.</p>
 
 <h2>Least-squares SGD with independent samples</h2>
 <p>Consider the population loss</p>
@@ -191,15 +191,15 @@
 \]
 <p>Indeed, the stationary equation gives \(\mathcal L(\Sigma_\eta-\eta\sigma^2I)=2\eta\mathcal T(\Sigma_\eta)\succeq0\), and the integral formula in the proof shows that \(\mathcal L^{-1}\) preserves positive semidefiniteness. Thus the leading isotropic approximation underestimates the variance in every direction.</p>
 
-<h2>Two explicit examples</h2>
-<h3>The one-dimensional formula and fourth moments</h3>
+<h2>Scalar and Gaussian-feature examples</h2>
+<h3>Scalar features and fourth moments</h3>
 <p>Write \(g=\mathbb E[X^2]&gt;0\), \(h=\mathbb E[X^4]\). The stationary equation is just \(2gv=2\eta\sigma^2g+2\eta hv\), so</p>
 \[
  v=\frac{\eta\sigma^2}{1-\eta h/g},
  \qquad 0&lt;\eta&lt;g/h.
 \]
 <p>Two feature distributions with the same second moment have the same leading covariance, but different fourth moments can produce very different finite-step noise floors. For example, \(X=\pm\sqrt g\) with equal probabilities gives \(h=g^2\), whereas \(X\sim\mathcal N(0,g)\) gives \(h=3g^2\).</p>
-<h3>Gaussian features in any dimension</h3>
+<h3>Gaussian feature vectors</h3>
 <p>If \(X\sim\mathcal N(0,G)\), Gaussian fourth moments give</p>
 \[
  \mathcal T(M)=2GMG+\operatorname{tr}(GM)G.
@@ -272,7 +272,7 @@
 <p>The first term need not be isotropic. It is the alignment of \(C\) with \(G\), not quadraticity alone, that produced our cancellation.</p>
 <p><em>Nonquadratic objectives.</em> Dieuleveut, Durmus, and Bach <a href="#ref-dieuleveut">[1, Proposition 2 and Theorem 4]</a> establish invariant-law convergence and small-step moment expansions under suitable strong-convexity, regularity, and noise assumptions. Their leading second moment solves a Lyapunov equation involving the Hessian and the gradient-noise covariance at the minimizer. Unlike least squares, nonlinear objectives generally also have a step-size-dependent stationary mean bias. Their theory is broader; the direct argument here needs only the stated least-squares moment assumptions.</p>
 <p><em>Averaging iterates is a different question.</em> We have studied the covariance of a single late iterate. The covariance of \(\bar\theta_n=n^{-1}\sum_{k=1}^n\theta_k\) also depends on correlations between times. In general, it is not \(\Sigma_\eta/n\). Precise least-squares averaging results appear in <a href="#ref-defossez">[2]</a>, and the general Markov-chain approach also analyzes this distinction <a href="#ref-dieuleveut">[1]</a>.</p>
-<p>The common lesson, also motivating our work on diffusion discretization <a href="#ref-hurault">[5]</a>, is to retain enough of the discrete dynamics to see which parameters the leading continuous picture hides. Here, the first term explains the isotropic noise floor; the next term reveals the role of feature geometry and the limits of that approximation.</p>
+<p>These finite-step effects also motivate our work on diffusion discretization <a href="#ref-hurault">[5]</a>. The leading term gives the isotropic noise floor; the correction describes its dependence on feature geometry, which is absent from the leading continuous approximation.</p>
 
 <h2>References</h2>
 <ol class="references">
@@ -282,6 +282,8 @@
   <li id="ref-li">Qianxiao Li, Cheng Tai, and Weinan E. <a href="https://jmlr.org/papers/v20/17-526.html"><em>Stochastic Modified Equations and Dynamics of Stochastic Gradient Algorithms I: Mathematical Foundations.</em></a> Journal of Machine Learning Research 20(40), 1–47, 2019.</li>
   <li id="ref-hurault">Samuel Hurault, Thomas Moreau, and Gabriel Peyré. <a href="https://arxiv.org/abs/2605.08392"><em>Geometry-Aware Discretization Error of Diffusion Models.</em></a> arXiv:2605.08392, 2026.</li>
 </ol>
-</article></main>
+</article>
+<p class="blog-ai-disclosure">How these posts and numerical experiments were prepared: <a href="../ai-disclosure/">AI disclosure</a>.</p>
+</main>
 <footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Published blog</a> · <a href="/privacy/">Privacy &amp; audience measurement</a></div></footer>
 </body></html>

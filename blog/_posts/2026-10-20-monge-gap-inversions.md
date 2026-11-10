@@ -190,7 +190,7 @@ Sorting preserves the complete multiset of fitted values. Isotonic regression in
 
 This limit should not be confused with increasing $$\gamma$$ at a fixed numerical smoothing scale. The smooth hinge is positive even for an ordered pair, and can keep pushing its values apart. Since $$0\le h_\delta(s)-s_+\le\delta\log2$$, the smoothed and exact objectives differ uniformly by at most $$\gamma\Delta(n-1)\delta\log2$$. To recover the same constrained limit while smoothing, it suffices to let $$\delta$$ decrease so that $$\gamma\delta\to0$$.
 
-The constraint here is on the sampled inputs. It does not certify monotonicity between them. Nor does the pairwise formula directly extend to higher dimensions, where optimal maps are described by convex potentials rather than a total order. These boundaries help explain why this one-dimensional identity is so useful: an intrinsically transport-based criterion becomes a very concrete convex penalty.
+The constraint here is on the sampled inputs. It does not certify monotonicity between them. Nor does the pairwise formula directly extend to higher dimensions, where optimal maps are described by convex potentials rather than a total order. On the line, the ordering of the inputs is what makes the transport criterion an explicit convex penalty.
 
 ## References
 

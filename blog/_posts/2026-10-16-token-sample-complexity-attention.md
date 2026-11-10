@@ -50,7 +50,7 @@ The apparent paradox is simple. For Gaussian or sub-Gaussian tokens, attention a
 
 <!--more-->
 
-## From a finite context to a population map
+## Empirical and population attention maps {#from-a-finite-context-to-a-population-map}
 
 Let $$Y_1,\ldots,Y_n$$ be independent tokens with law $$\mu$$ on $$\mathbb R^d$$. A single, unmasked attention head maps a query $$x$$ to
 
@@ -159,7 +159,7 @@ $$
 
 For standard one-dimensional Gaussians, $$H=\tau$$.
 
-## From local control to an $$L^2(\mu)$$ error
+## Integrated $$L^2(\mu)$$ error bounds {#from-local-control-to-an-l2mu-error}
 
 To avoid tracking output moments, let us measure the map error directly:
 

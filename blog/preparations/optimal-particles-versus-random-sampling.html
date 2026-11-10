@@ -38,7 +38,7 @@
 </div></header>
 <main class="wrap"><article class="blog-prose">
 <p>A probability distribution can be represented by a finite cloud of particles. The most familiar construction is to draw independent samples. But if the distribution is known and the particles can be placed deliberately, randomness is an unnecessary source of error.</p>
-<p>For a smooth, positive density on a bounded interval, the contrast is sharp. With \(n\) equally weighted particles, the smallest squared \(W_2\) error is of order \(n^{-2}\). Independent sampling gives expected squared error of order \(n^{-1}\). We can identify the optimal positions, compute the constants, and understand the difference using a single picture: approximate the quantile function by a staircase.</p>
+<p>For a smooth, positive density on a bounded interval, the contrast is sharp. With \(n\) equally weighted particles, the smallest squared \(W_2\) error is of order \(n^{-2}\). Independent sampling gives expected squared error of order \(n^{-1}\). We can identify the optimal positions, compute the constants, and understand the difference by approximating the quantile function with a staircase.</p>
 <p>This is <em>equal-weight quantization</em>. General quantization allows the weights to vary too; its theory is developed by Graf and Luschgy <a href="#ref-graf">[1]</a>. The prescribed-weight problem on the line is studied systematically by Xu and Berger <a href="#ref-xu">[2]</a>.</p>
 <aside class="note"><p>Book pointers: <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.6.4.14">Proposition 6.14, printed p. 110</a>, and <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.6.4.15">Proposition 6.15, printed p. 111</a>, in §6.4 of <em>Optimal Transport for Machine Learners</em> <a href="#ref-book">[3]</a>.</p></aside>
 
@@ -100,7 +100,7 @@
   +\frac1n\sum_{i=1}^n
        \left|U_{(i)}-\frac{i-\frac12}{n}\right|^2.
 \]
-<p>The second term is the cost of the random deviations from the optimal staircase. Averaging it gives the following particularly clean identity.</p>
+<p>The second term is the cost of the random deviations from the optimal staircase. Averaging it gives the following exact identity.</p>
 <p id="proposition-1"><strong>Proposition 1 (uniform sampling error).</strong> For every integer \(n\ge1\),</p>
 \[
  \mathbb E W_2(\operatorname{Unif}[0,1],\widehat\mu_n)^2
@@ -237,7 +237,9 @@
   <li id="ref-chevallier">Julien Chevallier. <a href="https://arxiv.org/abs/1801.02871"><em>Uniform decomposition of probability measures: quantization, classification, rate of convergence</em></a>. arXiv:1801.02871, 2018.</li>
   <li id="ref-fournier">Nicolas Fournier and Arnaud Guillin. <a href="https://arxiv.org/abs/1312.2128"><em>On the rate of convergence in Wasserstein distance of the empirical measure</em></a>. Probability Theory and Related Fields 162, 707–738, 2015.</li>
 </ol>
-</article></main>
+</article>
+<p class="blog-ai-disclosure">How these posts and numerical experiments were prepared: <a href="../ai-disclosure/">AI disclosure</a>.</p>
+</main>
 <footer class="draft-footer"><div class="wrap">Alpha preview · <a href="index.html">Forthcoming posts</a> · <a href="/blog/">Blog</a> · <a href="/privacy/">Privacy &amp; audience measurement</a></div></footer>
 </body>
 </html>

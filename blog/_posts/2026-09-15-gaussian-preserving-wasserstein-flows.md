@@ -51,7 +51,7 @@ This is the topic of the very last section of my new book [*Optimal Transport fo
 
 <!--more-->
 
-Here is one of my favorite explanations of this phenomenon. It combines a simple but powerful theorem of Gelbrich with a variational observation explained to me by Hugo Lavenant. The reward will be an extravagantly long proof of a familiar fact: convolving a Gaussian with a Gaussian still gives a Gaussian.
+Here is one of my favorite explanations of this phenomenon. It combines Gelbrich's contraction theorem with a variational observation explained to me by Hugo Lavenant. As an application, we will recover a familiar fact by a rather long route: convolving a Gaussian with a Gaussian still gives a Gaussian.
 
 ## Moment-matching Gaussian projection {#gaussian-projection-means-matching-moments}
 
@@ -409,4 +409,4 @@ A linear change of variables gives the same statement for any positive definite 
 
 Of course, one could prove Gaussian convolution closure directly using characteristic functions in a few lines. Instead, we have passed through a contraction theorem, a variational time discretization, an entropy identity, and a PDE.
 
-Probably one of the most overkill proofs of this elementary fact—but a beautiful one. The real reward is the general preservation principle, which applies far beyond this particular convolution identity.
+It is admittedly an excessive proof of this elementary fact. I like it because the same preservation principle applies to other energies and flows, not just Gaussian convolution.
