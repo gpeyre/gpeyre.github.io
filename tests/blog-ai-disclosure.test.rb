@@ -82,6 +82,24 @@ class BlogAiDisclosureTest < Minitest::Test
     assert_includes shared, "'/blog/ai-disclosure/' | relative_url"
   end
 
+  def test_homepage_has_a_disclosure_link_in_the_header
+    source = read("blog/index.html")
+    doc = document(source)
+    links = doc.css("header.blog-home-header .blog-disclosure-link a")
+    assert_equal 1, links.length
+    assert_equal "AI disclosure", links.first.text
+    assert_equal "{{ '/blog/ai-disclosure/' | relative_url }}", links.first["href"]
+    assert_operator source.index('class="blog-disclosure-link"'), :<,
+      source.index("{% include blog-subscribe.html %}"), "Disclosure precedes subscription controls"
+    return unless DISCLOSURE_BUILD
+
+    built = document(read("blog/index.html", DISCLOSURE_BUILD))
+    top_link = built.at_css("header.blog-home-header .blog-disclosure-link a")
+    refute_nil top_link
+    assert_equal BASEURL + PAGE, top_link["href"]
+    assert File.file?(File.join(DISCLOSURE_BUILD, built_path(PAGE)))
+  end
+
   def test_every_standalone_preview_has_a_promotion_safe_endnote
     refute_empty previews
     previews.each do |path|

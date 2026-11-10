@@ -22,6 +22,7 @@
 .blog-eyebrow span { color: #b76829; margin: 0 9px; }
 .blog-back { font-size: 14px; }
 .blog-subtitle { color: #62665f; font-size: 21px; line-height: 1.55; margin: 20px 0 12px; }
+.blog-disclosure-link { color: #62665f; font: 14px/1.7 'Open Sans', sans-serif; margin: 16px 0 0; }
 .blog-byline { color: #67726f; font-size: 13px; margin: 24px 0 0; }
 .blog-subscribe { color: #62665f; font-size: 13px; line-height: 1.7; margin: 24px 0 0; }
 .blog-subscribe span { margin: 0 6px; }
