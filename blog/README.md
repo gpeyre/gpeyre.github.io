@@ -54,6 +54,12 @@ an article, run `ruby scripts/build-blog-search.rb` and commit the regenerated
 `js/blog-search-index.js` along with the source changes. The generator reads
 all blog posts and standalone preview articles, excludes `published: false`,
 and derives titles, summaries, dates, and URLs directly from their metadata.
+It also synchronizes the forthcoming-list card titles with each article's main
+heading, preserving the list's grouping, summaries, and illustrations. Rename
+the title in the article itself, then run this generator; do not maintain a
+different short title in its card. Keep the article's `<h1>` and browser `<title>`
+consistent as well; the generator reports a mismatch. The `--check` mode detects
+stale list titles as well as a stale search catalogue.
 It fails on missing or duplicate keyword lists. The committed catalogue works
 with GitHub Pages safe builds and local static previews without plugins,
 external services, or a data-fetch request. The actual matching runs in
@@ -63,6 +69,8 @@ Run `ruby scripts/build-blog-search.rb --check` to detect stale or incomplete
 catalogues, `node tests/blog-search-core.test.js` for matching/ranking, and
 `ruby tests/blog-search-index.test.rb /path/to/built/site` for metadata and
 link coverage. Browser checks live in `tests/blog-search-browser.test.js`.
+Run `ruby tests/blog-preview-title-sync.test.rb /path/to/build` to check title
+consistency across article pages, list cards, browser tabs, and search records.
 
 ## Daily publication and Bluesky announcements
 
