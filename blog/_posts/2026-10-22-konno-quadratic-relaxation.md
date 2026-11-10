@@ -1,6 +1,6 @@
 ---
 title: 'Konno’s quadratic relaxation: two copies, the same minimum'
-subtitle: A one-line identity turns a quadratic interaction into two simpler subproblems.
+subtitle: When replacing a quadratic term by a bilinear one preserves the optimal value.
 description: An elementary exactness identity for quadratic optimization, its extension
   to regularized objectives, and its role in Gromov–Wasserstein computation.
 date: '2026-10-22'
@@ -147,7 +147,7 @@ a contradiction.
 
 The distinction between the two conclusions matters: exactness of the optimal *value* does not by itself force every optimal pair onto the diagonal. For example, if $$Q=0$$ and $$r=0$$, every pair is optimal.
 
-## What happens without the sign condition?
+## Failure without the sign condition {#what-happens-without-the-sign-condition}
 
 Take $$C=[-1,1]$$, $$Q=2$$, and $$r=0$$. The original energy is $$E(x)=x^2$$, with minimum $$0$$. Its split version is $$F(x,y)=xy$$, with minimum $$-1$$, attained at $$(1,-1)$$ and $$(-1,1)$$. The new freedom really changes the answer.
 
@@ -169,7 +169,7 @@ $$
 
 A small positive curvature in feasible directions controls how much the relaxation can underestimate the true minimum. This estimate concerns the global optima, independently of the algorithm used to search for them.
 
-## From exactness to an algorithm
+## Alternating minimization {#from-exactness-to-an-algorithm}
 
 Assume again the sign condition, and now suppose $$r$$ is convex. Fixing $$y$$ leaves the convex subproblem
 
@@ -197,7 +197,7 @@ If $$x^+$$ minimizes $$M_x$$, then $$E(x^+)\le M_x(x^+)\le M_x(x)=E(x)$$. This g
 
 Exactness is nevertheless a statement about *global* minimizers. Take $$E(x)=-x^2+x/2$$ on $$[-1,1]$$. Its global minimizer is $$-1$$, with value $$-3/2$$. At $$x=y=1$$, each block update minimizes a linear function with negative slope, so it selects $$1$$ again. The algorithm remains at value $$-1/2$$, although each separate subproblem is solved exactly.
 
-## Gromov–Wasserstein: the constraints supply the sign
+## Gromov–Wasserstein relaxation {#gromovwasserstein-the-constraints-supply-the-sign}
 
 Optimal transport usually compares points through a cross-cost. Gromov–Wasserstein transport instead compares the *relationships* between pairs of points: a good matching should preserve internal distances [[5]](#ref-5). This naturally creates a quadratic interaction.
 
@@ -277,7 +277,7 @@ Thus the quadratic distortion is nonpositive on feasible differences. Apply Theo
 
 The transport polytope is compact and these objectives are continuous, so the minima here are attained. The entropy forces agreement between the two copies at a global optimum; it does not establish uniqueness of the original transport plan or convexity of the joint objective.
 
-## What changes when mass is unbalanced?
+## The unbalanced case {#what-changes-when-mass-is-unbalanced}
 
 In unbalanced transport the marginal constraints are penalized rather than imposed. For arbitrary nonnegative masses $$u$$ and a strictly positive reference $$v$$, the appropriate KL divergence includes the mass corrections:
 

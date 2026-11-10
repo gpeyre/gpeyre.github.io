@@ -43,7 +43,7 @@ Both produce the same target distribution in the continuous model. But matching 
 
 <!--more-->
 
-## The experiment: one Gaussian, three modes
+## A Gaussian source and a three-component mixture {#the-experiment-one-gaussian-three-modes}
 
 In the plane, let
 
@@ -63,7 +63,7 @@ The two panels share their source points, target points, and spatial scale. **Bl
 
 For overlapping Gaussians, color means the most probable component given the endpoint—not an intrinsic, uniquely recoverable latent label. In the Dirac limit, it is exactly the identity of the destination atom.
 
-## Diffusion: reverse a deterministic probability flow
+## The probability-flow ODE {#diffusion-reverse-a-deterministic-probability-flow}
 
 Start with the target distribution and apply the Ornstein–Uhlenbeck noising process
 
@@ -150,7 +150,7 @@ $$
 
 The push-forward notation means that $$T_{\mathrm{diff}}(X)$$ has law $$\nu_\sigma$$ when $$X$$ has law $$\mu$$. At zero width, the final map is understood as the limiting assignment to the atoms; it is no longer an invertible smooth map.
 
-## Optimal transport: optimize the assignment
+## The quadratic Monge problem {#optimal-transport-optimize-the-assignment}
 
 The quadratic Monge problem instead asks for
 
@@ -188,7 +188,7 @@ $$
 
 The offsets $$\lambda_j$$ enforce the prescribed masses. Subtracting the two squared distances leaves an affine inequality, so the cells are convex polygons, possibly unbounded. They are not, in general, ordinary nearest-center Voronoi cells. See the [semi-discrete OT chapter](https://www.gpeyre.com/ot4ml/myst/_build/html/semidiscrete-w1/) for this geometric viewpoint.
 
-## Curved paths versus different maps
+## Trajectories and endpoint assignments {#curved-paths-versus-different-maps}
 
 Curved diffusion trajectories and straight OT trajectories are visually striking, but **curvature alone does not prove that the endpoint maps differ**. One could follow a curved route and still reach the optimal endpoint.
 
@@ -204,7 +204,7 @@ $$
 
 There are special cases of equality—for example, transport between a standard Gaussian and a single isotropic Gaussian. The point is not that diffusion can never be optimal, but that its construction does not impose optimality.
 
-## What the numerical figure computes
+## Numerical discretization {#what-the-numerical-figure-computes}
 
 The source is a deterministic, equal-weight cloud of $$240$$ points approximating $$\mathcal N(0,I_2)$$. The left panel integrates the **analytic** mixture-score ODE with fourth-order Runge–Kutta; no score estimation or neural network is involved.
 

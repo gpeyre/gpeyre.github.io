@@ -61,7 +61,7 @@ X\longmapsto\sqrt{\gamma(X^\top X)}
 }
 $$
 
-## A precise statement
+## Characterization by positive semidefinite monotonicity {#a-precise-statement}
 
 Let $$\mathbb S_+^d$$ denote the cone of real symmetric positive semidefinite matrices. Suppose $$\gamma:\mathbb S_+^d\to[0,\infty)$$ is finite, convex, and positively homogeneous:
 $$\gamma(tA)=t\gamma(A)$$ for $$t\geq0$$.
@@ -202,7 +202,7 @@ Squaring proves the required monotonicity, including when $$A$$ or $$B$$ is sing
 </div>
 </details>
 
-## Examples and a warning
+## Examples and failure of monotonicity {#examples-and-a-warning}
 
 For $$1\leq p<\infty$$, the Schatten gauge
 

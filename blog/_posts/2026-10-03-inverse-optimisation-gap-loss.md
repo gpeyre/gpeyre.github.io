@@ -49,7 +49,7 @@ A useful measure of disagreement is the **gap loss**: the cost of the observed d
 
 <!--more-->
 
-## Learning an objective from a decision
+## Inverse optimization {#learning-an-objective-from-a-decision}
 
 Let $$\mathcal Z$$ be a fixed feasible set and consider
 
@@ -76,7 +76,7 @@ $$
 
 The gap is nonnegative, and vanishes exactly when the observation is a minimizer. With several observations, one can average their gaps, allowing each observation to have its own known feasible set. This remains a convex loss.
 
-## Why the gap loss is convex
+## Convexity of the gap loss {#why-the-gap-loss-is-convex}
 
 <span id="proposition-1"></span>
 **Proposition 1 (convexity of the gap).** Under the affine parameter dependence above, $$\theta\mapsto\mathcal L(\theta;\hat z)$$ is convex for a fixed feasible observation $$\hat z$$ and a parameter-independent feasible set.
@@ -111,7 +111,7 @@ $$
 
 Under the usual conditions ensuring differentiability of the optimal value, for instance a unique optimizer on a compact feasible set with continuous $$F_0$$ and features, this is the gradient. Learning compares the features of the observed decision with those of the currently optimal decision.
 
-## The Fenchel–Young connection
+## Fenchel–Young losses {#the-fenchelyoung-connection}
 
 Blondel, Martins and Niculae developed the **Fenchel–Young loss** framework in their AISTATS paper [[2]](#ref-fy-aistats) and its broader JMLR treatment [[3]](#ref-fy-jmlr). Given a regularizer $$\Omega$$, its conjugate and loss are
 
@@ -189,7 +189,7 @@ There are unavoidable ambiguities. Adding $$u(x)+v(y)$$ to a cost changes every 
 
 A fixed entropy regularizer can be included in $$F_0$$ without losing convexity in the cost parameter. Our paper with Francisco Andrade and Clarice Poon [[6]](#ref-sparsistency) studies sparse recovery for that regularized model. The figure below instead uses **unregularized OT**: there is no entropy or artificial smoothing of the loss.
 
-## An interactive cost slice
+## Numerical experimentation: a cost slice {#an-interactive-cost-slice}
 
 We learn one entry of a positive diagonal metric, fixing the other to remove the scaling ambiguity:
 

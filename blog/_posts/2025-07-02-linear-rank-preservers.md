@@ -41,7 +41,7 @@ There is just one additional possibility for square matrices: transposition, fol
 
 The square complex case was proved by Marcus and Moyls in [*Linear Transformations on Algebras of Matrices*, Canadian Journal of Mathematics 11 (1959), 61–66](https://doi.org/10.4153/CJM-1959-008-0). Here is a self-contained proof that also covers rectangular matrices over the reals or complexes.
 
-## The precise statement
+## Classification of linear rank preservers {#the-precise-statement}
 
 Let $$\mathbb K=\mathbb R$$ or $$\mathbb C$$. Suppose
 
@@ -253,7 +253,7 @@ Over $$\mathbb C$$, linearity means **complex** linearity. The transpose in the 
 
 Finally, rank preservation does not imply preservation of singular values, determinants, or eigenvalues. For instance, $$X\mapsto2X$$ preserves all ranks. The rigidity concerns the *form of the operator*, not the numerical values attached to a matrix.
 
-## The geometric reason
+## Geometry of rank-one subspaces {#the-geometric-reason}
 
 Rank-one matrices form the simplest possible products: one column direction times one row direction. Their maximal linear pieces come in exactly two families. An invertible linear map preserving rank must preserve this two-family structure, or exchange the families when their dimensions agree.
 

@@ -46,7 +46,7 @@ This is more subtle than saying that a journey through a waypoint can be long. H
 
 <!--more-->
 
-## Which structure certifies optimality?
+## Optimality via convex potentials {#which-structure-certifies-optimality}
 
 For probability measures with finite second moment, quadratic optimal transport minimizes $$\mathbb E\lvert X-Y\rvert^2$$ over all joint laws with the prescribed marginals. A map $$T$$ induces the coupling $$(X,T(X))$$ and the output distribution $$T_\#\alpha$$: by definition, $$T_\#\alpha(B)=\alpha(T^{-1}(B))$$. For background on these two formulations, see [[5]](#ref-computational).
 
@@ -134,7 +134,7 @@ $$
 
 The product first rotates the source and then applies the optimal symmetric map $$C$$. The rotation is invisible in the output distribution because the source is isotropic, but it changes which source point goes where. Removing it preserves the target and lowers the cost. This is the matrix version of *polar factorization* [[2]](#ref-brenier).
 
-## Monotone is not the same as a convex gradient
+## Monotonicity and cyclic monotonicity {#monotone-is-not-the-same-as-a-convex-gradient}
 
 A map is *monotone* when
 
@@ -175,7 +175,7 @@ $$
 
 whose determinant is negative.
 
-## When does composition work?
+## Sufficient conditions for optimal composition {#when-does-composition-work}
 
 <span id="proposition-1"></span>
 

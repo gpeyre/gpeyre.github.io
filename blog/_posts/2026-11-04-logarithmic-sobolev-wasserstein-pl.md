@@ -55,7 +55,7 @@ embedded_experiment: true
 
 <!--more-->
 
-## Entropy has a gradient: Fisher information
+## The Wasserstein gradient of relative entropy {#entropy-has-a-gradient-fisher-information}
 
 <figure class="portrait-pair"><div class="portrait-pair-images"><div><a href="https://as.cornell.edu/people/leonard-gross"><img src="https://as.cornell.edu/sites/default/files/styles/4_5/public/2026-07/leonard-gross.jpg?itok=kmbYIhOU" width="500" height="572" loading="lazy" decoding="async" alt="Portrait of Leonard Gross"><p>Leonard Gross</p></a></div><div><a href="https://www.mis.mpg.de/de/people/felix-otto"><img src="https://www.mis.mpg.de/fileadmin/_processed_/5/e/csm_2655_23a2458343.webp" width="1440" height="810" loading="lazy" decoding="async" alt="Portrait of Felix Otto"><p>Felix Otto</p></a></div></div><figcaption>Gross’s logarithmic Sobolev inequality <a href="#ref-gross">[3]</a> and the Wasserstein viewpoint of Otto and Villani <a href="#ref-ov">[1]</a> meet in the argument below. Institutional portraits linked from <a href="https://as.cornell.edu/people/leonard-gross">Cornell University</a> and the <a href="https://www.mis.mpg.de/de/people/felix-otto">Max Planck Institute for Mathematics in the Sciences</a>; photographers and open reuse licenses are not specified on these profiles.</figcaption></figure>
 <p>Let \(\pi(x)=Z^{-1}e^{-V(x)}\) be a smooth positive probability density on \(\mathbb R^d\). We use natural logarithms and write</p>
@@ -90,7 +90,7 @@ $$
 
 <p>The equality with metric speed uses the gradient velocity, not an arbitrary velocity solving the same continuity equation. Wasserstein gradient-flow theory makes this identity precise beyond smooth densities <a href="#ref-ags">[2]</a>.</p>
 
-## The P–L condition in disguise
+## Equivalence with the Wasserstein P–L condition {#the-pl-condition-in-disguise}
 
 <p id="proposition-1"><strong>Proposition 1 (the dictionary).</strong> Logarithmic Sobolev with constant \(\lambda&gt;0\) is the inequality</p>
 
@@ -123,7 +123,7 @@ $$
 
 <p>The constant convention matters: for the standard Gaussian, \(\lambda=1\). In the classical function formulation, putting \(\rho=h^2\pi/\int h^2d\pi\) turns this into \(\operatorname{Ent}_\pi(h^2)\le(2/\lambda)\int|\nabla h|^2d\pi\). This is the normalization of Gross’s Gaussian inequality <a href="#ref-gross">[3]</a>.</p>
 
-## Why the measures themselves converge
+## Finite-length estimates and convergence in Wasserstein distance {#why-the-measures-themselves-converge}
 
 <p>Exponential decay of an objective does not, by itself, imply convergence of its argument. A valley can contain many minimizers; a curve might keep travelling along it. Here the dissipation identity gives the missing control: the curve has finite remaining length.</p>
 <p id="theorem-1"><strong>Theorem 1 (finite length under Wasserstein P–L).</strong> Let \(\mathcal G:\mathcal P_2(\mathbb R^d)\to(-\infty,+\infty]\) be lower semicontinuous, with finite infimum \(\mathcal G_\star\). Suppose a global locally absolutely continuous flow, of finite initial energy, has locally absolutely continuous energy \(E\) and satisfies for almost every time</p>
@@ -223,7 +223,7 @@ $$
 
 </details>
 
-## More than entropy, more than convexity
+## Sufficient conditions and extensions {#more-than-entropy-more-than-convexity}
 
 <p><em>Uniformly convex confinement.</em> If \(\nabla^2V\succeq\lambda I\), the Bakry–Émery criterion gives logarithmic Sobolev with constant \(\lambda\) <a href="#ref-be">[4]</a>. This is a sufficient condition, not a characterization: a bounded perturbation of a uniformly convex potential can preserve a logarithmic Sobolev inequality even when pointwise convexity is lost.</p>
 <p><em>A genuinely nonconvex lifted loss.</em> If \(|\nabla h|^2\ge2\lambda(h-h_\star)\), integration proves Wasserstein P–L for \(\mathcal G(\rho)=\int h\,d\rho\) whenever its slope has the expected gradient representation. For instance,</p>
@@ -246,7 +246,7 @@ $$
 <span id="numerical-experimentation-bending-the-route-to-equilibrium"></span>
 <span id="langevin-experiment"></span>
 
-## Numerical experimentation: a narrow Gaussian explores a mixture
+## Numerical experimentation: Langevin diffusion towards a Gaussian mixture {#numerical-experimentation-a-narrow-gaussian-explores-a-mixture}
 
 <p>A diffusion can quickly settle inside one well and still take a long time to explore the others. Start with a small, translated Gaussian cloud and let it evolve towards an equally weighted mixture of \(k\) Gaussians. The controls change the number of components and move their centers from overlapping to separated positions.</p>
 

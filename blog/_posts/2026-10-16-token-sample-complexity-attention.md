@@ -1,6 +1,6 @@
 ---
 title: "How many tokens does attention need?"
-subtitle: "A square-root law at each query can hide a much harder global approximation problem."
+subtitle: "How token amplitudes affect the number of samples needed to approximate attention."
 description: "Why finite-token attention can converge slowly despite a pointwise square-root rate: exponential query sensitivity, a radius–tail tradeoff in L2, and interactive Gaussian attention curves."
 topic: Attention and sampling
 keywords:
@@ -70,7 +70,7 @@ Thus $$T_n=T_{\mu_n}$$, where $$\mu_n=n^{-1}\sum_j\delta_{Y_j}$$. This measure-b
 
 > **A sampling model, not a model of every text sequence.** The mathematics below assumes i.i.d. tokens and a fixed attention head. Real text has dependence, position, and many interacting layers. These bounds isolate one source of error: replacing a token distribution by a finite random context.
 
-## Gaussians make the target beautifully simple
+## The attention map for Gaussian tokens {#gaussians-make-the-target-beautifully-simple}
 
 For $$\mu=\mathcal N(0,\Sigma)$$, exponential tilting shifts the Gaussian mean without changing its covariance:
 
@@ -104,7 +104,7 @@ The Gaussian moment-generating function is $$M(t)=\exp(t^\top\Sigma t/2)$$. Diff
 </div>
 </details>
 
-## A square-root rate, with an expensive constant
+## Pointwise error and dependence on the query {#a-square-root-rate-with-an-expensive-constant}
 
 At a fixed query, $$T_n(x)$$ is a ratio of sample averages. In our one-dimensional Gaussian example, the central limit theorem gives the particularly informative formula
 

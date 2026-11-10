@@ -49,7 +49,7 @@ The construction is recorded in [Proposition 13.34 of *Optimal Transport for Mac
 
 <!--more-->
 
-## Match internal geometry, not coordinates
+## The Gaussian Gromov–Wasserstein problem {#match-internal-geometry-not-coordinates}
 
 Ordinary transport needs a cost comparing a point $$x$$ in one space with a point $$y$$ in another. Gromov–Wasserstein transport instead compares how two points relate *within* each space [[3]](#ref-memoli). This makes it natural when the spaces have different dimensions.
 
@@ -77,7 +77,7 @@ The inner dissimilarities are *squared* Euclidean distances, and the outside los
 
 Every admissible coupling has finite objective, by the Gaussian fourth moments. An optimizer exists: the set of couplings is weakly compact, and the nonnegative continuous integrand makes the objective lower semicontinuous under convergence of $$\pi\otimes\pi$$.
 
-## The mixed fourth moment is decisive
+## Reduction to mixed fourth moments {#the-mixed-fourth-moment-is-decisive}
 
 Write $$k=\mathbb E[YX]\in\mathbb R^n$$ for the vector of cross-correlations, and define the score
 
@@ -135,7 +135,7 @@ The Gaussian fourth-moment identity gives $$\mathbb E[X^2Y_j^2]=1+2k_j^2$$. Ther
 
 This calculation identifies the possible escape route. In a jointly Gaussian law, the mixed fourth moment is tied to $$k$$. For a general coupling, it is an independent source of improvement. We will set $$k=0$$ and make the fourth moment large enough to compensate.
 
-## A radial coupling that beats the whole Gaussian class
+## A radial non-Gaussian competitor {#a-radial-coupling-that-beats-the-whole-gaussian-class}
 
 Let $$F_j$$ denote the CDF of the chi-squared law with $$j$$ degrees of freedom, and write $$q_j=F_j^{-1}$$ for its quantile. Draw $$Y\sim\mathcal N(0,I_n)$$ and put
 
@@ -219,7 +219,7 @@ The positive term $$\sqrt{2n}(c+o(1))$$ eventually exceeds $$4$$. Thus $$\mathca
 
 </details>
 
-## How can zero correlation win?
+## Radial dependence and cross-correlation {#how-can-zero-correlation-win}
 
 In the Gaussian class, all dependence is encoded by the cross-correlation vector, and its squared norm cannot exceed one. The largest available improvement in $$\mathcal G$$ beyond the independent value $$n$$ is exactly $$4$$.
 
@@ -227,7 +227,7 @@ The radial construction uses another kind of dependence. The radius squared of a
 
 In particular, this coupling is not jointly Gaussian. A jointly Gaussian pair with zero cross-covariance would be independent, whereas here $$X^2$$ is determined by $$\lvert Y\rvert^2$$. Marginal Gaussianity says nothing comparable about their joint nonlinear dependence.
 
-## What the example does—and does not—settle
+## Scope of the counterexample {#what-the-example-doesand-does-notsettle}
 
 The theorem uses unequal dimensions and only proves failure for sufficiently large $$n$$. It does not identify the smallest failing dimension, and the radial competitor need not be the global optimizer. A single better feasible coupling is enough to rule out an entire proposed optimizer class.
 

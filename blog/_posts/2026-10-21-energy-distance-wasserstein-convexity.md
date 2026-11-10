@@ -50,7 +50,7 @@ Looking at the repulsive interaction, one might expect a difficult nonconvex pro
 
 <!--more-->
 
-## A discrepancy made out of distances
+## Definition of the energy distance {#a-discrepancy-made-out-of-distances}
 
 Let $$\alpha,\beta\in\mathcal P_2(\mathbb R^d)$$, the probability measures with finite second moment. Take independent random variables $$X,X'\sim\alpha$$ and $$Y,Y'\sim\beta$$. We use the convention
 
@@ -111,7 +111,7 @@ Apply the same identity to the two self-interaction terms and cancel: the remain
 
 In higher dimensions one can average this one-dimensional identity over projected directions: Euclidean distance is a positive constant times the spherical average of absolute projected distance. Nonnegativity follows. Equality first gives identical projected laws for almost every direction, then for every direction by continuity of characteristic functions, and hence identical original laws.
 
-## Convexity in the right coordinates
+## Displacement convexity in one dimension {#convexity-in-the-right-coordinates}
 
 For $$0<r<1$$, let
 
@@ -190,7 +190,7 @@ Convexity of this expression in $$a$$ is precisely convexity of $$\varphi$$. $$\
 </div>
 </details>
 
-## The flow becomes a family of scalar equations
+## The quantile gradient-flow equation {#the-flow-becomes-a-family-of-scalar-equations}
 
 Assume that the target CDF $$F_\beta$$ is continuous. Then $$V_\beta'(x)=2F_\beta(x)-1$$. In quantile coordinates the Wasserstein gradient flow satisfies, for almost every rank $$r$$,
 
@@ -258,7 +258,7 @@ $$
 
 It still has a unique solution, as the resolvent of a monotone subdifferential. Selecting an arbitrary value of a discontinuous CDF can miss it. Sobolev regularizations of the quantile evolution are studied in [[4]](#ref-sobolev).
 
-## Why the plane is different
+## Failure of displacement convexity in two dimensions {#why-the-plane-is-different}
 
 Without a total ordering, the self-interaction need not be affine along a transport geodesic. The failure is visible with just two source atoms.
 

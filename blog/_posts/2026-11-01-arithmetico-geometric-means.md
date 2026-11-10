@@ -1,6 +1,6 @@
 ---
 title: "Arithmetico-geometric means and their generalizations"
-subtitle: "Two averaging rules, one shrinking interval, and a surprisingly rigid classification."
+subtitle: "Iterating two means, and when the limit is itself a quasi-arithmetic mean."
 description: "Iterate two means to obtain a third. Nested intervals prove convergence; arithmetic and harmonic means recover the geometric mean; Daróczy–Páles characterize exactly when a Gauss composition is quasi-arithmetic."
 date: "2026-11-01"
 topic: "Means and functional equations"
@@ -14,7 +14,7 @@ embedded_experiment: true
 
 <!--more-->
 
-## Three familiar means
+## Arithmetic, geometric, and harmonic means {#three-familiar-means}
 
 <p>For \(x,y&gt;0\), the arithmetic, geometric, and harmonic means are</p>
 
@@ -32,7 +32,7 @@ $$
 
 <p>A short proof is \(A-G=(\sqrt x-\sqrt y)^2/2\ge0\), followed by \(H=G^2/A\le G\). The inequalities are strict between distinct means when \(x\ne y\).</p>
 
-## Change coordinates: quasi-arithmetic means
+## Quasi-arithmetic means {#change-coordinates-quasi-arithmetic-means}
 
 <p>Let \(I\subset\mathbb R\) be a nonempty open interval and \(f:I\to\mathbb R\) be <em>continuous and strictly monotone</em>. The function \(f\) is a generator, not itself a mean. Define</p>
 
@@ -91,7 +91,7 @@ $$
 
 <p>Thus \(P_{-1}=H,P_0=G,P_1=A\), and \(P_p\le P_q\) when \(p\le q\). For example, Proposition 1 proves this because \((f_q\circ f_p^{-1})'(f_p(t))=t^{q-p}\) is nondecreasing. The logarithmic case is included.</p>
 
-## Iterate two means: Gauss composition
+## Gauss composition of means {#iterate-two-means-gauss-composition}
 
 <p>Given two generators \(f,g\), initialize \((x_0,y_0)=(x,y)\in I^2\) and iterate</p>
 
@@ -204,7 +204,7 @@ $$
 
 <p>This also holds for opposite power means: \(P_p(x,y)P_{-p}(x,y)=xy\), hence their Gauss composition is \(G\). At the other extreme, composing a mean with itself just returns that mean after one step.</p>
 
-## When is the limit another quasi-arithmetic mean?
+## The Daróczy–Páles characterization {#when-is-the-limit-another-quasi-arithmetic-mean}
 
 <p>The natural question is whether \(M_{f,g}=m_h\) for some generator \(h\). The answer is unexpectedly rigid. A fractional-linear, or Möbius, function is \(u\mapsto(au+b)/(cu+d)\), with \(ad-bc\ne0\) and no pole on the interval being used.</p>
 <figure class="portrait-pair">

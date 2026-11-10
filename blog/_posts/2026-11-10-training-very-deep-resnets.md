@@ -1,6 +1,6 @@
 ---
 title: "Training (very) deep ResNets"
-subtitle: "Depth becomes time. Backpropagation becomes an adjoint equation. Even a two-dimensional example reveals a surprisingly rich loss landscape."
+subtitle: "What differential equations tell us about training residual networks."
 description: "From residual blocks to controlled ODEs: adjoint training, the geometry of linear flows, and an exact complex loss landscape whose saddles flatten as depth grows. Two interactive experiments explore the dynamics and the finite-depth-to-exponential limit."
 date: "2026-11-10"
 topic: "Deep learning and differential equations"
@@ -56,7 +56,7 @@ embedded_experiment: true
 <style>.resnet-wide{position:relative;left:50%;transform:translateX(-50%);width:min(1240px,calc(100vw - 32px));margin:30px 0}.resnet-wide iframe{width:100%}.resnet-skip{width:100%;height:auto;display:block;margin:26px auto}.resnet-skip text{font-family:system-ui,sans-serif;font-size:16px;fill:#24333b}</style>
 <style>@media(max-width:360px){.resnet-wide{overflow-x:auto}.resnet-wide iframe[data-experiment="resnet-flow"]{min-width:340px}}</style>
 
-## One small step, repeated many times
+## Residual networks and the ODE limit {#one-small-step-repeated-many-times}
 
 <p>Let \(x_\ell\in\mathbb R^d\) be the activation, \(\theta_\ell\in\mathbb R^p\) the parameters of block \(\ell\), and \(\phi:\mathbb R^d\times\mathbb R^p\to\mathbb R^d\) a residual function. We assume \(\phi\) is continuously differentiable for the gradient calculations below. With depth \(L\), write</p>
 
@@ -106,7 +106,7 @@ $$
 </div>
 </details>
 
-## Training has a second clock
+## Gradient descent and depth-dependent scaling {#training-has-a-second-clock}
 
 <p>Take training pairs \((a_i,b_i)_{i=1}^N\), with a differentiable terminal loss \(\ell(x,b)\). A fixed output head can be absorbed into \(\ell\). Let \(x^i_0=a_i\), choose \(\lambda\ge0\), and consider</p>
 
@@ -204,7 +204,7 @@ $$
 <p>For each \(s\), the states and adjoints must be recomputed across \(t\). Think of a forward–backward sweep inside each training step. Proving that discrete training converges to this flow requires additional uniform control, not just convergence of a single forward pass <a href="#ref-sander">[10]</a>, <a href="#ref-marion">[11]</a>. Variational convergence of objectives and minimizers is a different question: the result in <a href="#ref-thorpe">[7]</a> uses explicit regularization across neighboring layers, not merely the quadratic weight penalty written here. Also, at a fixed numerical step size, solving the continuous adjoint is not automatically identical to differentiating a discretized solver <a href="#ref-neuralode">[6]</a>.</p>
 <p>Can training preserve the smoothness of the weights across depth? In work with Michael Sander and Pierre Ablin, we studied this question for linear residual networks under suitable initialization and small-loss assumptions <a href="#ref-sander">[10]</a>. Marion, Wu, Sander, and Biau developed a nonlinear analysis with smooth activations: finite-time control uses boundedness/clipping hypotheses, and long-time convergence uses a Polyak–Łojasiewicz condition <a href="#ref-marion">[11]</a>. Neither statement follows from skip connections alone; the simple quadratic weight penalty above does not itself enforce smoothness across depth.</p>
 
-## Linear blocks: simple equations, ordered products
+## Linear residual networks and time-ordered exponentials {#linear-blocks-simple-equations-ordered-products}
 
 <p>Now set \(\phi(x,A)=Ax\), with \(A\in\mathbb R^{d\times d}\). The finite network and the limiting flow are</p>
 
@@ -267,7 +267,7 @@ $$
 <div class="resnet-wide"><iframe class="idea-experiment" data-experiment="resnet-flow" src="{{ '/blog/preparations/assets/deep-resnet/flow.html' | relative_url }}" title="Linear ODE flow explorer: rotation, growth, shear and noncommuting time dependence" loading="lazy" style="height:950px"></iframe></div>
 <p>The constant and switched-shear modes use exact formulas. The rotating-strain mode uses fourth-order Runge–Kutta and reports a step-halving discrepancy; the determinant can also be checked against Liouville's formula. The sliders change a prescribed coefficient path—they do not train a neural network.</p>
 
-## Tie the weights: the matrix exponential
+## Shared weights and the matrix exponential {#tie-the-weights-the-matrix-exponential}
 
 <p>If all layers share one matrix \(A\), then the endpoint maps become</p>
 
@@ -288,7 +288,7 @@ $$
 
 <p>When \(A\) and \(H\) commute, the second expression simplifies to \(e^AH\). Let us choose a commuting two-dimensional family where the whole landscape can be drawn.</p>
 
-## A complex variable hiding inside a real network
+## A two-dimensional commuting model {#a-complex-variable-hiding-inside-a-real-network}
 
 <p>Identify the plane with \(\mathbb C\) and set</p>
 
@@ -357,7 +357,7 @@ $$
 </div>
 </details>
 
-## What depth improves—and what it does not
+## Depth dependence of critical points and gradient flow {#what-depth-improvesand-what-it-does-not}
 
 <p>For a fixed integer \(k\), the corresponding finite-depth minimum satisfies</p>
 
@@ -384,7 +384,7 @@ $$
 <p>Indeed, \(u=e^{-x}\) satisfies \(du/ds=2+2/u\), so \(u(s)\sim2s\). Consequently \(x(s)=-\log(2s)+o(1)\) and \(f_\infty(x(s))-1\sim1/s\): the loss decreases toward <em>one</em>, not zero. The algorithm escapes along an asymptotically flat direction rather than converging to a finite bad critical point. Each finite-depth loss grows to infinity as \(|z|\to\infty\), but this boundedness of sublevel sets is lost in the limit. The exceptional real-axis trajectory is a useful warning, not a description of all initializations.</p>
 <div class="note"><p>These conclusions concern the full two-real-parameter commuting slice, without regularization. They are not a landscape theorem for arbitrary matrix parameterizations or nonlinear ResNets. Even restricting to the real line changes the answer: for even \(L\), \(z=-L\) minimizes the real-line loss at value one, although it is a saddle in the plane. Odd finite depths, in contrast, have the real zero-loss solution \(z=-2L\). Rotation is necessary to reach the half-turn at even depth and in the ODE limit; the odd-depth real solution escapes to infinity as \(L\) grows.</p></div>
 
-## Numerical experimentation: from one layer to infinity
+## Numerical experimentation: finite- and infinite-depth loss landscapes {#numerical-experimentation-from-one-layer-to-infinity}
 
 <p>Change depth without moving the camera. The colored curves are the exact loss levels \(0.1,0.5,1,2,5,10,25\); level one is dashed. For finite \(L\ge2\), zoom out to find the saddle at \(-L\), or zoom in to see its alternating sectors. “Infinity” evaluates the exponential itself, not a very large power. The visible-minimum counter counts all minima inside the plotting window.</p>
 <div class="resnet-wide"><iframe class="idea-experiment" data-experiment="resnet-landscape" src="{{ '/blog/preparations/assets/deep-resnet/landscape.html' | relative_url }}" title="Analytic contours of the finite-depth residual loss and its exponential limit" loading="lazy" style="height:1000px"></iframe></div>

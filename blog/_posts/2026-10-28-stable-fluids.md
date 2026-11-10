@@ -1,6 +1,6 @@
 ---
 title: Stable fluids
-subtitle: Trace backwards, diffuse implicitly, and project away compression.
+subtitle: The numerical methods behind Jos Stam’s fluid simulation algorithm.
 description: "Stam’s Stable Fluids combines semi-Lagrangian advection, implicit diffusion, and an orthogonal incompressibility projection. Derive its Fourier solver and stir a periodic fluid interactively."
 date: '2026-10-28'
 topic: Fluid simulation
@@ -60,7 +60,7 @@ The trick is not to solve the entire fluid equation at once. Split it into manag
 <figure class="portrait-single"><img src="{{ '/blog/preparations/assets/new-dynamics/jos-stam-azam-khan.jpg' | relative_url }}" width="1884" height="1712" alt="Jos Stam in front of a whiteboard with fluid simulation equations" loading="lazy"><figcaption>Jos Stam, photographed by Azam Khan in May 2005. <a href="https://commons.wikimedia.org/wiki/File:Jos_Stam_2005_-_by_Azam_Khan.jpg">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>. Image unchanged.</figcaption></figure>
 <figure class="portrait-single"><img src="{{ '/blog/preparations/assets/new-dynamics/george-stokes.jpg' | relative_url }}" width="711" height="1065" alt="Portrait of George Gabriel Stokes after a photograph by Fradelle and Young" loading="lazy"><figcaption>George Gabriel Stokes (1819–1903), after a photograph by Fradelle &amp; Young, reproduced in Schuster and Shipley’s <em>Britain’s Heritage of Science</em> (1917). <a href="https://commons.wikimedia.org/wiki/File:SS-stokes.jpg">Wikimedia Commons</a>, public domain. Image unchanged.</figcaption></figure>
 
-## Velocity, pressure, and the constraint
+## The incompressible Navier–Stokes equations {#velocity-pressure-and-the-constraint}
 
 Work on a periodic square $$[0,L)^2$$. The velocity $$u(t,x)\in\mathbb R^2$$ solves the incompressible Navier–Stokes equations
 
@@ -78,7 +78,7 @@ $$
 
 where $$\kappa\ge0$$ is dye diffusivity and $$s$$ a dye source. Since $$\nabla\cdot u=0$$, the advection term can equally be written $$\nabla\cdot(au)$$. Dye does not feed back into the velocity in the simple model used here.
 
-## First understand the projection
+## The Helmholtz–Hodge projection {#first-understand-the-projection}
 
 Suppose $$w$$ is a provisional velocity that may compress the fluid. Remove a gradient:
 
@@ -120,7 +120,7 @@ so the unique minimum occurs at $$z=\mathsf Pw$$. $$\square$$
 
 This is the Helmholtz–Hodge decomposition, or Leray projection. Harlow and Welch’s MAC method (1965) already used staggered velocities and a pressure Poisson equation to enforce incompressibility <a href="#ref-harlow-welch">[6]</a>. Chorin and Temam developed the projection/fractional-step approach <a href="#ref-chorin">[2]</a>, <a href="#ref-temam">[3]</a>; Chorin’s 1968 paper also uses implicit alternating-direction schemes, not merely explicit Euler. Stam explicitly follows Chorin and Marsden’s book for the decomposition <a href="#ref-chorin-marsden">[7]</a>.
 
-## One time step, four operations
+## Operator splitting for one time step {#one-time-step-four-operations}
 
 Let $$h>0$$ be the time step. A first-order splitting in the order of Stam’s 1999 presentation is
 
@@ -147,7 +147,7 @@ An especially close antecedent is Pironneau’s transport–diffusion algorithm 
 
 Graphics had its own predecessors: Kass and Miller (1990) used an implicit solver for a shallow-water approximation <a href="#ref-kass-miller">[11]</a>, while Foster and Metaxas (1997) supplied Stam’s explicit three-dimensional gas-simulation baseline <a href="#ref-foster-metaxas">[12]</a>. Stam’s contribution is the simple, robust combination that makes volumetric fluid animation interactive, accepting numerical dissipation. He cites these graphics works and Harlow–Welch; Robert, Pironneau, and Staniforth–Côté are historical comparisons here, not sources cited in his paper.
 
-## Fourier projection: one small matrix per wave
+## Fourier representation of the projection {#fourier-projection-one-small-matrix-per-wave}
 
 For a Fourier mode $$e^{ik\cdot x}$$, with $$k=(2\pi/L)(j_1,j_2)$$, differentiation becomes multiplication by $$ik$$. Thus, for $$k\ne0$$,
 
@@ -191,7 +191,7 @@ In practice: transform the two velocity components, apply these multipliers, inv
 
 </aside>
 
-## What “stable” really means
+## Numerical stability and accuracy {#what-stable-really-means}
 
 <span id="proposition-3"></span>
 

@@ -14,7 +14,7 @@ embedded_experiment: true
 
 <!--more-->
 
-## Uncrossing: the cost matters
+## Uncrossing for Euclidean length {#uncrossing-the-cost-matters}
 
 <p>Let \(x_1,\ldots,x_n\) be red points and \(y_1,\ldots,y_n\) blue points in the plane. A perfect matching is a permutation \(\sigma\), with mean length</p>
 
@@ -65,7 +65,7 @@ $$
 
 </details>
 
-## Counting the survivors
+## Catalan enumeration of noncrossing matchings {#counting-the-survivors}
 
 <p>Place \(2n\) points on a strictly convex polygon, with red and blue colors alternating around its boundary. Every noncrossing chord separates two arcs, and points on either arc must be matched internally. This recursive geometry is exactly the Catalan recursion <a href="#ref-stanley">[2]</a>.</p>
 <p id="theorem-1"><strong>Theorem 1 (Catalan multiplicity).</strong> The number of noncrossing red–blue perfect matchings of these alternating vertices is</p>
@@ -120,7 +120,7 @@ $$
 
 </details>
 
-## Uniform exploration without rejection
+## Uniform sampling of noncrossing matchings {#uniform-exploration-without-rejection}
 
 <p>Drawing a random permutation and rejecting all crossings quickly becomes wasteful. The counting proof gives a direct sampler instead.</p>
 <p id="proposition-2"><strong>Proposition 2 (an exact uniform sampler).</strong> Choose the partner \(2k+1\) of vertex \(0\) with probability</p>
@@ -151,7 +151,7 @@ $$
 
 <p>Choosing \(k\) uniformly would be wrong: splits with more possible completions must receive more probability. This is a general recipe for exact combinatorial sampling—weight each branch of a recursive construction by its number of completions.</p>
 
-## Improvement is different from exploration
+## Local descent and noncrossing constraints {#improvement-is-different-from-exploration}
 
 <p>A simple local move chooses two red points and swaps their blue destinations. Reject the move if it introduces a crossing. Otherwise, the change in mean length is</p>
 

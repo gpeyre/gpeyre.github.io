@@ -42,7 +42,7 @@ The analogy is particularly striking on the simplex of probability vectors with 
 
 <!--more-->
 
-## The linear picture
+## Positive Markov matrices {#the-linear-picture}
 
 Let $$P$$ be a **strictly positive, column-stochastic** matrix:
 
@@ -66,7 +66,7 @@ Strict positivity is important here: an arbitrary stochastic matrix can have sev
   <figcaption>Successive images of the simplex under positive linear operators.</figcaption>
 </figure>
 
-## The nonlinear picture
+## Sinkhorn scaling {#the-nonlinear-picture}
 
 For strictly positive probability vectors $$a,b$$, a cost matrix $$C$$, and $$\varepsilon>0$$, let $$K_{ij}=e^{-C_{ij}/\varepsilon}>0$$. Entropically regularized optimal transport seeks
 
@@ -110,7 +110,7 @@ $$
 
 At the default $$\varepsilon=0.22$$, this kernel is close to the identity, so the contraction is gradual. Each boundary is obtained by applying the full nonlinear update to densely sampled points along all three edges. The map extends to the closed simplex because $$K$$ is strictly positive. **Step** advances exactly one iteration; the playback-speed control changes only how long each iterate is shown.
 
-## Why “nonlinear Perron–Frobenius”?
+## Hilbert’s projective metric {#why-nonlinear-perronfrobenius}
 
 For positive vectors, Hilbert’s projective distance is
 

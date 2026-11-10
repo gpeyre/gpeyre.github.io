@@ -1,6 +1,6 @@
 ---
 title: "Bures’ distance and square roots of covariances"
-subtitle: "Fix a Gaussian coordinate system—or optimally align it. Two simple choices, two geometries."
+subtitle: "Comparing Bures distance with the distance between covariance square roots."
 description: "Bures geometry optimally aligns covariance factors; linear optimal transport fixes their symmetric square roots. Short proofs explain commuting equality and the sharp square-root-of-two comparison, with interactive Gaussian ellipses."
 date: "2026-10-31"
 topic: "Gaussian optimal transport and matrix geometry"
@@ -50,7 +50,7 @@ If $$S\succeq0$$ and $$S^2=A$$, then $$SA=AS$$, so $$S$$ preserves every eigensp
 
 In particular, if $$Z\sim\mathcal N(0,I)$$, then $$A^{1/2}Z\sim\mu_A$$. The covariance records <em>squared</em> lengths; its square root acts on lengths themselves. This is why square roots, not raw covariances, are the natural objects below.
 
-## Bures geometry: choose the best alignment
+## Bures distance and optimal alignment {#bures-geometry-choose-the-best-alignment}
 
 The <em>Bures–Wasserstein distance</em> on $$\mathbb S_+^d$$ is
 
@@ -144,7 +144,7 @@ For singular endpoints, apply the result to $$A+\delta I,B+\delta I$$ and let $$
 
 This identification explains why Bures is a natural <em>metric</em>: it is the restriction of Wasserstein geometry to centered Gaussians <a href="#ref-dowson">[4]</a>, <a href="#ref-gelbrich">[5]</a>. For noncentered Gaussians, simply add the squared distance between their means.
 
-### From Gaussian transport to FID
+### Gaussian optimal transport and the Fréchet Inception Distance {#from-gaussian-transport-to-fid}
 
 An important application is the <em>Fréchet Inception Distance</em> (FID), introduced by Heusel et al. to evaluate image generators <a href="#ref-fid">[8]</a>. Pass real and generated images through a fixed pretrained Inception-v3 network, then estimate the mean and covariance of its last-pooling-layer feature vectors. Writing these as $$(m_r,C_r)$$ and $$(m_g,C_g)$$, FID compares their Gaussian approximations:
 
@@ -155,7 +155,7 @@ $$
 
 Bures geometry supplies exactly the covariance term. Despite its name, the conventional score is a <em>squared</em> Wasserstein distance. It is exact optimal transport between the fitted feature Gaussians—not between the original image distributions. A lower score means closer first two feature moments; matching those moments alone does not imply matching the entire feature distribution.
 
-### A quantum connection
+### Bures distance for density matrices {#a-quantum-connection}
 
 <figure class="portrait-single"><img src="{{ '/blog/imgs/donald-bures.jpg' | relative_url }}" alt="Portrait of Donald John Charles Bures" width="261" height="334" loading="lazy"><figcaption>Donald Bures. Photograph credited to the University of British Columbia in <a href="https://math.artsandsciences.baylor.edu/sites/g/files/ecbvkj1786/files/2024-12/Witte-BAF22.pdf#page=16">N. S. Witte’s Baylor Analysis Fest slides</a> (2022), slide 16. The photographer and date are not specified.</figcaption></figure>
 
@@ -169,7 +169,7 @@ $$
 
 Some conventions call $$F_{\mathrm{root}}^2$$ the fidelity. For commuting diagonal states, Bures reduces to the square-root distance between probability vectors, closely related to Hellinger distance. Our interpolations below live on the <em>whole covariance cone</em>; they are not constrained to remain trace-one quantum states.
 
-## Fix the alignment: linear optimal transport
+## Linear optimal transport with an isotropic reference {#fix-the-alignment-linear-optimal-transport}
 
 <p>One can also use the ordinary Frobenius distance \(\|A-B\|_{\mathrm F}\), but this is <em>not</em> the linear optimal transport distance in this story. The latter is</p>
 
@@ -214,7 +214,7 @@ $$
 d_{\mathrm B}(A,B)\le d_{\mathrm{root}}(A,B).
 $$
 
-## When do the two distances agree?
+## Equality for commuting covariances {#when-do-the-two-distances-agree}
 
 <span id="theorem-2"></span>
 
@@ -252,7 +252,7 @@ Equality forces $$u_i=v_i$$ for each positive singular value, so it holds exactl
 
 </details>
 
-## A sharp comparison, independent of dimension
+## Dimension-independent comparison bounds {#a-sharp-comparison-independent-of-dimension}
 
 <span id="theorem-3"></span>
 
@@ -303,7 +303,7 @@ The constant one is attained by distinct commuting covariances. Adding a small m
 
 </details>
 
-### Why Letrouit–Manole goes much further
+### The Letrouit–Manole stability estimate {#why-letrouitmanole-goes-much-further}
 
 <p>Theorem 1.1 of <a href="#ref-letrouit-manole">[1]</a> considers a reference density \(\rho\propto e^{-V}\) for which \(V-\kappa|x|^2/2\) is convex, with \(\kappa&gt;0\). For convex potentials \(\varphi_0,\varphi_1\) whose gradients are in \(L^2(\rho)\), it proves</p>
 
@@ -336,7 +336,7 @@ Diagonalize $$P-Q$$ with eigenvalues $$\eta_i$$. Rotational invariance makes the
 
 Their theorem therefore gives exactly the lower bound of Theorem 3. The striking generalization is that the potential inequality survives well beyond quadratic potentials and Gaussian target measures.
 
-## Two barycentric interpolations
+## Bures and square-root interpolations {#two-barycentric-interpolations}
 
 Distances determine how to interpolate. For positive definite endpoints and $$t\in[0,1]$$, compare
 

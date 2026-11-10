@@ -33,7 +33,7 @@
   <p class="draft-status">Alpha preview · Work in progress</p>
   <p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
   <h1>Weak transport and mean-preserving spreads</h1>
-  <p class="subtitle">Move the conditional means, then let the mass spread for free.</p>
+  <p class="subtitle">Optimal transport with a cost on conditional means, and its relation to convex order.</p>
   <p class="byline">Gabriel Peyré</p>
 </div></header>
 <main class="wrap"><article class="blog-prose">
@@ -41,7 +41,7 @@
 <p>Barycentric weak transport measures precisely this average displacement. It distinguishes moving a population’s conditional means from spreading mass around those means. This leads to a beautiful connection with convex order and martingales: first transport to a suitable intermediate distribution, then apply a mean-preserving spread. The construction belongs to the theory of weak transport <a href="#ref-general">[1]</a>; its projection structure is developed by Gozlan and Juillet <a href="#ref-gozlan">[2]</a> and Backhoff-Veraguas, Beiglböck, and Pammer <a href="#ref-backhoff">[3]</a>.</p>
 <aside class="note"><p>In <em>Optimal Transport for Machine Learners</em> <a href="#ref-book">[4]</a>, the relevant results are <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.12.6.33">Proposition 12.33, printed p. 273</a>, on barycentric projection, and <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.12.6.44">Proposition 12.44, printed p. 278</a>, on the Brenier–Strassen projection, in §12.6.</p></aside>
 
-<h2>One coupling, two costs</h2>
+<h2>Classical and barycentric transport costs</h2>
 <p>Let \(\alpha,\beta\in\mathcal P_2(\mathbb R^d)\): probability measures with finite second moments. A coupling \(\pi\in\Pi(\alpha,\beta)\) is a joint distribution of \((X,Y)\) with these marginals. Disintegrate it as \(\pi(dx,dy)=\alpha(dx)\pi_x(dy)\). Its <em>barycentric projection</em> is</p>
 \[
  T_\pi(x)=\int y\,d\pi_x(y)=\mathbb E[Y\mid X=x].
@@ -65,7 +65,7 @@
 \]
 <p>The cross term vanishes after conditioning on \(X\). Weak transport pays for the first term and ignores the conditional variance in the second. In particular \(0\le V(\alpha,\beta)\le W_2(\alpha,\beta)^2\).</p>
 
-<h2>Convex order: a precise notion of being more spread out</h2>
+<h2>Convex order and martingale couplings</h2>
 <p>Write \(\eta\preceq_{\mathrm{cx}}\beta\) if</p>
 \[
  \int\varphi\,d\eta\le\int\varphi\,d\beta
@@ -165,7 +165,7 @@
 </details>
 <p>The full Brenier–Strassen theorem goes further: \(T_*\) can be represented, \(\alpha\)-almost everywhere, by the gradient of a convex \(C^1\) function whose gradient is \(1\)-Lipschitz <a href="#ref-gozlan">[2]</a>, <a href="#ref-backhoff">[3]</a>. That regularity is a deeper structural result; the projection identity and uniqueness above already follow from conditional expectations and convexity.</p>
 
-<h2>Projecting an OT plan is a different operation</h2>
+<h2>Comparison with barycentric projection of an OT plan</h2>
 <p>One can also start with an <em>ordinary</em> quadratic OT optimizer \(\pi_{\mathrm{OT}}\) and take its barycentric map \(T_{\mathrm{OT}}\). This map solves OT from \(\alpha\) to its own output law \((T_{\mathrm{OT}})_\#\alpha\), but it does not usually solve the weak problem.</p>
 <p id="proposition-1"><strong>Proposition 1 (optimality to the barycentric output).</strong> If \(\pi\) minimizes ordinary quadratic transport from \(\alpha\) to \(\beta\), then</p>
 \[
@@ -250,7 +250,7 @@
 \]
 <p>It follows from Jensen because \(\int T_\pi\,d\alpha=m_\beta\). Dragging changes the centroids without automatic recentering. Even when the centroids agree, weak cost need not vanish: finite clouds with the same mean need not be ordered in convex order.</p>
 
-<h2>Why the intermediate law is useful</h2>
+<h2>Interpretation of the intermediate distribution</h2>
 <p>Weak transport separates a deterministic correction from residual uncertainty. It asks which conditional means can be assigned to source points while retaining exactly the prescribed target distribution. That is a different modeling question from making every individual displacement small.</p>
 <p>The same convex-order constraint appears in martingale optimal transport and model-independent finance: distributions at two times must be compatible with a martingale, while one optimizes over the remaining joint dependence <a href="#ref-finance">[7]</a>. Weak transport turns failure of that compatibility into an optimization problem: move the initial law as little as possible until a mean-preserving spread becomes feasible.</p>
 <p>The important distinction is between the law of the conditional means and the final law. The first is selected by an optimal map; the second may require splitting every particle. Keeping both visible makes the term “weak” precise.</p>

@@ -1,6 +1,6 @@
 ---
 title: "Why KL belongs to two divergence families"
-subtitle: "Density ratios and convex tangent planes meet at a rigid intersection."
+subtitle: "A characterization of KL among f-divergences and Bregman divergences."
 description: "Definitions and examples of phi-divergences and Bregman divergences, with a short measure-level proof that their smooth overlap is precisely scaled Kullback–Leibler divergence."
 date: "2026-11-07"
 topic: "Information geometry and convexity"
@@ -61,7 +61,7 @@ embedded_experiment: true
 <figcaption>Csiszár developed the density-ratio viewpoint <a href="#ref-csiszar">[5]</a>; Fisher’s information is the local quadratic geometry shared by the smooth divergences below <a href="#ref-fisher">[6]</a>. Left: Konrad Jacobs, MFO, 1976, <a href="https://commons.wikimedia.org/wiki/File:ImreCsiszar1976.jpg">source</a>, <a href="https://creativecommons.org/licenses/by-sa/2.0/de/deed.en">CC BY-SA 2.0 Germany</a>, unmodified. Right: anonymous 1913 photograph, University of Adelaide archive via <a href="https://commons.wikimedia.org/wiki/File:Youngronaldfisher2.JPG">Wikimedia Commons</a>, public domain.</figcaption>
 </figure>
 
-## First construction: compare density ratios
+## Definition of f-divergences {#first-construction-compare-density-ratios}
 
 <p>Let \(\alpha=p\,\omega\) and \(\beta=q\,\omega\) be probability measures with positive densities relative to a finite reference measure \(\omega\). For a convex function \(\phi:(0,\infty)\to\mathbb R\) satisfying \(\phi(1)=0\), define the <em>\(\phi\)-divergence</em>, also called an \(f\)-divergence, by</p>
 
@@ -84,7 +84,7 @@ $$
 
 <p>These are KL, half the Pearson \(\chi^2\) divergence, and squared Hellinger distance with the displayed normalization. For probabilities, the linear terms in the KL generator integrate to zero. More generally, replacing \(\phi(r)\) by \(\phi(r)+a(r-1)\) leaves the divergence unchanged.</p>
 
-### One family, several geometries
+### The power-divergence family {#one-family-several-geometries}
 
 <p>To compare shapes rather than arbitrary linear terms, normalize the generators by \(\phi(1)=\phi'(1)=0\). For the pictures, also fix \(\phi''(1)=1\). A convenient power-divergence family is <a href="#ref-cressie-read">[7]</a></p>
 
@@ -124,7 +124,7 @@ $$
 
 </details>
 
-## Second construction: subtract a tangent plane
+## Definition of Bregman divergences {#second-construction-subtract-a-tangent-plane}
 
 <p>Let \(\Phi\) be a differentiable convex functional on a convex set of densities. Its <em>Bregman divergence</em> is</p>
 
@@ -159,7 +159,7 @@ $$
 
 <p>has divergence \(\frac12|\int\psi\,d\alpha-\int\psi\,d\beta|^2\). It can vanish for different measures with the same features. “Divergence” therefore does not automatically mean a metric, or even a discrepancy separating every pair of laws.</p>
 
-## A short rigidity theorem
+## Characterization of the common divergence {#a-short-rigidity-theorem}
 
 <p>For a precise domain, normalize the finite reference measure so that \(\omega(E)=1\), and assume it has a measurable set \(A\) with \(0&lt;\omega(A)&lt;1\). Let \(\mathcal D\) be all probability densities bounded above and bounded away from zero; the bounds may depend on the density.</p>
 <p id="theorem-1"><strong>Theorem 1 (the smooth intersection is KL).</strong> Suppose \(\phi\in C^2(0,\infty)\) is convex with \(\phi(1)=0\), and \(\Phi\) is convex and twice differentiable along bounded zero-mass density directions. If</p>
@@ -237,7 +237,7 @@ $$
 
 <p>This common quadratic form is the Fisher information metric; it does not make Hellinger or Pearson divergence equal to KL. Rigidity comes from requiring one Bregman generator to realize the divergence for <em>all pairs</em>. Its Hessian at every base point then determines its tangent-plane remainders globally. If the divergence separates distinct laws, the scale in Theorem 1 must satisfy \(\kappa&gt;0\); \(\kappa=0\) gives the identically zero divergence.</p>
 
-## Why this matters for algorithms
+## KL regularization and multiplicative updates {#why-this-matters-for-algorithms}
 
 <p>The derivative of entropy is logarithmic. On a finite probability simplex, minimizing a linear cost regularized by KL gives an explicit multiplicative step:</p>
 

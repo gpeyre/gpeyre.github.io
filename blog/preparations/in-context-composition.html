@@ -22,7 +22,7 @@
   <p class="draft-status">Alpha preview · Work in progress</p>
   <p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
   <h1>In-context composition</h1>
-  <p class="subtitle">Moving a point also changes the world in which the next layer acts.</p>
+  <p class="subtitle">Composing transformer layers requires updating the context as well as the query.</p>
   <p class="byline">Gabriel Peyré</p>
 </div></header>
 <main class="wrap">
@@ -31,7 +31,7 @@
 
 <p>In <em>Transformers are Universal In-context Learners</em>, with Takashi Furuya and Maarten de Hoop, we called the resulting operation <em>in-context composition</em> and denoted it by \(\diamond\) <a href="#ref-universality">[1]</a>. Its definition uses a pushforward of the context measure. There is a simple way to understand the whole construction: enlarge the state to include both the measure and the query. Then this apparently twisted composition becomes ordinary composition. The same viewpoint connects successive layers to particle transport and to an advection equation.</p>
 
-<h2>A function of a distribution and a point</h2>
+<h2>Context-dependent maps</h2>
 <p>A context is a probability measure \(\mu\) on \(\mathbb R^d\). For a finite collection of tokens, its empirical distribution is</p>
 \[
   \mu=\frac1n\sum_{i=1}^n\delta_{x_i}.
@@ -46,7 +46,7 @@
 
 <p>To keep all formulas well defined, we work with compactly supported probability measures and maps continuous in the spatial variable. Their pushforwards then remain compactly supported. All maps in the main discussion have values in the same \(\mathbb R^d\); different embedding dimensions are also possible when successive domains and ranges match. Regularity with respect to \(\mu\) will enter later.</p>
 
-<h2>Pushforward: move the points, carry their mass</h2>
+<h2>Pushforward measures</h2>
 <p>For a measurable map \(T:\mathbb R^d\to\mathbb R^d\), the <em>pushforward</em> \(T_\#\mu\) is the distribution after applying \(T\). For a Borel set \(B\),</p>
 \[
   (T_\#\mu)(B)=\mu(T^{-1}(B)).
@@ -65,7 +65,7 @@
   (S\circ T)_\#\mu=S_\#(T_\#\mu).
 \]
 
-<h2>The next layer must see the updated context</h2>
+<h2>Definition of in-context composition</h2>
 <p>Apply \(g\) first. Its spatial map is \(g_\mu\), so the new query and context are \(g_\mu(x)\) and \((g_\mu)_\#\mu\). Applying \(f\) next therefore means</p>
 \[
   \begin{aligned}
@@ -126,7 +126,7 @@
 
 <p>Thus in-context maps form a monoid: they can be composed associatively and have an identity. The lift identifies them with a family of ordinary maps closed under composition. If both maps ignore the context, \(f(\mu,x)=F(x)\) and \(g(\mu,x)=G(x)\), then \((f\diamond g)(\mu,x)=F(G(x))\).</p>
 
-<h2>A revealing example: center the cloud twice</h2>
+<h2>Idempotence of centering</h2>
 <p>Let \(m(\mu)=\int y\,d\mu(y)\) be the mean and consider centering:</p>
 \[
   c(\mu,x)=x-m(\mu).
@@ -214,7 +214,7 @@
 \]
 <p>The nonlinear evolution is a semigroup under in-context composition. Its lift is an ordinary semigroup on measure–point pairs. If the velocity also depends explicitly on depth, one instead uses a two-time evolution family.</p>
 
-<h2>An exactly solvable flow: attraction to the mean</h2>
+<h2>Explicit solution for attraction to the mean</h2>
 <p>Take \(v[\mu](x)=m(\mu)-x\). A discrete step gives</p>
 \[
   g_h(\mu,x)=(1-h)x+h\,m(\mu).
@@ -230,7 +230,7 @@
 \]
 <p>The distribution contracts around its conserved mean, and its covariance decays as \(e^{-2t}\). The identity \(F_{s+t}=F_s\diamond F_t\) can be checked directly because every intermediate distribution has the same mean. This is a simple model of consensus; general attention dynamics need not preserve the mean or follow this particular contraction.</p>
 
-<h2>Why the Wasserstein viewpoint is natural</h2>
+<h2>Wasserstein stability</h2>
 <p>A measure-based description should be stable when the context points move. The \(1\)-Wasserstein distance compares distributions by coupling their points:</p>
 \[
   W_1(\mu,\nu)=\inf_{\pi\in\Pi(\mu,\nu)}
@@ -266,7 +266,7 @@
 
 <p>Such estimates connect finite clouds to continuous contexts and allow errors to be propagated across layers. Attention regularity is studied in <a href="#ref-regularity">[6]</a>; our universality paper uses continuity in the context measure to formulate approximation uniformly over its number of tokens <a href="#ref-universality">[1]</a>.</p>
 
-<h2>Related viewpoints and a few boundaries</h2>
+<h2>Related constructions and limitations</h2>
 <p>The pushed measure \(P_f(\mu)\) records where the population ends up, but it does not retain every pointwise correspondence. For a distribution symmetric about the origin, the identity and reflection \(x\mapsto-x\) give the same updated measure while moving a tagged query differently. This is why the measure–point lift contains more information than the measure update alone.</p>
 
 <p>Architectures acting compositionally on distributions also appear in our earlier <em>Stochastic Deep Networks</em> with Gwendoline de Bie and Marco Cuturi <a href="#ref-stochastic">[7]</a>. The distinctive feature emphasized here is to keep the tagged-point map visible together with its induced distribution update.</p>

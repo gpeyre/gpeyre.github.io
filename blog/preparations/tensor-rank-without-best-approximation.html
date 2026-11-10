@@ -9,7 +9,7 @@
 <p>But for tensors there is an obstruction before algorithms even enter the picture. The best approximation may not exist. Already for a \(2\times2\times2\) array, a sequence of tensors with two rank-one terms can approach a tensor that needs three. The approximation error tends to zero while the individual components blow up.</p>
 <p>This beautiful example is part of the systematic analysis of de Silva and Lim <a href="#ref-desilva">[1]</a>. We will prove it using only two matrix slices and a determinant.</p>
 
-<h2>What is the rank of a tensor?</h2>
+<h2>Tensor rank</h2>
 <p>An order-\(d\) tensor is an array \(T\in\mathbb R^{n_1\times\cdots\times n_d}\). The outer product of \(d\) vectors is the array</p>
 \[
  (u^{(1)}\otimes\cdots\otimes u^{(d)})_{i_1,\ldots,i_d}
@@ -77,7 +77,7 @@
 </div></details>
 <p>The <em>border rank</em> of a tensor is the smallest \(r\) such that it belongs to the closure of \(\mathcal R_r\). Thus border rank counts how many terms are sufficient with arbitrarily small error, whereas CP rank counts how many are needed exactly. For \(W\), these answers differ.</p>
 
-<h2>The cancellation is not a numerical accident</h2>
+<h2>Tangent directions and border rank</h2>
 <p>Consider the rank-one curve \(\gamma(t)=(e_1+te_2)^{\otimes3}\). Our tensor is \(W=\gamma'(0)\), and \(T_\varepsilon\) is its secant slope. A tangent direction to the rank-one cone can require three terms even though every secant slope uses two <a href="#ref-lim">[3]</a>.</p>
 <figure><svg viewBox="0 0 660 220" role="img" aria-labelledby="tensor-diagram-title" style="width:100%;height:auto"><title id="tensor-diagram-title">Secants to a rank-one curve approach a tangent; their difference quotient approaches W, which has rank three.</title><defs><marker id="tensor-arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="#087f8c"/></marker></defs><path d="M35 181 C120 177 220 150 340 48" fill="none" stroke="#bbcbd0" stroke-width="4"/><path d="M105 170 L309 72" fill="none" stroke="#d69757" stroke-width="3"/><path d="M105 170 L340 112" fill="none" stroke="#087f8c" stroke-width="3" marker-end="url(#tensor-arrow)"/><circle cx="105" cy="170" r="5" fill="#173543"/><circle cx="309" cy="72" r="5" fill="#d69757"/><text x="34" y="209" fill="#173543" font-size="15">γ(0)</text><text x="262" y="42" fill="#173543" font-size="15">γ(ε)</text><text x="390" y="88" fill="#173543" font-size="17">Secant slopes: rank ≤ 2</text><text x="390" y="121" fill="#087f8c" font-size="17">Tangent W: rank = 3</text><text x="390" y="158" fill="#62757d" font-size="14">Schematic, not an isometric plot</text></svg><figcaption>A derivative can be more expensive to represent exactly than the finite differences approaching it.</figcaption></figure>
 <p>The norms of the two components in \(T_\varepsilon\) are</p>
@@ -87,7 +87,7 @@
 \]
 <p>They diverge, but their difference stays bounded. More generally, any sequence of two-term decompositions converging to \(W\) must have unbounded component norms along a subsequence. Otherwise normalize each component’s factors, absorb their norms into bounded scalar coefficients, and extract convergent subsequences. The limit would be a two-term decomposition of \(W\), which is impossible. This is a representational degeneracy, not a failure of a particular optimizer.</p>
 
-<h2>What remains closed?</h2>
+<h2>Closedness of bounded-rank sets</h2>
 <p id="proposition-1"><strong>Proposition 1.</strong> The set \(\mathcal R_1\) is closed for tensors of any order. For matrices, every set \(\mathcal R_r\) is closed.</p>
 <details class="blog-proof"><summary>Proof: compact unit factors, or vanishing minors</summary><div class="blog-proof-body">
 <p>Write a convergent rank-at-most-one sequence as \(S_k=\lambda_k u_{1,k}\otimes\cdots\otimes u_{d,k}\), with unit factors. Zero terms cause no difficulty. Because \(\lVert S_k\rVert_F=|\lambda_k|\), the coefficients are bounded. Compactness of the unit spheres gives a subsequence on which all factors and the coefficient converge; its limit is again rank at most one.</p>

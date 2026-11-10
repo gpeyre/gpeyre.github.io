@@ -1,6 +1,6 @@
 ---
 title: "From Classical to Quantum Pinsker Inequality"
-subtitle: "One sign set, one matrix sign, and the same sharp constant."
+subtitle: "Proving Pinsker’s inequality for probability distributions and density matrices."
 description: "A self-contained proof of classical and quantum Pinsker: reduce probabilities to a sign set, then test matrix entropy curvature against a sign observable. The sharp constant survives noncommutativity."
 date: "2026-11-05"
 topic: "Classical and quantum information"
@@ -55,7 +55,7 @@ embedded_experiment: true
 <p>All logarithms are natural, and all matrices are finite-dimensional. The classical and quantum inequalities are standard; see Watrous <a href="#ref-watrous">[1]</a> and Wirth <a href="#ref-wirth">[2]</a>. The purpose here is a direct matrix-calculus proof, without assuming the quantum data-processing theorem.</p>
 <figure class="portrait-figure"><img src="{{ '/blog/preparations/assets/pinsker-simplex/mark-pinsker.jpg' | relative_url }}" alt="Mark Pinsker in Leningrad in 1976" width="180" height="247" loading="lazy" decoding="async"><figcaption>Mark Pinsker, Leningrad, 1976. Photograph: Konrad Jacobs, <a href="https://opc.mfo.de/detail?photo_id=3300">Oberwolfach Photo Collection</a>, <a href="https://creativecommons.org/licenses/by-sa/2.0/de/deed.en">CC BY-SA 2.0 Germany</a>. Unmodified image; <a href="https://commons.wikimedia.org/wiki/File:Pinsker_mark.jpg">source and license record</a>.</figcaption></figure>
 
-## First, two classical outcomes are enough
+## Classical Pinsker inequality by binary reduction {#first-two-classical-outcomes-are-enough}
 
 <p>For probability vectors \(a,b\), define the relative entropy and the full \(\ell^1\) discrepancy by</p>
 
@@ -123,7 +123,7 @@ $$
 
 <p>The proof also works for probability measures. Take densities with respect to their sum and replace finite sums by integrals. The sign set remains the event that detects the full total variation discrepancy.</p>
 
-## What replaces the sign set for matrices?
+## Quantum Pinsker inequality and the matrix sign {#what-replaces-the-sign-set-for-matrices}
 
 <p>A <em>density matrix</em> is a positive semidefinite Hermitian matrix of trace one. Its eigenvalues are probabilities, but its eigenvectors also matter. For two such matrices, the Umegaki relative entropy <a href="#ref-umegaki">[3]</a> and the trace norm are</p>
 
@@ -228,7 +228,7 @@ $$
 
 </details>
 
-## Why the constant cannot improve
+## Sharpness of the constant {#why-the-constant-cannot-improve}
 
 <p>A noncommutative inequality must include commuting examples. Take</p>
 

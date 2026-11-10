@@ -1,7 +1,6 @@
 ---
 title: DC programming and Toland duality
-subtitle: A difference of convex functions, two minimization problems, and a surprisingly
-  simple convex dual.
+subtitle: How convex conjugates relate two DC problems, and when the dual is convex.
 description: Difference-of-convex optimization, canonical curvature splitting in
   one dimension, nonunique minimal quadratic splits, and Toland duality, with
   an interactive decomposition and a nonconvex problem whose dual is convex.
@@ -66,7 +65,7 @@ The same construction also gives an algorithm. The key is to introduce a slope a
 
 <!--more-->
 
-## Two convex functions make one nonconvex problem
+## Difference-of-convex optimization {#two-convex-functions-make-one-nonconvex-problem}
 
 Let $$F,G:\mathbb R^d\to\mathbb R$$ be finite convex functions, and consider
 
@@ -106,7 +105,7 @@ The two basic identities are $$F=F^{**}$$, which reconstructs a convex function 
     <figcaption>Werner Fenchel (1905–1988). Photograph by Konrad Jacobs, 1972, Oberwolfach Photo Collection, via <a href="https://commons.wikimedia.org/wiki/File:Werner_Fenchel.jpeg">Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/2.0/de/deed.en">CC BY-SA 2.0 DE</a>; reproduced unchanged.</figcaption>
   </figure>
 
-## Toland duality in three lines
+## Toland duality {#toland-duality-in-three-lines}
 
 Conjugation reverses the two terms. Notice that the dual is another *minimization* problem, generally another DC problem.
 
@@ -244,7 +243,7 @@ Take a subsequence $$x_{k_j}\to\bar x$$. Since $$G$$ is finite and convex on all
 
 </details>
 
-## Is there a canonical DC decomposition?
+## Minimal DC decompositions {#is-there-a-canonical-dc-decomposition}
 
 Adding the same convex function to both terms hides curvature that cancels in the difference. To compare decompositions, it is therefore more meaningful to compare *convexity* than function values. Write
 
@@ -258,7 +257,7 @@ For twice differentiable functions, this means $$\nabla^2F_1\preceq\nabla^2F_2$$
 
 A decomposition $$\Phi=F-G$$ is *minimal* if there is no non-affine convex function $$R$$ that can be subtracted from both terms while keeping $$F-R$$ and $$G-R$$ convex. A *least* decomposition is stronger: it lies below **every** other decomposition in this order. Every least decomposition is minimal, but minimal ones can be incomparable. This distinction already appears in Hartman's foundational paper [[12, Section 6]](#ref-12).
 
-### In one dimension: split the curvature, then integrate twice
+### Canonical decomposition in one dimension {#in-one-dimension-split-the-curvature-then-integrate-twice}
 
 Let $$\Phi\in C^2([a,b])$$. Define the positive and negative curvature by
 
@@ -314,7 +313,7 @@ So $$R$$ is convex. If it is not affine, it is precisely a removable common conv
 
 The key picture is that positive and negative curvature never coexist at the same point in the least split. For a nonsmooth one-dimensional DC function on an open interval, the same idea uses the **Jordan decomposition of the signed measure** $$D^2\Phi$$: its mutually singular positive and negative parts are the curvature measures of the two least convex terms. The affine normalization must still be fixed. This extends the construction beyond ordinary second derivatives [[12]](#ref-12).
 
-### In two dimensions: minimal does not mean unique
+### Nonuniqueness of minimal decompositions in two dimensions {#in-two-dimensions-minimal-does-not-mean-unique}
 
 For matrices, positive semidefiniteness is only a partial order; there is no analogue of the scalar minimum that works for every pair. A simple indefinite quadratic already exposes the difference:
 
@@ -384,7 +383,7 @@ An extra optimization criterion can select a preferred split. For example, in th
 
 Nor does least curvature automatically mean the best algorithm. Adding a common quadratic can make DCA subproblems strongly convex and uniquely solvable. Minimality answers a structural question about the representation, not a universal question about speed of optimization.
 
-## Numerical experimentation: watch the curvature split
+## Numerical experimentation: curvature decomposition {#numerical-experimentation-watch-the-curvature-split}
 
 On $$[-2,2]$$, with $$A\geq0$$, consider
 
@@ -402,7 +401,7 @@ The shared-curvature slider adds $$\lambda(x+2)^2/2$$ to **both** terms. It leav
 
 The implementation locates the zeros of $$\Phi''$$ analytically and integrates each constant-sign interval in closed form. The curves are sampled only for drawing; the displayed identity check measures floating-point evaluation error, not a discretized approximation to convexity. [Open the experiment on its own]({{ '/blog/preparations/assets/dc-decomposition/index.html' | relative_url }}).
 
-  <h2 id="why-convex-dual">What a convex dual actually buys us</h2>
+  <h2 id="why-convex-dual">Advantages of a convex dual</h2>
 
 Assume the common optimal value is finite and $$\Psi=G^*-F^*$$ is convex on its feasible set $$D=\operatorname{dom}G^*$$. We can then work with a genuine convex minimization problem instead of searching the nonconvex landscape of $$\Phi$$. Every local minimizer of $$\Psi$$ on $$D$$ is global. First-order optimality can now certify the answer: when the objective has a differentiable extension to a neighborhood of $$D$$, the condition is
 
@@ -556,7 +555,7 @@ Both terms are nonnegative and vanish together only at $$x=x_k$$. The unique upd
 
 </details>
 
-## Why the example works: smoothing by infimal convolution
+## Moreau envelopes and infimal convolution {#why-the-example-works-smoothing-by-infimal-convolution}
 
 The Huber function is the Moreau envelope of the absolute value. More generally, given a finite convex $$F$$ and $$\lambda>0$$, define [[9]](#ref-9)
 
@@ -616,7 +615,7 @@ There is no contradiction with Proposition 1: $$\partial F^*(0)$$ is empty. Inde
 
 </details>
 
-  <h2 id="carlier-convex-reformulation">Carlier's example: a linear objective hidden inside transport</h2>
+  <h2 id="carlier-convex-reformulation">Carlier’s convex reformulation of a transport energy</h2>
 
 Carlier's transport example [[3, Section 3]](#ref-3) makes the benefit tangible. Let $$\mu_+,\mu_-$$ have densities on a bounded open convex set $$\Omega$$, and let $$K\subset\mathbb R^d$$ be nonempty, compact and convex. All measures here are probabilities. Consider
 

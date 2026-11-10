@@ -1,6 +1,6 @@
 ---
 title: "The perspective transform: convexity on measures"
-subtitle: "Density ratios, momentum, and the same one-line construction."
+subtitle: "A convexity argument for f-divergences and the Benamou–Brenier transport formulation."
 description: "A short convexity proof connects Csiszár divergences, the Benamou–Brenier action, and transport with mass creation. Perspectives turn density ratios into convex, reference-independent functionals on measures."
 date: "2026-11-09"
 topic: "Convex analysis and optimal transport"
@@ -66,7 +66,7 @@ $$
 <p>Read \(r\) as an amount of mass, \(z/r\) as a quantity per unit mass, and \(f\) as its cost. Multiplying by \(r\) returns a total cost. Convexity of \(f\) then becomes <em>joint</em> convexity in \((z,r)\). This elementary fact explains why both Csiszár divergences and the Benamou–Brenier formulation of optimal transport lead to convex optimization problems. It also tells us how to define these costs for atoms and at zero density.</p>
 <p>We will prove this once, then use it in information geometry, transport, and transport with mass creation. Standard references for the convex construction are Boyd and Vandenberghe <a href="#ref-boyd">[1]</a> and Combettes <a href="#ref-combettes">[2]</a>.</p>
 
-## Mix masses before mixing their ratios
+## Joint convexity of the perspective transform {#mix-masses-before-mixing-their-ratios}
 
 <p>Let \(f:\mathbb R^k\to[0,+\infty]\) be a proper, lower-semicontinuous convex function: it is finite somewhere, and its epigraph is closed. The value \(+\infty\) can encode a constraint. For now take positive masses \(r_0,r_1\) and finite costs.</p>
 <p id="theorem-1"><strong>Theorem 1 (perspective convexity).</strong> The perspective \(P_f\) is jointly convex for \(r>0\). It is also positively one-homogeneous:</p>
@@ -111,7 +111,7 @@ $$
 
 <p>This is the whole mechanism. Mixing two populations means averaging their per-unit quantities according to mass. The same ratio \(z/r\) is unchanged when both quantities are scaled, while the total cost scales linearly.</p>
 
-## What should happen at zero mass?
+## Extension to zero mass and recession functions {#what-should-happen-at-zero-mass}
 
 <p>Dividing by zero is not a definition. The correct extension is determined by the growth of \(f\) at infinity. Its <em>recession function</em> is</p>
 
@@ -228,7 +228,7 @@ $$
 
 <p>This is why one-homogeneity is so useful on measures: changing the reference measure changes all the densities by the same local factor, which cancels in the integral. Convexity here refers to ordinary linear mixtures of measures.</p>
 
-## First example: Csiszár divergences
+## Csiszár divergences {#first-example-csiszár-divergences}
 
 <figure class="portrait-figure">
 <img src="{{ '/blog/preparations/assets/imre-csiszar.jpg' | relative_url }}" width="274" height="400" alt="Imre Csiszár in 1976" loading="lazy">
@@ -285,7 +285,7 @@ $$
 
 </details>
 
-### A short consequence: coarse-graining reduces divergence
+### The data-processing inequality {#a-short-consequence-coarse-graining-reduces-divergence}
 
 <p>Suppose \(p_i,q_i\) are masses on a finite alphabet, and we merge indices into bins \(B\). Let \(p_B=\sum_{i\in B}p_i\) and similarly for \(q_B\).</p>
 <p id="proposition-1"><strong>Proposition 1 (deterministic data processing).</strong> Merging bins cannot increase the divergence:</p>
@@ -331,7 +331,7 @@ $$
 
 <p>Here \(\pi_0,\pi_1\) are the marginals, \(c\ge0\) is a transport cost, and \(\tau_0,\tau_1>0\) control marginal fidelity. Marginalization is linear. The transport term is linear, and the divergence terms are convex. The whole problem is therefore convex in \(\pi\). Joint convexity is useful when the reference measures are also optimized, for example in a reconstruction or barycenter problem with convex additional constraints.</p>
 
-## Second example: the Benamou–Brenier action
+## The Benamou–Brenier action {#second-example-the-benamoubrenier-action}
 
 <figure class="portrait-pair">
 
@@ -433,7 +433,7 @@ $$
 
 <p>For example, transporting \(\delta_a\) to \(\delta_b\) is achieved by \(\rho_t=\delta_{(1-t)a+tb}\) and \(m_t=(b-a)\rho_t\), with action \(\lVert b-a\rVert^2/2\). The measure formulation handles this moving atom directly. Requiring a Lebesgue density would exclude it.</p>
 
-### The Hamilton–Jacobi inequality is the same convexity in dual form
+### Hamilton–Jacobi duality {#the-hamiltonjacobi-inequality-is-the-same-convexity-in-dual-form}
 
 <p>The quadratic perspective has the elementary representation</p>
 
@@ -450,7 +450,7 @@ $$
 
 <p>then every admissible flow has cost at least \(\int\psi(1)\,d\beta-\int\psi(0)\,d\alpha\). Indeed, apply the pointwise inequality with \(b=\nabla\psi\) and integrate using the continuity equation. The compact support makes all these terms integrable. This is the Hamilton–Jacobi constraint underlying the dynamic transport dual <a href="#ref-bb">[7]</a>, and each such potential gives a certificate bounding the optimal cost from below.</p>
 
-## A third example: transport with creation and destruction
+## Transport with creation and destruction {#a-third-example-transport-with-creation-and-destruction}
 
 <p>The same idea allows a source term. Write \(s=rg\), where \(g\) is a per-unit growth rate, and replace continuity by</p>
 
@@ -497,7 +497,7 @@ $$
 
 <p>The square-root geometry of Hellinger therefore appears naturally when mass may change in time, while the momentum term supplies transport in space.</p>
 
-## What this buys us in optimization
+## Consequences for convex optimization {#what-this-buys-us-in-optimization}
 
 <p>The construction suggests a practical modeling rule: express unknowns as amounts, fluxes, or momenta, put the per-unit cost inside a perspective, and keep conservation laws linear. Local costs can then be combined with linear observations and convex constraints without losing convexity.</p>
 <p>For a discretized quadratic transport action, even the epigraph has a simple form. A cell cost \(e\) satisfies</p>

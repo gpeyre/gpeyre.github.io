@@ -51,7 +51,7 @@ Universality means reaching every prescribed uniform error by increasing the net
 
 <!--more-->
 
-## Why convex neural networks?
+## Convex neural network models {#why-convex-neural-networks}
 
 In quadratic optimal transport, the relevant representation is
 
@@ -156,7 +156,7 @@ which proves the claimed bound. $$\square$$
 
 Geometrically, each affine ReLU hinge creates a crease along an entire line. With nonnegative output weights, these creases cannot cancel. The graph of $$\max(0,x,y)$$ instead has three crease rays meeting at one point, without their opposite rays. The finite-point inequality makes this geometric obstruction robust under approximation.
 
-## Deeper ICNNs: the precise class
+## The deep ICNN architecture {#deeper-icnns-the-precise-class}
 
 A depth-$$L$$ ICNN has $$L-1$$ hidden ReLU layers. With arbitrary finite widths, its standard form is the following, where $$z_\ell=z_\ell(x)$$ and the middle recursion applies for $$2\leq\ell\leq L-1$$:
 
@@ -179,7 +179,7 @@ $$
 
 Here $$a\in\mathrm{Aff}$$, $$c_j\geq0$$, and each $$g_j\in\mathcal C_{L-1}$$. The width $$N$$ and the widths inside each $$g_j$$ are arbitrary but finite. Running the subnetworks in parallel gives the usual layered architecture, with no additional depth.
 
-### What growing depth can do
+### Universality with increasing depth {#what-growing-depth-can-do}
 
 Every convex Lipschitz function on a compact convex domain can be approximated uniformly by a finite maximum of affine functions. Such a maximum is an ICNN: add the affine pieces one at a time using
 
@@ -326,7 +326,7 @@ $$
 
 satisfies $$z_3=F$$, so $$F\in\mathcal C_4$$. All hidden-to-hidden weights are $$1$$. With four layers, one neuron per hidden layer already suffices.
 
-## More layers: still no universal fixed depth
+## Non-universality at fixed depth {#more-layers-still-no-universal-fixed-depth}
 
 [Theorem 1](#theorem-1) and [Theorem 2](#theorem-2) are the first two instances of a general phenomenon. Adding a layer resolves each particular counterexample above, but a more complicated target creates a new obstruction. The counterexample must change with the allowed depth.
 

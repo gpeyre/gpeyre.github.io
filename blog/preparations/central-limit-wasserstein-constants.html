@@ -33,7 +33,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p class="draft-status">Alpha preview · Work in progress</p>
 <p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
 <h1>Two symmetric central limit theorems, two rates</h1>
-<p class="subtitle">Symmetry removes skewness. It does not remove the small steps of a lattice.</p>
+<p class="subtitle">Why Bernoulli and uniform sums approach a Gaussian at different Wasserstein rates.</p>
 <p class="byline">Gabriel Peyré</p>
 </div></header>
 <main class="wrap"><article class="blog-prose">
@@ -55,7 +55,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 \]
 <p>The difference comes from the small staircases in the coin-sum CDF. Their width is still of order \(n^{-1/2}\), regardless of symmetry. This is the phenomenon behind <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.10.1.3">Propositions 10.3–10.4 of <em>Optimal Transport for Machine Learners</em></a> <a href="#ref-book">[1]</a>.</p>
 
-<h2>Wasserstein distance is an area between CDFs</h2>
+<h2>The CDF formula for one-dimensional Wasserstein distance</h2>
 <p>For probability laws \(\mu,\nu\) on the line with finite first moments,</p>
 \[
  \begin{aligned}
@@ -67,7 +67,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p>The optimal coupling matches equal quantiles. The area between quantile graphs equals the area between the CDF graphs, which gives the second formula <a href="#ref-computational">[2]</a>. The absolute value matters: positive and negative CDF errors cannot cancel.</p>
 <p>Let \(X_1,X_2,\ldots\) be independent copies of a centered, unit-variance variable \(X\), and put \(S_n=n^{-1/2}\sum_{i=1}^nX_i\). Write \(F_n\) for its CDF and \(\Phi,\phi\) for the standard Gaussian CDF and density. We need to understand the <em>shape</em> of \(F_n-\Phi\), not just bound its maximum.</p>
 
-<h2>A lattice leaves a sawtooth</h2>
+<h2>Lattice corrections</h2>
 <p>A lattice of span \(h\) is a set \(a+h\mathbb Z\). The <em>maximal span</em> is the largest spacing of a lattice containing the support. For a fair \(\pm1\) variable, it is \(2\), not \(1\): the normalized sum has adjacent values separated by \(2/\sqrt n\).</p>
 <p id="theorem-1"><strong>Theorem 1 (the symmetric lattice rate).</strong> Suppose \(X\) is symmetric, centered, has variance one, and has finite support contained in a lattice of maximal span \(h&gt;0\). Then</p>
 \[
@@ -95,7 +95,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 </div></details>
 <p>Geometrically, one transports a smooth Gaussian mass within cells of width \(h/\sqrt n\) to lattice sites near their centers. The average distance to the center of an interval of width \(\delta\) is \(\delta/4\). The theorem makes this picture precise and shows why the constant is universal within this symmetric lattice class.</p>
 
-<h2>A density exposes the fourth cumulant</h2>
+<h2>Fourth-cumulant corrections for continuous laws</h2>
 <p>For a symmetric law with a density, the staircase disappears. The first possible smooth correction comes from the fourth cumulant</p>
 \[
  \kappa_4=\mathbb E[X^4]-3.
@@ -142,7 +142,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p>Apply \(\bigl||u+v|-|u|\bigr|\le|v|\) and integrate to obtain the formula. \(\square\)</p>
 </div></details>
 
-<h2>The continuous uniform constant, explicitly</h2>
+<h2>The asymptotic constant for the uniform distribution</h2>
 <p>For \(X\) uniform on \([-\sqrt3,\sqrt3]\), \(\mathbb E[X^4]=9/5\), so \(\kappa_4=-6/5\). The remaining Gaussian integral can be evaluated without numerical quadrature.</p>
 <details class="blog-proof"><summary>Calculation: split at the roots of the Hermite polynomial</summary><div class="blog-proof-body">
 <p>The roots of \(H_3(x)=x(x^2-3)\) are \(0,\pm\sqrt3\), and</p>

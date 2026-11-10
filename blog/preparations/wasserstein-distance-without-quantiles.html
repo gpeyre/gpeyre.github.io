@@ -33,14 +33,14 @@
   <p class="draft-status">Alpha preview · Work in progress</p>
   <p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
   <h1>Wasserstein distance without quantiles</h1>
-  <p class="subtitle">A squared displacement is twice the area of a triangle. That observation removes the inverse CDF.</p>
+  <p class="subtitle">An exact formula for one-dimensional quadratic transport using CDFs rather than quantiles.</p>
   <p class="byline">Gabriel Peyré</p>
 </div></header>
 <main class="wrap"><article class="blog-prose">
 <p>One-dimensional optimal transport is often introduced as a sorting problem: line up the source and target quantiles, and match equal ranks. This gives an exact formula for Wasserstein distance. But sometimes a cumulative distribution function is easy to evaluate while its inverse is inconvenient. Gaussian mixtures are one example; data distributed across many machines are another.</p>
 <p>There is an exact alternative for the quadratic distance which uses only CDF values. The formula has a short geometric proof, works with atoms, and naturally suggests integration and sampling algorithms. The identity is recorded by Bobkov and Ledoux, who credit Eustasio del Barrio <a href="#ref-bobkov">[1]</a>. Its recent use for data-parallel sliced-Wasserstein estimation is due to Vauthier, Mérigot, and Korba <a href="#ref-cdf">[2]</a>. The formula also appears as <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.2.6.45">Proposition 2.45 in my book</a> <a href="#ref-book">[3]</a>.</p>
 
-<h2>From ranks to cumulative masses</h2>
+<h2>A CDF formula for quadratic Wasserstein distance</h2>
 <p>For a probability law \(\alpha\) on \(\mathbb R\), write</p>
 \[
   F_\alpha(x)=\alpha((-\infty,x]),
@@ -88,7 +88,7 @@
 </div></details>
 <p>The triangular region matters: simply replacing it by the full square would change the answer. So does the use of two different thresholds \(x,y\). The expression \(\int|F_\alpha(x)-F_\beta(x)|^2\,dx\) is a Cramér-type discrepancy, not \(W_2^2\). In contrast, \(W_1=\int|F_\alpha-F_\beta|\) does use a single threshold.</p>
 
-<h2>An exactly solvable example</h2>
+<h2>An example with sinusoidal density</h2>
 <p>Take the uniform law \(\beta\) on \([0,1]\), and let \(\alpha\) have density</p>
 \[
   \rho_\alpha(x)=1+\lambda\sin(2\pi x),
@@ -120,7 +120,7 @@
   <figcaption>The first panel shows the two CDFs; the second shades \(H(x,y)\) on the ordered triangle. The slider changes the integration resolution, and the convergence panel compares the numerical result with the exact value \(0.135/\pi^2\). Off-diagonal cells use their midpoints; the diagonal half-cells use their triangular centroids. The heat map follows the resolution up to a display cap of 80 cells per axis.</figcaption>
 </figure>
 
-<h2>Sampling the triangle</h2>
+<h2>An unbiased Monte Carlo estimator</h2>
 <p>For compactly supported laws, the formula also gives a particularly simple unbiased Monte Carlo estimator. Draw two independent uniforms on \([a,b]\), sort them into \(X&lt;Y\), and evaluate \(H(X,Y)\). The sorted pair is uniform on the triangle, whose area is \((b-a)^2/2\).</p>
 <p id="proposition-1"><strong>Proposition 1 (an unbiased CDF estimator).</strong> For independent triangle samples \((X_\ell,Y_\ell)\), set</p>
 \[
@@ -153,7 +153,7 @@
 \]
 <p>Indeed, the two positive parts cannot be simultaneously positive, so \(H\) is the maximum of zero and the two CDF differences. Changing each difference by at most \(\delta_\alpha+\delta_\beta\) changes their maximum by at most that amount. Integrate over a triangle of area \((b-a)^2/2\). This bound concerns CDF approximation; quadrature or Monte Carlo error must still be added separately.</p>
 
-<h2>When avoiding inversion helps</h2>
+<h2>Gaussian mixtures and truncation</h2>
 <p>A Gaussian-mixture CDF is a weighted sum of Gaussian CDFs. It can be evaluated directly, whereas evaluating its inverse requires root finding. For unbounded laws, restricting the formula to a finite triangle has a precise interpretation: it computes the distance between the laws <em>clipped</em> to that interval.</p>
 <details class="blog-proof">
 <summary>Controlled truncation: what a finite integration interval actually computes</summary>

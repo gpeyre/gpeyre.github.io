@@ -33,7 +33,7 @@
   <p class="draft-status">Alpha preview · Work in progress</p>
   <p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
   <h1>The covariance of SGD iterates</h1>
-  <p class="subtitle">An isotropic noise floor, anisotropic relaxation, and the fourth moments hiding in the next term.</p>
+  <p class="subtitle">Computing the covariance of constant-step SGD for least squares.</p>
   <p class="byline">Gabriel Peyré</p>
 </div></header>
 <main class="wrap"><article class="blog-prose">
@@ -46,7 +46,7 @@
 <aside class="note"><p>I thank <a href="https://samuro95.github.io/">Samuel Hurault</a> for bringing this calculation to my attention during our work with <a href="https://tommoral.github.io/">Thomas Moreau</a> on error control for diffusion models.</p></aside>
 <p>The broader picture is developed beautifully by Aymeric Dieuleveut, Alain Durmus, and Francis Bach <a href="#ref-dieuleveut">[1]</a>, who study constant-step SGD through its invariant Markov-chain distribution. Here, a direct least-squares calculation gives exact moment equations and a short proof of the small-step expansion.</p>
 
-<h2>A fresh sample at each step</h2>
+<h2>Least-squares SGD with independent samples</h2>
 <p>Consider the population loss</p>
 \[
  f(\theta)=\mathbb E[(X^\top\theta-Y)^2],
@@ -110,7 +110,7 @@
 </div></details>
 <p>The last term is the noise injected at the optimum. The fourth-moment term is the contribution of the random curvature \(XX^\top\). Replacing this random matrix by its mean \(G\) would change that term and miss part of the finite-step correction.</p>
 
-<h2>A stationary law, not a limiting point</h2>
+<h2>Existence of a stationary distribution</h2>
 <p>Choose a finite constant \(R\) such that</p>
 \[
  \mathbb E[\|X\|^2XX^\top]\preceq RG.
@@ -143,7 +143,7 @@
 <p>At stationarity the mean equation gives \(Gm=0\), hence \(m=0\). Setting \(M_{k+1}=M_k=\Sigma_\eta\) in Theorem 1 and dividing by \(2\eta\) gives the covariance equation. \(\square\)</p>
 </div></details>
 
-<h2>Why the leading covariance is isotropic</h2>
+<h2>The leading-order stationary covariance</h2>
 <p>The stationary covariance is of order \(\eta\), so \(2\eta\mathcal T(\Sigma_\eta)\) only enters at order \(\eta^2\). At first order, the equation becomes</p>
 \[
  G\Sigma_\eta+\Sigma_\eta G\simeq2\eta\sigma^2G.
@@ -192,7 +192,7 @@
 <p>Indeed, the stationary equation gives \(\mathcal L(\Sigma_\eta-\eta\sigma^2I)=2\eta\mathcal T(\Sigma_\eta)\succeq0\), and the integral formula in the proof shows that \(\mathcal L^{-1}\) preserves positive semidefiniteness. Thus the leading isotropic approximation underestimates the variance in every direction.</p>
 
 <h2>Two explicit examples</h2>
-<h3>One dimension: kurtosis controls the correction</h3>
+<h3>The one-dimensional formula and fourth moments</h3>
 <p>Write \(g=\mathbb E[X^2]&gt;0\), \(h=\mathbb E[X^4]\). The stationary equation is just \(2gv=2\eta\sigma^2g+2\eta hv\), so</p>
 \[
  v=\frac{\eta\sigma^2}{1-\eta h/g},
@@ -228,7 +228,7 @@
 <p>The denominator reveals an instability invisible in the first-order approximation. As \(\eta\lambda(d+2)\) approaches one, the second moment blows up, even though the mean recursion may still be stable.</p>
 <aside class="note"><p><strong>Gaussian features do not imply Gaussian iterates.</strong> The update multiplies the current error by a random matrix and adds a random vector. These formulas describe its exact covariance, not an exact Gaussian invariant law. A covariance ellipse below is a second-moment summary, not a density contour or a claimed probability region.</p></aside>
 
-<h2>The transient: flat directions take longer</h2>
+<h2>Transient covariance and curvature dependence</h2>
 <p>Start at \(\theta_0=\theta_*\). The covariance initially vanishes and gradually builds up. On the time scale \(t=k\eta\), the leading behavior is especially simple.</p>
 <p id="proposition-4"><strong>Proposition 4 (small-step transient).</strong> For each fixed \(T&lt;\infty\), uniformly over integers \(k\) with \(0\le k\eta\le T\),</p>
 \[
@@ -261,7 +261,7 @@
 <iframe class="idea-experiment" data-experiment="sgd" src="assets/ot-lab/index.html?topic=sgd" title="Covariance of constant-step least-squares SGD" loading="lazy"></iframe>
 <p class="caption">All variances are divided by \(\eta\sigma^2\), so the first-order stationary approximation is the unit circle. Solid curves show exact moments; dashed curves show the first-order transient. The stationary comparison includes the second-order expansion, with relative errors measured in Frobenius norm. The safe bound \(\eta R&lt;1\) is sufficient, not necessarily the exact stability threshold for anisotropic features.</p>
 
-<h2>What changes beyond this model?</h2>
+<h2>Extensions beyond homoscedastic least squares</h2>
 <p><em>Nonconstant conditional noise.</em> Keep \(\mathbb E[\xi\mid X]=0\), assume \(\mathbb E[\xi^2]&lt;\infty\) so that the loss remains finite, and suppose \(C=\mathbb E[\xi^2XX^\top]\) is finite. Then replace \(\sigma^2G\) by \(C\) in the exact equations. The expansion becomes</p>
 \[
  \Sigma_\eta=\eta S+\eta^2D+O(\eta^3),

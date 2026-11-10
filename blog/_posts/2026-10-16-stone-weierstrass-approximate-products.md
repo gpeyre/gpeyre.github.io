@@ -90,7 +90,7 @@ Three familiar examples illustrate the hypotheses:
 - **Fourier approximation.** On the torus $$\mathbb T^d$$, real trigonometric polynomials form a unital algebra and separate points. They therefore approximate every continuous periodic function uniformly. This is a density statement, not a claim that the ordinary Fourier partial sums of every continuous function converge uniformly.
 - **Exponential networks.** On a compact $$K\subset\mathbb R^d$$, the finite real linear combinations of $$x\mapsto e^{w\cdot x}$$ form a unital algebra: $$w=0$$ gives constants, and $$e^{u\cdot x}e^{v\cdot x}=e^{(u+v)\cdot x}$$. They separate points because the exponential is injective and linear forms separate points. Thus one-hidden-layer networks with exponential activation are uniformly dense in $$C(K,\mathbb R)$$.
 
-## An algebra only in the closure
+## Approximate closure under multiplication {#an-algebra-only-in-the-closure}
 
 Here is the useful reformulation.
 

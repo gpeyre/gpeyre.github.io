@@ -41,7 +41,7 @@
   <figcaption>Stone: <a href="https://photoarchive.lib.uchicago.edu/db.xqy?one=apf1-07972.xml">University of Chicago Photographic Archive, apf1-07972</a>, Hanna Holborn Gray Special Collections Research Center, University of Chicago Library; <a href="https://photoarchive.lib.uchicago.edu/rights.html">educational and scholarly use permission</a>. Weierstrass: Smithsonian Institution Libraries, via <a href="https://commons.wikimedia.org/wiki/File:Karl_Weierstrass.jpg">Wikimedia Commons</a>, public domain.</figcaption>
 </figure>
 
-<h2>A compact space whose points are measures</h2>
+<h2>The compact space of probability measures</h2>
 <p>Let \((K,d)\) be a nonempty compact metric space and let \(\mathcal P(K)\) be its Borel probability measures. Fix \(1\le p&lt;\infty\). The Wasserstein distance is</p>
 \[
 W_p(\mu,\nu)^p
@@ -55,7 +55,7 @@ m_\phi(\mu)=\int_K\phi(x)\,d\mu(x).
 \]
 <p>This is a linear observable of the measure. Its dependence on the point \(x\) can be completely nonlinear: \(\phi\) could be a cosine, a bump, or a neural-network feature.</p>
 
-<h2>What is a polynomial of a measure?</h2>
+<h2>Moment and Wasserstein polynomials</h2>
 <p>A <em>moment polynomial</em> is a finite linear combination of products</p>
 \[
 M(\mu)=\prod_{j=1}^{r}m_{\phi_j}(\mu).
@@ -78,7 +78,7 @@ P_\Phi(\mu)=\int_{K^r}\Phi(x_1,\ldots,x_r)\,d\mu^{\otimes r}.
 \]
 <p>Likewise, \(\iint V(x,y)\,d\mu(x)d\mu(y)\) describes a pair interaction. By contrast, \(\mu\mapsto W_p(\mu,\nu)\), with a fixed target \(\nu\), is typically not itself a finite polynomial. It is continuous, so the next theorem still applies.</p>
 
-<h2>Universality in three observations</h2>
+<h2>The polynomial approximation theorem</h2>
 <p id="theorem-1"><strong>Theorem 1 (polynomial universality).</strong> For every continuous \(F:\mathcal P(K)\to\mathbb R\) and every \(\varepsilon&gt;0\), there is a moment polynomial \(P\) such that</p>
 \[
 \sup_{\mu\in\mathcal P(K)}|F(\mu)-P(\mu)|&lt;\varepsilon.
@@ -96,7 +96,7 @@ P_\Phi(\mu)=\int_{K^r}\Phi(x_1,\ldots,x_r)\,d\mu^{\otimes r}.
 
 <p>The crucial distinction is between <em>one fixed finite list of moments</em> and a list that may grow with the desired accuracy. Two distributions can have the same mean and variance. The theorem allows us to add the features needed to distinguish the distributions relevant to the target functional.</p>
 
-<h2>An explicit approximation: sample, evaluate, average</h2>
+<h2>Constructive approximation by empirical measures</h2>
 <p>Stone–Weierstrass proves existence. There is also a natural construction. For independent samples \(X_i\sim\mu\), define the empirical measure and its averaged prediction:</p>
 \[
 \widehat\mu_n=\frac1n\sum_{i=1}^n\delta_{X_i},
@@ -183,12 +183,12 @@ P(\mu)=q\!\left(\int_K\phi(x)\,d\mu(x)\right),
 
 <p>Our more recent work with Takashi Furuya and Maarten de Hoop proves universality for attention-based <em>in-context maps</em> \((\mu,x)\mapsto G(\mu,x)\) on compact token domains <a href="#ref-attention">[9]</a>. This addresses a different architecture and output: a query and its context interact, and the context itself evolves through layers. It is not a direct consequence of the pooling corollary. A common theme is that probability measures let us state approximation results independently of a fixed number of tokens.</p>
 
-<h2>Why mean field games already needed these polynomials</h2>
+<h2>Applications in mean field games</h2>
 <p>In mean field games, an agent responds to the distribution of the population. Costs and value functions consequently depend on a measure, as in the framework introduced by Lasry and Lions <a href="#ref-mfg">[10]</a>. Polynomial test functionals provide a tractable family with which to study this dependence. Cardaliaguet’s notes, based on Lions’s lectures, make the density argument explicit and then use it in the theory of symmetric particle systems <a href="#ref-cardaliaguet">[2]</a>.</p>
 
 <p>The connection with exchangeability is particularly natural. If a random measure directs conditionally independent observations, their joint test-function expectations are averages of products \(\prod_j\int\phi_j\,d\mu\). Knowing all these averages determines the law of the random measure: by density, it determines the expectation of every continuous \(F\) on \(\mathcal P(K)\). This is the uniqueness mechanism behind the directing measure in the de Finetti–Hewitt–Savage representation <a href="#ref-hewitt">[11]</a>. Neural networks on distributions reuse a much older mathematical language.</p>
 
-<h2>What compactness and continuity are doing</h2>
+<h2>Compactness and continuity assumptions</h2>
 <p>The statement is uniform over \(\mathcal P(K)\) because \(K\) is compact. On the full noncompact space \(\mathcal P_p(\mathbb R^d)\), this global conclusion does not follow. It does hold on every <em>fixed \(W_p\)-compact subset</em>: bounded continuous test functions still give continuous observables, separate measures, and generate a unital algebra. Apply Stone–Weierstrass to that compact subset.</p>
 <p>The restriction is genuine. Polynomials made from bounded features are bounded, so they cannot uniformly approximate the continuous, unbounded functional \(\mu\mapsto\int |x|^p\,d\mu(x)\) over all of \(\mathcal P_p(\mathbb R^d)\).</p>
 

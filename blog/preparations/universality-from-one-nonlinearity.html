@@ -38,7 +38,7 @@
   <figcaption>Stone: <a href="https://photoarchive.lib.uchicago.edu/db.xqy?one=apf1-07972.xml">University of Chicago Photographic Archive, apf1-07972</a>, Hanna Holborn Gray Special Collections Research Center, University of Chicago Library; <a href="https://photoarchive.lib.uchicago.edu/rights.html">educational and scholarly use permission</a>.<br>Weierstrass: Smithsonian Institution Libraries, via <a href="https://commons.wikimedia.org/wiki/File:Karl_Weierstrass.jpg">Wikimedia Commons</a>, public domain.</figcaption>
 </figure>
 
-<h2>First, products only need to exist in the closure</h2>
+<h2>Approximate stability under multiplication</h2>
 <p>Let \(K\) be a compact Hausdorff space. We work with <em>real-valued</em> continuous functions and the uniform norm</p>
 \[
   \|f\|_\infty=\sup_{x\in K}|f(x)|.
@@ -67,7 +67,7 @@
 <p>Polynomials restricted to a compact subset of \(\mathbb R^d\) are an exact algebra separating points. So are real trigonometric polynomials on a torus: products reduce to sums of Fourier modes. This proves density, not convergence of the ordinary Fourier partial sums of every continuous function.</p>
 <p>Another useful example is the span of \(x\mapsto e^{w\cdot x}\), with \(w\in\mathbb R^d\). It contains constants, separates points, and satisfies \(e^{u\cdot x}e^{v\cdot x}=e^{(u+v)\cdot x}\). For deep ReLU networks, by contrast, products need not be networks exactly; approximate products suffice. The next theorem lets us bypass even that construction.</p>
 
-<h2>Replace multiplication by one nonlinear operation</h2>
+<h2>Stability under a non-affine operation</h2>
 <p>Fix \(s\ge1\) and a continuous map \(h:\mathbb R^s\to\mathbb R\). It acts on functions <em>pointwise</em>:</p>
 \[
   h(f_1,\ldots,f_s)(x)
@@ -82,7 +82,7 @@
 <p>This is the real uniform-approximation consequence of the operating-functions theorem of de Leeuw and Katznelson <a href="#ref-deleeuw">[2]</a>; later accounts include <a href="#ref-briem">[3]</a> and <a href="#ref-hatori">[4]</a>. Its scalar version can even be formulated for an operation defined only on an interval, applied to functions taking values there. We use globally defined operations to keep the argument transparent. The multivariable version reduces to the scalar one along an affine line.</p>
 <div class="note"><p>“Stable” here means <em>closed, up to uniform approximation, under a pointwise operation</em>. It is not a statement about robustness to perturbing the input or about bounded network weights. We keep linear combinations and constants; only the product hypothesis is being replaced.</p></div>
 
-<h2>Why smooth curvature gives multiplication</h2>
+<h2>The smooth case: recovering squares by Taylor expansion</h2>
 <p>First suppose the operation is scalar and \(C^2\), denoted \(\sigma:\mathbb R\to\mathbb R\), and that it operates on the closed space \(A\). Since \(\sigma\) is non-affine, some \(b\) satisfies \(\sigma''(b)\ne0\). For \(f\in A\), form the central difference</p>
 \[
   Q_t(f)=
@@ -123,7 +123,7 @@
 \]
 <p>The constants are doing real work: one must be free to move to a point where the nonlinearity has curvature.</p>
 
-<h2>Corners are enough: the general proof</h2>
+<h2>The continuous case: a smoothing argument</h2>
 <p>The absolute value and ReLU have no classical second derivative at their corner. Yet averaging nearby translates smooths the corner without losing the ability to operate on \(A\). This supplies the missing curvature. The same argument works for any continuous non-affine operation, however irregular.</p>
 <details class="blog-proof">
 <summary>Proof of Theorem 2: pass to the closure, restrict to a line, and smooth</summary>
@@ -195,7 +195,7 @@
 <p>This includes the usual universal approximation mechanism for deep ReLU networks. Specifying skip connections avoids silently assuming that an arbitrary activation can pass an old signal unchanged through every intervening layer.</p>
 <div class="note"><p><em>Non-affine is not the same as nonpolynomial.</em> The corollary allows repeated composition and growing depth. With \(\sigma(t)=t^2\), a single hidden layer only produces polynomials of degree at most two, so it is not universal on an interval. It is not closed under applying \(\sigma\) to its own outputs: squaring \(x^2\) produces \(x^4\). For one-hidden-layer ridge networks with biases and a continuous activation, universality on arbitrary compact subsets of Euclidean space requires <em>nonpolynomiality</em>, which is also sufficient <a href="#ref-leshno">[5]</a>. Our hypothesis concerns every already-built function, not just an activation applied once to affine inputs.</p></div>
 
-<h2>What the hypotheses buy us</h2>
+<h2>Necessity of the assumptions</h2>
 <p>Non-affinity cannot be dropped: affine functions on \([0,1]\) contain constants and separate points, and every affine operation preserves them. They are nevertheless a closed proper subspace of \(C([0,1])\).</p>
 <p>Constants cannot be dropped either. The closed linear space of continuous functions vanishing at \(0\) separates points of \([0,1]\) and is stable under squaring, but can never approximate the constant \(1\). Linearity is also essential: continuous nondecreasing functions contain all constants and separate points, and exponentiation preserves them, but they are not dense in all continuous functions.</p>
 <p>Finally, this is a qualitative theorem in the uniform norm. It says nothing by itself about the number of neurons, training, approximation rates, or coefficient bounds. The factor \(t^{-2}\) in the curvature argument warns that the proof may amplify weights considerably.</p>

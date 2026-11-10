@@ -1,6 +1,6 @@
 ---
 title: "Solving a positive definite congruence equation"
-subtitle: "A global diffeomorphism hidden inside a matrix square root."
+subtitle: "An explicit solution and a change of coordinates on the positive definite cone."
 description: "An explicit solution of UYU = X, with proofs of uniqueness and smooth dependence on positive definite matrices."
 topic: Linear algebra
 keywords:
@@ -39,7 +39,7 @@ If $$X$$ and $$Y$$ are symmetric positive definite, there is still exactly one s
 
 This expands the lemma in my [note of 9 August 2025](https://bsky.app/profile/gabrielpeyre.bsky.social/post/3lvxnbcglps2u).
 
-## The statement
+## The positive definite congruence theorem {#the-statement}
 
 Let $$\mathbb S_n$$ be the vector space of real symmetric $$n\times n$$ matrices, and write
 

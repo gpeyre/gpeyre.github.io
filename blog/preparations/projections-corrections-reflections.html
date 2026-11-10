@@ -19,7 +19,7 @@
 <p>The answer depends on what we mean by “project.” Reaching <em>some</em> feasible point and reaching the <em>nearest</em> feasible point are different tasks. A picture with two halfplanes is enough to separate them. It also introduces three beautiful algorithms: alternating projections, Dykstra’s corrections, and Douglas–Rachford reflections.</p>
 <p>We will first work with closed convex sets, where convergence is understood, then keep the same operations and venture into a nonconvex puzzle. In that second setting, a successful animation is an experiment, not a convergence theorem.</p>
 
-<h2>The geometry of a projection</h2>
+<h2>Euclidean projections onto convex sets</h2>
 <p>For a nonempty closed convex set \(A\subset\mathbb R^d\), its Euclidean projection is the unique nearest point</p>
 \[
  P_Az=\operatorname*{arg\,min}_{a\in A}\frac12\lVert z-a\rVert^2.
@@ -43,7 +43,7 @@
 </div></details>
 <p>For two such sets \(A,B\) with \(A\cap B\ne\varnothing\), <em>feasibility</em> asks for any point in the intersection. <em>Best approximation</em> asks for the particular point \(P_{A\cap B}z_0\). The second problem remembers the starting point as an objective, not merely as an initialization.</p>
 
-<h2>Alternating projections forget the original objective</h2>
+<h2>Alternating projections and the nearest-point problem</h2>
 <figure class="portrait-single"><img src="assets/projection-lab/von-neumann.jpg" width="510" height="700" loading="lazy" alt="Portrait of John von Neumann"><figcaption>John von Neumann. U.S. Department of Energy, public domain. <a href="https://www.siam.org/publications/siam-news/articles/siam-and-john-von-neumann/">Supplied image source</a> · <a href="https://commons.wikimedia.org/wiki/File:HD.3F.191_(11239892036).jpg">Public-domain provenance</a>.</figcaption></figure>
 <p>The simplest iteration is</p>
 \[
@@ -62,7 +62,7 @@
 </div></details>
 <p>If both sets are affine subspaces, the limit <em>is</em> the nearest point. Let \(L\) be the direction subspace of \(A\cap B\). Orthogonal projection onto either affine set preserves the component along \(L\), so the iterates remain in \(z_0+L^\perp\). Their feasible limit in this affine space is the unique nearest point. For general convex sets, that preservation property disappears.</p>
 
-<h3>A counterexample you can draw</h3>
+<h3>A counterexample with two halfplanes</h3>
 <p>Take</p>
 \[
  A=\{(x,y):y\ge0\},\quad B=\{(x,y):y\ge x\},\quad z_0=(2,-1).
@@ -73,7 +73,7 @@
 \]
 <p>The last point already belongs to the intersection, so the algorithm stops. Yet \(P_Bz_0=(1/2,1/2)\) also belongs to \(A\). Since it minimizes distance over all of \(B\), it is also the nearest point over the smaller set \(A\cap B\). The squared distances are \(5\) for the POCS limit and \(9/2\) for the true projection.</p>
 
-<h2>Dykstra: remember the normal displacements</h2>
+<h2>Dykstra’s algorithm</h2>
 <figure class="portrait-single"><a href="https://magazine.amstat.org/blog/2025/12/01/dykstra/"><img src="https://magazine.amstat.org/wp-content/uploads/2025/12/ObitRichard-Dykstra-2011-731x1024.jpg" width="731" height="1024" loading="lazy" decoding="async" alt="Portrait of Richard L. Dykstra"></a><figcaption>Richard L. Dykstra. Portrait linked from Kung-Sik Chan’s <a href="https://magazine.amstat.org/blog/2025/12/01/dykstra/">memorial in <em>Amstat News</em></a>, American Statistical Association, December 2025. The source does not identify the photographer or specify an open reuse license.</figcaption></figure>
 <p>Dykstra’s algorithm adds two correction vectors. Initialize \(z=z_0\) and \(p=q=0\), then repeat the following full cycle:</p>
 \[
@@ -99,7 +99,7 @@
 <p>Dykstra introduced the cone version in 1983 <a href="#ref-dykstra">[3]</a>, followed by the general closed-convex-set result of Boyle and Dykstra <a href="#ref-boyle">[4]</a>. A useful way to understand the corrections is as dual coordinates: minimize the squared distance subject to both constraints, and alternate dual updates while retaining each constraint’s previous contribution. Tibshirani gives this connection explicitly <a href="#ref-tibshirani">[5]</a>. In our halfplane example, the second full cycle reaches \((1/2,1/2)\).</p>
 <p>The original algorithm is not being replaced by a nearest-point shortcut in the experiment below: its correction vectors are updated at every cycle.</p>
 
-<h2>Douglas–Rachford: reflect, then average</h2>
+<h2>Douglas–Rachford splitting</h2>
 <figure class="portrait-pair"><div class="portrait-pair-images"><div><a href="https://www.math.purdue.edu/news/2016/douglas_obit.html"><img src="https://www.math.purdue.edu/news/2016/images/JimDouglas.jpeg" width="198" height="264" loading="lazy" decoding="async" alt="Portrait of Jim Douglas Jr."><p>Jim Douglas Jr.</p></a></div><div><a href="https://cmor.rice.edu/news/henry-rachford-former-rice-professor-dies-97"><img src="https://cmor.rice.edu/sites/g/files/bxs4926/files/2022-11/2211_Henry_Rachford.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="Portrait of Henry H. Rachford Jr."><p>Henry H. Rachford Jr.</p></a></div></div><figcaption>Institutional portraits linked from the memorials published by <a href="https://www.math.purdue.edu/news/2016/douglas_obit.html">Purdue University</a> (Douglas, 2016) and <a href="https://cmor.rice.edu/news/henry-rachford-former-rice-professor-dies-97">Rice University</a> (Rachford, 2022). Photographers and open reuse licenses are not specified on these pages.</figcaption></figure>
 <p>Instead of correcting a projection, reflect across the set. Write \(R_A=2P_A-I\). Douglas–Rachford uses</p>
 \[
@@ -132,7 +132,7 @@
 </div></details>
 <p>The name comes from Douglas and Rachford’s 1956 heat-equation splitting method <a href="#ref-original-dr">[6]</a>. The reflection formula is its later feasibility incarnation. The history and modern combinatorial applications are discussed by Aragón Artacho, Borwein, and Tam <a href="#ref-dr">[7]</a>.</p>
 
-<h2>Sudoku: five easy projections in a larger space</h2>
+<h2>A product-space formulation of Sudoku</h2>
 <p>Encode a \(9\times9\) board by a tensor \(X\in\mathbb R^{9\times9\times9}\): \(X_{ijk}=1\) means that cell \((i,j)\) contains digit \(k\). A valid board lies in five sets:</p>
 <ol><li>\(C_1\): for every cell, \((X_{ijk})_{k=1}^9\) is one-hot.</li><li>\(C_2\): for every row and digit, \((X_{ijk})_{j=1}^9\) is one-hot.</li><li>\(C_3\): for every column and digit, \((X_{ijk})_{i=1}^9\) is one-hot.</li><li>\(C_4\): for every block and digit, its nine cell entries are one-hot.</li><li>\(C_5\): every given clue cell is fixed to its prescribed one-hot vector; all other coordinates are free.</li></ol>
 <p>A one-hot vector is one of the nine standard basis vectors. Its nearest point to a score vector \(x\) is \(e_k\) for an index maximizing \(x_k\), because \(\lVert x-e_k\rVert^2=\lVert x\rVert^2+1-2x_k\). We choose the smallest index in a tie. Each group in a given constraint is disjoint from the others, so these groupwise choices give an exact Euclidean projection. Projection onto \(C_5\) simply overwrites the clue coordinates.</p>
@@ -143,7 +143,7 @@
 \]
 <p>Projection onto \(C\) applies the five projections separately. Projection onto the diagonal \(D\) averages the five copies. We apply precisely the Douglas–Rachford formula above with \(A=C\), \(B=D\), as in the product-space approach of <a href="#ref-dr">[7]</a>. Theorem 3 no longer applies: the reflections of these nonconvex sets need not be nonexpansive.</p>
 
-<h3>Distinguish a displayed board from the real-valued state</h3>
+<h3>Rounding and feasibility diagnostics</h3>
 <p>Write the five components of the product shadow \(P_Cz_k\) as \(X_k^{(1)},\ldots,X_k^{(5)}\). Its average and cellwise rounded board are</p>
 \[
  U_k=\frac15\sum_{s=1}^5X_k^{(s)},\qquad

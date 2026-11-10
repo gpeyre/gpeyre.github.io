@@ -33,7 +33,7 @@
   <p class="draft-status">Alpha preview · Work in progress</p>
   <p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
   <h1>Sinkhorn on Gaussians: an exact convergence rate</h1>
-  <p class="subtitle">A matrix recursion, a one-dimensional fraction, and what temperature really does to convergence.</p>
+  <p class="subtitle">How entropic regularization affects Sinkhorn’s convergence rate for Gaussian marginals.</p>
   <p class="byline">Gabriel Peyré</p>
 </div></header>
 <main class="wrap"><article class="blog-prose">
@@ -41,7 +41,7 @@
 <p>Gaussians offer a small laboratory in which this question can be answered exactly. For a quadratic cost, the entropic optimal coupling is Gaussian, and Sinkhorn stays within Gaussian distributions. This closed-form structure is studied in our work with Hicham Janati, Boris Muzellec, and Marco Cuturi <a href="#ref-janati">[1]</a>, and in more detail by Akyildiz, Del Moral, and Miguez <a href="#ref-akyildiz">[2]</a>. In one dimension, the entire iteration becomes a fractional-linear map.</p>
 <p>The conclusion is encouraging: for centered Gaussian iterates, the number of full Sinkhorn cycles needed for a fixed relative reduction of a suitable error is of order \(1/\varepsilon\) at low temperature. A recent paper of Lénaïc Chizat, Alex Delalande, and Tomas Vaškevičius <a href="#ref-chizat">[3]</a> explains why favorable temperature dependence extends well beyond Gaussians.</p>
 
-<h2>The problem and the convention</h2>
+<h2>Entropic transport between centered Gaussians</h2>
 <p>Let \(\alpha=\mathcal N(0,A)\) and \(\beta=\mathcal N(0,B)\), where \(A,B\) are positive-definite \(d\times d\) covariance matrices. We use the cost and regularized objective</p>
 \[
  c(x,y)=\tfrac12|x-y|^2,
@@ -64,7 +64,7 @@
 \]
 <p>The associated density relative to \(\alpha\otimes\beta\) is \(e^{(f+g-c)/\varepsilon}\). The first update enforces the \(X\)-marginal; the second enforces the \(Y\)-marginal. Throughout this post, <em>one cycle means both updates</em>. After a full cycle, the second marginal is exactly \(\beta\), but the first generally is not yet \(\alpha\).</p>
 
-<h2>Gaussian closure: iterate conditional covariances</h2>
+<h2>Gaussian closure and the covariance recursion</h2>
 <p>Quadratic potentials whose Gibbs density is integrable produce Gaussian laws, and integrating a Gaussian produces another quadratic potential. Starting with an admissible centered Gaussian initialization therefore preserves centered Gaussian joint laws. The target covariances \(A,B\) do not evolve; the useful evolving quantities are the <em>conditional</em> covariances</p>
 \[
  S_k=\operatorname{Cov}(X\mid Y),
@@ -197,7 +197,7 @@
 </div></details>
 <p>The same asymptotic factor applies to the cross-covariance error and to the first-marginal variance error: the former is linear in \(s_k\), and the latter has a nonzero derivative at \(s_*\).</p>
 
-<h2>What happens at low temperature?</h2>
+<h2>The small-regularization limit</h2>
 <p>The natural dimensionless temperature is \(\tau=\varepsilon/\sqrt{ab}\). Indeed, the optimal joint covariance is</p>
 \[
  \Sigma_*=
@@ -249,7 +249,7 @@
 <iframe class="idea-experiment" data-experiment="gaussian" src="assets/ot-lab/index.html?topic=gaussian" title="Gaussian Sinkhorn covariance and convergence experiment" loading="lazy"></iframe>
 <p class="caption">The curves evaluate the exact recurrence in cross-ratio coordinates, with analytic interpolation between integer cycles; there is no discretization of the Gaussian tails and no fitted convergence rate. Both ellipses show the same Mahalanobis radius. The initialization depends on temperature so that the initial relative conditional-variance error is always one.</p>
 
-<h2>Why a worst-case bound looks much worse</h2>
+<h2>Comparison with worst-case contraction bounds</h2>
 <p>Classical Sinkhorn analysis uses the Hilbert projective metric <a href="#ref-franklin">[4]</a>, <a href="#ref-book">[5]</a>. For a bounded cost with oscillation \(C=\sup c-\inf c\), the kernel \(K=e^{-c/\varepsilon}\) has projective diameter at most \(2C/\varepsilon\). Birkhoff’s theorem then gives the full-cycle contraction bound</p>
 \[
  \overline q_{\mathrm H}=\tanh^2\!\left(\frac{C}{2\varepsilon}\right),

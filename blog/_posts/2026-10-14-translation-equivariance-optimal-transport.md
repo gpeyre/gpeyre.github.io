@@ -41,7 +41,7 @@ The more interesting question is to characterize **all costs whose optimal plans
 
 <!--more-->
 
-## The setup and the question
+## Translation equivariance of optimal plans {#the-setup-and-the-question}
 
 Let $$\mu,\nu$$ be compactly supported probability measures on $$\mathbb R^d$$, and let $$c:\mathbb R^d\times\mathbb R^d\to\mathbb R$$ be a finite, continuous cost. Write $$\Pi(\mu,\nu)$$ for the couplings with these marginals, and
 
@@ -164,7 +164,7 @@ It is therefore a sum $$f_a(x)+g_a(y)$$, as required.
 </div>
 </details>
 
-## Every quadratic cost works
+## Quadratic costs {#every-quadratic-cost-works}
 
 Consider an arbitrary polynomial of total degree at most two:
 
@@ -196,7 +196,7 @@ $$
 
 This cannot be written as $$h(x-y)+f(x)+g(y)$$: such a representation would have mixed Hessian $$-D^2h(x-y)$$, which is symmetric. Translation equivariance thus goes beyond displacement costs even when the exponential factor is trivial.
 
-## Which cubic costs work
+## Cubic costs {#which-cubic-costs-work}
 
 For polynomials of total degree at most three, there is a complete answer that needs **neither invertibility nor $$d\geq2$$**.
 
@@ -263,7 +263,7 @@ By contrast, $$c(x,y)=x^2y$$ fails. Take $$\mu=\nu=(\delta_0+\delta_1)/2$$. Befo
 
 More generally, twice the direct-minus-crossed cost difference is $$2a+1$$. The optimal matching switches at $$a=-1/2$$, where both matchings, and their mixtures, are optimal.
 
-## An exponential cost that genuinely scales
+## An exponentially scaling cost {#an-exponential-cost-that-genuinely-scales}
 
 The vector $$k$$ in the theorem need not vanish. In dimension two, consider the smooth, positive cost
 
@@ -293,7 +293,7 @@ $$
 
 It cannot be reduced to $$h(x-y)+f(x)+g(y)$$, since that would make its mixed Hessian invariant under common translations. Here the mixed Hessian instead scales by $$e^{2a_1}$$. The positive exponential factor is an essential part of the characterization.
 
-## Why the dimension assumption matters
+## The one-dimensional case {#why-the-dimension-assumption-matters}
 
 In one dimension, ordering can preserve optimality for a much larger family of costs. For example,
 

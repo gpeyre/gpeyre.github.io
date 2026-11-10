@@ -129,7 +129,7 @@ The name *balancedness* refers to the special case $$h=0$$: balanced initial fac
 
 The matrix $$h$$ has one row and column per neuron. It records labeled pairwise quantities $$\langle u_i,u_j\rangle-\langle v_i,v_j\rangle$$, and its dimension changes with $$n$$. As such, it is not a single functional of a probability distribution. Some of its spectral summaries, however, admit precisely such a formulation.
 
-## A covariance of fixed size
+## The neuron covariance {#a-covariance-of-fixed-size}
 
 Stack the two weights of each neuron into one vector:
 
@@ -234,7 +234,7 @@ $$
 
 Thus the covariance laws are **normalized spectral summaries of balancedness**. Their advantage is that they can be defined without a neuron count or a labeling. Repeating every neuron the same number of times changes the size of $$h$$ but leaves $$\Sigma$$ and every $$H_k$$ unchanged.
 
-## From particles to a neuron distribution
+## The mean-field formulation {#from-particles-to-a-neuron-distribution}
 
 Associate the empirical probability measure
 
@@ -270,7 +270,7 @@ This is the mean-field statement: **one functional is conserved for all finite w
 
 The definition extends to other sufficiently regular losses on probability measures. A mean-field conservation law is a functional constant along their Wasserstein gradient flows; evaluating it on empirical measures gives compatible laws at every width. The particular signed spectral laws here rely on the linear network's split structure—lifting an arbitrary objective to measures does not automatically produce these invariants.
 
-## Why conservation helps convergence
+## Conservation laws and convergence {#why-conservation-helps-convergence}
 
 The hidden covariance blocks control the predictor's speed:
 

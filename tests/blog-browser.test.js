@@ -243,7 +243,8 @@ const publishedRecords = Array.from(catalogue.window.BLOG_SEARCH_RECORDS).filter
                 await third.locator(":scope > summary").click();
                 assert.ok(await proofs.evaluateAll(nodes => nodes.every(n => !n.open)));
                 const headings = await page.locator("article > h2").allTextContents();
-                assert.ok(headings.indexOf("More layers: still no universal fixed depth") < headings.indexOf("Numerical experimentation"));
+                assert.ok(headings.includes("Non-universality at fixed depth"));
+                assert.ok(headings.indexOf("Non-universality at fixed depth") < headings.indexOf("Numerical experimentation"));
                 assert.ok(!headings.includes("Depth and approximation accuracy"));
             }
             if (isBarycentric) {

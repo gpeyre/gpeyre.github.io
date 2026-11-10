@@ -18,12 +18,12 @@
 <meta name="twitter:image:alt" content="Ordinary and scaled sign-gradient descent losses for two isospectral quadratics, with the soft eigendirection aligned or spread across coordinates.">
 <!-- Generated numerical summary image: end -->
 </head><body>
-<header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Conditioning of Non-Euclidean Gradient Descent</h1><p class="subtitle">Choose a geometry first. Its conditioning follows—and need not be invariant under rotations.</p><p class="byline">Gabriel Peyré</p></div></header>
+<header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Conditioning of Non-Euclidean Gradient Descent</h1><p class="subtitle">Why rotating a quadratic can change the convergence of sign gradient descent.</p><p class="byline">Gabriel Peyré</p></div></header>
 <main class="wrap"><article class="blog-prose">
 <p>Rotating a quadratic preserves every eigenvalue of its Hessian. It also preserves the behavior of ordinary gradient descent, provided we rotate the initial point along with the objective. A coordinatewise optimizer can behave very differently: taking signs is not invariant under a rotation.</p>
 <p>How should we then measure conditioning? Not by switching arbitrarily to a different matrix norm. The clean route is to define steepest descent in a chosen vector norm, derive the two constants in its convergence theorem, and <em>then</em> take their ratio. This viewpoint is useful in our work on balanced low-rank adaptation <a href="#ref-balora">[1]</a>, and belongs to the broader study of optimization geometry <a href="#ref-geometry">[2]</a>.</p>
 
-<h2>A direction is not yet a speed</h2>
+<h2>Steepest descent in a chosen norm</h2>
 <p>Fix \(1\leq p\leq\infty\), and let \(q\) be the dual exponent: \(1/p+1/q=1\). For a gradient covector \(g\), define</p>
 \[
  d_p(g)\in\underset{v\in\mathbb R^d}{\operatorname{argmin}}
@@ -68,7 +68,7 @@
 <p>At nonsmooth endpoint norms the flow is a differential inclusion. The following discrete argument works for any selected minimizing direction.</p>
 <aside class="note"><p><strong>Scaled is essential.</strong> The update here is \(x^+=x-\eta\|g\|_1\operatorname{sign}(g)\), not \(x^+=x-\eta\operatorname{sign}(g)\). The latter has a different speed and can oscillate with a fixed step even on a scalar quadratic. Work on signSGD, including stochastic and communication-efficient variants <a href="#ref-signsgd">[3]</a>, should not be read as a theorem about precisely the same algorithm without checking its scaling and assumptions.</p></aside>
 
-<h2>The convergence theorem determines the condition number</h2>
+<h2>Convergence rates and condition numbers</h2>
 <p>Assume that \(f\) has finite minimum \(f_*\) and satisfies</p>
 \[
  f(x+v)\leq f(x)+\langle\nabla f(x),v\rangle+\tfrac L2\|v\|_p^2,
@@ -96,7 +96,7 @@
 </div></details>
 <p>The constants are global when the assumptions are global, and local only when the assumptions and invariance of the neighborhood are local. A positive Hessian at an isolated minimizer yields nearby constants. With a manifold of minimizers, one needs an appropriate local P–L property—for example from a smooth Morse–Bott structure—not merely a list of positive eigenvalues with all zero directions ignored.</p>
 
-<h2>For a quadratic, which matrix norms appear?</h2>
+<h2>Matrix-norm formulas for quadratic objectives</h2>
 <p>Take \(f(x)=\tfrac12 x^\top Hx\), with \(H\succ0\). The sharp constants are</p>
 \[
  L_p(H)=\sup_{u\ne0}\frac{u^\top Hu}{\|u\|_p^2},
@@ -129,7 +129,7 @@
 \]
 <p>The first maximum is over the vertices of the cube; the second is over the vertices \(\pm e_i\) of the \(\ell^1\) ball. A convex quadratic attains its maximum over a polytope at a vertex. This is where the coordinate axes enter.</p>
 
-<h2>A rotation changes the sign-descent condition number</h2>
+<h2>Rotation dependence of sign-descent conditioning</h2>
 <p>Let \(d\) be even, \(0&lt;\varepsilon&lt;1\), and \(v=(1,\ldots,1)^\top/\sqrt d\). Compare</p>
 \[
  H_{\mathrm{axis}}=\operatorname{diag}(\varepsilon,1,\ldots,1),
@@ -162,7 +162,7 @@
 <p>The experiment matches initial vectors by an orthogonal change of coordinates. Ordinary GD then has exactly the same loss in both problems, up to floating-point arithmetic. Scaled sign descent does not. Select soft, hard, or mixed initial directions to distinguish an actual trajectory from a worst-case upper bound.</p>
 <figure><iframe class="idea-experiment" data-experiment="sign" src="assets/optimization-geometry/index.html?topic=sign" title="Interactive isospectral quadratic comparison for ordinary and scaled sign gradient descent" loading="lazy" style="width:100%;height:850px;border:0;"></iframe><figcaption>Each method uses the geometry-specific step \(1/L_p\). Solid lines are computed losses; dashed lines are Theorem 1's upper bounds. The better condition number is not a promise that every individual run will be faster. No stochastic gradients or momentum are used.</figcaption></figure>
 
-<h2>Geometry before conditioning</h2>
+<h2>Dependence of conditioning on the optimizer</h2>
 <p>There is no optimizer-independent condition number. The Euclidean spectrum is the correct answer for Euclidean steepest descent, but a coordinatewise method asks a different question. This is why the distinction between balanced and hyperbalanced representations in <a href="balanced-low-rank-conditioning.html">low-rank adaptation</a> becomes meaningful when the optimizer responds to coordinates <a href="#ref-balora">[1]</a>.</p>
 <p>Changing coordinates, changing the factorization, and changing the descent norm are three related but distinct operations. The companion post on <a href="intrinsic-factor-training-dynamics.html">intrinsic factor dynamics</a> describes how a redundant parameterization itself induces a non-Euclidean mobility. Here we fixed the represented quadratic and changed the optimizer's geometry.</p>
 

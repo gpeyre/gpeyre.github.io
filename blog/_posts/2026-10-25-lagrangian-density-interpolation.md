@@ -1,7 +1,6 @@
 ---
 title: Interpolating measures by a Lagrangian flow
-subtitle: First choose how the density changes. Then find the motion that makes it
-  happen.
+subtitle: Constructing a velocity field for a prescribed path of probability densities.
 description: 'Moser’s construction turns a prescribed path of positive densities into
   moving particles: solve one Poisson equation, divide the flux by the density, and
   integrate a flow.'
@@ -50,7 +49,7 @@ Moser’s construction gives a beautiful affirmative answer for smooth, strictly
 
 <figure class="portrait-single"><img src="{{ '/blog/preparations/assets/new-dynamics/jurgen-moser.jpg' | relative_url }}" width="270" height="400" alt="Jürgen Moser in Tokyo in 1969, photographed by Konrad Jacobs" loading="lazy"><figcaption>Jürgen Moser (1928–1999), Tokyo, 1969. Konrad Jacobs / <a href="https://opc.mfo.de/detail?photo_id=7503">Oberwolfach Photo Collection</a>, via <a href="https://commons.wikimedia.org/wiki/File:J%C3%BCrgen_Moser.jpeg">Wikimedia Commons</a>; <a href="https://creativecommons.org/licenses/by-sa/2.0/de/deed.en">CC BY-SA 2.0 Germany</a>. Image unchanged.</figcaption></figure>
 
-## Moving particles, moving measures
+## Pushforwards and the continuity equation {#moving-particles-moving-measures}
 
 Let $$T_t(x)$$ be the position at time $$t$$ of a particle starting at $$x$$. A time-dependent velocity $$v_t$$ generates the flow
 
@@ -75,7 +74,7 @@ $$
 
 Density times velocity is the flux $$j_t=\rho_tv_t$$. Thinking in terms of flux is the useful change of viewpoint: after prescribing $$\rho_t$$, the continuity equation is linear in $$j_t$$.
 
-## A density cross-fade realized by a flow
+## Moser’s construction for linear density interpolation {#a-density-cross-fade-realized-by-a-flow}
 
 To avoid boundary distractions, work first on the unit flat torus $$\mathbb T^d=\mathbb R^d/\mathbb Z^d$$: opposite faces of the unit cube are identified. Let $$\rho_0,\rho_1$$ be smooth probability densities with $$\rho_i\ge c>0$$. Prescribe
 
@@ -162,7 +161,7 @@ The compatibility condition is again equality of total mass. Under the same smoo
 
 Positivity is central, not cosmetic. A moderate flux crossing a region with density $$10^{-3}$$ requires a velocity a thousand times larger than the same flux in a region of density one. Quantitatively, $$\lvert v_t\rvert\le\lvert \nabla u\rvert/c$$. Removing the lower bound can destroy this simple regular-flow construction, even when other transport maps still exist.
 
-## One dimension makes the whole flow explicit
+## Explicit construction in one dimension {#one-dimension-makes-the-whole-flow-explicit}
 
 On $$[0,1]$$, define the cumulative distributions $$F_i(x)=\int_0^x\rho_i(s)\,ds$$, and $$F_t=(1-t)F_0+tF_1$$. The no-flux solution has $$j(x)=F_0(x)-F_1(x)$$.
 
@@ -194,7 +193,7 @@ The initial condition is $$T_0(x)=x$$, proving the claim. $$\square$$
 
 The endpoint $$F_1^{-1}\circ F_0$$ is the monotone optimal map for quadratic transport in one dimension. The *path* is nevertheless generally not the Wasserstein geodesic: a geodesic interpolates quantiles linearly, whereas we interpolate densities linearly.
 
-## A constructive transport, not generally an optimal one
+## Comparison with optimal transport {#a-constructive-transport-not-generally-an-optimal-one}
 
 The divergence equation has many flux solutions: any divergence-free field can be added to $$j$$. Choosing $$j=\nabla u$$ selects the smallest unweighted $$L^2$$ flux norm, because gradients are orthogonal to divergence-free fields. But optimal transport minimizes a different quantity, the kinetic action
 

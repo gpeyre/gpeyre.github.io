@@ -1,6 +1,6 @@
 ---
 title: "The Mathematical Nexus"
-subtitle: "800 animated vignettes. 140 Python notebooks. One place to explore."
+subtitle: "A collection of 800 mathematical animations and 140 Python notebooks."
 description: "A collection of mathematical animations and accompanying Python notebooks, now gathered in the Mathematical Nexus."
 topic: Resources
 keywords:

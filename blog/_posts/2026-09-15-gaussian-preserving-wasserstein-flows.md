@@ -1,6 +1,6 @@
 ---
 title: "Why I love Gaussian-preserving flows"
-subtitle: "A contraction, a variational principle, and a beautifully excessive proof about Gaussian convolution."
+subtitle: "When does a Wasserstein gradient flow preserve Gaussian distributions?"
 description: "Gelbrich's Gaussian contraction and a criterion explained by Hugo Lavenant, with proofs for Gaussian relative entropy and heat flow."
 topic: Optimal transport
 keywords:
@@ -53,7 +53,7 @@ This is the topic of the very last section of my new book [*Optimal Transport fo
 
 Here is one of my favorite explanations of this phenomenon. It combines a simple but powerful theorem of Gelbrich with a variational observation explained to me by Hugo Lavenant. The reward will be an extravagantly long proof of a familiar fact: convolving a Gaussian with a Gaussian still gives a Gaussian.
 
-## Gaussian projection means matching moments
+## Moment-matching Gaussian projection {#gaussian-projection-means-matching-moments}
 
 Let $$\mathcal P_2(\mathbb R^d)$$ denote probability measures with finite second moment. For $$\alpha\in\mathcal P_2(\mathbb R^d)$$, define its mean and covariance by
 
@@ -251,7 +251,7 @@ $$
 
 The energy lost by Gaussian projection is **exactly** $$\mathrm{KL}(\alpha\mid\mathsf G\alpha)$$. Equality holds precisely when $$\alpha$$ is Gaussian. The sufficient condition is therefore satisfied, with a strict improvement for every non-Gaussian measure of finite energy.
 
-## With a Gaussian reference, the PDE is Ornstein–Uhlenbeck
+## The Ornstein–Uhlenbeck equation {#with-a-gaussian-reference-the-pde-is-ornsteinuhlenbeck}
 
 There is an important distinction before arriving at heat flow. For a smooth density, the Wasserstein descent equation is
 
@@ -290,7 +290,7 @@ $$
 
 This is exactly the kind of reduction that makes Gaussian-preserving PDEs so appealing.
 
-### The closed form, and an interactive picture
+### Closed-form Gaussian evolution {#the-closed-form-and-an-interactive-picture}
 
 There is no need to discretize these differential equations. Set
 
@@ -326,7 +326,7 @@ where $$R_\theta$$ is a rotation. Thus $$a$$ is the **ellipse's axis ratio**, wh
 
 The picture displays covariance ellipsoids—ellipses in the plane—and evaluates the mean and covariance directly from the matrix exponential. Rotating the target changes both the covariance evolution and the path of the mean. Directions with larger target variance relax more slowly: along a target eigenvector of variance $$\lambda$$, the mean error decays as $$e^{-t/\lambda}$$. The displayed $$\mathrm{KL}(\alpha_t\mid\beta)$$ decreases toward zero.
 
-## Removing confinement gives the heat equation
+## The heat equation as an entropy gradient flow {#removing-confinement-gives-the-heat-equation}
 
 To obtain pure heat flow, use the negative entropy
 
@@ -384,7 +384,7 @@ $$
 \alpha_t=\mathcal N(m_0,\Sigma_0+2tI).
 $$
 
-## An extravagant proof about convolution
+## Gaussian convolution and preservation of Gaussianity {#an-extravagant-proof-about-convolution}
 
 The heat equation also has the familiar convolution representation
 

@@ -33,14 +33,14 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p class="draft-status">Alpha preview · Work in progress</p>
 <p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
 <h1>Which statistics evolve on their own?</h1>
-<p class="subtitle">An exact moment-closure theorem for Wasserstein gradient flows, with a geometric answer.</p>
+<p class="subtitle">When can a statistic evolve without tracking the full probability distribution?</p>
 <p class="byline">Gabriel Peyré</p>
 </div></header>
 <main class="wrap"><article class="blog-prose">
 <p>A probability distribution contains infinitely many degrees of freedom. Its mean is just a vector; its covariance is just a matrix. This compression is useful only if we understand what it loses. When the distribution evolves, can a retained statistic follow a closed equation without tracking everything else?</p>
 <p>Usually a moment equation introduces a new moment, which introduces another, creating an endless hierarchy. But a particularly clean class of Wasserstein flows admits an exact answer. The criterion is geometric: the squared norm of the statistic's gradient must be affine in the statistic itself. It includes familiar first and second moments, but also nonpolynomial observables built from curved distance functions. The scalar result appears in <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.16.5.30">Proposition 16.30 of <em>Optimal Transport for Machine Learners</em></a> <a href="#ref-book">[1]</a>.</p>
 
-<h2>Let the energy depend on one statistic</h2>
+<h2>Energy functionals depending on one statistic</h2>
 <p>Let \(\Omega\subset\mathbb R^d\) be connected and open, and let \(\varphi\in C^2(\Omega)\). For a probability law \(\alpha\), define</p>
 \[
  m(\alpha)=\int\varphi(x)\,d\alpha(x),
@@ -88,7 +88,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 </div></details>
 <p>Requiring closure for every \(g\) avoids accidental cancellations: a constant energy makes every statistic stationary, and would tell us nothing about \(\varphi\). In fact, the proof shows that testing the single energy \(g(s)=s\), but on <em>all</em> laws, is enough. Special families can have extra moment identities, but a closure valid only within such a family describes the evolution only if the flow also stays in that family.</p>
 
-<h2>Why a distance coordinate appears</h2>
+<h2>Distance coordinates and the eikonal equation</h2>
 <p>On a connected region where \(\nabla\varphi\ne0\), choose \(s_0\) in the range of \(\varphi\) and set</p>
 \[
  r(x)=\int_{s_0}^{\varphi(x)}
@@ -109,7 +109,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 \]
 <p>So the statistic is quadratic in a distance-like coordinate, even if that coordinate is highly nonlinear in \(x\). This is a local description, valid before normal lines meet or a critical point is reached. In the first formula, the branch is the one where \(\sqrt{a+bs_0}+(b/2)r&gt;0\). There is no claim that every smooth hypersurface has a globally smooth distance function.</p>
 
-<h2>Examples, and a genuine failure</h2>
+<h2>Examples and counterexamples</h2>
 <p>For \(\varphi(x)=u\cdot x\), closure holds with \(a=|u|^2,b=0\). Particles translate along \(u\). For \(\varphi(x)=|x|^2\), one has \(a=0,b=4\); particles undergo a common radial scaling. Neither assertion requires a Gaussian initial law.</p>
 <p>Now take an oriented smooth hypersurface \(\mathcal S\), or a local oriented patch. Its signed distance \(r_\mathcal S\) satisfies \(|\nabla r_\mathcal S|=1\) in a smooth tubular neighborhood. Thus \(r_\mathcal S+\lambda r_\mathcal S^2/2\) is another exactly closed statistic, for as long as the particles stay in that neighborhood. The normal direction varies from particle to particle, but each trajectory follows a straight normal line, and a single scalar governs the retained moment.</p>
 <p>A counterexample is just as instructive. On the line, \(\varphi(x)=x^4\) has \(|\varphi'(x)|^2=16x^6\), which is not affine in \(x^4\). The laws</p>
@@ -119,7 +119,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 \]
 <p>both have fourth moment one. Their sixth moments are \(1\) and \(\sqrt2\), respectively. For \(g(s)=s\), their initial fourth-moment derivatives are therefore \(-16\) and \(-16\sqrt2\). No common scalar equation based on the fourth moment alone can describe both.</p>
 
-<h2>Numerical experimentation: different clouds, the same statistic</h2>
+<h2>Numerical experimentation: autonomous moment evolution</h2>
 <p>On an annulus about the unit circle, use \(\varphi(x)=|x|-1\) and \(g(m)=m^2/2\). Here \(a=1,b=0\), so \(m_t=m_0e^{-t}\). A particle with initial polar coordinates \((R_i,\theta_i)\) follows the exact trajectory</p>
 \[
  R_i(t)=R_i-m_0(1-e^{-t}),\qquad \theta_i(t)=\theta_i.

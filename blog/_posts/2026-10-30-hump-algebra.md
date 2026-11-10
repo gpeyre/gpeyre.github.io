@@ -1,6 +1,6 @@
 ---
 title: "The hump algebra of Yves Meyer"
-subtitle: "A Gaussian identity becomes a space of functions, with a norm that counts bumps across scales."
+subtitle: "Gaussian expansions and their connection to Banach algebras and Besov spaces."
 description: "Multiplying two Gaussian bumps gives a smaller Gaussian bump. Yves Meyer's hump algebra turns this identity into a Banach algebra, with a scale-invariant atomic norm and an equivalent Besov norm."
 date: "2026-10-30"
 topic: "Gaussians and harmonic analysis"
@@ -20,7 +20,7 @@ Gaussian bumps are useful building blocks for signals and images: each has a loc
   <figcaption>Yves Meyer, 2000. Photograph: <a href="https://commons.wikimedia.org/wiki/File:Yves_Meyer_(Conservatoire_National_des_Arts_et_M%C3%A9tiers)_-_Philippe_Binant_Archives.jpg">Philippe Binant</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Meyer develops the hump algebra in Chapter VI, §6 of <em>Wavelets and Operators</em>.</figcaption>
 </figure>
 
-## Multiply two humps
+## Products of Gaussian functions {#multiply-two-humps}
 
 For a center $$a\in\mathbb R^d$$ and a scalar width $$s>0$$, write
 

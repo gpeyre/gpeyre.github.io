@@ -17,13 +17,13 @@
 <meta name="twitter:image:alt" content="An orthostochastic coupling between two irregular point clouds, with the exact assignment dashed; the matching transport-energy trajectory is compared with the dashed Kantorovich optimum.">
 <!-- Generated numerical summary image: end -->
 </head><body>
-<header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Orthostochastic matrices and optimal transport</h1><p class="subtitle">A convex transport problem, a nonconvex parametrization, and a warning from three points.</p><p class="byline">Gabriel Peyré</p></div></header>
+<header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Orthostochastic matrices and optimal transport</h1><p class="subtitle">An orthogonal parametrization preserves the optimal transport cost, but can introduce bad local minima.</p><p class="byline">Gabriel Peyré</p></div></header>
 <main class="wrap"><article class="blog-prose">
 <p>I learned about orthostochastic matrices from <strong>Peyman Milanfar</strong>. They offer a beautiful bridge between orthogonal geometry, probability, and optimal transport.</p>
 <p>A permutation matches each source point to exactly one target point. A doubly stochastic matrix allows a softer matching, splitting each point among several destinations. There is a less familiar way to build such matrices: take an orthogonal matrix and square each of its entries. The result is <em>orthostochastic</em>.</p>
 <p>This construction automatically enforces positivity and the two marginal constraints of uniform discrete transport. Surprisingly, although it describes only a small nonconvex subset of all couplings, it preserves the optimal value of every linear transport objective. What it does <em>not</em> preserve is the friendly optimization landscape: an orthogonal gradient flow can settle at a genuinely suboptimal local minimum.</p>
 
-<h2>From probabilities to orthogonal amplitudes</h2>
+<h2>Bistochastic and orthostochastic matrices</h2>
 <p>Write \(\mathbf1=(1,\ldots,1)^\top\). An \(n\times n\) real matrix \(P\) is <em>bistochastic</em>, or <em>doubly stochastic</em>, when</p>
 \[
  P_{ij}\ge0,\qquad P\mathbf1=\mathbf1,\qquad P^\top\mathbf1=\mathbf1.
@@ -40,7 +40,7 @@
 <p>Both sets are invariant under transposition and independent row or column permutations. The set \(\mathcal O_n\) is compact, as the continuous image of the compact group \(\mathrm O(n)\). Changing signs of rows or columns of \(Q\) leaves \(P\) unchanged. In particular, one may restrict \(Q\) to \(\mathrm{SO}(n)\), the determinant-one component, without losing any \(P\): if necessary, flip one row.</p>
 <p>In the complex analogue, \(P_{ij}=|U_{ij}|^2\) for a unitary \(U\); this is called <em>unistochastic</em>. Real signs and complex phases give different classes. We use the real convention throughout <a href="#ref-bengtsson">[2]</a>.</p>
 
-<h2>The convex hull is much larger</h2>
+<h2>The Birkhoff–von Neumann theorem</h2>
 <figure class="portrait-single"><img src="../imgs/garrett-birkhoff.jpg" width="271" height="400" loading="lazy" decoding="async" alt="Mathematician Garrett Birkhoff, photographed by Konrad Jacobs"><figcaption>Garrett Birkhoff. Photograph: Konrad Jacobs, Archives of the Mathematisches Forschungsinstitut Oberwolfach, <a href="https://opc.mfo.de/detail?photo_id=346">photo 346</a>; <a href="https://creativecommons.org/licenses/by-sa/2.0/de/deed.en">CC BY-SA 2.0 Germany</a>. Unmodified image from the <a href="https://commons.wikimedia.org/wiki/File:Garrett_Birkhoff.jpeg">licensed source</a>.</figcaption></figure>
 <p>A permutation \(\sigma\) corresponds to \(P^\sigma_{ij}=1\) when \(j=\sigma(i)\), and zero otherwise. Such a matrix is itself orthogonal and orthostochastic. The classical Birkhoff–von Neumann theorem gives a complete convex characterization <a href="#ref-birkhoff">[1]</a>.</p>
 <p id="theorem-1"><strong>Theorem 1 (Birkhoff–von Neumann).</strong> Every bistochastic matrix is a convex combination of permutation matrices. Equivalently,</p>
@@ -72,7 +72,7 @@
 \]
 <p>is the average of the two cyclic permutation matrices. But the first two rows of any signed entrywise square root overlap in exactly one nonzero coordinate; their inner product can only be \(\pm1/2\), never zero. Thus \(P\notin\mathcal O_3\). A block diagonal copy of this example proves strict inclusion and nonconvexity for every \(n\ge3\).</p>
 
-<h2>A characterization: can the square roots be signed consistently?</h2>
+<h2>The signed square-root characterization</h2>
 <p>Squaring has forgotten the signs of the orthogonal matrix. Recovering them is exactly the remaining obstruction.</p>
 <p id="theorem-2"><strong>Theorem 2 (signed square-root criterion).</strong> A bistochastic \(P\) is orthostochastic if and only if there is a <em>single</em> sign matrix \(S\in\{-1,1\}^{n\times n}\) such that, for every pair of distinct rows,</p>
 \[
@@ -100,7 +100,7 @@
 </div></details>
 <p>For comparison, complex phases can close any triangle, not just a degenerate one: the three-by-three <em>unistochastic</em> criterion is the ordinary triangle inequality for these lengths <a href="#ref-bengtsson">[2]</a>. The flat matrix \(P_{ij}=1/3\) is unistochastic but not orthostochastic: three signed terms of magnitude \(1/3\) cannot sum to zero.</p>
 
-<h2>Why this smaller set still solves uniform Kantorovich transport</h2>
+<h2>Equivalence for uniform discrete optimal transport</h2>
 <p>Let \(x_1,\ldots,x_n\) and \(y_1,\ldots,y_n\) be two point clouds in \(\mathbb R^d\), and consider the equally weighted measures</p>
 \[
  \alpha=\frac1n\sum_i\delta_{x_i},\qquad
@@ -159,7 +159,7 @@
 \]
 <p>The Cayley factor is orthogonal because \(\Omega\) is skew-symmetric. An Armijo backtracking test accepts only sufficient energy decrease. Finite steps approximate the continuous flow; they are not its exact solution.</p>
 
-<h2>A genuine trap, even for squared Euclidean transport</h2>
+<h2>Suboptimal local minima for squared Euclidean costs</h2>
 <p>Equality of global minima does not imply that a gradient flow reaches them. In fact, <em>every signed permutation is stationary</em>: at such a \(Q\), the matrix \(Q^\top G\) is diagonal. Initializing at the identity would therefore prevent any motion, even if its matching is terrible.</p>
 <p>There are also strict suboptimal local minima, not just unstable stationary points. Here is an explicit planar example.</p>
 <p id="proposition-2"><strong>Proposition 2 (a three-point local minimum).</strong> Let \(x_i\) be the vertices of a unit equilateral triangle and let \(y_i=R_\theta x_i\), where \(R_\theta\) is planar rotation and \(\theta=75^\circ\). For \(C_{ij}=\|x_i-y_j\|^2\), the matrix \(Q=I\) is a strict local minimum of \(E\), but it is not globally optimal.</p>
@@ -174,7 +174,7 @@
 </div></details>
 <p>The example separates two notions that are easy to confuse: a <em>global exact reformulation</em> and a <em>globally convergent algorithm</em>. Orthostochastic transport gives the first, not the second.</p>
 
-<h2>Numerical experimentation: watch the coupling and its cost</h2>
+<h2>Numerical experimentation: coupling and objective evolution</h2>
 <p>Use the time control to follow one orthogonal descent trajectory. The left panel shows blue source points, rust target points, and the current coupling \(\pi_t=Q_t\odot Q_t/n\). Dashed segments show an exact Kantorovich assignment, computed independently by the Hungarian algorithm. On the right, the solid curve is \(E(Q_t)\); the dashed horizontal line is the certified assignment cost.</p>
 <iframe class="idea-experiment" data-experiment="orthostochastic-ot" src="assets/orthostochastic-ot/index.html" title="Orthostochastic transport gradient flow: current coupling, exact Kantorovich matching, and transport energy over time" loading="lazy" style="width:100%;height:850px;border:0"></iframe>
 <p class="caption">Change the number of points in <em>each</em> cloud or move the target cloud to restart the solve. Playback starts paused. The local-minimum preset uses Proposition 2 with an initialization close to, but not exactly at, the identity: its persistent gap is real, not a plotting artifact. The regular cloud preset starts from a dense orthogonal matrix. Line opacity represents coupling mass; very small segments may be omitted from drawing, never from the energy or marginal computations. Time selects saved orthogonal iterates, without linearly blending matrices or couplings. The reported orthogonality residual checks numerical feasibility; the cost gap checks optimality. A small residual does not imply a small gap.</p>

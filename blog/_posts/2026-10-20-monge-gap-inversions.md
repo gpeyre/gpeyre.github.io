@@ -48,7 +48,7 @@ This is the *Monge gap*, introduced as a learning regularizer by Théo Uscidda a
 
 <!--more-->
 
-## Compare a map with its best rearrangement
+## The Monge gap {#compare-a-map-with-its-best-rearrangement}
 
 For probability measures $$\alpha,\beta$$, let $$\Pi(\alpha,\beta)$$ denote the joint laws with these marginals. Given a cost $$c$$, write
 
@@ -69,7 +69,7 @@ The graph law $$(\operatorname{Id},T)_\#\alpha$$ is an admissible coupling, so $
 
 For quadratic cost on the line, optimal transport matches inputs and outputs in increasing order [[3]](#ref-computational). If the source is atomless, this is the rearranged map $$T^\uparrow=Q_{T_\#\alpha}\circ F_\alpha$$, with $$F_\alpha$$ the source CDF and $$Q$$ the target quantile. For a finite equal-weight cloud, it simply means sorting the outputs.
 
-## An exact price for every inversion
+## An inversion formula for the Monge gap {#an-exact-price-for-every-inversion}
 
 Take equally spaced inputs $$x_i=x_1+(i-1)\Delta$$, with $$\Delta>0$$, and set $$\alpha_n=n^{-1}\sum_{i=1}^n\delta_{x_i}$$. Write $$t_i=T(x_i)$$, and denote their sorted values by $$t_{(1)}\le\cdots\le t_{(n)}$$. An inversion is a pair $$i<j$$ with $$t_i>t_j$$.
 
@@ -184,7 +184,7 @@ The objective-error bound concerns the smooth optimization problem, not the exac
 </figcaption>
 </figure>
 
-## Sorting is not regression
+## Monotone rearrangement and isotonic regression {#sorting-is-not-regression}
 
 Sorting preserves the complete multiset of fitted values. Isotonic regression instead changes values, pooling neighboring observations when needed. Monge-gap regression balances prediction, complexity, and order. For the *exact hinge penalty*, in the finite-dimensional positive-definite setting, sending $$\gamma\to\infty$$ gives the unique kernel-regression fit subject to nondecreasing evaluations: comparison with any feasible fit bounds $$\gamma\mathcal M$$, coercivity gives compactness, and every limit solves the constrained problem.
 

@@ -214,7 +214,7 @@ Geometrically, each fiber $$\pi_x$$ collapses to its **nearest Dirac mass**, loc
 
 This result holds for **every coupling**, without OT optimality. There is no constraint $$S_\#\alpha=\beta$$: the projected target is $$\widetilde\beta=(T_\pi)_\#\alpha$$. It is also a statement about the fiberwise metric, **not ordinary Wasserstein distance on the product space**, which allows the source coordinate to move. The sufficient conditions below address the separate question of whether $$T_\pi$$ is an optimal transport map to its image.
 
-## Optimal to a modified target
+## Optimality for the projected target {#optimal-to-a-modified-target}
 
 <span id="theorem-1"></span>
 **Theorem 1 (quadratic OT).** Let $$\alpha,\beta\in\mathcal P_2(\mathbb R^d)$$, the probability measures with finite second moments. If $$\pi$$ is an **optimal quadratic Kantorovich coupling**, then
@@ -255,7 +255,7 @@ This proof uses unregularized quadratic optimality of $$\pi$$. The entropic OT g
 
 These are **sufficient conditions**, not an if-and-only-if characterization. For example, an independent coupling $$\alpha\otimes\beta$$ has a constant barycentric map, which is automatically optimal to its point-mass image, even when the coupling is not an OT optimizer.
 
-## Why this does not solve the original problem
+## The change in the target marginal {#why-this-does-not-solve-the-original-problem}
 
 In general, **$$\widetilde\beta\neq\beta$$**. For a source with $$n$$ atoms,
 
@@ -276,7 +276,7 @@ $$
 
 Consequently, with finite second moments, $$\widetilde\beta=\beta$$ **if and only if** $$\pi$$ was already induced by a map. There is no cheap recovery of the original target hidden in barycentric projection: it discards the spread of each source's destinations.
 
-## Entropic projection and log sum exp
+## Entropic OT and the log-sum-exp potential {#entropic-projection-and-log-sum-exp}
 
 Now assume $$\pi=\pi^\varepsilon$$ is the **solution of the quadratic entropic OT problem** defined above, not an arbitrary positive coupling. Its optimal dual potentials $$f_i,g_j$$ can be normalized so that
 
@@ -346,7 +346,7 @@ Its graph is therefore cyclically monotone, so it is optimal for its own margina
 </div>
 </details>
 
-## Move the target cloud
+## Numerical experimentation {#move-the-target-cloud}
 
 {% include blog-figure.html kind="barycentric" %}
 

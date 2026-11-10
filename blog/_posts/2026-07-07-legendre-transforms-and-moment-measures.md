@@ -87,7 +87,7 @@ $$
 </div>
 </details>
 
-## Where moment measures enter
+## Moment measures {#where-moment-measures-enter}
 
 A convex potential $$u$$ with $$0<Z_u=\int e^{-u}<\infty$$ defines a log-concave probability density. Its **moment measure** is the distribution of its gradient under that density:
 

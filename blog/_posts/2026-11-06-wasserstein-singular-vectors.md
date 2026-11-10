@@ -49,7 +49,7 @@ embedded_experiment: true
 
 <!--more-->
 
-## One data matrix, two families of distributions
+## Row and column probability distributions {#one-data-matrix-two-families-of-distributions}
 
 <figure class="portrait-figure"><img src="{{ '/blog/imgs/gaspard-monge-carnavalet.jpg' | relative_url }}" width="425" height="500" loading="lazy" decoding="async" alt="Engraved profile portrait of Gaspard Monge"><figcaption>Gaspard Monge. Engraving by Edmé Quenedey after Jean-Claude Naigeon, Musée Carnavalet, inventory G.19215. <a href="https://www.parismuseescollections.paris.fr/fr/musee-carnavalet/oeuvres/gaspard-monge">CC0 Paris Musées / Musée Carnavalet – Histoire de Paris</a>. Modern discrete couplings extend the map-based transport problem associated with Monge.</figcaption></figure>
 <p>Let \(X\in\mathbb R_+^{n\times m}\) have nonzero rows and columns, with \(n,m\ge2\). Normalize each row to a probability vector \(a_i\in\Delta_m\), and each column to \(b_k\in\Delta_n\). Thus rows describe samples over features, while columns describe features over samples.</p>
@@ -77,7 +77,7 @@ $$
 <p>One can fix scale by \(\|C\|_\infty=\|D\|_\infty=1\), where the norm is the <em>entrywise maximum</em>, not a matrix operator norm. These equations resemble left and right singular-vector equations, but the maps are nonlinear. The unknown vectors have become distance matrices.</p>
 
 
-## Three simple properties do much of the work
+## Monotonicity, homogeneity, and Lipschitz continuity {#three-simple-properties-do-much-of-the-work}
 
 <p id="proposition-1"><strong>Proposition 1 (order, scaling, and stability).</strong> For admissible costs and \(s\ge0\),</p>
 
@@ -115,7 +115,7 @@ $$
 <p>Nonexpansiveness does <em>not</em> imply strict contraction, uniqueness, or convergence of every normalized iteration. Those conclusions need more information.</p>
 
 
-## A regularizer that also makes existence transparent
+## Regularization and existence {#a-regularizer-that-also-makes-existence-transparent}
 
 <p>The paper adds a simple term, different from entropic regularization:</p>
 
@@ -168,7 +168,7 @@ $$
 <p>This proof uses a convex <em>sum-normalized</em> slice; the superficially more familiar constraint \(\|C\|_\infty=1\) is not itself a convex slice. The paper’s Theorem 2.3 gives regularized existence, and Proposition 2.6 proves uniqueness and linear convergence for sufficiently large regularization. We do not claim that every positive \(\tau\) is already in that contraction regime.</p>
 
 
-## A power iteration, not a magic convergence theorem
+## Nonlinear power iteration {#a-power-iteration-not-a-magic-convergence-theorem}
 
 <p>The numerical update alternates the two transforms:</p>
 

@@ -1,6 +1,6 @@
 ---
 title: "From MLP universality to ConvNet Universality"
-subtitle: "Approximate one coordinate, share it across space, and turn width into depth."
+subtitle: "A universality proof for translation-equivariant networks, with a width–depth trade-off."
 description: "From exponential networks to two-layer MLPs, then from one output coordinate to a universal equivariant ConvNet. A short construction trades width for depth."
 date: "2026-10-29"
 topic: "Neural networks and symmetry"
@@ -56,7 +56,7 @@ The sigmoidal case is the classical theorem of Cybenko and of Hornik, Stinchcomb
   <figcaption>Portraits linked from their institutional sources: George Cybenko, photograph by John Sherman / <a href="https://home.dartmouth.edu/news/2025/03/four-dartmouth-professors-named-aaas-fellows">Dartmouth</a>; Kurt Hornik, <a href="https://research.wu.ac.at/en/persons/kurt-hornik-7/">WU Vienna University of Economics and Business</a>.</figcaption>
 </figure>
 
-## Why exponentials make the proof simple
+## Universality through exponential networks {#why-exponentials-make-the-proof-simple}
 
 Consider the finite sums
 
@@ -199,7 +199,7 @@ $$
 
 This differs from invariance, which would require the output to stay unchanged. Examples of equivariant maps include pointwise squaring, a nonlinear stencil such as $$F(x)_j=x_jx_{j+1}$$, and the global interaction $$F(x)_j=x_j\sum_k x_k^2$$. All commute with cyclic shifts. Every ConvNet above does too: convolution commutes with shifts, pointwise activation commutes with shifts, and $$\tau_s\mathbf1=\mathbf1$$.
 
-## One output coordinate is enough
+## Universality of translation-equivariant networks {#one-output-coordinate-is-enough}
 
 For an equivariant $$F$$, define the scalar function $$g(x)=F(x)_0$$. Then
 
@@ -265,7 +265,7 @@ This is a basic instance of the correspondence developed by Petersen and Voigtla
 
 A shallow network computes all its features in parallel and then sums them. A deep network can evaluate the same sum sequentially: compute one feature, add its contribution to a running total, and move on to the next. The key is to retain both the original input and the partial sum. This gives an explicit conversion from width to depth, with *no extra approximation error*.
 
-### First, an MLP as an accumulator
+### Sequential accumulation in an MLP {#first-an-mlp-as-an-accumulator}
 
 For the scalar MLP $$f_n(x)=\sum_{i=1}^n a_i\sigma(\langle w_i,x\rangle+b_i)$$, initialize $$s_0=0$$ and apply
 
@@ -276,7 +276,7 @@ $$
 
 After $$n$$ residual blocks, $$s_n=f_n(x)$$. Instead of $$n$$ parallel nonlinear units, each block needs only one; the carried state consists of the $$d$$ input coordinates and one scalar accumulator. Thus the state width is $$d+1$$, independent of the desired accuracy, while the number of blocks grows with $$n$$. Keeping the input is essential: the next feature depends on $$x$$, not just on the previous partial sum.
 
-### Then, the same construction with convolution
+### Sequential accumulation in a convolutional network {#then-the-same-construction-with-convolution}
 
 For a deep ConvNet, a channel is an entire signal in $$\mathbb R^d$$. A general convolutional layer from $$r$$ channels to $$r'$$ channels has the form
 
@@ -375,7 +375,7 @@ The counts for these explicit realizations are:
 
 The final linear readout is not counted as a hidden layer. These are sufficient widths, not optimal-width claims. The channel bounds for the two deep constructions are independent of the approximation tolerance and of $$d$$; each channel still contains $$d$$ spatial values. The conversion retains full-support filters and does not reduce the order of the parameter count. It exchanges parallel computation for sequential computation, without asserting that training the resulting deep network will be easier.
 
-## What about small filters?
+## Local filters and receptive fields {#what-about-small-filters}
 
 Our short proofs allow filters with full circular support. Width counts channels, not spatial positions or filter coefficients. With small filters and fixed depth, the receptive field may exclude part of the input; such a network cannot approximate every equivariant map. For instance, changing a coordinate outside that receptive field leaves its output at the origin unchanged, whereas the target $$F(x)_j=\sum_k x_k$$ changes.
 

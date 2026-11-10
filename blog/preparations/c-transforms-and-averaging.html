@@ -22,7 +22,7 @@
 <p>Here is a natural test of how different the new geometry is. If two functions are cost-concave, is their average still cost-concave? For quadratic cost in Euclidean space, yes. For most other power costs, no—even on an interval. Squared geodesic distance on a round sphere gives a surprising positive example. Throughout, “average” means an arithmetic average of <em>functions</em>, not a Wasserstein barycenter of measures.</p>
 <figure class="portrait-single"><img src="assets/transport-geometry/legendre-fourier-1820.jpg" width="691" height="563" alt="Watercolor caricatures of Adrien-Marie Legendre and Joseph Fourier by Julien-Léopold Boilly" loading="lazy"><figcaption>Adrien-Marie Legendre and Joseph Fourier, by Julien-Léopold Boilly, 1820. Bibliothèque de l’Institut de France; <a href="https://commons.wikimedia.org/wiki/File:Legendre_and_Fourier_(1820).jpg">source and public-domain record</a>. This is the historical Legendre portrait, not the frequently misidentified portrait of the politician Louis Legendre.</figcaption></figure>
 
-<h2>One inequality defines the transform</h2>
+<h2>Definition of the c-transform</h2>
 <p>Let \(X,Y\) be compact spaces and \(c:X\times Y\to\mathbb R\) continuous. Initially take a finite continuous \(f\). A feasible dual pair satisfies \(f(x)+g(y)\le c(x,y)\). For fixed \(f\), its largest feasible partner is</p>
 \[
  f^c(y)=\inf_{x\in X}\{c(x,y)-f(x)\}.
@@ -42,7 +42,7 @@
 <p>Every transformed function is therefore fixed by double transformation. Finally, if a c-concave \(h\) majorizes \(f\), monotonicity of the double transform gives \(h=h^{c\bar c}\ge f^{c\bar c}\). \(\square\)</p>
 </div></details>
 
-<h2>Recovering ordinary conjugacy</h2>
+<h2>Relation to the Legendre transform</h2>
 <p>On full dual Euclidean spaces, the convex conjugate is \(h^*(y)=\sup_x\{x\cdot y-h(x)\}\). Our infimum convention differs by signs. For the pairing cost \(c(x,y)=x\cdot y\),</p>
 \[
  f^c(y)=-(-f)^*(-y),\qquad f^{c\bar c}=-(-f)^{**}.
@@ -60,14 +60,14 @@
 \]
 <p>is convex. This proves averaging stability. Restrictions on the target domain restrict the allowed supporting slopes; the full-space characterization cannot simply be reused with an arbitrary target subset.</p>
 
-<h2>A different positive example: metric costs</h2>
+<h2>Metric costs and Lipschitz potentials</h2>
 <p id="proposition-2"><strong>Proposition 2 (metric potentials).</strong> On the same compact metric space \(X=Y\), with \(c=d\), c-concave functions are precisely the 1-Lipschitz functions. Consequently their convex combinations are c-concave.</p>
 <details class="blog-proof"><summary>Proof: the triangle inequality identifies the whole class</summary><div class="blog-proof-body">
 <p>Each profile \(x\mapsto d(x,y)-g(y)\) is 1-Lipschitz, and so is its finite lower envelope. Conversely, if \(f\) is 1-Lipschitz, then \(d(x,y)-f(x)\ge-f(y)\), with equality at \(x=y\). Hence \(f^d=-f\), and \(f^{dd}=f\). \(\square\)</p>
 </div></details>
 <p>For an arbitrary finite input, one can also write \(f^{dd}(x)=\sup_y\{f(y)-d(x,y)\}\): this is its smallest 1-Lipschitz majorant. In particular, \(|x-y|^p\) with \(0&lt;p\le1\) is a metric, so averaging is stable in that range too. Geodesic distance itself poses no curvature restriction; the subtlety starts when one <em>squares</em> it.</p>
 
-<h2>Two short counterexamples cover every other power</h2>
+<h2>Closure under averaging for power costs</h2>
 <p id="theorem-1"><strong>Theorem 1 (power costs on an interval).</strong> Let \(X=Y=[-3,3]\) and \(c_p(x,y)=|x-y|^p\), with \(p&gt;0\). The class of c-concave functions is closed under arithmetic convex combinations if \(0&lt;p\le1\) or \(p=2\). For every other exponent, a mean of two individual cost profiles already fails to be c-concave.</p>
 <p>The metric argument proves the first range. For \(p=2\), the allowed centers form the convex interval \([-3,3]\). At each point an average of two supporting parabolas is itself a parabola, up to a constant, centered at the average of their centers; that center remains in the interval.</p>
 <details class="blog-proof"><summary>Proof of failure: a supporting profile has too little curvature</summary><div class="blog-proof-body">
@@ -94,7 +94,7 @@
 <p>After multiplication by \(p(p-1)\), this says the average has greater curvature than its only possible touching cost profile. Both profiles are smooth near zero because \(r\ne0\). Again there is a contradiction. \(\square\)</p>
 </div></details>
 
-<h2>Why the sphere is a genuine exception</h2>
+<h2>Squared geodesic costs on spheres</h2>
 <p>For squared <em>intrinsic</em> geodesic distance on a round sphere, arithmetic combinations of finite c-concave functions are c-concave. The property extends to products of round spheres, including flat tori with their product metrics <a href="#ref-km">[3]</a>, <a href="#ref-rcpm">[4]</a>. Chordal distance from an ambient embedding is a different cost.</p>
 <p>The key ingredient is a supporting-profile inequality, not merely positive sectional curvature. Fix a contact point \(x_0\), interpolate shortest logarithms to two centers, and define</p>
 \[

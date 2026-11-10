@@ -17,7 +17,7 @@ const keywords=html.match(/<meta name="keywords" content="([^"]+)"/)[1].split(",
 assert.match(html,/same<\/em> factor/);assert.match(html,/every<\/em> nonnegative Gram factorization/);
 assert.match(html,/Monte Carlo summands/);assert.match(html,/Laplace transform/);assert.match(html,/Poisson jumps/);
 assert.ok(!/<(?:canvas|iframe)\b/.test(html),"Static proof diagram is not a numerical experiment");
-const heads=[...html.matchAll(/<h2(?: [^>]+)?>(.*?)<\/h2>/g)].map(m=>m[1]);assert.equal(heads.at(-2),"Finally: the associated kernel notions");assert.equal(heads.at(-1),"Bibliography");
+const heads=[...html.matchAll(/<h2(?: [^>]+)?>(.*?)<\/h2>/g)].map(m=>m[1]);assert.equal(heads.at(-2),"Completely positive kernels");assert.equal(heads.at(-1),"Bibliography");
 const picture=fs.readFileSync(path.join(root,"blog/preparations/assets/cp-matrices/five-cycle.svg"),"utf8");assert.match(picture,/aria-labelledby="title desc"/);assert.equal((picture.match(/<circle /g)||[]).length,5);assert.match(picture,/10t/);
 for(const link of html.matchAll(/href="#([^"]+)"/g))assert.ok(html.includes('id="'+link[1]+'"'),"Missing reference "+link[1]);
 console.log("Complete positivity presentation: Meyer/Marco acknowledgment, numbered folded proofs, kernel-only final section, bibliography, escaped math, licensed portrait and five-cycle diagram pass.");

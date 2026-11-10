@@ -76,7 +76,7 @@ Integration gives the stated exponential decay.
 </div>
 </details>
 
-## A curved valley
+## A banana-shaped P–L example {#a-curved-valley}
 
 One of my favourite illustrations is the [banana-shaped gradient flow in the Mathematical Nexus](https://www.gpeyre.com/mathematical-nexus/python/p-l-flow/banana_gradient_flow_interactive.html). Let $$I=[0,1]$$ and, for $$b\geq0$$, consider
 
@@ -146,7 +146,7 @@ No fixed positive constant can bound this ratio below on the whole plane. This d
 </div>
 </details>
 
-## Ten years of a useful perspective
+## Karimi–Nutini–Schmidt and the P–L condition {#ten-years-of-a-useful-perspective}
 
 The 2016 paper by Hamed Karimi, Julie Nutini, and Mark Schmidt, [*Linear Convergence of Gradient and Proximal-Gradient Methods Under the Polyak–Łojasiewicz Condition*](https://arxiv.org/abs/1608.04636), is an excellent entry point into this viewpoint, including its discrete and proximal variants.
 

@@ -1,6 +1,6 @@
 ---
 title: Langevin without a potential
-subtitle: Confinement can settle a cloud without stopping its circulation.
+subtitle: Stationary distributions and probability currents for nongradient diffusions.
 description: Langevin dynamics need not follow a potential. Confinement gives an invariant
   law; linear drift gives an exact Gaussian criterion, a Lyapunov covariance equation,
   and stationary circulation.
@@ -75,7 +75,7 @@ $$
 
 Stationarity asks only for $$\nabla\cdot j_\infty=0$$: whatever enters a region must leave it. Detailed balance asks for the stronger condition $$j_\infty=0$$. In this uniformly elliptic setting, that is the reversible case [[1]](#ref-pavliotis).
 
-## What the potential does—and does not—guarantee
+## Gibbs measures and reversibility {#what-the-potential-doesand-does-notguarantee}
 
 If $$v=\nabla f$$, a natural candidate is
 
@@ -136,7 +136,7 @@ $$
 
 These conditions are sufficient, not necessary. They constrain the inward component, not the tangential one. A large swirl can be perfectly compatible with confinement. A better adapted, nonradial Lyapunov function may also succeed when the radial test fails.
 
-## The linear case is completely explicit
+## Linear diffusions and Gaussian invariant measures {#the-linear-case-is-completely-explicit}
 
 Take $$v(x)=A(x-m_*)$$, with a real matrix $$A$$. It need not be symmetric. We call the drift *stable* when every eigenvalue of $$A$$ has positive real part—so that $$e^{-At}\to0$$.
 

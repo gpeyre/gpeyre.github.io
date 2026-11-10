@@ -1,6 +1,6 @@
 ---
 title: "Averaging Positive Symmetric Matrices"
-subtitle: "Average matrices, average their logarithms, or average an entire geometric path?"
+subtitle: "Comparing log-Euclidean and Kubo–Ando geometric means with the logarithmic mean."
 description: "Three ways to average positive matrices: log-Euclidean geometry, the Kubo–Ando geometric mean, and its logarithmic path average. Short axiomatic characterizations, proofs, Gaussian transport, and interactive covariance ellipses."
 date: "2026-11-03"
 last_modified_at: "2026-11-03T09:16:42Z"
@@ -15,7 +15,7 @@ embedded_experiment: true
 
 <!--more-->
 
-## The positive cone: why matrices encode data
+## Positive semidefinite matrices and applications {#the-positive-cone-why-matrices-encode-data}
 
 <p>Write \(\mathbb S^d\) for the real symmetric \(d\times d\) matrices. Its positive semidefinite cone and positive definite interior are</p>
 
@@ -43,7 +43,7 @@ $$
 <p>The PSD matrices form a <em>convex cone</em>, since \(x^\top(aA+bB)x\ge0\) for \(a,b\ge0\). Positive definite endpoints stay positive definite. There is no positivity problem with convex arithmetic averaging. The issue is the geometry: a multiplicative change from variance \(1\) to \(100\) has arithmetic midpoint \(50.5\), whereas the scalar geometric midpoint is \(10\).</p>
 <p>From now on, assume \(A,B\succ0\). Logarithms and inverse-based formulas require this assumption. A singular covariance can be regularized as \(A+\delta I\), but results involving its logarithm are not assertions about \(\delta=0\).</p>
 
-## First route: average logarithms
+## The log-Euclidean mean {#first-route-average-logarithms}
 
 <p>The spectral theorem writes \(A=U\operatorname{diag}(a_i)U^\top\), with \(U\) orthogonal and \(a_i&gt;0\). Define</p>
 
@@ -69,7 +69,7 @@ $$
 <p>This is the <em>log-Euclidean geometric interpolation</em>, developed by Arsigny, Fillard, Pennec, and Ayache <a href="#ref-arsigny">[1]</a>, <a href="#ref-arsigny-siam">[5]</a>. Its midpoint is \(E_{1/2}\). In dimension one it is \(a^{1-t}b^t\). More generally, if \(A\) and \(B\) commute, they share an eigenbasis, and each eigenvalue follows precisely this scalar rule.</p>
 <p>The name describes an actual geometry: \(d_{\mathrm{LE}}(A,B)=\|\log A-\log B\|_{\mathrm F}\), where \(\|M\|_{\mathrm F}^2=\operatorname{tr}(M^\top M)\). The path \(E_t\) is a straight line in log coordinates and minimizes the weighted squared-distance objective. For several matrices with nonnegative weights summing to one, the corresponding mean is explicitly \(\exp(\sum_i w_i\log A_i)\).</p>
 
-## Second route: the Kubo–Ando geometric mean
+## The Kubo–Ando geometric mean {#second-route-the-kuboando-geometric-mean}
 
 <p>Another principle is to make averaging compatible with <em>every invertible linear change of coordinates</em>. Covariances transform as \(A\mapsto SAS^\top\). One would like to average before or after this change with the same result.</p>
 <p>The geometric mean associated with Kubo–Ando theory is</p>
@@ -193,7 +193,7 @@ $$
 
 </details>
 
-## A third object: the logarithmic mean
+## The operator logarithmic mean {#a-third-object-the-logarithmic-mean}
 
 <p>Now average the <em>whole Kubo–Ando path</em> using an ordinary matrix integral. This defines the <em>operator logarithmic mean</em>, denoted here by \(\mathcal L\):</p>
 
@@ -244,7 +244,7 @@ $$
 <tr><td>Logarithmic</td><td>Average the whole Kubo–Ando path</td><td>\(3/\log4\)</td></tr>
 </tbody></table>
 
-### A genuine bridge to log-Euclidean geometry
+### Relation to log-Euclidean geometry {#a-genuine-bridge-to-log-euclidean-geometry}
 
 <p>There is nevertheless a simple limiting connection—not by averaging time, but by shrinking matrix powers toward the identity.</p>
 <p id="proposition-2"><strong>Proposition 2 (small-power limit).</strong> For fixed positive definite \(A,B\) and \(t\in[0,1]\),</p>
@@ -274,13 +274,13 @@ $$
 
 </details>
 
-## Which axioms select the mean?
+## Axiomatic characterizations {#which-axioms-select-the-mean}
 
 <p>The formulas above are natural, but do their properties <em>force</em> them? There are two distinct questions: what counts as a matrix mean, and which additional principles distinguish one mean from another?</p>
 <p>For this discussion, a <em>matrix mean</em> is a map \(M:\mathbb P_d\times\mathbb P_d\to\mathbb P_d\), where \(\mathbb P_d=\mathbb S_{++}^d\), which is normalized by \(M(A,A)=A\) and jointly monotone in the Löwner order. If \(A\preceq B\), these conditions imply \(A\preceq M(A,B)\preceq B\). They do not impose symmetry, which would exclude weighted means. This is a convenient working definition, not the full Kubo–Ando axiomatization: that theory additionally uses a transformer inequality and continuity from above on positive semidefinite operators <a href="#ref-kubo">[7]</a>, <a href="#ref-connections">[10]</a>.</p>
 <p>In particular, <em>Kubo–Ando mean</em> names a whole class, not just the geometric mean. Arithmetic, harmonic, geometric, and logarithmic means all satisfy congruence equivariance. Coordinate invariance alone cannot choose between them.</p>
 
-### The geometric midpoint: three invariances suffice
+### Characterization of the geometric midpoint {#the-geometric-midpoint-three-invariances-suffice}
 
 <p id="theorem-4"><strong>Theorem 4 (invariance determines the geometric midpoint).</strong> The only map \(M:\mathbb P_d\times\mathbb P_d\to\mathbb P_d\) satisfying the following three identities, for all \(A,B\) and every invertible \(S\), is \(M(A,B)=A\#B\):</p>
 
@@ -325,7 +325,7 @@ $$
 
 <p>Full congruence equivariance matters: the log-Euclidean midpoint has symmetry and inverse compatibility, but not equivariance under every invertible change of coordinates. Conversely, the arithmetic midpoint is symmetric and congruence-equivariant, but fails inverse compatibility. Another standard characterization uses congruence equivariance together with agreement with the scalar geometric mean on diagonal matrices <a href="#ref-bini-iannazzo">[11]</a>.</p>
 
-### The interpolation: make midpoints consistent
+### Midpoint consistency and geometric interpolation {#the-interpolation-make-midpoints-consistent}
 
 <p>For a whole interpolation, the natural exchange law is \(M_t(A,B)=M_{1-t}(B,A)\). Even with congruence and inverse compatibility, this does not fix the speed along the path: replacing \(t\) by an increasing continuous \(h(t)\), with \(h(0)=0\), \(h(1)=1\), and \(h(1-t)=1-h(t)\), preserves those laws. The missing requirement is that <em>every temporal midpoint is the geometric midpoint of its endpoints</em>.</p>
 
@@ -361,7 +361,7 @@ $$
 
 </details>
 
-### The logarithmic mean: average consistently over subdivisions
+### Subdivision consistency and the logarithmic mean {#the-logarithmic-mean-average-consistently-over-subdivisions}
 
 <p>The logarithmic mean is selected by a different principle: split the geometric path into equal halves, average each half, then average the two answers <em>arithmetically</em>. Its integral representation is standard <a href="#ref-raissouli-furuichi">[12]</a>; the following elementary characterization follows directly from subdivision.</p>
 
@@ -417,7 +417,7 @@ $$
 
 <p>The distinction is now structural: coordinate changes, swapping, and inversion select the <em>geometric midpoint</em>; consistent midpoints select its <em>constant-speed path</em>; arithmetic aggregation over equal subdivisions selects the <em>logarithmic path average</em>.</p>
 
-## A Gaussian transport map hidden in a geometric mean
+## The Gaussian optimal transport map {#a-gaussian-transport-map-hidden-in-a-geometric-mean}
 
 <p>Here is a useful connection to <a href="{{ '/blog/preparations/bures-distance-square-root-covariances.html' | relative_url }}">Bures geometry and Gaussian optimal transport</a>. The optimal quadratic-cost transport from \(\mathcal N(0,A)\) to \(\mathcal N(0,B)\) is \(x\mapsto Tx\), where</p>
 

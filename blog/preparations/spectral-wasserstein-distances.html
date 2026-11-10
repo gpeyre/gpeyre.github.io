@@ -33,7 +33,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p class="draft-status">Alpha preview · Work in progress</p>
 <p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
 <h1>Spectral Wasserstein distances</h1>
-<p class="subtitle">Keep the directions of motion, then choose how to measure them.</p>
+<p class="subtitle">Measuring transport through the second moments of displacement.</p>
 <p class="byline">Gabriel Peyré</p>
 </div></header>
 <main class="wrap"><article class="blog-prose">
@@ -41,7 +41,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p>In <em>Muon Dynamics as a Spectral Wasserstein Flow</em> <a href="#ref-muon">[1]</a>, I keep the entire matrix of displacement second moments and apply a matrix gauge to it. This gives the <em>spectral Wasserstein distance</em> \(\mathsf W_\gamma\). It connects a static coupling problem, an adversary choosing a quadratic ground cost, and a Benamou–Brenier action for moving distributions.</p>
 <p>The construction extends the subspace robust Wasserstein distances of François-Pierre Paty and Marco Cuturi <a href="#ref-paty">[2]</a>. We will prove the robust and dynamic formulations, then explore the Schatten family numerically. There is a useful subtlety: the distance and dynamic formula remain meaningful down to \(p=1/2\), even though the convex robust-cost interpretation stops at \(p=1\).</p>
 
-<h2>Replace a scalar transport cost by a displacement matrix</h2>
+<h2>Displacement matrices and spectral transport costs</h2>
 <p>Let \(\mu,\nu\in\mathcal P_2(\mathbb R^d)\): probability measures with finite second moments. A coupling \(\pi\in\Pi(\mu,\nu)\) is a joint law of \((X,Y)\) with these marginals. Define</p>
 \[
  S_\pi=\mathbb E[(Y-X)(Y-X)^\top].
@@ -69,7 +69,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
  \mathsf W_{\gamma_\infty}^2=\sigma^2.
 \]
 
-<h2>A robust quadratic cost</h2>
+<h2>The cost-robust formulation</h2>
 <p>A convex monotone gauge has a positive-semidefinite support representation <a href="#ref-muon">[1]</a>:</p>
 \[
  \gamma(S)=\max_{Q\in K_\gamma}\operatorname{tr}(QS),
@@ -121,7 +121,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 </div></details>
 <p>The same representation proves the triangle inequality: each \(\mathsf W_Q\) is a pseudometric, and their maximum satisfies the triangle inequality. Separation follows from \(c\operatorname{tr}S\le\gamma(S)\le C\operatorname{tr}S\) for some positive constants. Hence \(\sqrt c\,\mathsf W_2\le\mathsf W_\gamma\le\sqrt C\,\mathsf W_2\): this is a genuine distance with the usual \(\mathsf W_2\) topology.</p>
 
-<h3>The connection with Paty and Cuturi</h3>
+<h3>Relation to subspace robust Wasserstein distances</h3>
 <p>For the Ky Fan gauge \(\gamma_k(S)=\sum_{i=1}^k\lambda_i(S)\), with eigenvalues in decreasing order, the representing matrices satisfy</p>
 \[
  0\preceq Q\preceq I,
@@ -188,7 +188,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 \]
 <p>Each integrand is a quadratic perspective. Taking their supremum gives a convex action in mass and momentum, while continuity becomes \(\partial_t\rho+\nabla\cdot m=0\), linear in the unknowns. The closed perspective extends the formula to measures; for singular \(Q\), the local vacuum cost is zero on \(\ker Q\) and infinite in the other directions. The full action still forces finite-energy momentum to be absolutely continuous with respect to mass, because \(\gamma\) bounds Euclidean kinetic energy from below.</p>
 
-<h2>Can the Schatten exponent be smaller than one?</h2>
+<h2>Schatten exponents below one</h2>
 <p>Yes, with a precise change of scope. The paper's main theory uses matrix norms, hence \(p\ge1\); Appendix E.4 of its October 2026 revision develops the extension below <a href="#ref-muon">[1]</a>. For \(0\lt p\lt 1\), \(\gamma_p\) is a Schatten anti-norm on positive matrices: it is monotone and concave rather than convex <a href="#ref-antinorm">[8]</a>. The robust-cost theorem and convex coupling formulation above no longer apply. Nevertheless, the distance and dynamic statements extend further.</p>
 <p id="theorem-3"><strong>Theorem 3 (the half-Schatten threshold).</strong> Define \(\mathsf W_{\gamma_p}\) by the same static formula. For every \(p\in[1/2,\infty]\), it is a distance and satisfies the same Benamou–Brenier formula with action \(\mathcal E_{\gamma_p}\). In dimension \(d\ge2\), for every \(0\lt p\lt 1/2\), the triangle inequality can fail. In dimension one, \(\gamma_p(s)=s\) for every \(p>0\), so all these choices simply give \(W_2\) and its usual dynamic formula.</p>
 <details class="blog-proof"><summary>Proof: the square root lifts to a Schatten-2p norm</summary><div class="blog-proof-body">
@@ -239,7 +239,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 \]
 <p>Their equally weighted mixture gives \(I_2\), with \(\gamma_p(I_2)=2^{1/p}>2\) for \(p\lt 1\). Hence no supremum of linear quadratic costs can represent this gauge there. A metric can survive even though its static optimization problem is nonconvex.</p>
 
-<h2>Numerical experimentation: changing p changes the coupling</h2>
+<h2>Numerical experimentation: dependence on the Schatten exponent</h2>
 <p>How does the spectral gauge change transport between more intricate distributions? The figure below uses two point clouds with several clusters and curved structure. Change the number of points in each cloud, then move \(p\) from \(1/2\) through \(1\) to the operator-norm endpoint. The same clouds are kept when \(p\) changes, so the differences come from the transport geometry.</p>
 <p>For \(n\) points in each cloud, use the empirical measures</p>
 \[

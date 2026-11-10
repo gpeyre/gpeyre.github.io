@@ -63,7 +63,7 @@ $$
 
 Let us derive this equation from the variational time step, explain its boundary behavior, and then watch it act on a mixture of three Gaussians.
 
-## Quantiles flatten one-dimensional transport
+## The quantile representation of one-dimensional transport {#quantiles-flatten-one-dimensional-transport}
 
 For a probability measure $$\alpha\in\mathcal P_2(\mathbb R)$$, meaning that its second moment is finite, define its cumulative distribution and generalized quantile by
 
@@ -112,7 +112,7 @@ $$
 
 A large spacing $$q_s$$ means low density; a small spacing means high density.
 
-## The JKO step becomes a Hilbert-space proximal step
+## The JKO scheme in quantile coordinates {#the-jko-step-becomes-a-hilbert-space-proximal-step}
 
 For an energy $$\mathcal E$$ on measures and a time step $$\tau>0$$, the JKO scheme chooses
 
@@ -189,7 +189,7 @@ If $$U$$ is convex, then $$L''(z)=U''(1/z)/z^3\ge0$$: the integrand in quantile 
 
 > **What is exact, and what is a smooth computation?** The quantile JKO minimization on $$\mathcal C$$ is an exact reformulation. The formulas involving $$q_s$$ above describe its smooth, strictly increasing regime. For arbitrary measures, use the extended energy $$\mathcal E(q_\#ds)$$, rather than assuming that a classical derivative alone captures the whole functional. Atoms, gaps in support, and singular parts require this distinction.
 
-## Negative Shannon entropy gives heat
+## The heat equation as an entropy gradient flow {#negative-shannon-entropy-gives-heat}
 
 Take the Boltzmann entropy
 
@@ -255,7 +255,7 @@ $$
 
 The squared $$L^2$$ speed of the quantile is precisely the Fisher information of the density.
 
-## A Gaussian check: one JKO step is not one heat step
+## Gaussian solutions and finite JKO steps {#a-gaussian-check-one-jko-step-is-not-one-heat-step}
 
 The exact heat solution is convolution with $$\mathcal N(0,2t)$$. Thus, starting from $$\mathcal N(m,\sigma_0^2)$$,
 
@@ -303,7 +303,7 @@ The strictly convex scalar objective has derivative $$(b-\sigma_k)/\tau-1/b$$. I
 
 In other words, JKO applies implicit Euler to $$\dot\sigma=1/\sigma$$. The continuous solution has variance $$\sigma_0^2+2t$$, but a single JKO step does *not* simply add $$2\tau$$ to the variance. The two agree in the vanishing-step limit.
 
-## Numerical experimentation: follow the same mass over time
+## Numerical experimentation: quantile trajectories {#numerical-experimentation-follow-the-same-mass-over-time}
 
 Start from three Gaussian components with unequal weights and widths. If their means, variances, and weights are $$m_j,\sigma_j^2,w_j$$, the heat solution is exactly
 

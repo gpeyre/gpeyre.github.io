@@ -46,7 +46,7 @@ Could this effortless coupling already be an optimal transport? Under compactnes
 
 <!--more-->
 
-## The freedom that a coupling represents
+## Couplings and the transport objective {#the-freedom-that-a-coupling-represents}
 
 Let $$\alpha,\beta$$ be probability measures with compact metric supports $$A=\operatorname{supp}\alpha$$ and $$B=\operatorname{supp}\beta$$, and let $$c:A\times B\to\mathbb R$$ be continuous. A coupling $$\pi\in\Pi(\alpha,\beta)$$ is a joint distribution whose first marginal is $$\alpha$$ and second marginal is $$\beta$$. The transport problem is
 
@@ -126,7 +126,7 @@ $$
 
 The perturbation has a simple meaning: reduce mass where the cost is higher than its row-and-column prediction, and increase mass where it is lower. Centering makes these changes cancel separately in every marginal. Compactness keeps the direction bounded; continuity upgrades an almost-everywhere conclusion to one on the full supports. With merely measurable costs or noncompact supports, the theorem needs corresponding integrability and almost-everywhere qualifications.
 
-## The smallest possible cycle
+## Two-point cycle perturbations {#the-smallest-possible-cycle}
 
 For two points on each side, keeping the row and column sums fixed permits the perturbation
 
@@ -143,7 +143,7 @@ $$
 
 Unless this slope is zero, one sign improves the independent plan. The continuous proof uses a distributed version of this same mass exchange. This also connects with transport duality: a cost $$u(x)+v(y)$$ is exactly saturated by a pair of dual potentials everywhere, so every feasible plan has the same primal value. General duality and optimality conditions are treated in [[2]](#ref-villani).
 
-## Quadratic cost: orthogonal supports are the exception
+## Quadratic cost and orthogonal supports {#quadratic-cost-orthogonal-supports-are-the-exception}
 
 For $$c(x,y)=\lVert x-y\rVert^2$$, the rectangular cross-difference is
 
@@ -158,7 +158,7 @@ Let $$U=\operatorname{span}(A-A)$$ and $$V=\operatorname{span}(B-B)$$. Theorem 1
 
 A Dirac marginal is one possibility, because its difference span is $$\{0\}$$. But it is not the only possibility: a source on a horizontal line and a target on a vertical line also work, even when both are diffuse. More generally the supports may lie in orthogonal affine subspaces. If both supports have nonempty interior in the same positive-dimensional Euclidean space, independence cannot be optimal.
 
-## Why entropic transport approaches independence
+## The large-regularization limit {#why-entropic-transport-approaches-independence}
 
 There is an apparent tension with entropic regularization, where diffuse couplings are desirable. The regularized problem is
 

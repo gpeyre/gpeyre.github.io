@@ -54,7 +54,7 @@ embedded_experiment: true
 
 <!--more-->
 
-## The two requirements
+## Joint convexity and lower semicontinuity {#the-two-requirements}
 
 <p>Let \(X,Y\) be compact metric spaces and let \(c:X\times Y\to[0,\infty)\) be continuous. Write \(\mathcal P(X)\) for probability measures on \(X\), and \(\delta_x\) for a unit point mass. We seek a functional \(F(\alpha,\beta)\) which does not exceed \(c(x,y)\) on point masses:</p>
 
@@ -146,7 +146,7 @@ $$
 <p>There are generally many ways to make this decomposition. Convexity bounds \(F\) by the average pointwise cost of <em>each</em> one, so it bounds \(F\) by the smallest of them. Lower semicontinuity is what lets finite decompositions control general distributions.</p>
 <p>Without that last assumption, the conclusion is false. On \(X=Y=[0,1]\), set \(F=T_c\) when both marginals have finite support, and \(F=+\infty\) otherwise. This functional is convex and agrees with the cost on every Dirac pair, but it assigns infinite value to diffuse distributions. Weak lower semicontinuity excludes precisely this kind of jump from finite clouds to their limit.</p>
 
-## A complete example on two points
+## Transport on a two-point space {#a-complete-example-on-two-points}
 
 <p>Take \(X=Y=\{0,1\}\), with cost \(c(x,y)=|x-y|\). The squared cost is the same on this two-point space. Write</p>
 
@@ -184,7 +184,7 @@ $$
 <p>The four Dirac pairs are the corners of the square of parameters \((a,b)\). The equal-point corners have cost \(0\), and the other two have cost \(1\). The V-shaped surface \(|a-b|\) is the largest convex function lying below those four heights.</p>
 <p>This also illustrates why one should state the theorem for the transport <em>cost</em>. On these two points \(W_2^2=|a-b|\), whereas \(W_2=\sqrt{|a-b|}\) is not convex in the marginals: along \(b=0\), it is a strictly concave function of \(a\).</p>
 
-## Why “largest” is essential
+## Nonuniqueness without maximality {#why-largest-is-essential}
 
 <p>Joint convexity, weak lower semicontinuity, and agreement on Dirac masses do not uniquely determine a functional. On compact Euclidean supports, choose \(\varepsilon&gt;0\) and let</p>
 
@@ -226,7 +226,7 @@ $$
 <p>Assign cost \(c(x,y)\) to the pairs \((\delta_x,\delta_y)\), and \(+\infty\) to every other pair of laws. Taking the convex lower-semicontinuous envelope of this function produces \(T_c\). On finite spaces, this is the familiar operation of taking the lower convex roof of finitely many points. On general compact spaces, weak limits complete that construction.</p>
 <p>The coupling is therefore more than an auxiliary variable introduced to relax a matching constraint. It is the certificate of a convex decomposition. Its marginal constraints say exactly that the decomposition averages to the two distributions we started with. This is one reason linear programming appears so naturally in optimal transport <a href="#ref-computational">[3]</a>.</p>
 
-## The dual potentials are the supporting affine functions
+## Kantorovich duality and supporting affine functions {#the-dual-potentials-are-the-supporting-affine-functions}
 
 <p>This picture also explains Kantorovich duality. A continuous affine function of the two marginals has the form</p>
 
@@ -344,7 +344,7 @@ $$
 <p><strong>Which exponents does this cover?</strong> The proposition as written is a formula for \(W_1\), not for \(W_p\) at arbitrary \(p\). The underlying condition, however, is that the <em>ground costs</em> satisfy the triangle inequality. Thus the same proof gives \(T_p=\sum_i w_i(p)|a_i-b_i|\), with \(w_i(p)=(d_{ij}^p+d_{ik}^p-d_{jk}^p)/2\), whenever these three weights are nonnegative. This always holds for \(0&lt;p\le1\), because \((u+v)^p\le u^p+v^p\); it can also hold for particular triangles with \(p&gt;1\), for instance an equilateral triangle. For \(p\ge1\), remember that this computes \(W_p^p\), not \(W_p\) itself.</p>
 <p>For \(p&gt;1\), that inequality may fail, and keeping all common mass in place need no longer be optimal. For example, take \(x_1=(-1,0)\), \(x_2=(0,0.1)\), \(x_3=(1,0)\), and \(p=2\). Between \(a=(1/2,1/2,0)\) and \(b=(0,1/2,1/2)\), sending half the mass directly from \(x_1\) to \(x_3\) costs \(2\). Instead, exchanging half a unit along each of \(x_1\to x_2\) and \(x_2\to x_3\) costs only \(1.01\). This uses the mass already present at \(x_2\); it is not free transshipment. Between the two endpoint Dirac masses, the cost is still \(4\).</p>
 
-### Beyond p = 1: an equally fast exact computation
+### Exact three-site transport for general positive exponents {#beyond-p--1-an-equally-fast-exact-computation}
 
 <p>Fortunately, even when the triangle inequality fails, three-site transport has a closed form. Write \(c_{ij}=d_{ij}^p\). At most one edge can violate the triangle inequality; relabel its endpoints \(i,j\), with \(k\) the remaining site, and put</p>
 

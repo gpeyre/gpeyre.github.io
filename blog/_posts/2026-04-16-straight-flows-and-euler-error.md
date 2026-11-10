@@ -44,7 +44,7 @@ I wanted a precise estimate that exhibits this dependence directly. Rewriting th
 
 This post develops the argument in my [note *Rectified Flow meets Cauchy–Lipschitz*](https://github.com/gpeyre/DiscreteDiffusion/tree/main/draft/cauchy-lipschitz).
 
-## The setting
+## ODE assumptions and material acceleration {#the-setting}
 
 Consider an ordinary differential equation on $$[0,1]$$:
 
@@ -74,7 +74,7 @@ $$
 
 A global bound $$A_{\max}=\sup_{t,x}\|a(t,x)\|$$ can replace $$A_X$$ when available, but only the acceleration along this trajectory is needed below.
 
-## The bound
+## Global Euler error bound {#the-bound}
 
 For $$h=1/n$$ and $$t_k=kh$$, the explicit Euler scheme is
 
@@ -188,7 +188,7 @@ Errors generated earlier have more time to be amplified. This is a discrete Duha
 </div>
 </details>
 
-## What exactly does “straight” mean?
+## Geometric straightness and material acceleration {#what-exactly-does-straight-mean}
 
 If $$a(t,X(t))=0$$ for all $$t$$, the trajectory has constant velocity, and Euler is exact at every grid point, even for a large step. The recurrence above proves this immediately.
 

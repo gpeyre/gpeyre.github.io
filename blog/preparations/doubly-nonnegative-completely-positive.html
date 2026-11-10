@@ -13,7 +13,7 @@
 <p>When we say that a matrix is <em>positive</em>, do we mean that its entries are positive, that its quadratic form is nonnegative, or that it can be built from nonnegative features? These properties sound similar, but they answer different questions. The last requirement is stronger than the first two combined.</p>
 <p>This post develops the matrix distinction behind the discussion of positive features in Section 10.4 of my book <a href="#ref-book">[2]</a>. We will keep matrices center stage, build explicit examples and counterexamples, and only at the end turn to kernels and a constructive proof for generalized Gaussians.</p>
 
-<h2>Two kinds of nonnegativity</h2>
+<h2>Positive semidefiniteness and entrywise nonnegativity</h2>
 <p>We study real symmetric matrices \(A\); their factors need not be square. Write \(A\succeq0\) when \(A\) is <em>positive semidefinite</em> (PSD):</p>
 \[
  z^\top Az\ge0\qquad\text{for every }z\in\mathbb R^n.
@@ -33,7 +33,7 @@
 \]
 <p>The word “doubly” refers to these two orders, not to row and column sums as in a <a href="orthostochastic-matrices.html">doubly stochastic matrix</a>. Checking membership in \(\mathrm{DNN}_n\) is straightforward: inspect the entries and the eigenvalues.</p>
 
-<h2>Nonnegative features: a stronger requirement</h2>
+<h2>Complete positivity and nonnegative Gram factors</h2>
 <p>A PSD matrix is a Gram matrix: \(A=BB^\top\) for some real \(B\), whose rows are feature vectors. A matrix is <em>completely positive</em> if these features can all be chosen nonnegative:</p>
 \[
  \mathrm{CP}_n=\{BB^\top:B\in\mathbb R_+^{n\times r},\ r\text{ finite}\}.
@@ -64,7 +64,7 @@
 \]
 <p>satisfies \(BB^\top=A\). If \(a=0\), positive semidefiniteness forces \(b=0\), and the factorization is immediate. A classical, substantially less elementary theorem says that \(\mathrm{CP}_n=\mathrm{DNN}_n\) for every \(n\le4\) <a href="#ref-maxfield">[3]</a>. The first obstruction occurs at five.</p>
 
-<h2>A useful closure calculus</h2>
+<h2>Closure properties</h2>
 <p id="proposition-1"><strong>Proposition 1 (constructing more completely positive matrices).</strong> The cone \(\mathrm{CP}_n\) is convex, closed, and stable under entrywise products. If \(A\in\mathrm{CP}_n\) and \(R\in\mathbb R_+^{m\times n}\), then \(RAR^\top\in\mathrm{CP}_m\).</p>
 <details class="blog-proof"><summary>Proof: concatenate features, multiply features, and normalize their trace</summary><div class="blog-proof-body">
 <p>If \(A=BB^\top\) and \(D=CC^\top\), then \(sA+tD\), for \(s,t\ge0\), is factored by the concatenation \([\sqrt sB\ \sqrt tC]\). Also \(RAR^\top=(RB)(RB)^\top\), with \(RB\ge0\). For the entrywise product, pair every column of \(B\) with every column of \(C\):</p>
@@ -80,7 +80,7 @@
 </div></details>
 <p>The width bound is an existence result, not a promise that a small or useful factor is easy to find <a href="#ref-cp-book">[4]</a>. Complete positivity imposes an extra geometric constraint, not just another easy spectral check.</p>
 
-<h2>Five points are enough to separate the cones</h2>
+<h2>A five-dimensional counterexample</h2>
 <p>Let \(C\) be the adjacency matrix of a cycle on five vertices. For \(t\ge0\), set</p>
 \[
  A_t=I+tC=
@@ -117,7 +117,7 @@
 </div></details>
 <p>A block diagonal copy with an identity matrix gives counterexamples in every larger dimension. The gap between the cones is a classical topic in matrix optimization <a href="#ref-five">[5]</a>; this particular cycle family makes the reason visible without solving a factorization problem.</p>
 
-<h2>Even strictly positive entries do not suffice</h2>
+<h2>A counterexample with strictly positive entries</h2>
 <p>Perhaps the zero entries caused the problem? They made it easy to prove, but they are not essential. Let \(J=\mathbf1\mathbf1^\top\) and define</p>
 \[
  \overline A=I+\tfrac35C+\tfrac1{10}J.
@@ -142,14 +142,14 @@
 </div></details>
 <p>Entrywise positivity and spectral positivity are tests on the matrix we see. Complete positivity asks for a common nonnegative latent representation. The latter can fail even when both former tests hold strictly.</p>
 
-<h2 id="kernels">Finally: the associated kernel notions</h2>
+<h2 id="kernels">Completely positive kernels</h2>
 <p>A real symmetric kernel \(k(x,y)\) is <em>doubly nonnegative</em> if every finite Gram matrix \(K_{ij}=k(x_i,x_j)\) is DNN, and <em>completely positive</em> if every such matrix is CP. The first property is just the combination of a PSD kernel and pointwise nonnegative values. For the second, a constructive sufficient condition is a nonnegative feature representation</p>
 \[
  k(x,y)=\int\phi(x,z)\phi(y,z)\,d\mu(z),\qquad \phi(x,z)\ge0.
 \]
 <p>Indeed, on any finite point cloud, this is an integral of nonnegative rank-one matrices, hence a CP matrix by Proposition 1. The same closure rules allow nonnegative sums, products, and finite-valued nonnegative mixtures of such kernels. A finite matrix has a finite factor, but one should not expect a single finite-dimensional exact feature map for a kernel on an entire continuum.</p>
 
-<h3>A positive kernel which still has no positive features</h3>
+<h3>A doubly nonnegative kernel that is not completely positive</h3>
 <p>The matrix obstruction has a smooth kernel counterpart from the book. On the circle, set</p>
 \[
  k_\lambda(x,y)=\lambda+\cos^2\!\big((x-y)/2\big),\qquad\lambda=\tfrac1{20}.
@@ -166,7 +166,7 @@
 \]
 <p>To check the value, note that \(\sum_{i,j}K_{ij}=25(\lambda+1/2)\), while \(\langle C,K\rangle=10(\lambda+\cos^2(\pi/5))\). Thus this finite Gram matrix is not CP, and the kernel cannot have nonnegative features. A positive PSD kernel is not automatically positively factorable.</p>
 
-<h3>Gaussian features, then generalized Gaussians</h3>
+<h3>Gaussian and generalized Gaussian kernels</h3>
 <figure class="portrait-single"><img src="../imgs/schoenberg-1971.jpg" width="277" height="400" loading="lazy" decoding="async" alt="Isaac Jacob Schoenberg, photographed in 1971 by Konrad Jacobs"><figcaption>Isaac Jacob Schoenberg, 1971. Konrad Jacobs, Archives of the Mathematisches Forschungsinstitut Oberwolfach, <a href="https://opc.mfo.de/detail?photo_id=3723">photo 3723</a>. Unmodified image from <a href="https://commons.wikimedia.org/wiki/File:SchoenbergIJ.jpeg">Wikimedia Commons</a>, licensed <a href="https://creativecommons.org/licenses/sa/1.0/">CC ShareAlike 1.0</a>.</figcaption></figure>
 <p>Gaussian kernels are better behaved: they have genuinely positive features. More generally, the same is true of</p>
 \[

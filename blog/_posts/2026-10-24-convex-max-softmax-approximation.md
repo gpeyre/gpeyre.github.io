@@ -1,8 +1,6 @@
 ---
 title: Convex approximation with max and softmax layers
-subtitle: Supporting planes give a remarkably simple universal network. Smoothing
-  the maximum makes the network differentiable—but introduces a second approximation
-  scale.
+subtitle: Approximation rates for maxima of affine functions and their smooth log-sum-exp counterparts.
 description: Constructive universal approximation of convex functions by max-affine
   and log-sum-exp networks, with proofs, rates, and interactive experiments.
 date: '2026-10-24'
@@ -51,7 +49,7 @@ One architecture is especially transparent: compute several affine functions, th
 
 <!--more-->
 
-## A network made of supporting planes
+## Max-affine networks and supporting hyperplanes {#a-network-made-of-supporting-planes}
 
 For vectors $$a_i\in\mathbb R^d$$ and offsets $$b_i\in\mathbb R$$, set
 
@@ -91,7 +89,7 @@ No differentiability or interior assumption is needed. In particular, a plane ne
 </div>
 </details>
 
-## How many planes are needed?
+## Approximation rates for smooth convex functions {#how-many-planes-are-needed}
 
 Write $$\Vert g\Vert_\infty=\sup_{x\in K}\vert g(x)\vert$$. Theorem 1 gives no bound on $$N$$. If the target is smooth, tangent planes have a quadratic local error, and a grid gives an explicit rate. An $$h$$-net means that every point of $$K$$ is within distance $$h$$ of one of the chosen points.
 
@@ -181,7 +179,7 @@ Thus each active region has diameter at most $$4\sqrt\varepsilon$$, and is conta
 </div>
 </details>
 
-## From max to softmax
+## Log-sum-exp approximation {#from-max-to-softmax}
 
 The smooth analogue is the *log-sum-exp* (LSE) network, at temperature $$\tau>0$$:
 
@@ -398,7 +396,7 @@ For conditioning, hard-max and low-temperature fits use free plane centers and f
 
 The automatic setting uses $$\tau=1/(2n)$$; manual mode lets you explore other temperatures and refits the softmax network. At very low temperature, an LSE can genuinely approach a polyhedral shape even though it is smooth. The fine mesh and analytic normals reduce rendering artifacts without artificially rounding the surface. The smoothing lemma compares max and LSE built from the *same* planes; the two independently trained 2D models need not satisfy that comparison.
 
-## What this buys us—and what it does not
+## Applications and limitations {#what-this-buys-usand-what-it-does-not}
 
 A max-affine epigraph is described by linear inequalities, which is convenient in optimization. Its smooth LSE counterpart provides an explicit gradient and a positive semidefinite Hessian. Both are universal convex models, and their rates expose the usual dependence on dimension. Differences of two LSE networks can in turn represent much richer, nonconvex functions [[6]](#ref-dlse).
 
