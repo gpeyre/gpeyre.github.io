@@ -697,7 +697,7 @@
       "date": "2026-11-10",
       "url": "https://www.gpeyre.com/blog/2026/11/10/training-very-deep-resnets/",
       "message": "Depth becomes time in a ResNet. Explore adjoint training, noncommuting linear flows, and a loss with no bad local minima—but increasingly flat saddles. https://www.gpeyre.com/blog/2026/11/10/training-very-deep-resnets/",
-      "status": "prepared",
+      "status": "announced",
       "source_sha256": "da293513c205f80eacd533214659f33ec234f98034f3fc5034b57204b4a8fd44",
       "base_commit": "b3703c4a053fd2cb2ae653c8b782b25e74571e5a",
       "files": [
@@ -707,14 +707,23 @@
         "js/blog-search-index.js",
         "blog/publication-log.json"
       ],
-      "publication_commit": null,
-      "bluesky_uri": null,
-      "bluesky_cid": null,
+      "publication_commit": "d5e999e3f5a1e05909aa5b4d8ab11beb3ff34a3a",
+      "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3mzw53bdc223n",
+      "bluesky_cid": "bafyreig6bnpkoot62erqtw4sf2y7qpq4z73mavnytx7hgapt4emxurzmbu",
       "working_sha256": {
         "blog/_posts/2026-11-10-training-very-deep-resnets.md": "a39448cf806a0c977d74aaf3bd832884c4a2be8f938133cfe5157a10e259e368",
         "blog/preparations/training-very-deep-resnets.html": "4d8ed7a34c1676252a66407c220c27258a71186855188b022fcaf6ecc523166a",
         "blog/preparations/index.html": "4b81754459dde1298ef9e2666b4b5a550632647a9899b74c74d3cc34ed5fc9b9",
         "js/blog-search-index.js": "1bbe11c02ebd35a7ddbe267bea70d7f88b79d08a4ce2b96a84807a5b872d407c"
+      },
+      "announcement_image": {
+        "path": "/blog/imgs/summaries/training-very-deep-resnets.jpg",
+        "alt": "Exact residual-network loss contours at depth eight: eight zero-loss minima surrounding the degenerate saddle at minus eight, with its loss-one contour dashed.",
+        "width": 1200,
+        "height": 900,
+        "sha256": "568a5404a95221d4d7ebc8f2ac0225f6727ad0d4224d1f48f77e43c36b6f4860",
+        "mime_type": "image/jpeg",
+        "size": 124076
       }
     }
   ]
