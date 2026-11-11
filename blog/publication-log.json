@@ -732,7 +732,7 @@
       "date": "2026-11-11",
       "url": "https://www.gpeyre.com/blog/2026/11/11/projections-corrections-reflections/",
       "message": "Alternating projections find a feasible point, not necessarily the nearest one. Dykstra adds corrections; Douglas–Rachford uses reflections. Explore the geometry—and a Sudoku experiment. https://www.gpeyre.com/blog/2026/11/11/projections-corrections-reflections/",
-      "status": "prepared",
+      "status": "announced",
       "source_sha256": "65fe2435b784addda591955a530bcea3457ac804da9078648827f314c6a1ba9e",
       "base_commit": "ff4c2403f0b7c33a08d20fd34782c211179d4eb8",
       "files": [
@@ -742,14 +742,23 @@
         "js/blog-search-index.js",
         "blog/publication-log.json"
       ],
-      "publication_commit": null,
-      "bluesky_uri": null,
-      "bluesky_cid": null,
+      "publication_commit": "ae4dd8469bc99850d8541379604b144d877035c6",
+      "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3mzynk6s2226r",
+      "bluesky_cid": "bafyreiczus6b5qwhxdwfyx3xq2o6x67wvjmbqjwjueeb2aoqtfjmqxpf7a",
       "working_sha256": {
         "blog/_posts/2026-11-11-projections-corrections-reflections.md": "b72b6bb48694b8a1841dd9e7d07c65e01e1c1eeb227832be97d72dabc52b6e06",
         "blog/preparations/projections-corrections-reflections.html": "87b82838a5dd8f0b6b5c5360c7d36e7369f93d02fd9397e7082c06d013169ce8",
         "blog/preparations/index.html": "f377ae48adba73b4742f8d164f59285f849d8340d74a0ecdc50f426fc9549041",
         "js/blog-search-index.js": "0dfa9db85e86472846f69034ff7cf8c59ed9534a3725e2e172c6cd68c5ddc42f"
+      },
+      "announcement_image": {
+        "path": "/blog/imgs/summaries/projections-corrections-reflections.jpg",
+        "alt": "A Sudoku solved by product-space Douglas–Rachford reflections: teal clues and the verified completed grid, beside the violation and unrounded-residual histories.",
+        "width": 1200,
+        "height": 587,
+        "sha256": "27852dfc639584ada2dc886922841fa155849d40b6a6cf60f1cba4f0c0f49608",
+        "mime_type": "image/jpeg",
+        "size": 81279
       }
     }
   ]
