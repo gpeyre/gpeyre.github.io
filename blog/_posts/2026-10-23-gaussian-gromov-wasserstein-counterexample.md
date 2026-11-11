@@ -43,7 +43,7 @@ proofs: true
 
 Quadratic optimal transport between Gaussians has an explicit solution: when the source is nondegenerate, an affine map solves the transport problem, and the answer can be expressed using means and covariance matrices. Does a comparable Gaussian solution exist for Gromov–Wasserstein transport, where the task is to match *relations between pairs of points*?
 
-In general, it does not. A pair of Gaussian marginals need not admit a jointly Gaussian optimal coupling. The example below makes the obstruction explicit: linear correlation has a bounded budget, while correlating the *radii* can exploit fluctuations that grow with dimension.
+In general, it does not. A pair of Gaussian marginals need not admit a jointly Gaussian optimal coupling. In the example below, the improvement available through linear correlation is bounded, whereas matching the *radii* gives an improvement that grows with dimension.
 
 The construction is recorded in [Proposition 13.34 of *Optimal Transport for Machine Learners*](https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.13.3.34) [[1]](#ref-book). The Gaussian-constrained problem and the question of unrestricted optimality are studied by Antoine Salmona, Julie Delon, and Agnès Desolneux [[2]](#ref-gaussian). We will prove the strict separation directly, without claiming a formula for the unrestricted optimizer.
 
@@ -133,7 +133,7 @@ The Gaussian fourth-moment identity gives $$\mathbb E[X^2Y_j^2]=1+2k_j^2$$. Ther
 
 </details>
 
-This calculation identifies the possible escape route. In a jointly Gaussian law, the mixed fourth moment is tied to $$k$$. For a general coupling, it is an independent source of improvement. We will set $$k=0$$ and make the fourth moment large enough to compensate.
+This calculation suggests how to construct a better coupling. In a jointly Gaussian law, the mixed fourth moment is tied to $$k$$. A general coupling need not satisfy this relation. We will set $$k=0$$ and make the fourth moment large enough to compensate.
 
 ## A radial non-Gaussian competitor {#a-radial-coupling-that-beats-the-whole-gaussian-class}
 

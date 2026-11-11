@@ -57,7 +57,7 @@ proofs: true
 embedded_experiment: true
 ---
 
-Convex optimization is appealing because a local supporting plane contains global information. But many interesting objectives combine competing effects: a fidelity term and a sparsity incentive, attraction and repulsion, or positive and negative contributions to a transport energy. Subtracting two convex functions is already enough to leave the convex world.
+Many optimization objectives are differences of convex functions. Examples include a fidelity term minus a sparsity incentive, attraction minus repulsion, and transport energies with positive and negative weights. Although each term is convex, their difference need not be.
 
 The resulting class is called *difference-of-convex*, or *DC*, optimization. Toland duality consists in conjugating both convex functions, reversing their order, and minimizing again [[1]](#ref-1), [[2]](#ref-2). Following the viewpoint of Guillaume Carlier [[3]](#ref-3), I want to explain how this duality works and when it turns a nonconvex objective into a convex dual problem.
 
@@ -412,9 +412,9 @@ $$
 
 Without constraints, this reduces to $$\nabla\Psi(p_\star)=0$$. For a nonsmooth dual, one uses its convex subdifferential, including the feasible-set constraint. This is a condition on the *whole dual objective*, not merely the shared-slope condition of DCA.
 
-This opens the door to convex optimization methods and global error certificates, provided the dual can be evaluated and its constraints or proximal subproblems can be handled. It does not automatically make the problem small, smooth, or cheap. Nor does convexity alone imply uniqueness; strict convexity would give uniqueness of an attained dual minimizer, and recovering a unique primal point requires an additional argument.
+We can then use convex optimization methods and global error certificates, provided we can evaluate the dual and handle its constraints or proximal subproblems. The dual may still be large, nonsmooth, or expensive to solve. Convexity alone does not imply uniqueness; strict convexity would give uniqueness of an attained dual minimizer, and recovering a unique primal point requires an additional argument.
 
-Crucially, one does not need to solve the dual exactly. A globally accurate dual solution can be turned into a globally accurate primal solution by solving one convex recovery problem. Let $$v_\star$$ be the common finite optimal value, and measure recovery accuracy by the Fenchel residual
+An approximate dual solution can also be useful: solving one convex recovery problem transfers its accuracy to the primal. Let $$v_\star$$ be the common finite optimal value, and measure recovery accuracy by the Fenchel residual
 
 $$
 r_F(x,p)=F(x)+F^*(p)-\langle p,x\rangle\geq0.
@@ -617,7 +617,7 @@ There is no contradiction with Proposition 1: $$\partial F^*(0)$$ is empty. Inde
 
   <h2 id="carlier-convex-reformulation">Carlier’s convex reformulation of a transport energy</h2>
 
-Carlier's transport example [[3, Section 3]](#ref-3) makes the benefit tangible. Let $$\mu_+,\mu_-$$ have densities on a bounded open convex set $$\Omega$$, and let $$K\subset\mathbb R^d$$ be nonempty, compact and convex. All measures here are probabilities. Consider
+Carlier's transport example [[3, Section 3]](#ref-3) gives another application. Let $$\mu_+,\mu_-$$ have densities on a bounded open convex set $$\Omega$$, and let $$K\subset\mathbb R^d$$ be nonempty, compact and convex. All measures here are probabilities. Consider
 
 $$
 \min_{\nu\in\mathcal P(K)}J(\nu),
@@ -652,7 +652,7 @@ $$
 
 Every optimal measure arises this way. The value identity extends beyond densities; the stated gradient recovery uses absolute continuity.
 
-Why is the new problem better structured? Its objective $$L$$ is linear, and its feasible set is convex: averaging two convex functions preserves convexity, while their averaged gradient stays in the convex set $$K$$. The difficult difference of transport costs has become a linear objective with geometric constraints. One can study global optimality in this convex set rather than navigate stationary points of a difference of distances.
+The new objective $$L$$ is linear, and its feasible set is convex: averaging two convex functions preserves convexity, while their averaged gradient stays in the convex set $$K$$. This replaces the difference of transport costs by a linear objective with convex constraints, for which global optimality can be studied directly.
 
 There is an analytic benefit too. Adding a constant to $$u$$ does not change $$L$$, so fix $$u(x_0)=0$$ at some $$x_0\in\Omega$$. Boundedness of $$K$$ bounds both slopes and values. After continuous extension to $$\overline\Omega$$, the normalized feasible family is closed and compact in the uniform norm by Arzelà–Ascoli. This gives existence, not uniqueness: if $$\mu_+=\mu_-$$, both objectives are constant.
 

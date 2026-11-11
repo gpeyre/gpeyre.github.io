@@ -49,8 +49,8 @@ proofs: true
 embedded_experiment: true
 ---
 
-<p>I learned this Wasserstein P–L viewpoint from Raphaël Barboni. In particular, he taught me the useful distinction at the heart of this post: the condition can control convergence of the gradient-flow trajectory itself, not merely decay of its objective value.</p>
-<p>A small gradient is reassuring only if it means that the objective is nearly minimized. The Polyak–Łojasiewicz condition supplies precisely this guarantee <a href="#ref-pl">[6]</a>. It can yield exponential convergence even without convexity, as in <a href="{{ '/blog/2026/08/14/polyak-lojasiewicz-gradient-flows/' | relative_url }}">Fast gradient flows without convexity</a>.</p>
+<p>I learned this Wasserstein P–L viewpoint from Raphaël Barboni. He showed me that the condition can control convergence of the gradient-flow trajectory itself, as well as decay of its objective value.</p>
+<p>The Polyak–Łojasiewicz condition bounds the objective error in terms of the gradient norm <a href="#ref-pl">[6]</a>. It can yield exponential convergence even without convexity, as in <a href="{{ '/blog/2026/08/14/polyak-lojasiewicz-gradient-flows/' | relative_url }}">Fast gradient flows without convexity</a>.</p>
 <p>Replace a point by a probability distribution, Euclidean distance by quadratic Wasserstein distance, and the objective by relative entropy. The P–L condition then becomes the <em>logarithmic Sobolev inequality</em>. A finite-length argument proves convergence of the distribution itself, in addition to decay of its entropy. It also explains the implication from logarithmic Sobolev to Talagrand’s transport inequality <a href="#ref-ov">[1]</a>.</p>
 
 <!--more-->
@@ -125,7 +125,7 @@ $$
 
 ## Finite-length estimates and convergence in Wasserstein distance {#why-the-measures-themselves-converge}
 
-<p>Exponential decay of an objective does not, by itself, imply convergence of its argument. A valley can contain many minimizers; a curve might keep travelling along it. Here the dissipation identity gives the missing control: the curve has finite remaining length.</p>
+<p>Exponential decay of an objective does not, by itself, imply convergence of its argument. The trajectory could keep moving among nearly minimizing points. Here the dissipation identity bounds the remaining length of the curve, which proves convergence.</p>
 <p id="theorem-1"><strong>Theorem 1 (finite length under Wasserstein P–L).</strong> Let \(\mathcal G:\mathcal P_2(\mathbb R^d)\to(-\infty,+\infty]\) be lower semicontinuous, with finite infimum \(\mathcal G_\star\). Suppose a global locally absolutely continuous flow, of finite initial energy, has locally absolutely continuous energy \(E\) and satisfies for almost every time</p>
 
 $$

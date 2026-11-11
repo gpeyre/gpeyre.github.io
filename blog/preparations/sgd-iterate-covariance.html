@@ -37,7 +37,7 @@
   <p class="byline">Gabriel Peyré</p>
 </div></header>
 <main class="wrap"><article class="blog-prose">
-<p>With a fixed learning rate, stochastic gradient descent usually does not settle at a single point. It keeps fluctuating. The size and shape of these fluctuations matter: they determine the residual optimization error, and tell us what is lost when a discrete training algorithm is replaced by a continuous approximation.</p>
+<p>With a fixed learning rate, stochastic gradient descent usually does not settle at a single point. It keeps fluctuating. Their size and shape determine the residual optimization error. They also help us assess continuous approximations of a discrete training algorithm.</p>
 <p>For least squares, the covariance can be computed explicitly. Under constant conditional observation-noise variance, the stationary covariance of SGD is, to first order,</p>
 \[
  \Sigma_\eta=\eta\sigma^2 I+O(\eta^2).
@@ -225,7 +225,7 @@
 <p>Contracting with the entries of a symmetric \(M\) yields the formula for \(\mathcal T\). The expression for \(D\) follows by substitution into its Lyapunov equation.</p>
 <p>When \(G=\lambda I_d\), start from \(M_0=0\). The exact moment recursion preserves the form \(M_k=v_kI_d\), so convergence from Theorem 2 implies \(\Sigma_\eta=vI_d\). Substitution gives \(v=\eta\sigma^2+\eta\lambda(d+2)v\). Solving proves the formula. No rotational symmetry of the full conditional noise law is needed. \(\square\)</p>
 </div></details>
-<p>The denominator reveals an instability invisible in the first-order approximation. As \(\eta\lambda(d+2)\) approaches one, the second moment blows up, even though the mean recursion may still be stable.</p>
+<p>The denominator shows a stability limit that the first-order approximation misses. As \(\eta\lambda(d+2)\) approaches one, the second moment blows up, even though the mean recursion may still be stable.</p>
 <aside class="note"><p><strong>Gaussian features do not imply Gaussian iterates.</strong> The update multiplies the current error by a random matrix and adds a random vector. These formulas describe its exact covariance, not an exact Gaussian invariant law. A covariance ellipse below is a second-moment summary, not a density contour or a claimed probability region.</p></aside>
 
 <h2>Transient covariance and curvature dependence</h2>
@@ -272,7 +272,7 @@
 <p>The first term need not be isotropic. It is the alignment of \(C\) with \(G\), not quadraticity alone, that produced our cancellation.</p>
 <p><em>Nonquadratic objectives.</em> Dieuleveut, Durmus, and Bach <a href="#ref-dieuleveut">[1, Proposition 2 and Theorem 4]</a> establish invariant-law convergence and small-step moment expansions under suitable strong-convexity, regularity, and noise assumptions. Their leading second moment solves a Lyapunov equation involving the Hessian and the gradient-noise covariance at the minimizer. Unlike least squares, nonlinear objectives generally also have a step-size-dependent stationary mean bias. Their theory is broader; the direct argument here needs only the stated least-squares moment assumptions.</p>
 <p><em>Averaging iterates is a different question.</em> We have studied the covariance of a single late iterate. The covariance of \(\bar\theta_n=n^{-1}\sum_{k=1}^n\theta_k\) also depends on correlations between times. In general, it is not \(\Sigma_\eta/n\). Precise least-squares averaging results appear in <a href="#ref-defossez">[2]</a>, and the general Markov-chain approach also analyzes this distinction <a href="#ref-dieuleveut">[1]</a>.</p>
-<p>These finite-step effects also motivate our work on diffusion discretization <a href="#ref-hurault">[5]</a>. The leading term gives the isotropic noise floor; the correction describes its dependence on feature geometry, which is absent from the leading continuous approximation.</p>
+<p>These finite-step effects also motivate our work on diffusion discretization <a href="#ref-hurault">[5]</a>. The leading continuous approximation gives an isotropic noise floor. The finite-step correction accounts for its dependence on feature geometry.</p>
 
 <h2>References</h2>
 <ol class="references">

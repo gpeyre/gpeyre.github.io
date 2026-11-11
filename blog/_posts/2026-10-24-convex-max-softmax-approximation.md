@@ -43,7 +43,7 @@ keywords:
 proofs: true
 ---
 
-When learning an energy, it is often worth building its geometry into the model. A convex objective has no spurious local minima on a convex domain, and many algorithms can exploit that structure. In quadratic optimal transport, the optimal map is the gradient of a convex potential when the source measure has a density and both measures have finite second moments. These are good reasons to use neural architectures that represent convex functions by construction [[7]](#ref-icnn), [[8]](#ref-ot).
+When learning an energy known to be convex, it makes sense to use a model that preserves convexity. A convex objective has no spurious local minima on a convex domain, and many optimization algorithms use this property. Convex potentials also describe quadratic optimal transport maps when the source measure has a density and both measures have finite second moments. Neural architectures that represent convex functions by construction are used in both settings [[7]](#ref-icnn), [[8]](#ref-ot).
 
 One option is to compute several affine functions and take their maximum. To approximate a convex target, choose these functions as supporting planes; their maximum forms a polyhedral surface beneath the graph. Replacing the maximum by a log-sum-exp gives a smooth surface. The questions are whether these networks approximate every convex function, how many planes are needed, and how smoothing affects the error.
 
@@ -151,7 +151,7 @@ $$
 
 This nonsmooth estimate is a bound for a uniform grid, not an optimal rate for the whole Lipschitz convex class. Adaptive plane placement can improve it; this distinction is important in max-affine convex regression [[4]](#ref-balazs).
 
-The smooth exponent $$2/d$$ cannot generally be improved by a clever choice of planes. Even a quadratic already forces it.
+The smooth exponent $$2/d$$ cannot generally be improved by choosing the planes differently. A quadratic target already gives a matching lower bound.
 
 <span id="proposition-1"></span>
 
@@ -386,7 +386,7 @@ For conditioning, hard-max and low-temperature fits use free plane centers and f
 <div><h4>3D · Trained max network</h4><canvas class="plot-surface" id="max-3d" role="img" aria-label="Three-dimensional surface of the trained max-affine approximation" aria-describedby="max-3d-description max-3d-caption max-stats-2d"></canvas></div>
 <div><h4>3D · Trained softmax network</h4><canvas class="plot-surface" id="softmax-3d" role="img" aria-label="Three-dimensional surface of the trained smooth log-sum-exp approximation" aria-describedby="max-3d-description max-3d-caption max-stats-2d"></canvas></div>
 </div>
-<p class="caption" id="max-3d-caption">Teal and orange surfaces show the learned networks, with studio lighting and reflective highlights to reveal facets and curvature. Both panels use the same lighting. Heights are function values, not errors; compare with the target using the 2D contours above. The max shows its planar faces exactly; softmax uses a fine 201 × 201 grid and analytic normals, without smoothing the fitted functions.</p>
+<p class="caption" id="max-3d-caption">Teal and orange surfaces show the learned networks. Lighting makes the facets and curvature easier to see, and is the same in both panels. Heights are function values, not errors; compare with the target using the 2D contours above. The max shows its planar faces exactly; softmax uses a fine 201 × 201 grid and analytic normals, without smoothing the fitted functions.</p>
 </div>
 </section>
 

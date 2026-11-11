@@ -34,13 +34,13 @@ keywords:
 proofs: true
 ---
 
-Given a way to measure a positive semidefinite matrix, a natural way to measure a general matrix is to apply it to its Gram matrix:
+Suppose we have a way to measure the size of a positive semidefinite matrix. We can use it to measure a general matrix through its Gram matrix:
 
 $$
 N(X)=\sqrt{\gamma(X^\top X)}.
 $$
 
-When does this construction give a norm? The key condition is monotonicity in the positive semidefinite order: increasing a covariance should not decrease its size.
+When does this construction give a norm? The condition we need is monotonicity in the positive semidefinite order: increasing a covariance should not decrease its size.
 
 <!--more-->
 
@@ -232,4 +232,4 @@ $$
 A\preceq B,\qquad \gamma(A)=1.1>0.15=\gamma(B).
 $$
 
-Its Gram lift cannot be a norm. Monotonicity is exactly the missing property.
+Its Gram lift cannot be a norm. This example shows why convexity alone cannot replace monotonicity.

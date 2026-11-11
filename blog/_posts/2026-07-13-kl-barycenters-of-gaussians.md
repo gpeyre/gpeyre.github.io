@@ -1,6 +1,6 @@
 ---
 title: "The KL barycenter of Gaussians is Gaussian"
-subtitle: "Average precisions, not covariances."
+subtitle: "Gaussian barycenters for reverse KL."
 description: "A short derivation of the reverse-KL Gaussian barycenter, with an animated two-dimensional example."
 topic: Probability
 keywords:
@@ -122,7 +122,7 @@ m=\frac{\sum_i\lambda_i m_i/\sigma_i^2}
 {\sum_i\lambda_i/\sigma_i^2}.
 $$
 
-More concentrated inputs exert a stronger pull on the mean. In several dimensions, that pull depends on direction, which is why the mean in the animation need not follow the straight segment between the input means.
+More concentrated inputs receive more weight in the mean. In several dimensions, these weights depend on direction, so the mean in the animation need not follow the straight segment between the input means.
 
 ## Dependence on the orientation of KL {#the-direction-of-kl-matters}
 

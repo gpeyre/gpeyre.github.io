@@ -41,7 +41,7 @@ proofs: true
 
 While working with Stephen Zhang on the convergence of two-layer linear networks, we made use of a construction I find particularly appealing: **mean-field conservation laws**. These are functionals of the neuron distribution that remain constant during training. The same functional works for every number of neurons, and also for a continuous distribution describing an infinite-width network.
 
-In our [recent preprint](https://arxiv.org/abs/2610.09356), the relevant laws depend only on the neurons' second moments. They turn a familiar conservation principle, *balancedness*, into a statement about a matrix whose size does not grow with the network. This gives a way to control the geometry of training and prove convergence.
+In our [recent preprint](https://arxiv.org/abs/2610.09356), these laws depend only on the neurons' second moments. They express consequences of *balancedness* using a matrix whose size does not grow with the network. We use them to control the training dynamics and prove convergence.
 
 <!--more-->
 

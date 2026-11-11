@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,follow">
 <meta name="keywords" content="spectral Wasserstein distance, spectral optimal transport, displacement covariance, displacement second moment, Schatten gauge, Schatten norm, Schatten quasi-norm, Schatten anti-norm, nuclear norm, operator norm, trace norm, robust optimal transport, cost-robust transport, adversarial ground cost, subspace robust Wasserstein, projection robust Wasserstein, Ky Fan norm, François-Pierre Paty, Marco Cuturi, Gabriel Peyré, Muon, matrix geometry, positive semidefinite order, Loewner monotonicity, Sion minimax theorem, Benamou–Brenier formulation, continuity equation, conditional expectation, superposition principle, geodesic, displacement interpolation, coupling relaxation, fractional transport, triangle inequality, half-Schatten threshold, perspective transform, transport spectral, covariance des déplacements, transport robuste">
-<meta name="description" content="Spectral Wasserstein transport measures the whole displacement matrix. Proofs connect it to adversarial quadratic costs and a dynamic action, with a Schatten-p experiment and a sharp extension to p at least one half.">
+<meta name="description" content="Transport costs based on the second-moment matrix of displacement, with cost-robust and dynamic formulations, proofs, and a numerical comparison of Schatten gauges.">
 <title>Spectral Wasserstein distances — Alpha preview — Gabriel Peyré</title>
 <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/spectral-wasserstein-distances.html">
 <link rel="stylesheet" href="assets/drafts.css">
@@ -37,9 +37,9 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p class="byline">Gabriel Peyré</p>
 </div></header>
 <main class="wrap"><article class="blog-prose">
-<p>Quadratic optimal transport minimizes the average squared distance traveled by mass. But two movements can have the same average energy and very different geometry: one may spread its effort evenly across directions, while the other concentrates it along a single axis. The usual Wasserstein distance adds all these contributions together.</p>
-<p>In <em>Muon Dynamics as a Spectral Wasserstein Flow</em> <a href="#ref-muon">[1]</a>, I keep the entire matrix of displacement second moments and apply a matrix gauge to it. This gives the <em>spectral Wasserstein distance</em> \(\mathsf W_\gamma\). It connects a static coupling problem, an adversary choosing a quadratic ground cost, and a Benamou–Brenier action for moving distributions.</p>
-<p>The construction extends the subspace robust Wasserstein distances of François-Pierre Paty and Marco Cuturi <a href="#ref-paty">[2]</a>. We will prove the robust and dynamic formulations, then explore the Schatten family numerically. The range of admissible exponents differs between the results: the distance and dynamic formula remain meaningful down to \(p=1/2\), even though the convex robust-cost interpretation stops at \(p=1\).</p>
+<p>Quadratic optimal transport minimizes the average squared distance traveled by mass. Two couplings can have the same cost but distribute their motion differently: one may use all directions evenly, while the other moves mostly along a single axis. The usual Wasserstein cost sums these directional contributions.</p>
+<p>In <em>Muon Dynamics as a Spectral Wasserstein Flow</em> <a href="#ref-muon">[1]</a>, I keep the matrix of displacement second moments and apply a matrix gauge to it. This defines the <em>spectral Wasserstein distance</em> \(\mathsf W_\gamma\). It has both a formulation in terms of quadratic ground costs and a dynamic formulation of Benamou–Brenier type.</p>
+<p>The construction extends the subspace robust Wasserstein distances of François-Pierre Paty and Marco Cuturi <a href="#ref-paty">[2]</a>. Below are proofs of the robust and dynamic formulations, followed by a numerical comparison of Schatten gauges. The range of admissible exponents differs between the results: the distance and dynamic formula remain meaningful down to \(p=1/2\), even though the convex robust-cost interpretation stops at \(p=1\).</p>
 
 <h2>Displacement matrices and spectral transport costs</h2>
 <p>Let \(\mu,\nu\in\mathcal P_2(\mathbb R^d)\): probability measures with finite second moments. A coupling \(\pi\in\Pi(\mu,\nu)\) is a joint law of \((X,Y)\) with these marginals. Define</p>
@@ -94,7 +94,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
  \mathsf W_\gamma(\mu,\nu)^2
  =\max_{Q\in K_\gamma}\mathsf W_Q(\mu,\nu)^2.
 \]
-<p>The transport plan minimizes its cost while an adversary selects the most demanding admissible quadratic geometry. The matrix is shared by all transported pairs.</p>
+<p>For each admissible quadratic cost, solve the corresponding transport problem, then take the largest value. The chosen matrix is shared by all transported pairs.</p>
 <details class="blog-proof"><summary>Proof: a support function and a minimax exchange</summary><div class="blog-proof-body">
 <p>For \(F(\pi,Q)=\operatorname{tr}(QS_\pi)\), the support formula gives</p>
 \[
@@ -146,7 +146,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
  \qquad
  \mathcal E_\gamma(\rho,v)=\int_0^1\gamma(S_t)\,dt.
 \]
-<p>The gauge is applied <em>after</em> averaging over space. Applying a Schatten gauge separately to each rank-one matrix \(v_tv_t^\top\) would simply give \(|v_t|^2\), recovering ordinary quadratic transport for every \(p\). The spectral geometry comes from measuring collective motion.</p>
+<p>The gauge is applied <em>after</em> averaging over space. Applying a Schatten gauge separately to each rank-one matrix \(v_tv_t^\top\) would simply give \(|v_t|^2\), recovering ordinary quadratic transport for every \(p\). Averaging first is what makes the cost depend on the distribution of motion across directions.</p>
 <p id="theorem-2"><strong>Theorem 2 (spectral Benamou–Brenier formula).</strong> For a convex monotone gauge as above,</p>
 \[
  \mathsf W_\gamma(\mu,\nu)^2
@@ -237,10 +237,10 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
  S_\pm=\begin{pmatrix}1&\pm1\\\pm1&1\end{pmatrix},
  \qquad \gamma_p(S_\pm)=2.
 \]
-<p>Their equally weighted mixture gives \(I_2\), with \(\gamma_p(I_2)=2^{1/p}>2\) for \(p\lt 1\). Hence no supremum of linear quadratic costs can represent this gauge there. A metric can survive even though its static optimization problem is nonconvex.</p>
+<p>Their equally weighted mixture gives \(I_2\), with \(\gamma_p(I_2)=2^{1/p}>2\) for \(p\lt 1\). Hence no supremum of linear quadratic costs can represent this gauge there. The metric property therefore does not require convexity of the static optimization problem.</p>
 
 <h2>Numerical experimentation: dependence on the Schatten exponent</h2>
-<p>How does the spectral gauge change transport between more intricate distributions? The figure below uses two point clouds with several clusters and curved structure. Change the number of points in each cloud, then move \(p\) from \(1/2\) through \(1\) to the operator-norm endpoint. The same clouds are kept when \(p\) changes, so the differences come from the transport geometry.</p>
+<p>The figure compares transport between two point clouds with several clusters and curved structure. Change the number of points in each cloud, then move \(p\) from \(1/2\) through \(1\) to the operator-norm endpoint. Changing \(p\) leaves the clouds fixed, so the resulting differences come from the transport cost.</p>
 <p>For \(n\) points in each cloud, use the empirical measures</p>
 \[
  \mu_n=\frac1n\sum_{i=1}^n\delta_{x_i},\qquad

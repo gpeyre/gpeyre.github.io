@@ -46,7 +46,7 @@ Suppose an attention head has already been trained. Keep its weights fixed, but 
 
 This is the question of *token sample complexity*, which we study with Léa Bohbot, Cyril Letrouit, and François-Xavier Vialard in our recent paper [[1]](#ref-token). It concerns the number of tokens used at inference, not the number of examples used to train the model. There is also beautiful, independent and concurrent work by Etienne Boursier and Claire Boyer on this same question [[2]](#ref-boursier).
 
-The apparent paradox is simple. For Gaussian or sub-Gaussian tokens, attention at a fixed query has the familiar Monte Carlo scale $$n^{-1/2}$$. But the constant can grow exponentially as the query moves away from the origin. To control the error over an entire token distribution, we must balance these increasingly difficult queries against their increasingly small probability. We will make this tradeoff explicit for one-dimensional Gaussians.
+Pointwise and global errors can have different rates. For Gaussian or sub-Gaussian tokens, attention at a fixed query has the familiar Monte Carlo scale $$n^{-1/2}$$. The constant can grow exponentially as the query moves away from the origin. To control the error over an entire token distribution, we must weigh the large errors at distant queries against their small probability. We will work this out for one-dimensional Gaussians.
 
 <!--more-->
 
@@ -106,7 +106,7 @@ The Gaussian moment-generating function is $$M(t)=\exp(t^\top\Sigma t/2)$$. Diff
 
 ## Pointwise error and dependence on the query {#a-square-root-rate-with-an-expensive-constant}
 
-At a fixed query, $$T_n(x)$$ is a ratio of sample averages. In our one-dimensional Gaussian example, the central limit theorem gives the particularly informative formula
+At a fixed query, $$T_n(x)$$ is a ratio of sample averages. In our one-dimensional Gaussian example, the central limit theorem gives
 
 $$
  \sqrt n\,[T_n(x)-\tau x]

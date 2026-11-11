@@ -1,6 +1,6 @@
 ---
 title: "Diffusion versus optimal transport: two maps from one Gaussian"
-subtitle: "Same target distribution, different assignments—and different paths."
+subtitle: "Comparing the assignments made by a diffusion flow and quadratic transport."
 description: "Compare the deterministic score-based probability flow with quadratic optimal transport from a centered Gaussian to a three-Gaussian mixture, down to the three-Dirac limit."
 topic: Diffusion models
 keywords:
@@ -39,7 +39,7 @@ figure: diffusion
 
 A centered Gaussian can be transformed into three Gaussian clouds in many ways. Here we compare the **deterministic diffusion map**, obtained by reversing a score-based probability-flow ODE, with the **optimal transport map**, which minimizes the total squared displacement.
 
-Both produce the same target distribution in the continuous model. But matching distributions does not mean matching individual particles. Coloring each particle by its destination makes this distinction visible.
+Both produce the same target distribution in the continuous model, but they need not send each particle to the same place. The figure colors particles by destination so we can compare the assignments.
 
 <!--more-->
 
@@ -97,7 +97,7 @@ Consequently, the deterministic ODE $$\dot x_t=v_t(x_t)$$ has the same one-time 
 
 To generate data, integrate this ODE **backward**, from the Gaussian end toward the mixture. There is no injected noise along a trajectory: once the initial Gaussian point is fixed, the output is fixed.
 
-An important factor-of-two warning: simply deleting the Brownian term from the *reverse SDE* does not give this ODE. For the normalization above, the forward-time probability-flow drift is $$-x-\nabla\log p_t$$, whereas the reverse-SDE drift, expressed in decreasing forward time, is $$-x-2\nabla\log p_t$$.
+A factor of two needs care here: deleting the Brownian term from the *reverse SDE* does not give this ODE. For the normalization above, the forward-time probability-flow drift is $$-x-\nabla\log p_t$$, whereas the reverse-SDE drift, expressed in decreasing forward time, is $$-x-2\nabla\log p_t$$.
 
 ### Reparametrization from an exact Gaussian {#a-map-starting-from-an-exact-gaussian}
 
@@ -221,4 +221,4 @@ using the Hungarian algorithm, and draws the straight segments $$x_i\to y_{\pi^\
 
 Reusing the same endpoints ensures that both panels have exactly the same empirical target, so the reported mean squared costs are directly comparable. The identity matching is feasible, hence the optimal-assignment cost cannot exceed the diffusion cost. In the Dirac limit, both panels also have identical counts at each atom; those finite-sample proportions approximate the prescribed weights.
 
-Same Gaussian source, same target measure—but a different rule for deciding who goes where.
+The difference comes from the assignment rule, rather than from the source or target measures.

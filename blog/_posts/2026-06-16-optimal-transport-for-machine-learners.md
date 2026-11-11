@@ -27,9 +27,9 @@ keywords:
   - "mathematics education"
 ---
 
-The alpha version of my new book, [*Optimal Transport for Machine Learners*](https://www.gpeyre.com/ot4ml/), is out. In particular, there is an **online version with interactive figures**, so that the mathematical exposition can be explored alongside the examples.
+The alpha version of my new book, [*Optimal Transport for Machine Learners*](https://www.gpeyre.com/ot4ml/), is out. The **online edition includes interactive figures** to accompany the text.
 
-This is an early version: the text and its illustrations will continue to evolve. My aim is to make the geometry and computation of optimal transport accessible to readers interested in machine learning, with the mathematics and its visual intuition close together.
+This is an early version, and I will continue revising the text and illustrations. My aim is to explain the geometry and computation of optimal transport to readers interested in machine learning, using figures to help with the mathematics.
 
 <!--more-->
 

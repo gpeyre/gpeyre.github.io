@@ -20,7 +20,7 @@
 <header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Orthostochastic matrices and optimal transport</h1><p class="subtitle">An orthogonal parametrization preserves the optimal transport cost, but can introduce bad local minima.</p><p class="byline">Gabriel Peyré</p></div></header>
 <main class="wrap"><article class="blog-prose">
 <p>I learned about orthostochastic matrices from <strong>Peyman Milanfar</strong>. They connect orthogonal matrices with probability couplings and optimal transport.</p>
-<p>A permutation matches each source point to exactly one target point. A doubly stochastic matrix allows a softer matching, splitting each point among several destinations. There is a less familiar way to build such matrices: take an orthogonal matrix and square each of its entries. The result is <em>orthostochastic</em>.</p>
+<p>A permutation matches each source point to exactly one target point. A doubly stochastic matrix allows each point's mass to be split among several destinations. There is a less familiar way to build such matrices: take an orthogonal matrix and square each of its entries. The result is <em>orthostochastic</em>.</p>
 <p>This construction automatically enforces positivity and the two marginal constraints of uniform discrete transport. Although it describes only a nonconvex subset of all couplings, it preserves the optimal value of every linear transport objective. The nonconvex parametrization can, however, introduce suboptimal local minima where an orthogonal gradient flow can stop.</p>
 
 <h2>Bistochastic and orthostochastic matrices</h2>
@@ -124,7 +124,7 @@
 <p>The feasible sets, and in the presence of ties the sets of minimizers, are <em>not</em> identical. When \(C=0\), every bistochastic matrix is optimal, including matrices with no orthogonal lift. The argument relies on a linear objective and two uniform clouds of the same cardinality; it is not a statement about entropically regularized transport or arbitrary masses. Nor does it make nonconvex optimization easier than the classical assignment problem, which already has efficient algorithms such as the Hungarian method <a href="#ref-kuhn">[5]</a>.</p>
 
 <h2>Projected descent and an orthogonal gradient flow</h2>
-<p>The benefit of the parametrization is exact feasibility: \(\pi_{ij}=Q_{ij}^2/n\) is automatically a coupling. To optimize it, one must move <em>along</em> the orthogonal group, not normalize rows and hope the columns follow. Orthogonal flows for assignment were studied by Brockett and Wong <a href="#ref-brockett">[6]</a>.</p>
+<p>The benefit of the parametrization is exact feasibility: \(\pi_{ij}=Q_{ij}^2/n\) is automatically a coupling. To optimize it, one must move <em>along</em> the orthogonal group, since normalizing rows alone would not preserve the column constraints. Orthogonal flows for assignment were studied by Brockett and Wong <a href="#ref-brockett">[6]</a>.</p>
 <p>Use the normalized Frobenius metric \(\langle U,V\rangle_n=\operatorname{tr}(U^\top V)/n\). This choice only rescales time relative to the ordinary Frobenius metric. The ambient gradient of \(E\) is \(G=2C\odot Q\). Writing \(\operatorname{sym}(A)=(A+A^\top)/2\) and \(\operatorname{skew}(A)=(A-A^\top)/2\), its tangent projection is</p>
 \[
  \mathcal G(Q)=G-Q\operatorname{sym}(Q^\top G)
@@ -172,7 +172,7 @@
 \]
 <p>For these triangles every coefficient is \(6\cos\theta>0\). The Hessian is therefore positive definite on the tangent space, making \(I\) a strict local minimum. But its cost is \(2-2\cos75^\circ\), whereas the cyclic assignment with relative angle \(75^\circ-120^\circ=-45^\circ\) costs \(2-2\cos45^\circ\), which is strictly smaller. \(\square\)</p>
 </div></details>
-<p>The example separates two notions that are easy to confuse: a <em>global exact reformulation</em> and a <em>globally convergent algorithm</em>. Orthostochastic transport gives the first, not the second.</p>
+<p>The orthostochastic formulation has the correct global optimum, but its gradient flow need not reach it.</p>
 
 <h2>Numerical experimentation: coupling and objective evolution</h2>
 <p>Use the time control to follow one orthogonal descent trajectory. The left panel shows blue source points, rust target points, and the current coupling \(\pi_t=Q_t\odot Q_t/n\). Dashed segments show an exact Kantorovich assignment, computed independently by the Hungarian algorithm. On the right, the solid curve is \(E(Q_t)\); the dashed horizontal line is the certified assignment cost.</p>

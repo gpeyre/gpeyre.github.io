@@ -9,7 +9,7 @@ proofs: true
 embedded_experiment: true
 ---
 
-<p>Draw straight lines matching red points to blue points. If two lines cross, swapping their destinations often looks like an obvious improvement. For ordinary Euclidean length, this intuition is correct: a shortest matching has no proper crossings.</p>
+<p>Consider a matching between red points and blue points in the plane. If two segments cross properly, swapping their destinations reduces their total Euclidean length. A shortest matching therefore has no proper crossings.</p>
 <p>Eliminating crossings still leaves many possible matchings. Even on a convex polygon, their number grows exponentially and is given exactly by a Catalan number. The counting argument also gives an exact uniform sampler. Finding the cheapest matching is a separate task, and a locally improved matching need not be globally optimal. The geometric starting point is <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.1.1.5">Proposition 1.5 of my book</a> <a href="#ref-book">[1]</a>.</p>
 
 <!--more-->

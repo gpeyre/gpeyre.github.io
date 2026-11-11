@@ -77,7 +77,7 @@ This is a projection in the sense that $$\mathsf G(\mathsf G\alpha)=\mathsf G\al
 
 ## Gelbrich's contraction theorem
 
-The crucial result is the following form of the inequality in Matthias Gelbrich's [1990 paper, *On a Formula for the L² Wasserstein Metric between Measures on Euclidean and Hilbert Spaces*](https://doi.org/10.1002/mana.19901470121).
+We will use the following form of the inequality in Matthias Gelbrich's [1990 paper, *On a Formula for the L² Wasserstein Metric between Measures on Euclidean and Hilbert Spaces*](https://doi.org/10.1002/mana.19901470121).
 
 <span id="theorem-1"></span>
 **Theorem 1 (Gelbrich's contraction).** For every $$\alpha,\beta\in\mathcal P_2(\mathbb R^d)$$,
@@ -140,7 +140,7 @@ $$
 
 ## Hugo Lavenant's Gaussian-preservation criterion
 
-[Hugo Lavenant](https://hugolav.github.io/) explained to me the following very useful consequence: if Gaussian projection does not increase an energy, then its Wasserstein minimizing movements can stay Gaussian.
+[Hugo Lavenant](https://hugolav.github.io/) explained the following consequence to me: if Gaussian projection does not increase an energy, then its Wasserstein minimizing movements can stay Gaussian.
 
 Suppose $$f:\mathcal P_2(\mathbb R^d)\to(-\infty,+\infty]$$ satisfies
 
@@ -288,7 +288,7 @@ $$
 \end{aligned}
 $$
 
-This is exactly the kind of reduction that makes Gaussian-preserving PDEs so appealing.
+We have reduced the PDE to equations for the mean and covariance.
 
 ### Closed-form Gaussian evolution {#the-closed-form-and-an-interactive-picture}
 
@@ -407,6 +407,6 @@ $$
 
 A linear change of variables gives the same statement for any positive definite Gaussian convolution kernel; translations add its mean, and degenerate cases follow by approximation.
 
-Of course, one could prove Gaussian convolution closure directly using characteristic functions in a few lines. Instead, we have passed through a contraction theorem, a variational time discretization, an entropy identity, and a PDE.
+Characteristic functions would prove Gaussian convolution closure directly in a few lines. Here we took a longer route through a contraction theorem, a variational time discretization, an entropy identity, and a PDE.
 
 It is admittedly an excessive proof of this elementary fact. I like it because the same preservation principle applies to other energies and flows, not just Gaussian convolution.

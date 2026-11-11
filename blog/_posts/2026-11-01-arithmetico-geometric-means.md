@@ -10,7 +10,7 @@ embedded_experiment: true
 ---
 
 <p>Take two positive numbers. Replace them simultaneously by their arithmetic and geometric means, then repeat. The numbers rapidly approach one another: their common limit is Gauss’s <em>arithmetic–geometric mean</em>. This simple algorithm connects averaging, dynamical systems, and elliptic integrals <a href="#ref-dlmf">[1]</a>.</p>
-<p>There are two different ways to generalize it. We can change coordinates before taking an arithmetic mean, or we can iterate two different averaging rules. The first construction gives <em>quasi-arithmetic means</em>; the second is called <em>Gauss composition</em>. Do these two constructions lead to the same family? Not in general—and there is an exact answer to when they do.</p>
+<p>There are two ways to generalize it: change coordinates before taking an arithmetic mean, or iterate two different averaging rules. The first gives <em>quasi-arithmetic means</em>; the second is called <em>Gauss composition</em>. We will study when the limit of the second construction is a mean of the first type.</p>
 
 <!--more-->
 

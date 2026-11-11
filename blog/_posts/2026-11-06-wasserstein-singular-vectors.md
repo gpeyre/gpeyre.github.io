@@ -43,8 +43,8 @@ embedded_experiment: true
 ---
 
 <p>Two histograms can have almost disjoint supports and still describe nearly the same object: imagine translating a narrow bump by one pixel. Optimal transport recognizes this—provided we already know which bins are close. But what if the bins are genes, words, or abstract features, with no obvious geometry?</p>
-<p>The project began with a question Laura Cantini raised about genomics at our first meeting at the start of Geert-Jan Huizing’s PhD. Geert started working on it, and the question gradually took us somewhere unexpected: from biology to abstract mathematics, nonlinear Perron–Frobenius theory, and the study of <em>topical maps</em>. I love this kind of journey, where an application leads us to a new mathematical landscape.</p>
-<p>With Geert-Jan Huizing and Laura Cantini, we studied a way to close the loop: compare samples using a distance between features, then compare features using the resulting distance between samples. A consistent pair is a pair of <em>Wasserstein singular vectors</em> <a href="#ref-wsv">[1]</a>. The construction is unsupervised: unlike supervised ground-metric learning <a href="#ref-ground">[2]</a>, it does not start from labels saying which samples ought to be similar.</p>
+<p>The project began with a question Laura Cantini raised about genomics at our first meeting at the start of Geert-Jan Huizing’s PhD. Geert started working on it, and we eventually found ourselves studying nonlinear Perron–Frobenius theory and <em>topical maps</em>. I enjoy seeing a biological question lead us to mathematics we had not expected to use.</p>
+<p>With Geert-Jan Huizing and Laura Cantini, we studied two coupled comparisons: samples are compared using a distance between features, and features using the resulting distance between samples. A consistent pair is a pair of <em>Wasserstein singular vectors</em> <a href="#ref-wsv">[1]</a>. The construction is unsupervised: unlike supervised ground-metric learning <a href="#ref-ground">[2]</a>, it does not start from labels saying which samples ought to be similar.</p>
 
 
 <!--more-->

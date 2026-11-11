@@ -39,7 +39,7 @@
 <main class="wrap"><article class="blog-prose">
 <p>Sinkhorn’s algorithm alternately corrects the two marginals of a coupling. Its convergence rate depends strongly on the regularization. As the entropic temperature \(\varepsilon\) decreases, the transport plan becomes sharper and convergence usually slows down. How much slower: exponentially in \(1/\varepsilon\), or only proportionally to \(1/\varepsilon\)?</p>
 <p>For Gaussian marginals, this rate can be computed exactly. For a quadratic cost, the entropic optimal coupling is Gaussian, and Sinkhorn stays within Gaussian distributions. This closed-form structure is studied in our work with Hicham Janati, Boris Muzellec, and Marco Cuturi <a href="#ref-janati">[1]</a>, and in more detail by Akyildiz, Del Moral, and Miguez <a href="#ref-akyildiz">[2]</a>. In one dimension, the entire iteration becomes a fractional-linear map.</p>
-<p>For centered Gaussian iterates, the number of full Sinkhorn cycles needed for a fixed relative reduction of a suitable error is of order \(1/\varepsilon\) at low temperature. A recent paper of Lénaïc Chizat, Alex Delalande, and Tomas Vaškevičius <a href="#ref-chizat">[3]</a> explains why favorable temperature dependence extends well beyond Gaussians.</p>
+<p>For centered Gaussian iterates, the number of full Sinkhorn cycles needed for a fixed relative reduction of a suitable error is of order \(1/\varepsilon\) at low temperature. A recent paper of Lénaïc Chizat, Alex Delalande, and Tomas Vaškevičius <a href="#ref-chizat">[3]</a> proves related convergence bounds for broader classes of marginals.</p>
 
 <h2>Entropic transport between centered Gaussians</h2>
 <p>Let \(\alpha=\mathcal N(0,A)\) and \(\beta=\mathcal N(0,B)\), where \(A,B\) are positive-definite \(d\times d\) covariance matrices. We use the cost and regularized objective</p>
@@ -257,12 +257,12 @@
  1-\overline q_{\mathrm H}\sim4e^{-C/\varepsilon}.
 \]
 <p>The exponentially small quantity is the <em>improvement</em> \(1-\overline q_{\mathrm H}\), not the contraction factor itself: that factor approaches one. This elementary guarantee can lead to a cycle count of order \(e^{C/\varepsilon}\log(1/\eta)\). For half-squared distance on a common ball of radius \(R\), one can take \(C\le2R^2\).</p>
-<p>This is a worst-case bound, not a prediction that every instance is exponentially slow. It uses extreme kernel ratios and ignores the geometry of the marginals. Moreover, Gaussian supports are unbounded, so the bounded-cost estimate is actually vacuous for them. The exact calculation above is a different, structure-sensitive analysis: its decay exponent is proportional to \(\varepsilon\), not exponentially small in \(1/\varepsilon\).</p>
+<p>This is a worst-case bound, not a prediction that every instance is exponentially slow. It uses extreme kernel ratios and ignores the geometry of the marginals. Moreover, Gaussian supports are unbounded, so the bounded-cost estimate is actually vacuous for them. The Gaussian calculation instead uses the form of the marginals: its decay exponent is proportional to \(\varepsilon\), not exponentially small in \(1/\varepsilon\).</p>
 
 <h2>Convergence rates under structural assumptions on the marginals</h2>
 <p>Replacing \(\tfrac12|x-y|^2\) by \(-\langle x,y\rangle\) subtracts fixed marginal integrals, so it preserves the optimizer and the temperature. For this bilinear cost, Chizat, Delalande, and Vaškevičius <a href="#ref-chizat">[3, Theorems 1.1–1.2]</a> prove substantially sharper bounds. With compact supports, a convex source domain, and a log-concave source density, their dual-gap bound has a full-cycle factor of the form \(1-c_0\varepsilon\) at low temperature, where \(c_0&gt;0\) depends on the fixed problem geometry. The target marginal need not have a density.</p>
 <p>For a source density bounded above and below by positive constants on a compact convex domain, they obtain a global \(1-c_1\varepsilon^2\) factor, improving eventually to \(1-c_2\varepsilon\). These are structural assumptions, not a claim that smoothness alone always suffices. Their Gaussian example separately establishes the sharp linear dependence on temperature for the asymptotic dual-gap rate; it is not an application of their compact-support theorem.</p>
-<p>The Gaussian calculation shows that low-temperature convergence depends on the structure of the marginals, not just on extreme ratios of Gibbs-kernel entries. Using that structure gives a sharper rate than the worst-case contraction estimate.</p>
+<p>For Gaussian marginals, the covariance recursion gives a better rate than the worst-case kernel estimate. The results above show how assumptions on other marginals can also improve that estimate.</p>
 
 <h2>References</h2>
 <ol class="references">

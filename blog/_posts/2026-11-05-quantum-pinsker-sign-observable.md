@@ -238,7 +238,7 @@ $$
 $$
 
 <p>As \(\varepsilon\to0\), \(D(\rho_\varepsilon\Vert\sigma)=2\varepsilon^2+O(\varepsilon^4)\), while \(\lVert\rho_\varepsilon-\sigma\rVert_1=2|\varepsilon|\). The ratio tends to \(1/2\), so the constant is sharp. With base-two logarithms it becomes \(1/(2\log2)\).</p>
-<p>The classical and quantum proofs have the same skeleton: entropy has enough curvature along the line connecting the two states, and a sign test measures the entire discrepancy. Quantum data processing gives another short route via the two-outcome measurement <a href="#ref-watrous">[1]</a>; the direct proof above makes the curvature responsible for the constant explicit. Early quantum forms appear in work of Hiai, Ohya, and Tsukada <a href="#ref-hiai">[4]</a>.</p>
+<p>Both proofs bound entropy curvature along the segment between the two states and use a sign test to measure their discrepancy. Quantum data processing gives another proof via the two-outcome measurement <a href="#ref-watrous">[1]</a>; the matrix calculation above shows directly where the constant comes from. Early quantum forms appear in work of Hiai, Ohya, and Tsukada <a href="#ref-hiai">[4]</a>.</p>
 
 ## Numerical experimentation: Pinsker on the probability simplex {#numerical-experimentation-pinsker-on-a-triangle}
 

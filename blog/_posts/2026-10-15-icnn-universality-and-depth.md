@@ -43,11 +43,11 @@ figure: icnn
 proofs: true
 ---
 
-Neural networks are flexible representations of functions. But what if the function must be **convex**? This constraint is especially natural in optimal transport. For probability measures with finite second moments and an absolutely continuous source, Brenier's theorem identifies the quadratic optimal transport map as the gradient of a convex potential [[1]](#ref-brenier), [[2]](#ref-ot). Learning such a potential is therefore a way to learn a transport map while respecting its geometry.
+In optimal transport, we often need to learn a **convex** function rather than an arbitrary one. For probability measures with finite second moments and an absolutely continuous source, Brenier's theorem identifies the quadratic optimal transport map as the gradient of a convex potential [[1]](#ref-brenier), [[2]](#ref-ot). We can therefore learn a transport map by learning its convex potential.
 
-**Input-convex neural networks**, or ICNNs, enforce convexity through their architecture [[3]](#ref-amos). A natural question follows: can they approximate every convex function? Yes, if depth is allowed to grow with the desired accuracy [[4]](#ref-chen). But in dimension two, no fixed depth suffices. We start with two explicit counterexamples on a square, for one and two hidden ReLU layers, then give a self-contained proof of the obstruction at every fixed depth.
+**Input-convex neural networks**, or ICNNs, enforce convexity through their architecture [[3]](#ref-amos). Can they approximate every convex function? Yes, if depth is allowed to grow with the desired accuracy [[4]](#ref-chen). But in dimension two, no fixed depth suffices. We will prove this first for one and two hidden ReLU layers using explicit counterexamples on a square, then for every fixed depth.
 
-Universality means reaching every prescribed uniform error by increasing the network's size. Its failure is compatible with a good fit at a fixed tolerance: the obstruction can be small enough to escape a plot of the function values. The second example below illustrates this distinction particularly well.
+Universality means reaching every prescribed uniform error by increasing the network's size. A class can fail this requirement and still give a good fit at a fixed tolerance. In the second example below, we need to look at the residuals to see the remaining error.
 
 <!--more-->
 
@@ -100,7 +100,7 @@ $$
 \boxed{\|h-f\|_{\infty,K}\geq\frac1{12}.}
 $$
 
-This is not a difficulty of training. No choice of parameters can overcome it.
+The lower bound applies to all parameter choices, not just to numerically trained networks.
 
 <details class="blog-proof">
 <summary>Proof: a seven-point inequality</summary>
@@ -314,7 +314,7 @@ Apply Lemma 1 to $$F$$. Arbitrarily accurate approximation at depth three would 
 </div>
 </details>
 
-Once again, one extra layer resolves this particular obstruction. The width-one construction
+For this example, one extra layer is enough. The width-one construction
 
 $$
 \begin{aligned}

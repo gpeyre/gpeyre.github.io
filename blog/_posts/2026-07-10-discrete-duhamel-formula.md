@@ -39,7 +39,7 @@ A_1\cdots A_n-B_1\cdots B_n
 A_1\cdots A_{k-1}(A_k-B_k)B_{k+1}\cdots B_n.
 $$
 
-This discrete Duhamel formula is simply a telescoping sum — but one whose ordering is indispensable when matrices do not commute.
+This discrete Duhamel formula is a telescoping sum. Keeping the factors in their original order lets us use it even when the matrices do not commute.
 
 <!--more-->
 
@@ -100,7 +100,7 @@ $$
 \left(\prod_{j>k}\|B_j\|\right).
 $$
 
-Each term consists of a local perturbation, multiplied by the amplification contributed by the surrounding factors.
+Each term is a local perturbation multiplied by the surrounding factors, which may amplify it.
 
 If all factors have norm at most $$M$$, then
 

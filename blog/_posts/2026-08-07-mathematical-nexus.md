@@ -30,7 +30,7 @@ keywords:
 
 The [Mathematical Nexus](https://www.gpeyre.com/mathematical-nexus/) brings together **800 animated vignettes and 140 accompanying Python notebooks**, encompassing most of the mathematical content I have shared on social media.
 
-The idea is to give these short explorations a more permanent home: a place where one can move from a visual intuition to the mathematics and the code behind it, and follow connections between topics.
+I wanted to give these posts a permanent home, with their explanations and code together rather than scattered across social media.
 
 <!--more-->
 
@@ -39,6 +39,6 @@ The idea is to give these short explorations a more permanent home: a place wher
   <figcaption>A visual entry point into the collection.</figcaption>
 </figure>
 
-Browse an animation, open a notebook, change a parameter, and see what happens. I hope this collection will be useful for teaching, learning, and the simple pleasure of exploring mathematics.
+The notebooks let you modify the examples and try the calculations yourself. I hope the collection will be useful for teaching and learning, as well as for the pleasure of exploring mathematics.
 
 [Explore the Mathematical Nexus →](https://www.gpeyre.com/mathematical-nexus/)

@@ -33,9 +33,9 @@ keywords:
 proofs: true
 ---
 
-Fun fact: a linear operator on matrices may mix all their entries, but preserving the rank of **every** matrix leaves very little freedom. It must be a change of basis on the left and on the right.
+Fun fact: if a linear operator preserves the rank of **every** matrix, it has very little freedom. Apart from transposition in the square case, it must act by changes of basis on the left and on the right.
 
-There is just one additional possibility for square matrices: transposition, followed by those same changes of basis. The proof comes from understanding the linear subspaces made entirely of matrices of rank at most one.
+We can prove this by studying the linear subspaces made entirely of matrices of rank at most one.
 
 <!--more-->
 
@@ -199,7 +199,7 @@ $$
 S(E_{ij})=c_{ij}E_{ij}.
 $$
 
-So only an entrywise scaling remains. We will show that its coefficients factor into a row scale and a column scale.
+It remains to show that this entrywise scaling factors into a row scale and a column scale.
 
 For $$i\ne k$$ and $$j\ne\ell$$, the matrix
 
@@ -257,4 +257,4 @@ Finally, rank preservation does not imply preservation of singular values, deter
 
 Every rank-one matrix is the product of a column vector and a row vector. Their maximal linear pieces come in exactly two families. An invertible linear map preserving rank must preserve this two-family structure, or exchange the families when their dimensions agree.
 
-This two-family structure restricts a linear transformation of $$mn$$ entries to two changes of basis, with transposition as the only extra symmetry.
+The two families therefore determine the form of the transformation of all $$mn$$ entries: two changes of basis, possibly composed with transposition.

@@ -49,7 +49,7 @@ proofs: true
 embedded_experiment: true
 ---
 
-<p>Suppose a cost \(c(x,y)\) tells us how expensive it is to move one point to another. How should we extend it to compare two probability distributions? Optimal transport answers by introducing a coupling and minimizing an average cost. But there is another way to arrive at the same construction: ask for the largest extension compatible with convexity and stability under weak limits.</p>
+<p>Given a cost \(c(x,y)\) for moving one point to another, optimal transport compares probability distributions by minimizing the average cost over couplings. Under the assumptions below, we can also characterize this construction without starting from couplings: it is the largest extension of the pointwise cost that is jointly convex and stable under weak limits.</p>
 <p>A coupling expresses a pair of distributions as an average of point-pairs. Convexity puts an upper bound on the cost of every such decomposition, and the best of those bounds is precisely the Kantorovich value. Savaré and Sodini develop this relaxation approach in a more general setting <a href="#ref-savare">[1]</a>; the compact probability version is <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.3.3.35">Theorem 3.35 of my book</a> <a href="#ref-book">[2]</a>.</p>
 
 <!--more-->

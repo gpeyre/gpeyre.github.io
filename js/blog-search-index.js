@@ -2668,7 +2668,7 @@ window.BLOG_SEARCH_RECORDS = [
     "status": "forthcoming",
     "date": null,
     "title": "Spectral Wasserstein distances",
-    "description": "Spectral Wasserstein transport measures the whole displacement matrix. Proofs connect it to adversarial quadratic costs and a dynamic action, with a Schatten-p experiment and a sharp extension to p at least one half.",
+    "description": "Transport costs based on the second-moment matrix of displacement, with cost-robust and dynamic formulations, proofs, and a numerical comparison of Schatten gauges.",
     "keywords": [
       "spectral Wasserstein distance",
       "spectral optimal transport",

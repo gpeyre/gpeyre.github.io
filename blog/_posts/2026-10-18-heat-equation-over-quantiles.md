@@ -47,7 +47,7 @@ proofs: true
 embedded_experiment: true
 ---
 
-The heat equation spreads a density through space. In one dimension, there is another way to watch it: follow the median, the first quartile, or any fixed fraction of the mass. These positions trace deterministic, ordered paths, even though heat can also be described by random Brownian motion.
+The heat equation describes how a density spreads. In one dimension, we can follow this evolution through the median, the first quartile, or any other fixed fraction of the mass. These positions follow deterministic, ordered paths, although the same density evolution can also be described by Brownian motion.
 
 The Jordan–Kinderlehrer–Otto formulation provides a way to derive these paths. Heat is the Wasserstein gradient flow of negative entropy [[1]](#ref-jko). Quantiles turn the one-dimensional Wasserstein distance into an ordinary $$L^2$$ distance. In quantile coordinates, the linear heat equation becomes a nonlinear equation for a single increasing function.
 
@@ -61,7 +61,7 @@ $$
  =\frac{\partial_{ss}q}{(\partial_s q)^2}.
 $$
 
-Let us derive this equation from the variational time step, explain its boundary behavior, and then watch it act on a mixture of three Gaussians.
+We will derive this equation from the variational time step, discuss its boundary behavior, and illustrate it with a mixture of three Gaussians.
 
 ## The quantile representation of one-dimensional transport {#quantiles-flatten-one-dimensional-transport}
 
@@ -245,7 +245,7 @@ $$
 
 This holds for heat at every positive time, in particular for the mixtures below. These are tail conditions, not finite Dirichlet values imposed at $$s=0,1$$.
 
-Finally, the apparently nonlinear quantile equation retains a simple gradient-flow identity. With sufficient decay,
+The quantile equation also gives the usual gradient-flow identity. With sufficient decay,
 
 $$
  \frac{d}{dt}\mathcal H(\alpha_t)
@@ -319,7 +319,7 @@ The initial-separation slider moves the component means from an overlapping mixt
 
 *The density is the analytic Gaussian-convolution solution; quantiles are obtained by numerical inversion of its CDF. No JKO time discretization or stochastic particle simulation is used. The finite time grid only draws the trajectories. Increasing $$n$$ changes which quantiles are tracked, not the underlying heat flow; the endpoints $$s=0,1$$, whose quantiles are infinite, are never sampled.*
 
-This is also the starting point of genuinely Lagrangian numerical schemes: discretize the increasing map, rather than the Eulerian density, and inherit mass conservation from the parametrization. Variational convergence results and a broader overview can be found in Matthes–Osberger [[4]](#ref-matthes) and Carrillo–Matthes–Wolfram [[5]](#ref-carrillo); for computational Wasserstein gradient flows more generally, see [[6]](#ref-computational).
+Lagrangian numerical schemes use this representation to discretize the increasing map rather than the density. Mass conservation then follows from the parametrization. Variational convergence results and a broader overview can be found in Matthes–Osberger [[4]](#ref-matthes) and Carrillo–Matthes–Wolfram [[5]](#ref-carrillo); for computational Wasserstein gradient flows more generally, see [[6]](#ref-computational).
 
 ## References
 

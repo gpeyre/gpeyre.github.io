@@ -64,7 +64,7 @@ $$
 $$
 
 <p>Read \(r\) as an amount of mass, \(z/r\) as a quantity per unit mass, and \(f\) as its cost. Multiplying by \(r\) returns a total cost. Convexity of \(f\) then becomes <em>joint</em> convexity in \((z,r)\). This elementary fact explains why both Csiszár divergences and the Benamou–Brenier formulation of optimal transport lead to convex optimization problems. It also tells us how to define these costs for atoms and at zero density.</p>
-<p>We will prove this once, then use it in information geometry, transport, and transport with mass creation. Standard references for the convex construction are Boyd and Vandenberghe <a href="#ref-boyd">[1]</a> and Combettes <a href="#ref-combettes">[2]</a>.</p>
+<p>We will prove the convexity property, then apply it to divergences and to transport with or without mass creation. Standard references are Boyd and Vandenberghe <a href="#ref-boyd">[1]</a> and Combettes <a href="#ref-combettes">[2]</a>.</p>
 
 ## Joint convexity of the perspective transform {#mix-masses-before-mixing-their-ratios}
 
@@ -244,7 +244,7 @@ $$
 $$
 
 <p>If \(\alpha=p\lambda\) and \(\beta=q\lambda\) with \(q>0\), the integrand is the familiar \(q\phi(p/q)\). These are the <em>Csiszár \(f\)-divergences</em>, also associated with the early work of Ali and Silvey <a href="#ref-csiszar">[3]</a>, <a href="#ref-ali">[4]</a>. We use the letter \(\phi\) to distinguish the scalar generator from the divergence functional.</p>
-<p>Common choices illustrate how much geometry fits inside the same construction:</p>
+<p>Some common choices are:</p>
 
 <div class="blog-equation-scroll">
 

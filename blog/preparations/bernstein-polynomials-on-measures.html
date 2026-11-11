@@ -38,7 +38,7 @@
 </div></header>
 <main class="wrap"><article class="blog-prose">
 <p>Suppose the input of a learning problem is a whole distribution: a population, a point cloud, or a collection of tokens of arbitrary size. We would like to approximate a continuous functional \(F(\mu)\) of that distribution by something finite. One construction is to draw \(n\) points from \(\mu\), evaluate \(F\) on their empirical distribution, and average the answer.</p>
-<p>This recipe produces a <em>polynomial of the measure</em>. As \(n\) grows, it approximates every continuous functional, uniformly over all distributions on a compact space. Its approximation error is controlled by the sampling error of the empirical measure. Bernstein’s probabilistic proof of the Weierstrass theorem <a href="#ref-bernstein">[1]</a> already contains the idea; its extension to probability measures belongs to the Bernstein–Schnabl construction <a href="#ref-schnabl">[2]</a>.</p>
+<p>The resulting function is a <em>polynomial of the measure</em>. As \(n\) grows, it approximates every continuous functional, uniformly over all distributions on a compact space. Its approximation error is controlled by the sampling error of the empirical measure. Bernstein’s probabilistic proof of the Weierstrass theorem <a href="#ref-bernstein">[1]</a> already contains the idea; its extension to probability measures belongs to the Bernstein–Schnabl construction <a href="#ref-schnabl">[2]</a>.</p>
 <p>The companion post <a href="wasserstein-polynomials.html">Polynomials of probability measures</a> explains the Stone–Weierstrass argument and its links to neural networks. Here the emphasis is constructive: which polynomial should we choose, why does it converge uniformly, and what determines its rate?</p>
 <aside class="note"><p>In my book <a href="#ref-book">[3]</a>, see §4.4, especially <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.4.4.36">Proposition 4.36, printed p. 81</a>, for particle polynomials and their approximation rates. Chapter 10 discusses empirical Wasserstein estimates.</p></aside>
 
@@ -82,7 +82,7 @@
 \[
  \sup_{\mu\in\mathcal P(K)}|B_nF(\mu)-F(\mu)|\longrightarrow0.
 \]
-<p>The supremum is the essential point: one particle count works for every input law, including discrete, singular, and continuous laws.</p>
+<p>The convergence is uniform: the same particle count works for every input law, whether discrete, singular, or continuous.</p>
 <details class="blog-proof">
 <summary>Proof: reduce the whole space to a finite histogram</summary>
 <div class="blog-proof-body">
@@ -212,7 +212,7 @@
 <h2>Interaction order and representation complexity</h2>
 <p>The construction is explicit, but the kernel \(\varphi_n\) lives on \(K^n\), a space of dimension \(dn\) in Euclidean coordinates. Representing a completely general kernel can be expensive. The rate in \(n\) is therefore a rate in <em>interaction order</em>, not automatically a rate in the number of network parameters or operations.</p>
 <p>There are two separate approximations if one evaluates \(B_nF\) by averaging \(R\) independent empirical clouds. The bias is \(B_nF-F\), studied above. The additional Monte Carlo fluctuation has root-mean-square size at most \(\|F\|_\infty/\sqrt R\). Increasing \(R\) reduces the second error, but does not remove the first.</p>
-<p>Useful architectures exploit additional structure: low-order interactions, a small family of features, or compositional rules acting on the law. This connects with <em>Stochastic Deep Networks</em> <a href="#ref-debie">[7]</a> and the pooling constructions in the <a href="wasserstein-polynomials.html">companion post</a>. The Bernstein operator provides a baseline for comparing these more economical representations.</p>
+<p>To reduce this cost, an architecture can use low-order interactions, a small family of features, or compositions of simpler operations on the law. Examples include <em>Stochastic Deep Networks</em> <a href="#ref-debie">[7]</a> and the pooling constructions in the <a href="wasserstein-polynomials.html">companion post</a>. Their representation cost can be compared with that of the Bernstein operator.</p>
 
 <h2>References</h2>
 <ol class="references">

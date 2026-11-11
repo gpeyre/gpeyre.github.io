@@ -37,7 +37,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p class="byline">Gabriel Peyré</p>
 </div></header>
 <main class="wrap"><article class="blog-prose">
-<p>The central limit theorem describes the Gaussian limit of normalized sums of independent random variables. Here we ask about the rate of convergence. Even two symmetric, bounded, unit-variance distributions can approach the Gaussian at different powers of the sample size.</p>
+<p>The central limit theorem describes the Gaussian limit of normalized sums of independent random variables. The rate of convergence depends on the distribution: two symmetric, bounded, unit-variance distributions can approach the Gaussian at different powers of the sample size.</p>
 <p>Compare a fair coin taking values \(\pm1\) with a continuous uniform variable on \([-\sqrt3,\sqrt3]\). Both have mean zero, variance one, and zero skewness. Yet their normalized sums satisfy</p>
 \[
  \begin{aligned}
@@ -93,7 +93,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 \]
 <p>Consequently its integral against \(\phi\) tends to \(1/4\). To see this without a probabilistic argument, first use a compactly supported step function as weight: each interval contains an integer number of full periods plus two negligible partial periods. Then approximate \(\phi\) in \(L^1\), using the uniform bound \(|\psi|\le1/2\). Multiplying by \(h/\sqrt n\) proves the result. \(\square\)</p>
 </div></details>
-<p>Geometrically, one transports a smooth Gaussian mass within cells of width \(h/\sqrt n\) to lattice sites near their centers. The average distance to the center of an interval of width \(\delta\) is \(\delta/4\). The theorem makes this picture precise and shows why the constant is universal within this symmetric lattice class.</p>
+<p>Geometrically, one transports a smooth Gaussian mass within cells of width \(h/\sqrt n\) to lattice sites near their centers. The average distance to the center of an interval of width \(\delta\) is \(\delta/4\). The theorem gives this interpretation a precise form, with the same constant throughout this symmetric lattice class.</p>
 
 <h2>Fourth-cumulant corrections for continuous laws</h2>
 <p>For a symmetric law with a density, the staircase disappears. The first possible smooth correction comes from the fourth cumulant</p>

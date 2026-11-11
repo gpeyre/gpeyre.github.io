@@ -5,6 +5,12 @@ const { chromium } = require(process.env.BLOG_PLAYWRIGHT_PATH || "playwright");
 const root = path.resolve(__dirname, ".."), sourcePath = path.join(root, "blog/announcement-queue.md"), baseline = fs.readFileSync(sourcePath, "utf8");
 const url = pathToFileURL(path.join(root, "blog/announcement-queue.html")).href;
 const expected = [...baseline.matchAll(/^- \[([ x])\] Ready to publish\s*$/gm)];
+const topics = baseline.split(/^## /m).slice(1).map(block => (block.match(/^Topic: (.+)$/m) || [null, "Other topics"])[1].trim());
+const expectedTopicCounts = {
+  ot: topics.filter(topic => topic.startsWith("OT /")).length,
+  transport: topics.filter(topic => topic.startsWith("Transport geometry")).length,
+  other: topics.filter(topic => !topic.startsWith("OT /") && !topic.startsWith("Transport geometry")).length
+};
 
 (async () => {
   const browser = await chromium.launch({ headless: true, channel: "chrome" });
@@ -37,8 +43,11 @@ const expected = [...baseline.matchAll(/^- \[([ x])\] Ready to publish\s*$/gm)];
     await page.getByLabel("Readiness", { exact: true }).selectOption("ready");
     assert.equal(await page.locator(".queue-card:visible").count(), expected.filter(match => match[1] === "x").length);
     await page.getByLabel("Readiness", { exact: true }).selectOption("all");
-    await page.getByLabel("Topic", { exact: true }).selectOption("transport");
-    assert.ok(await page.locator(".queue-card:visible").count() > 0);
+    for (const [topic, count] of Object.entries(expectedTopicCounts)) {
+      await page.getByLabel("Topic", { exact: true }).selectOption(topic);
+      assert.equal(await page.locator(".queue-card:visible").count(), count, `Topic filter: ${topic}`);
+      assert.equal(await page.locator("[data-empty]").isVisible(), count === 0, `Empty state: ${topic}`);
+    }
     await page.getByLabel("Topic", { exact: true }).selectOption("all");
     const first = page.locator(".queue-ready input").first(), originallyChecked = await first.isChecked();
     await first.setChecked(!originallyChecked);
@@ -78,10 +87,10 @@ const expected = [...baseline.matchAll(/^- \[([ x])\] Ready to publish\s*$/gm)];
     assert.equal(download.suggestedFilename(), "announcement-queue.md");
     assert.match(await page.locator("[data-save-status]").innerText(), /Downloaded only—not saved/);
     assert.equal(await page.locator("[data-save]").isEnabled(), true, "Downloading must not claim source was saved");
-    const slugs = [...baseline.matchAll(/https:\/\/www\.gpeyre\.com\/blog\/preparations\/([a-z0-9-]+)\.html/g)].map(match => match[1]);
+    const slugs = [...baseline.matchAll(/^> .+ https:\/\/www\.gpeyre\.com\/blog\/preparations\/([a-z0-9-]+)\.html$/gm)].map(match => match[1]);
     const malformed = [
       [baseline.replace(/^## 1\. /m, "## "), /numbered title/],
-      [baseline.replace(`${slugs[1]}.html`, `${slugs[0]}.html`), /unique article slugs/],
+      [baseline.replace(new RegExp(`^(> .+ )https://www\\.gpeyre\\.com/blog/preparations/${slugs[1]}\\.html$`, "m"), `$1https://www.gpeyre.com/blog/preparations/${slugs[0]}.html`), /unique article slugs/],
       [baseline.replace(/^> /m, "> Extra line\n> "), /single-line quoted announcement/],
       [baseline.replace(/^> /m, "  > Indented extra line\n> "), /unexpected content/],
       [baseline.replace(/\.html(?=\n)/, ".html extra words"), /exact gpeyre.com preview URL/],

@@ -41,7 +41,7 @@ proofs: true
 embedded_experiment: true
 ---
 
-Two pictures of a probability distribution suggest two different ways to interpolate it. One can blend their densities, as in a cross-fade. Or one can move the particles, carrying every bit of mass from its starting point to a destination. Can these pictures describe exactly the same evolution?
+There are two ways to interpolate between probability distributions: blend their densities, or move particles from one distribution to the other. We can ask whether a prescribed density interpolation can also be realized by a particle flow.
 
 Moser’s construction does this for smooth, strictly positive densities. Prescribe the density path, solve a divergence equation for its flux, then divide by the density to recover a velocity. This reduces the transport problem to a Poisson solve and an ordinary differential equation. The idea originates in Moser’s theorem on volume forms [[1]](#ref-moser); Dacorogna and Moser developed the prescribed-Jacobian problem further [[2]](#ref-dm).
 
@@ -72,7 +72,7 @@ $$
  \qquad \mu_t=\rho_t\,dx.
 $$
 
-Density times velocity is the flux $$j_t=\rho_tv_t$$. Thinking in terms of flux is the useful change of viewpoint: after prescribing $$\rho_t$$, the continuity equation is linear in $$j_t$$.
+Density times velocity is the flux $$j_t=\rho_tv_t$$. After prescribing $$\rho_t$$, the continuity equation is linear in $$j_t$$, which makes it easier to solve for the flux first.
 
 ## Moser’s construction for linear density interpolation {#a-density-cross-fade-realized-by-a-flow}
 
@@ -159,7 +159,7 @@ $$
 
 The compatibility condition is again equality of total mass. Under the same smoothness and positivity assumptions up to the boundary, $$v_t\cdot n=0$$, so the velocity is tangent to the boundary and its flow preserves the domain. This does *not* assert that every boundary point stays fixed. Boundary-fixing and support-control versions require more careful constructions, as in [[2]](#ref-dm), [[3]](#ref-teixeira).
 
-Positivity is central, not cosmetic. A moderate flux crossing a region with density $$10^{-3}$$ requires a velocity a thousand times larger than the same flux in a region of density one. Quantitatively, $$\lvert v_t\rvert\le\lvert \nabla u\rvert/c$$. Removing the lower bound can destroy this simple regular-flow construction, even when other transport maps still exist.
+The positive lower bound on the density matters. A given flux through a region with density $$10^{-3}$$ requires a velocity a thousand times larger than through a region of density one. Quantitatively, $$\lvert v_t\rvert\le\lvert \nabla u\rvert/c$$. Without the lower bound, this regular-flow construction can fail even when other transport maps still exist.
 
 ## Explicit construction in one dimension {#one-dimension-makes-the-whole-flow-explicit}
 

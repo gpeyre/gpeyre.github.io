@@ -1,6 +1,6 @@
 ---
 title: "When is independence optimal transport?"
-subtitle: "Precisely when the cost has no interaction left to optimize."
+subtitle: "A criterion for the product coupling to be optimal."
 description: "An exact criterion for independent sampling to solve optimal transport, with a short centered-interaction proof, orthogonal supports, and the high-temperature limit of entropic transport."
 topic: Optimal transport
 keywords:
@@ -160,7 +160,7 @@ A Dirac marginal is one possibility, because its difference span is $$\{0\}$$. B
 
 ## The large-regularization limit {#why-entropic-transport-approaches-independence}
 
-There is an apparent tension with entropic regularization, where diffuse couplings are desirable. The regularized problem is
+Entropic regularization penalizes dependence between the two coordinates. The regularized problem is
 
 $$
   \min_{\pi\in\Pi(\alpha,\beta)}

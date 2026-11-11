@@ -38,7 +38,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 </div></header>
 <main class="wrap"><article class="blog-prose">
 <p>Means and covariances summarize a distribution with finitely many numbers. When the distribution evolves, can a chosen statistic follow a closed equation without tracking the full law?</p>
-<p>Usually a moment equation introduces a new moment, which introduces another, creating an endless hierarchy. For the class of Wasserstein flows considered here, an exact criterion is available: the squared norm of the statistic's gradient must be affine in the statistic itself. It includes familiar first and second moments, but also nonpolynomial observables built from curved distance functions. The scalar result appears in <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.16.5.30">Proposition 16.30 of <em>Optimal Transport for Machine Learners</em></a> <a href="#ref-book">[1]</a>.</p>
+<p>A moment equation usually involves other moments, so it does not give a closed system. For the Wasserstein flows considered here, closure has an exact criterion: the squared norm of the statistic's gradient must be affine in the statistic itself. Examples include familiar first- and second-moment observables, as well as some nonpolynomial ones built from distance functions. The scalar result appears in <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.16.5.30">Proposition 16.30 of <em>Optimal Transport for Machine Learners</em></a> <a href="#ref-book">[1]</a>.</p>
 
 <h2>Energy functionals depending on one statistic</h2>
 <p>Let \(\Omega\subset\mathbb R^d\) be connected and open, and let \(\varphi\in C^2(\Omega)\). For a probability law \(\alpha\), define</p>
@@ -135,7 +135,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
        \int\nabla\varphi_i\cdot\nabla\varphi_j\,d\alpha.
 \]
 <p>Thus an exact finite system follows if every gradient product belongs to the affine span of \(1,\varphi_1,\ldots,\varphi_k\). Linear and quadratic coordinate functions have this property: their gradients are at most linear, and products of those gradients are at most quadratic. This explains mean–second-moment closure without an assumption that the evolving law is Gaussian.</p>
-<p>Closed equations for observables and invariance of a family of distributions are related but distinct questions. The first can hold while the distribution retains complicated information which those observables never see.</p>
+<p>A closed equation for observables does not require the distribution to stay in a fixed family. Distributions with the same observables can still have different shapes.</p>
 
 <h2>References</h2>
 <ol class="references">

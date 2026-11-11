@@ -29,9 +29,9 @@
 </header>
 <main class="wrap">
 <article class="blog-prose">
-<p>A dataset is often better represented by a probability measure than by a vector. A point cloud may contain ten points or ten thousand; its ordering should not matter. A population in a mean field game has the same feature: what matters is the distribution of states, rather than a list of named individuals. This raises a basic approximation question: what are the analogues of polynomials when the input is a whole probability distribution?</p>
+<p>A probability measure is a convenient representation of a point cloud: its number of points may vary, and their ordering should not matter. In a mean field game, we likewise describe a population by the distribution of its states rather than a list of individuals. What should play the role of a polynomial when the input is a probability distribution?</p>
 
-<p>One can form polynomials from expectations of continuous features, taking finite products and linear combinations. On a compact ground space, these expressions approximate <em>every continuous functional of a probability measure</em>, uniformly over all measures. The proof is a direct application of Stone–Weierstrass. It explains why averaging features can be a universal architecture, and why finite-particle interactions are useful coordinates for an infinite-dimensional space. This is also the subject of the “Measure-to-Vector Maps on Wasserstein Space” section of my book <a href="#ref-book">[1]</a>.</p>
+<p>We can take finite products and linear combinations of expectations of continuous features. On a compact ground space, these expressions approximate <em>every continuous functional of a probability measure</em>, uniformly over all measures. This follows directly from Stone–Weierstrass, and leads to approximation results for networks based on averaged features. The same material appears in the “Measure-to-Vector Maps on Wasserstein Space” section of my book <a href="#ref-book">[1]</a>.</p>
 
 <figure class="portrait-pair">
   <div class="portrait-pair-images">
@@ -94,10 +94,10 @@ P_\Phi(\mu)=\int_{K^r}\Phi(x_1,\ldots,x_r)\,d\mu^{\otimes r}.
 </div>
 </details>
 
-<p>The crucial distinction is between <em>one fixed finite list of moments</em> and a list that may grow with the desired accuracy. Two distributions can have the same mean and variance. The theorem allows us to add the features needed to distinguish the distributions relevant to the target functional.</p>
+<p>The list of moments may grow with the desired accuracy; <em>one fixed finite list</em> need not suffice. For instance, two distributions can have the same mean and variance. The theorem allows us to add features as needed for the target functional.</p>
 
 <h2>Constructive approximation by empirical measures</h2>
-<p>Stone–Weierstrass proves existence. There is also a natural construction. For independent samples \(X_i\sim\mu\), define the empirical measure and its averaged prediction:</p>
+<p>There is also a construction based on empirical measures. For independent samples \(X_i\sim\mu\), define the empirical measure and its averaged prediction:</p>
 \[
 \widehat\mu_n=\frac1n\sum_{i=1}^n\delta_{X_i},
 \qquad B_nF(\mu)=\mathbb E F(\widehat\mu_n).
@@ -112,7 +112,7 @@ B_nF(\mu_t)=\sum_{k=0}^{n}F(\mu_{k/n})
 \[
 \sup_{\mu\in\mathcal P(K)}|B_nF(\mu)-F(\mu)|\longrightarrow0.
 \]
-<p>The uniformity is important: the same number of particles works for <em>all</em> input measures. Pointwise convergence of empirical measures alone would not prove this stronger statement.</p>
+<p>Here the same number of particles works for <em>all</em> input measures. Pointwise convergence of empirical measures alone would not prove this uniform statement.</p>
 
 <details class="blog-proof">
 <summary>Proof: repeated sample indices are the only error on monomials</summary>
@@ -141,7 +141,7 @@ B_nF(\mu_t)=\sum_{k=0}^{n}F(\mu_{k/n})
 </div>
 </details>
 
-<p>The construction recovers a familiar statistical bias. For variance on a compact subset of \(\mathbb R\),</p>
+<p>For example, applying the construction to variance on a compact subset of \(\mathbb R\) gives</p>
 \[
 B_n\operatorname{Var}(\mu)=\left(1-\frac1n\right)\operatorname{Var}(\mu).
 \]
@@ -177,7 +177,7 @@ P(\mu)=q\!\left(\int_K\phi(x)\,d\mu(x)\right),
 \[
 \rho\!\left(\frac1N\sum_{i=1}^N\phi(x_i)\right).
 \]
-<p>This is permutation invariant and applies to every sample size \(N\). Normalization is meaningful: duplicating the entire cloud does not change its empirical probability measure. A task that depends on the raw number of observations must also receive that number; it is not solely a functional of the normalized measure.</p>
+<p>This is permutation invariant and applies to every sample size \(N\). Duplicating the entire cloud leaves its empirical probability measure unchanged. If a task depends on the number of observations, that number must also be supplied: it is not determined by the normalized measure.</p>
 
 <p>With Gwendoline de Bie and Marco Cuturi, we developed this measure-based viewpoint in <em>Stochastic Deep Networks</em> <a href="#ref-debie">[8]</a>. A basic block averages pairwise information, \(T_\mu(x)=\int h(x,y)\,d\mu(y)\), and transports the input measure to \((T_\mu)_\#\mu\). This resembles attention at the level of operations on a distribution, although it is not the usual normalized softmax formula. The paper also considers tensorization and auxiliary noise; that noise matters when a measure-to-measure model must split an atom into a nontrivial distribution.</p>
 
@@ -186,7 +186,7 @@ P(\mu)=q\!\left(\int_K\phi(x)\,d\mu(x)\right),
 <h2>Applications in mean field games</h2>
 <p>In mean field games, an agent responds to the distribution of the population. Costs and value functions consequently depend on a measure, as in the framework introduced by Lasry and Lions <a href="#ref-mfg">[10]</a>. Polynomial test functionals provide a tractable family with which to study this dependence. Cardaliaguet’s notes, based on Lions’s lectures, make the density argument explicit and then use it in the theory of symmetric particle systems <a href="#ref-cardaliaguet">[2]</a>.</p>
 
-<p>The connection with exchangeability is particularly natural. If a random measure directs conditionally independent observations, their joint test-function expectations are averages of products \(\prod_j\int\phi_j\,d\mu\). Knowing all these averages determines the law of the random measure: by density, it determines the expectation of every continuous \(F\) on \(\mathcal P(K)\). This is the uniqueness mechanism behind the directing measure in the de Finetti–Hewitt–Savage representation <a href="#ref-hewitt">[11]</a>. Neural networks on distributions reuse a much older mathematical language.</p>
+<p>The same density argument is useful in exchangeability. If a random measure directs conditionally independent observations, their joint test-function expectations are averages of products \(\prod_j\int\phi_j\,d\mu\). Knowing all these averages determines the law of the random measure: by density, it determines the expectation of every continuous \(F\) on \(\mathcal P(K)\). This proves uniqueness of the directing measure in the de Finetti–Hewitt–Savage representation <a href="#ref-hewitt">[11]</a>.</p>
 
 <h2>Compactness and continuity assumptions</h2>
 <p>The statement is uniform over \(\mathcal P(K)\) because \(K\) is compact. On the full noncompact space \(\mathcal P_p(\mathbb R^d)\), this global conclusion does not follow. It does hold on every <em>fixed \(W_p\)-compact subset</em>: bounded continuous test functions still give continuous observables, separate measures, and generate a unital algebra. Apply Stone–Weierstrass to that compact subset.</p>

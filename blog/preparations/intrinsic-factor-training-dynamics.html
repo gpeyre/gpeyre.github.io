@@ -22,8 +22,8 @@
 </head><body>
 <header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Intrinsic dynamics of overparameterized dynamics</h1><p class="subtitle">When can training a matrix factorization be described directly in terms of its product?</p><p class="byline">Gabriel Peyré</p></div></header>
 <main class="wrap"><article class="blog-prose">
-<p>A matrix can have many factorizations. Multiplying one factor by a scalar and dividing the other by the same scalar changes neither the matrix nor its predictions. But Euclidean gradient descent sees the factors, not just their product: two representations of the same model can start moving at different speeds.</p>
-<p>Can we nevertheless describe training directly in the space of represented models? In our work with <a href="https://arxiv.org/abs/2508.07370">Sibylle Marcotte and Rémi Gribonval</a> <a href="#ref-intrinsic">[1]</a>, we study when such an <em>intrinsic dynamics</em> exists. The key is to keep the right conserved information from initialization. A two-factor linear model allows an explicit calculation.</p>
+<p>A matrix can have many factorizations. Multiplying one factor by a scalar and dividing the other by the same scalar changes neither the matrix nor its predictions. Euclidean gradient descent acts on the factors, so two representations of the same model can start moving at different speeds.</p>
+<p>In our work with <a href="https://arxiv.org/abs/2508.07370">Sibylle Marcotte and Rémi Gribonval</a> <a href="#ref-intrinsic">[1]</a>, we study when training admits an <em>intrinsic description</em>, directly in terms of the represented model. This requires retaining some conserved quantities from initialization. We can calculate them explicitly for a two-factor linear model.</p>
 <p>I owe my understanding of these dynamics to Sibylle Marcotte. In particular, the results on relaxed balancedness presented below are due to her, as developed in our joint work with Rémi Gribonval.</p>
 
 <h2>Closed dynamics for the represented model</h2>
@@ -35,7 +35,7 @@
 \[
  K(\theta)=D\phi(\theta)D\phi(\theta)^*.
 \]
-<p>The star denotes the Euclidean adjoint. The operator \(K\) is a <em>mobility</em>: it converts a loss gradient into a model velocity. A closed equation for \(z\) requires recovering \(K(\theta)\) from \(z\), possibly together with quantities fixed at initialization. This should work for all smooth losses \(F\), not just by fitting a vector field along one particular trajectory.</p>
+<p>The star denotes the Euclidean adjoint. The operator \(K\) is a <em>mobility</em>: it converts a loss gradient into a model velocity. A closed equation for \(z\) requires recovering \(K(\theta)\) from \(z\), possibly together with quantities fixed at initialization. The equation must hold for all smooth losses \(F\), rather than describe only one particular trajectory.</p>
 <p>The distinction matters for implicit bias. A reparameterized Euclidean flow generally is not Euclidean gradient flow in model space; the induced mobility records the geometry of the parameterization <a href="#ref-arora">[2]</a>, <a href="#ref-bah">[3]</a>. We should not call \(K\) itself a metric: where invertible on the relevant tangent space, it is the <em>inverse</em> metric.</p>
 
 <h2>Scalar factorization and conserved imbalance</h2>
@@ -123,7 +123,7 @@
 <figure><iframe class="idea-experiment" data-experiment="intrinsic" src="assets/optimization-geometry/index.html?topic=intrinsic" title="Interactive scalar factor gradient flow and invariant hyperbolas" loading="lazy" style="width:100%;height:850px;border:0;"></iframe><figcaption>The curves are recomputed from the scalar ODE, with factors reconstructed from the conserved quantity. Playback starts paused. The same target and physical time scale are used for every imbalance.</figcaption></figure>
 
 <h2>Dependence on initialization</h2>
-<p>The model does evolve autonomously once the appropriate initialization label is fixed. But it is not independent of initialization: different \(\lambda\)'s produce different mobilities. Nor do arbitrary matrix-valued imbalances automatically lead to such a simple closed product flow. Our paper analyzes precisely when conservation laws provide enough information, with further results for deeper linear networks and path-lifted ReLU networks <a href="#ref-intrinsic">[1]</a>.</p>
+<p>Once the conserved initialization label is fixed, the model has an autonomous equation. Its dynamics still depend on initialization: different \(\lambda\)'s produce different mobilities. Nor do arbitrary matrix-valued imbalances automatically lead to such a simple closed product flow. Our paper analyzes precisely when conservation laws provide enough information, with further results for deeper linear networks and path-lifted ReLU networks <a href="#ref-intrinsic">[1]</a>.</p>
 <p>Factorization changes the geometry of the flow and can thereby change optimization and implicit regularization <a href="#ref-gunasekar">[6]</a>. The companion post <a href="balanced-low-rank-conditioning.html">One low-rank matrix, many optimization speeds</a> asks a complementary question: among representations of the same matrix, which are best conditioned? <a href="sign-gradient-descent-geometry.html">The geometry of sign gradient descent</a> then changes the optimizer rather than the representation.</p>
 
 <h2>Bibliography</h2><ol class="references">

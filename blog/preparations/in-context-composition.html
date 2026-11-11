@@ -27,7 +27,7 @@
 </div></header>
 <main class="wrap">
 <article class="blog-prose">
-<p>Composing two functions usually means feeding the output of the first into the second. A transformer layer introduces a small twist: a token is transformed using the other tokens as context, and those other tokens are transformed too. The next layer sees a new point <em>and a new context</em>.</p>
+<p>Composing two functions usually means feeding the output of the first into the second. In a transformer layer, a token is transformed using the other tokens as context, and those tokens are transformed too. The next layer sees a new point <em>and a new context</em>.</p>
 
 <p>In <em>Transformers are Universal In-context Learners</em>, with Takashi Furuya and Maarten de Hoop, we called the resulting operation <em>in-context composition</em> and denoted it by \(\diamond\) <a href="#ref-universality">[1]</a>. Its definition uses a pushforward of the context measure. On the enlarged state consisting of the measure and the query, this operation is ordinary composition. The same viewpoint connects successive layers to particle transport and to an advection equation.</p>
 
@@ -269,7 +269,7 @@
 <h2>Related constructions and limitations</h2>
 <p>The pushed measure \(P_f(\mu)\) records where the population ends up, but it does not retain every pointwise correspondence. For a distribution symmetric about the origin, the identity and reflection \(x\mapsto-x\) give the same updated measure while moving a tagged query differently. This is why the measure–point lift contains more information than the measure update alone.</p>
 
-<p>Architectures acting compositionally on distributions also appear in our earlier <em>Stochastic Deep Networks</em> with Gwendoline de Bie and Marco Cuturi <a href="#ref-stochastic">[7]</a>. The distinctive feature emphasized here is to keep the tagged-point map visible together with its induced distribution update.</p>
+<p>Architectures acting compositionally on distributions also appear in our earlier <em>Stochastic Deep Networks</em> with Gwendoline de Bie and Marco Cuturi <a href="#ref-stochastic">[7]</a>. Here we track both the tagged point and the updated distribution.</p>
 
 <p>Transport by pushforward does not by itself make a layer an <em>optimal</em> transport map, or make its continuous-depth limit a Wasserstein gradient flow. Those require extra structure. <em>Sinkformers</em>, with Michael Sander, Pierre Ablin, and Mathieu Blondel, studies a particular attention normalization and its links to transport and gradient-flow interpretations <a href="#ref-sinkformers">[8]</a>.</p>
 

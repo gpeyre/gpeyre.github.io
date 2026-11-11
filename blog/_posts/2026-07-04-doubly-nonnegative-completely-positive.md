@@ -39,7 +39,7 @@ $$
 \mathcal D_n=\{X\in\mathbb R^{n\times n}:X=X^\top,\ X\succeq0,\ X_{ij}\geq0\}.
 $$
 
-A seemingly similar condition is to ask for a Gram factorization with nonnegative vectors. This defines the cone of **completely positive matrices**. The two cones agree up to dimension four — but not in dimension five.
+Another notion asks for a Gram factorization with nonnegative vectors. This defines the cone of **completely positive matrices**. The two cones agree up to dimension four. In dimension five they are different.
 
 <!--more-->
 

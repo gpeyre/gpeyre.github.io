@@ -12,7 +12,7 @@ A fully connected neural network can approximate any continuous function on a co
 
 The target should have the same symmetry: shifting the input should shift the output. For finite periodic signals, ConvNet universality follows directly from MLP universality. A translation-equivariant map is determined by *one* of its output coordinates. Approximate that coordinate by an MLP, and convolution applies the same computation at every position.
 
-We will first prove shallow MLP universality through exponential networks and Stone–Weierstrass, then turn the proof into a convolutional one. Finally, we will see how to replace a wide hidden layer by a deep network with a constant number of channels.
+We will prove shallow MLP universality using exponential networks and Stone–Weierstrass, then deduce the convolutional result. We will also show how a deep network with a fixed number of channels can replace a wide hidden layer.
 
 <!--more-->
 
@@ -263,7 +263,7 @@ This is a basic instance of the correspondence developed by Petersen and Voigtla
 
 ## Depth–width trade-offs {#trading-width-for-depth}
 
-A shallow network computes all its features in parallel and then sums them. A deep network can evaluate the same sum sequentially: compute one feature, add its contribution to a running total, and move on to the next. The key is to retain both the original input and the partial sum. This gives an explicit conversion from width to depth, with *no extra approximation error*.
+A shallow network computes its features in parallel and then sums them. A deep network can evaluate the same sum one term at a time, retaining the original input and a running total. This converts width into depth without changing the represented function.
 
 ### Sequential accumulation in an MLP {#first-an-mlp-as-an-accumulator}
 

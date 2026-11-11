@@ -10,7 +10,7 @@ proofs: true
 embedded_experiment: true
 ---
 
-<p>Positive semidefinite matrices encode shapes and directional information. A covariance describes uncertainty; a diffusion tensor describes preferred directions of motion; a feature covariance summarizes an image region. Averaging these objects is how we pool noisy estimates, interpolate measurements, or build a representative template. Different means preserve different geometric properties.</p>
+<p>Positive semidefinite matrices describe covariance, diffusion, and other directional properties of data. We average them to combine noisy estimates, interpolate measurements, or construct a representative template. The choice of mean affects which geometric properties are preserved.</p>
 <p>For positive numbers, arithmetic and geometric averaging already answer different questions. For matrices, noncommutativity gives several distinct extensions of the <em>geometric mean</em>. We will compare the <em>log-Euclidean geometric mean</em>, the <em>Kubo–Ando geometric mean</em>, and the <em>logarithmic mean</em>, which is different from either geometric mean.</p>
 
 <!--more-->
@@ -34,7 +34,7 @@ A=\mathbb E[(X-m)(X-m)^\top]\succeq0,
 $$
 
 <p>Thus covariance averaging combines directional uncertainty. In diffusion MRI, positive tensors describe local anisotropic diffusion; smoothing and resampling require averages of nearby tensors <a href="#ref-arsigny">[1]</a>, <a href="#ref-pennec">[2]</a>. In computer vision, covariances of local features describe image regions, and averaged descriptors can serve as templates or update tracking models <a href="#ref-tuzel">[3]</a>, <a href="#ref-tracker">[4]</a>. Positive matrices also appear as kernel Gram matrices and, in their complex Hermitian version, quantum density matrices. Extra constraints, such as a fixed trace or diagonal, may require a separate normalization; the means below act on the whole positive cone.</p>
-<p>The naive weighted average is perfectly legitimate:</p>
+<p>The ordinary weighted average preserves positivity:</p>
 
 $$
 A\nabla_t B=(1-t)A+tB,\qquad 0\le t\le1.
@@ -415,7 +415,7 @@ $$
 \ne\frac{\log4}{3}=\mathcal L(1,4)^{-1}.
 $$
 
-<p>The distinction is now structural: coordinate changes, swapping, and inversion select the <em>geometric midpoint</em>; consistent midpoints select its <em>constant-speed path</em>; arithmetic aggregation over equal subdivisions selects the <em>logarithmic path average</em>.</p>
+<p>These characterizations distinguish the three constructions. Congruence equivariance, symmetry, and inverse compatibility determine the <em>geometric midpoint</em>. Midpoint consistency determines its <em>constant-speed path</em>, while arithmetic averaging over equal subdivisions determines the <em>logarithmic path average</em>.</p>
 
 ## The Gaussian optimal transport map {#a-gaussian-transport-map-hidden-in-a-geometric-mean}
 

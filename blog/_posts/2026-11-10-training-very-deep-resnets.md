@@ -263,7 +263,7 @@ $$
 
 ## Numerical experimentation: linear ODE flows {#numerical-experimentation-a-family-of-linear-flows}
 
-<p>Move an entire circle of initial conditions, not just one particle. The explorer runs over \(0\le t\le2\) and offers a constant matrix, a rotating strain, and two shears applied in different orders. The solid teal endpoint curve is the image of the unit circle; compare it with the dashed prediction \(\exp(\int_0^t A)\). These agree in the constant case and can separate when matrices at different times do not commute.</p>
+<p>The figure follows a circle of initial conditions over \(0\le t\le2\). Choose a constant matrix, a rotating strain, or two shears applied in different orders. The solid teal curve is the image of the unit circle; the dashed curve shows the prediction \(\exp(\int_0^t A)\). They agree in the constant case and can differ when matrices at different times do not commute.</p>
 <div class="resnet-wide"><iframe class="idea-experiment" data-experiment="resnet-flow" src="{{ '/blog/preparations/assets/deep-resnet/flow.html' | relative_url }}" title="Linear ODE flow explorer: rotation, growth, shear and noncommuting time dependence" loading="lazy" style="height:950px"></iframe></div>
 <p>The constant and switched-shear modes use exact formulas. The rotating-strain mode uses fourth-order Runge–Kutta and reports a step-halving discrepancy; the determinant can also be checked against Liouville's formula. The sliders change a prescribed coefficient path—they do not train a neural network.</p>
 

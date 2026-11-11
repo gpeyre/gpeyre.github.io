@@ -42,7 +42,7 @@ proofs: true
 embedded_experiment: true
 ---
 
-Imagine fitting a response curve to noisy observations. You want a flexible model, but you also expect larger inputs to produce larger outputs. Smoothness alone does not enforce this: a perfectly smooth curve can run in the wrong direction. Optimal transport suggests a different penalty, one which measures how much a map would improve if we reassigned its outputs.
+When fitting a curve to noisy observations, we may expect larger inputs to produce larger outputs. A smooth fit need not respect this order. Optimal transport suggests a penalty that measures how much the transport cost would decrease if we reassigned the fitted outputs.
 
 This is the *Monge gap*, introduced as a learning regularizer by Théo Uscidda and Marco Cuturi [[1]](#ref-monge). In one dimension, it has a particularly transparent meaning. On a uniform input grid, it is exactly a sum of penalties for inverted pairs. The identity in [Proposition 3.44 of *Optimal Transport for Machine Learners*](https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.3.4.44) [[2]](#ref-book) makes a transport-based regression problem an ordinary convex optimization problem.
 
@@ -166,7 +166,7 @@ Introducing variables $$s_{ij}\ge0$$ and constraints $$s_{ij}\ge(Kq)_i-(Kq)_j$$ 
 
 ## Numerical experimentation
 
-Increase the transport penalty and watch decreasing pairs become more expensive. The fitted curve, its sorted evaluations, and the exact inversion gap expose three different objects: the learned map, its rearrangement, and the excess transport cost.
+Increasing the transport penalty discourages decreasing pairs. The figure shows the fitted curve, its sorted evaluations, and the exact inversion gap, so that we can compare the learned map with its rearrangement.
 
 For the numerical solver only, replace $$s_+$$ by the smooth hinge $$h_\delta(s)=\delta\log(1+e^{s/\delta})$$, with $$\delta=0.015$$. Damped Newton iterations minimize this smooth objective, denoted by $$J_\delta(t)$$, in the fitted values $$t=(t_i)$$. The data term alone makes it $$2/n$$-strongly convex, giving the diagnostic
 

@@ -88,7 +88,7 @@ $$
        \left(\sum_j|\beta_j|\right).
 $$
 
-This inequality is the seed of the Banach-algebra norm.
+This inequality will give the product bound for the Banach-algebra norm.
 
 <aside class="note"><p><strong>Mixtures versus an algebra.</strong> Positive coefficients give nonnegative mixtures. To obtain a vector space, we must also allow negative coefficients. If one instead uses probability-density Gaussians and weights summing to one, a product needs a further normalization to become a probability density. Here we study ordinary pointwise products of functions, without renormalizing them.</p></aside>
 

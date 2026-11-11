@@ -36,9 +36,9 @@ figure: ode
 proofs: true
 ---
 
-Straighter trajectories should be easier to integrate numerically. In flow matching, this suggests a way to generate samples with fewer velocity evaluations, but it helps to make the dependence precise.
+In flow matching, straighter trajectories should require fewer velocity evaluations to generate a sample. What estimate makes this intuition precise?
 
-I wanted a precise estimate that exhibits this dependence directly. Rewriting the usual stability argument behind Cauchy–Lipschitz gives one: Euler’s global error is controlled by the **material acceleration** along the exact trajectory, multiplied by a stability factor.
+The usual stability argument behind Cauchy–Lipschitz gives an answer. Euler’s global error is controlled by the **material acceleration** along the exact trajectory, multiplied by a stability factor.
 
 <!--more-->
 
@@ -135,7 +135,7 @@ A_X\int_{t_k}^{t_{k+1}}(t_{k+1}-s)\,\mathrm ds
 =\frac{h^2A_X}{2}.
 $$
 
-The local Euler defect is precisely an accumulated acceleration.
+The one-step error is therefore an integral of the acceleration.
 
 *Step 2: stability transports the defect*
 
@@ -207,4 +207,4 @@ Here $$L=0$$ and $$A_X=b\pi^2$$. The error bound is explicit, and lowering $$b$$
 
 This estimate explains a numerical motivation for [rectified flow](https://arxiv.org/abs/2209.03003): trajectories with small material acceleration have small local Euler defects. It does not, by itself, bound statistical error, velocity-estimation error, or the discrepancy between a learned model and the target distribution. It isolates the discretization error for a given velocity field.
 
-It also makes the trade-off explicit: reducing acceleration helps, but a large spatial Lipschitz constant can still amplify the remaining error.
+Reducing acceleration helps, but a large spatial Lipschitz constant can still amplify the remaining error.

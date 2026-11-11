@@ -88,7 +88,7 @@
 \]
 <p>Insert these inequalities in Theorem 1. Finally, if \(C=A^\top A=BB^\top\), then \(A=U C^{1/2}\) and \(B=C^{1/2}V^\top\) for column-orthonormal \(U,V\). Hence \(Y=UCV^\top\), and the eigenvalues of \(C\) are exactly the positive singular values of \(Y\). Both inequalities become equalities. \(\square\)</p>
 </div></details>
-<p>The unavoidable part of conditioning is the singular-value spread of \(Y\). Imbalance adds an avoidable part. This distinguishes a difficulty of the represented problem from a difficulty introduced by its coordinates.</p>
+<p>The spread of singular values of \(Y\) limits how well conditioned the problem can be. Choosing imbalanced factors can worsen the conditioning without changing the matrix being learned.</p>
 
 <h2>Conditioning under scalar rescaling</h2>
 <p>Keep the thin SVD of \(Y\) fixed and choose</p>
@@ -111,7 +111,7 @@
 <p>There is still a rotational freedom in a balanced factorization. Calling it <em>hyperbalanced</em> means that the common Gram matrix is diagonal, with its entries ordered. This chooses a canonical form of balance. It is not needed to minimize the Euclidean quantity in Theorem 2: <em>all</em> balanced factorizations already do that. It can matter for coordinate-dependent optimizers, whose geometry is not invariant under latent rotations; see <a href="sign-gradient-descent-geometry.html">Which condition number does sign gradient descent see?</a></p>
 <p>An SVD-based balancing map preserves the represented product. It should not be confused with a nearest-point Euclidean projection in factor space. The practical BaLoRA construction in <a href="#ref-balora">[2]</a> exploits small matrix decompositions to make this reparameterization efficient.</p>
 <p>For a nonlinear least-squares model \(\tfrac12\|h(AB)-y\|^2\) at an interpolating solution, the paper gives conditioning bounds involving the Jacobian of \(h\). These require the corresponding rank and nondegeneracy hypotheses. If exact interpolation fails, residual terms enter the Hessian. Neither case is covered by simply reusing \(H=J^*J\) above, and neither turns the local calculation into a universal convergence theorem for fine-tuning.</p>
-<p>Finally, gradient flow conserves latent imbalance, while finite-step gradient descent need not conserve it exactly <a href="#ref-du">[4]</a>. The companion post on <a href="intrinsic-factor-training-dynamics.html">intrinsic factor dynamics</a> explains the continuous-time reduction. Earlier analyses of factorization and implicit bias <a href="#ref-gunasekar">[5]</a>, as well as initialization-dependent LoRA dynamics <a href="#ref-init">[6]</a>, further illustrate why the representation at initialization is not an innocuous detail.</p>
+<p>Finally, gradient flow conserves latent imbalance, while finite-step gradient descent need not conserve it exactly <a href="#ref-du">[4]</a>. The companion post on <a href="intrinsic-factor-training-dynamics.html">intrinsic factor dynamics</a> explains the continuous-time reduction. Earlier analyses of factorization and implicit bias <a href="#ref-gunasekar">[5]</a>, as well as initialization-dependent LoRA dynamics <a href="#ref-init">[6]</a>, also show how the initial factorization affects training.</p>
 
 <h2>Bibliography</h2><ol class="references">
 <li id="ref-lora">Edward J. Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang, Lu Wang, and Weizhu Chen. <a href="https://arxiv.org/abs/2106.09685"><em>LoRA: low-rank adaptation of large language models.</em></a> ICLR, 2022.</li>

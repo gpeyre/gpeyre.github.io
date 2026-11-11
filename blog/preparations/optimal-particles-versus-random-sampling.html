@@ -37,8 +37,8 @@
   <p class="byline">Gabriel Peyré</p>
 </div></header>
 <main class="wrap"><article class="blog-prose">
-<p>A probability distribution can be represented by a finite cloud of particles. The most familiar construction is to draw independent samples. But if the distribution is known and the particles can be placed deliberately, randomness is an unnecessary source of error.</p>
-<p>For a smooth, positive density on a bounded interval, the contrast is sharp. With \(n\) equally weighted particles, the smallest squared \(W_2\) error is of order \(n^{-2}\). Independent sampling gives expected squared error of order \(n^{-1}\). We can identify the optimal positions, compute the constants, and understand the difference by approximating the quantile function with a staircase.</p>
+<p>A probability distribution can be represented by a finite cloud of particles. The most familiar construction is to draw independent samples. If the distribution is known, we can instead choose the positions to minimize the approximation error.</p>
+<p>For a smooth, positive density on a bounded interval, the two approaches have different convergence rates. With \(n\) equally weighted particles, the smallest squared \(W_2\) error is of order \(n^{-2}\). Independent sampling gives expected squared error of order \(n^{-1}\). We can identify the optimal positions, compute the constants, and understand the difference by approximating the quantile function with a staircase.</p>
 <p>This is <em>equal-weight quantization</em>. General quantization allows the weights to vary too; its theory is developed by Graf and Luschgy <a href="#ref-graf">[1]</a>. The prescribed-weight problem on the line is studied systematically by Xu and Berger <a href="#ref-xu">[2]</a>.</p>
 <aside class="note"><p>Book pointers: <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.6.4.14">Proposition 6.14, printed p. 110</a>, and <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.6.4.15">Proposition 6.15, printed p. 111</a>, in §6.4 of <em>Optimal Transport for Machine Learners</em> <a href="#ref-book">[3]</a>.</p></aside>
 
@@ -225,7 +225,7 @@
  \sim\frac1{\sqrt{2\pi n}}.
 \]
 <p>The last equivalent follows from the binomial CLT and uniform integrability of the standardized absolute fluctuations. In contrast, for every even \(n\), deliberate equal-weight placement represents this law exactly by repeating each endpoint \(n/2\) times. The \(n^{-2}\) versus \(n^{-1}\) comparison is a theorem for the stated positive-density class, not a universal pair of rates for all measures. The same two-point fluctuation explains the general sampling bound in the <a href="bernstein-polynomials-on-measures.html">post on Bernstein polynomials of measures</a>.</p>
-<p>Finally, optimal placement assumes access to the target quantile, or to a sufficiently accurate approximation of it. If the distribution itself must be learned from data, quantization does not erase that statistical uncertainty. It separates two questions: how well do we know the distribution, and how efficiently can we represent the distribution we know?</p>
+<p>Finally, optimal placement assumes access to the target quantile, or to a sufficiently accurate approximation of it. If the distribution must first be learned from data, choosing better particle positions does not remove the statistical error in that estimate. Quantization addresses the representation error once a distribution has been chosen.</p>
 
 <h2>References</h2>
 <ol class="references">

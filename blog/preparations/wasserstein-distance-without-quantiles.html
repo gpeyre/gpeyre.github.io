@@ -38,7 +38,7 @@
 </div></header>
 <main class="wrap"><article class="blog-prose">
 <p>One-dimensional optimal transport is often introduced as a sorting problem: line up the source and target quantiles, and match equal ranks. This gives an exact formula for Wasserstein distance. But sometimes a cumulative distribution function is easy to evaluate while its inverse is inconvenient. Gaussian mixtures are one example; data distributed across many machines are another.</p>
-<p>There is an exact alternative for the quadratic distance which uses only CDF values. The formula has a short geometric proof, works with atoms, and naturally suggests integration and sampling algorithms. The identity is recorded by Bobkov and Ledoux, who credit Eustasio del Barrio <a href="#ref-bobkov">[1]</a>. Its recent use for data-parallel sliced-Wasserstein estimation is due to Vauthier, Mérigot, and Korba <a href="#ref-cdf">[2]</a>. The formula also appears as <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.2.6.45">Proposition 2.45 in my book</a> <a href="#ref-book">[3]</a>.</p>
+<p>For the quadratic distance, an exact alternative uses only CDF values. It works with atoms as well as densities, and can be evaluated by numerical integration or sampling. The proof is a change in integration order over a triangular region. The identity is recorded by Bobkov and Ledoux, who credit Eustasio del Barrio <a href="#ref-bobkov">[1]</a>. Its recent use for data-parallel sliced-Wasserstein estimation is due to Vauthier, Mérigot, and Korba <a href="#ref-cdf">[2]</a>. The formula also appears as <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.2.6.45">Proposition 2.45 in my book</a> <a href="#ref-book">[3]</a>.</p>
 
 <h2>A CDF formula for quadratic Wasserstein distance</h2>
 <p>For a probability law \(\alpha\) on \(\mathbb R\), write</p>
@@ -52,7 +52,7 @@
   W_2^2(\alpha,\beta)
   =\int_0^1|Q_\alpha(r)-Q_\beta(r)|^2\,dr.
 \]
-<p>The aim is not to change the optimal coupling. It is to integrate the cost of that coupling in a different order. Define the nonnegative function, for \(x&lt;y\),</p>
+<p>We keep the optimal coupling and change the order in which its cost is integrated. For \(x&lt;y\), define the nonnegative function</p>
 \[
   H(x,y)
   =(F_\alpha(x)-F_\beta(y))_+
@@ -86,7 +86,7 @@
 \]
 <p>The set of \(r\)'s satisfying both has length \((F_\alpha(x)-F_\beta(y))_+\). The reverse direction gives the other positive part. All integrands are nonnegative, so Tonelli's theorem permits the change in integration order, even before finiteness is established. The second moments make the resulting Wasserstein value finite. \(\square\)</p>
 </div></details>
-<p>The triangular region matters: simply replacing it by the full square would change the answer. So does the use of two different thresholds \(x,y\). The expression \(\int|F_\alpha(x)-F_\beta(x)|^2\,dx\) is a Cramér-type discrepancy, not \(W_2^2\). In contrast, \(W_1=\int|F_\alpha-F_\beta|\) does use a single threshold.</p>
+<p>The formula requires both the triangular region and two different thresholds \(x,y\). Replacing the triangle by the full square would give a different value. The expression \(\int|F_\alpha(x)-F_\beta(x)|^2\,dx\) is a Cramér-type discrepancy, not \(W_2^2\). In contrast, \(W_1=\int|F_\alpha-F_\beta|\) does use a single threshold.</p>
 
 <h2>An example with sinusoidal density</h2>
 <p>Take the uniform law \(\beta\) on \([0,1]\), and let \(\alpha\) have density</p>
@@ -121,7 +121,7 @@
 </figure>
 
 <h2>An unbiased Monte Carlo estimator</h2>
-<p>For compactly supported laws, the formula also gives a particularly simple unbiased Monte Carlo estimator. Draw two independent uniforms on \([a,b]\), sort them into \(X&lt;Y\), and evaluate \(H(X,Y)\). The sorted pair is uniform on the triangle, whose area is \((b-a)^2/2\).</p>
+<p>For compactly supported laws, the formula gives an unbiased Monte Carlo estimator. Draw two independent uniforms on \([a,b]\), sort them into \(X&lt;Y\), and evaluate \(H(X,Y)\). The sorted pair is uniform on the triangle, whose area is \((b-a)^2/2\).</p>
 <p id="proposition-1"><strong>Proposition 1 (an unbiased CDF estimator).</strong> For independent triangle samples \((X_\ell,Y_\ell)\), set</p>
 \[
   \widehat D_L
@@ -175,9 +175,9 @@
 \]
 <p>Thus finite-window integration underestimates the true distance by a controlled amount. The relevant tail quantity is a squared displacement, not just the probability of being outside the interval.</p>
 </div></details>
-<p>For distributed empirical data, each worker can contribute its local count below a threshold. Adding these weighted counts gives the global CDF. Crucially, one must aggregate the CDFs <em>before</em> taking the positive parts; averaging local Wasserstein distances solves a different problem.</p>
+<p>For distributed empirical data, each worker can contribute its local count below a threshold. Adding these weighted counts gives the global CDF. The CDFs must be aggregated <em>before</em> taking the positive parts; averaging local Wasserstein distances solves a different problem.</p>
 <p>The same idea applies after projecting high-dimensional measures onto a line. For a direction \(\theta\), compute the CDFs of \(\theta^\top X\) and \(\theta^\top Y\), apply the formula, and average the resulting <em>squared</em> distances over uniformly sampled directions. This estimates the square of the <em>sliced</em> Wasserstein distance; take a square root to obtain the distance itself. It is a different metric from the full high-dimensional Wasserstein distance. The recent paper <a href="#ref-cdf">[2]</a> develops estimators tailored to this setting.</p>
-<p>There is a computational tradeoff: a two-dimensional quadrature is not automatically cheaper than one-dimensional quantile integration or sorting a sample. The benefit is access to a different computational primitive—CDF evaluation—which can be particularly convenient for structured distributions and distributed data. For the broader algorithmic picture, see <a href="#ref-computational">[4]</a>.</p>
+<p>A two-dimensional quadrature is not necessarily cheaper than one-dimensional quantile integration or sorting a sample. The formula is useful when CDF values are easier to obtain, as for some structured distributions and distributed datasets. For other transport algorithms, see <a href="#ref-computational">[4]</a>.</p>
 
 <h2>References</h2>
 <ol class="references">

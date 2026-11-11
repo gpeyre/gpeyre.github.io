@@ -78,7 +78,7 @@ Topic: Other topics
 
 - [x] Ready to publish
 
-> Can a factored matrix evolve on its own during training? A conserved imbalance supplies the missing information, giving a closed gradient-flow equation for the represented model. https://www.gpeyre.com/blog/preparations/intrinsic-factor-training-dynamics.html
+> Training a matrix factorization usually depends on more than its product. With suitable initialization, a conserved imbalance gives a closed equation for the product itself. https://www.gpeyre.com/blog/preparations/intrinsic-factor-training-dynamics.html
 
 ## 8. Weak transport and mean-preserving spreads
 
@@ -86,7 +86,7 @@ Topic: OT / Wasserstein geometry
 
 - [ ] Ready to publish
 
-> What if transport only paid for moving conditional means? Weak transport becomes a Wasserstein projection under convex order: first move the means, then spread mass for free. https://www.gpeyre.com/blog/preparations/weak-transport-and-convex-order.html
+> With quadratic cost, weak transport can be written as a Wasserstein projection under convex order. This post explains the role of conditional means and mean-preserving spreads. https://www.gpeyre.com/blog/preparations/weak-transport-and-convex-order.html
 
 ## 9. In-context composition
 
@@ -94,7 +94,7 @@ Topic: Other topics
 
 - [ ] Ready to publish
 
-> A transformer layer moves a token and its context together. Our in-context composition becomes ordinary composition on a lifted space—a bridge to advection and particle dynamics. https://www.gpeyre.com/blog/preparations/in-context-composition.html
+> Each attention layer changes both a token and its context. Our in-context composition accounts for both updates; on the space of measure–point pairs, it is ordinary composition. https://www.gpeyre.com/blog/preparations/in-context-composition.html
 
 ## 10. Why optimal transport respects a density cap
 
@@ -102,7 +102,7 @@ Topic: OT / Wasserstein geometry
 
 - [ ] Ready to publish
 
-> Can optimal transport create overcrowding? In a convex Euclidean domain, a common constant cap on endpoint densities survives the whole quadratic Wasserstein geodesic. https://www.gpeyre.com/blog/preparations/wasserstein-geodesics-density-caps.html
+> If two densities share a constant upper bound, so does their quadratic Wasserstein interpolation on a convex Euclidean domain. The proof uses a determinant inequality. https://www.gpeyre.com/blog/preparations/wasserstein-geodesics-density-caps.html
 
 ## 11. Bernstein polynomials on probability measures
 
@@ -110,7 +110,7 @@ Topic: Other topics
 
 - [ ] Ready to publish
 
-> Sample, evaluate, average: a Bernstein polynomial on measures. On a compact space, this gives universal approximation, with rates that reveal the role of dimension. https://www.gpeyre.com/blog/preparations/bernstein-polynomials-on-measures.html
+> Bernstein's averaging construction also applies to continuous functions of probability measures. On a compact space it gives uniform approximation, with an error controlled by sampling. https://www.gpeyre.com/blog/preparations/bernstein-polynomials-on-measures.html
 
 ## 12. Sinkhorn on Gaussians: an exact convergence rate
 
@@ -118,7 +118,7 @@ Topic: OT / Wasserstein geometry
 
 - [ ] Ready to publish
 
-> Why does Sinkhorn slow down as regularization decreases? For centered 1D Gaussians, a covariance recursion gives an exact convergence rate and explains the low-temperature regime. https://www.gpeyre.com/blog/preparations/gaussian-sinkhorn-convergence.html
+> For centered 1D Gaussians, Sinkhorn reduces to a scalar recursion. We can compute its convergence rate exactly and see how it depends on regularization. https://www.gpeyre.com/blog/preparations/gaussian-sinkhorn-convergence.html
 
 ## 13. Polynomials of probability measures
 
@@ -126,7 +126,7 @@ Topic: Other topics
 
 - [ ] Ready to publish
 
-> Polynomials of probability measures? Products of expectations form an algebra. Stone–Weierstrass gives universal approximation of continuous functionals of measures on a compact domain. https://www.gpeyre.com/blog/preparations/wasserstein-polynomials.html
+> On a compact domain, polynomials of probability measures approximate every continuous functional. The proof is an application of Stone–Weierstrass. https://www.gpeyre.com/blog/preparations/wasserstein-polynomials.html
 
 ## 14. Wasserstein distance without quantiles
 
@@ -134,7 +134,7 @@ Topic: OT / Wasserstein geometry
 
 - [ ] Ready to publish
 
-> Can we compute 1D quadratic Wasserstein distance without inverting CDFs? A triangle-area identity gives a formula directly in terms of the CDFs, with a geometric proof. https://www.gpeyre.com/blog/preparations/wasserstein-distance-without-quantiles.html
+> In 1D, quadratic Wasserstein distance can be computed directly from CDFs, without inverting them. A triangle-area argument gives the formula. https://www.gpeyre.com/blog/preparations/wasserstein-distance-without-quantiles.html
 
 ## 15. The covariance of SGD iterates
 
@@ -142,7 +142,7 @@ Topic: Other topics
 
 - [ ] Ready to publish
 
-> In least squares with constant noise variance, fixed-step SGD has an isotropic stationary covariance to first order. An exact recursion reveals fourth-moment corrections and relaxation times. https://www.gpeyre.com/blog/preparations/sgd-iterate-covariance.html
+> For least squares with constant noise variance, fixed-step SGD has an isotropic stationary covariance to first order. Fourth moments determine the next correction. https://www.gpeyre.com/blog/preparations/sgd-iterate-covariance.html
 
 ## 16. Carefully placed particles versus random samples
 
@@ -150,7 +150,7 @@ Topic: OT / Wasserstein geometry
 
 - [ ] Ready to publish
 
-> For a uniform law on an interval, optimal particles have squared W2 error of order 1/n², versus order 1/n in expectation for random samples. Quantile-bin averages show how to choose the points. https://www.gpeyre.com/blog/preparations/optimal-particles-versus-random-sampling.html
+> For a uniform distribution on an interval, optimally placed particles have squared W2 error of order 1/n². Independent sampling gives order 1/n in expectation. https://www.gpeyre.com/blog/preparations/optimal-particles-versus-random-sampling.html
 
 ## 17. Optimal conditioning of low-rank adaptation
 
@@ -158,7 +158,7 @@ Topic: Other topics
 
 - [ ] Ready to publish
 
-> The same low-rank matrix can train at different speeds depending on its factors. A short Hessian calculation shows why balancing gives optimal Euclidean local conditioning. https://www.gpeyre.com/blog/preparations/balanced-low-rank-conditioning.html
+> Rescaling matrix factors can slow training without changing their product. For exact low-rank matrix recovery, balancing gives optimal positive Hessian conditioning. https://www.gpeyre.com/blog/preparations/balanced-low-rank-conditioning.html
 
 ## 18. Two symmetric central limit theorems, two rates
 
@@ -166,7 +166,7 @@ Topic: OT / Wasserstein geometry
 
 - [ ] Ready to publish
 
-> Two symmetric distributions, two central-limit rates: coin flips converge like 1/√n, continuous uniforms like 1/n in W1. The difference is the lattice. https://www.gpeyre.com/blog/preparations/central-limit-wasserstein-constants.html
+> Coin flips and continuous uniform variables are both symmetric, but their normalized sums converge at different W1 rates: 1/√n and 1/n. The lattice explains the difference. https://www.gpeyre.com/blog/preparations/central-limit-wasserstein-constants.html
 
 ## 19. Conditioning of Non-Euclidean Gradient Descent
 
@@ -174,7 +174,7 @@ Topic: Other topics
 
 - [ ] Ready to publish
 
-> Rotating a quadratic preserves its eigenvalues but can change how sign descent behaves. Norm-steepest descent reveals the relevant condition number—and why coordinate geometry matters. https://www.gpeyre.com/blog/preparations/sign-gradient-descent-geometry.html
+> Euclidean gradient descent is rotation invariant; scaled sign descent is not. The relevant condition number depends on the norm used for descent. https://www.gpeyre.com/blog/preparations/sign-gradient-descent-geometry.html
 
 ## 20. Spectral Wasserstein distances
 
@@ -182,7 +182,7 @@ Topic: OT / Wasserstein geometry
 
 - [ ] Ready to publish
 
-> Wasserstein transport measures how far mass moves. Spectral Wasserstein distances also track its directions. A robust-cost interpretation, a dynamic formulation, and a Schatten-p experiment. https://www.gpeyre.com/blog/preparations/spectral-wasserstein-distances.html
+> Spectral Wasserstein distances account for the directions of transport displacements. I explain their robust-cost and dynamic formulations, with a point-cloud experiment. https://www.gpeyre.com/blog/preparations/spectral-wasserstein-distances.html
 
 ## 21. When the best low-rank tensor approximation does not exist
 
@@ -190,7 +190,7 @@ Topic: Other topics
 
 - [ ] Ready to publish
 
-> For tensors, a best low-rank approximation may not exist. Two rank-one terms can converge to a tensor that needs three. Two matrix slices and a determinant give an elementary proof. https://www.gpeyre.com/blog/preparations/tensor-rank-without-best-approximation.html
+> A best low-rank tensor approximation need not exist: a sequence of rank-two tensors can converge to a rank-three tensor. Here is an example with a short proof. https://www.gpeyre.com/blog/preparations/tensor-rank-without-best-approximation.html
 
 ## 22. Which statistics evolve on their own?
 
@@ -198,7 +198,7 @@ Topic: OT / Wasserstein geometry
 
 - [ ] Ready to publish
 
-> Can one statistic evolve on its own while the whole distribution moves? A geometric criterion gives exact moment closure for a class of Wasserstein gradient flows. https://www.gpeyre.com/blog/preparations/autonomous-wasserstein-statistics.html
+> When does a statistic satisfy a closed equation during a Wasserstein gradient flow? For energies depending on one observable, a condition on its gradient gives the answer. https://www.gpeyre.com/blog/preparations/autonomous-wasserstein-statistics.html
 
 ## 23. Universality and invariance
 
@@ -206,7 +206,7 @@ Topic: Other topics
 
 - [ ] Ready to publish
 
-> What can a neural network distinguish—and approximate? For GNNs, 1-WL describes the blind spots. Concatenating features and adding an MLP turns separation into relative universality. https://www.gpeyre.com/blog/preparations/universality-and-invariance.html
+> Expressive sum-message-passing GNNs distinguish the 1-WL classes. On compact sets of bounded-size graphs, a final MLP gives approximation of continuous functions constant on those classes. https://www.gpeyre.com/blog/preparations/universality-and-invariance.html
 
 ## 24. c-transform as a generalized Legendre transform
 
@@ -214,7 +214,7 @@ Topic: OT / Wasserstein geometry
 
 - [ ] Ready to publish
 
-> Are averages of transport potentials still transport potentials? Quadratic costs say yes; most other power costs say no. Cost transforms and supporting shapes explain the difference. https://www.gpeyre.com/blog/preparations/c-transforms-and-averaging.html
+> Averages of transport potentials stay in the class for metric costs and quadratic Euclidean costs. Other power costs can fail, as a one-dimensional counterexample shows. https://www.gpeyre.com/blog/preparations/c-transforms-and-averaging.html
 
 ## 25. Universal approximation from one nonlinearity
 
@@ -222,7 +222,7 @@ Topic: Other topics
 
 - [ ] Ready to publish
 
-> Stone–Weierstrass needs products—or does it? Closure under one continuous non-affine operation already gives universality. Taylor expansion and smoothing reveal the hidden algebra. https://www.gpeyre.com/blog/preparations/universality-from-one-nonlinearity.html
+> On a compact space, a separating real linear family containing constants is dense if its closure is stable under one fixed continuous non-affine operation. https://www.gpeyre.com/blog/preparations/universality-from-one-nonlinearity.html
 
 ## 26. Orthostochastic matrices and optimal transport
 
@@ -230,7 +230,7 @@ Topic: OT / Wasserstein geometry
 
 - [ ] Ready to publish
 
-> Can squaring an orthogonal matrix solve optimal transport? The optimum is unchanged, but a gradient flow can get trapped. Signed square roots explain the geometry. https://www.gpeyre.com/blog/preparations/orthostochastic-matrices.html
+> Squaring an orthogonal matrix entrywise gives a doubly stochastic matrix. Optimizing a linear transport cost this way preserves the optimum, but can introduce suboptimal local minima. https://www.gpeyre.com/blog/preparations/orthostochastic-matrices.html
 
 ## 27. Doubly nonnegative and completely positive matrices
 
@@ -238,4 +238,4 @@ Topic: Other topics
 
 - [ ] Ready to publish
 
-> Positive entries and positive eigenvalues do not guarantee nonnegative features. A five-cycle exposes the gap; Gaussian scale mixtures show when positive features do exist. https://www.gpeyre.com/blog/preparations/doubly-nonnegative-completely-positive.html
+> A positive semidefinite matrix with nonnegative entries need not have nonnegative Gram factors. A five-cycle gives a counterexample; Gaussian kernels do admit such features. https://www.gpeyre.com/blog/preparations/doubly-nonnegative-completely-positive.html

@@ -47,7 +47,7 @@
 \[
  f^c(y)=-(-f)^*(-y),\qquad f^{c\bar c}=-(-f)^{**}.
 \]
-<p>Under the properness assumptions of Fenchel–Moreau biconjugacy, the last expression is the closed concave envelope above \(f\). One should not silently identify this infimum transform with the usual supremum Legendre transform <a href="#ref-rockafellar">[2]</a>.</p>
+<p>Under the properness assumptions of Fenchel–Moreau biconjugacy, the last expression is the closed concave envelope above \(f\). This infimum transform therefore differs from the usual supremum Legendre transform <a href="#ref-rockafellar">[2]</a>.</p>
 <p>For the quadratic cost \(c(x,y)=\tfrac12|x-y|^2\) on \(\mathbb R^d\times\mathbb R^d\), let \(h(x)=\tfrac12|x|^2-f(x)\). Completing the square gives</p>
 \[
  f^c(y)=\tfrac12|y|^2-h^*(y),\qquad
@@ -65,7 +65,7 @@
 <details class="blog-proof"><summary>Proof: the triangle inequality identifies the whole class</summary><div class="blog-proof-body">
 <p>Each profile \(x\mapsto d(x,y)-g(y)\) is 1-Lipschitz, and so is its finite lower envelope. Conversely, if \(f\) is 1-Lipschitz, then \(d(x,y)-f(x)\ge-f(y)\), with equality at \(x=y\). Hence \(f^d=-f\), and \(f^{dd}=f\). \(\square\)</p>
 </div></details>
-<p>For an arbitrary finite input, one can also write \(f^{dd}(x)=\sup_y\{f(y)-d(x,y)\}\): this is its smallest 1-Lipschitz majorant. In particular, \(|x-y|^p\) with \(0&lt;p\le1\) is a metric, so averaging is stable in that range too. Geodesic distance itself poses no curvature restriction; the subtlety starts when one <em>squares</em> it.</p>
+<p>For an arbitrary finite input, one can also write \(f^{dd}(x)=\sup_y\{f(y)-d(x,y)\}\): this is its smallest 1-Lipschitz majorant. In particular, \(|x-y|^p\) with \(0&lt;p\le1\) is a metric, so averaging is stable in that range too. For geodesic distance, the argument needs no curvature assumption. Squaring the distance changes this.</p>
 
 <h2>Closure under averaging for power costs</h2>
 <p id="theorem-1"><strong>Theorem 1 (power costs on an interval).</strong> Let \(X=Y=[-3,3]\) and \(c_p(x,y)=|x-y|^p\), with \(p&gt;0\). The class of c-concave functions is closed under arithmetic convex combinations if \(0&lt;p\le1\) or \(p=2\). For every other exponent, a mean of two individual cost profiles already fails to be c-concave.</p>
@@ -96,7 +96,7 @@
 
 <h2>Squared geodesic costs on spheres</h2>
 <p>For squared <em>intrinsic</em> geodesic distance on a round sphere, arithmetic combinations of finite c-concave functions are c-concave. The property extends to products of round spheres, including flat tori with their product metrics <a href="#ref-km">[3]</a>, <a href="#ref-rcpm">[4]</a>. Chordal distance from an ambient embedding is a different cost.</p>
-<p>The key ingredient is a supporting-profile inequality, not merely positive sectional curvature. Fix a contact point \(x_0\), interpolate shortest logarithms to two centers, and define</p>
+<p>The proof uses an inequality between supporting cost profiles; positive sectional curvature alone is not enough. Fix a contact point \(x_0\), interpolate shortest logarithms to two centers, and define</p>
 \[
  y_t=\operatorname{Exp}_{x_0}\bigl((1-t)\operatorname{Log}_{x_0}y_0+t\operatorname{Log}_{x_0}y_1\bigr),
  \qquad q_t(x)=c(x,y_t)-c(x_0,y_t).
@@ -113,7 +113,7 @@
 \]
 <p>Equality holds at \(x_0\). Thus the average has a cost-profile support at every point. Taking the lower envelope of all these supports recovers the average, proving c-concavity. The geometric inequality itself is the substantive theorem of Kim and McCann; it is not proved by this elementary envelope argument. \(\square\)</p>
 </div></details>
-<p>For smooth costs on bounded Euclidean domains, Figalli, Kim, and McCann characterize this convexity of the potential class by <em>nonnegative cross-curvature</em>, under bi-twist, nondegeneracy, and convexity of the cost-gradient images <a href="#ref-fkm">[5]</a>. This condition is stronger than weak Ma–Trudinger–Wang. It is precisely the kind of global hypothesis that the two elementary power-cost counterexamples warn us not to omit.</p>
+<p>For smooth costs on bounded Euclidean domains, Figalli, Kim, and McCann characterize this convexity of the potential class by <em>nonnegative cross-curvature</em>, under bi-twist, nondegeneracy, and convexity of the cost-gradient images <a href="#ref-fkm">[5]</a>. This condition is stronger than weak Ma–Trudinger–Wang. The power-cost counterexamples above show why additional hypotheses are needed.</p>
 
 <h2>Numerical experimentation</h2>
 <p>The panels below compute the transform and double transform of an editable function. The presets are the two averages in Theorem 1; they are regenerated for the selected exponent. The orange curve lies above the input and coincides with it exactly when the finite-grid function is c-concave. Refine the target grid before interpreting a small gap as a continuum obstruction.</p>

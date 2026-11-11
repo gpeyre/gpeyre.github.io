@@ -42,9 +42,9 @@ keywords:
 proofs: true
 ---
 
-The Stone–Weierstrass theorem is a cornerstone of approximation theory: it turns a few structural properties of a family of functions into the ability to approximate every continuous function. It explains the density of polynomials and Fourier modes, and provides a route to universality for neural networks—even two-layer networks. It also plays a central role in my recent work with Takashi Furuya and Maarten de Hoop on attention universality over an infinite-dimensional space of contexts [[3]](#ref-attention).
+The Stone–Weierstrass theorem gives a general criterion for a family of functions to approximate every continuous function on a compact space. It applies to polynomials and Fourier modes, and can also be used to prove universality of neural networks, including two-layer networks. We use it in our recent work with Takashi Furuya and Maarten de Hoop on attention universality over an infinite-dimensional space of contexts [[3]](#ref-attention).
 
-The hypothesis that often looks most restrictive is **stability under products**. Multiplying two polynomials gives another polynomial, but multiplying two ReLU networks generally does not give a ReLU network. Fortunately, exact multiplication is unnecessary: it is enough that products belong to the **uniform closure** of the class. This elementary consequence of the usual theorem is worth keeping in mind.
+The hypothesis that often looks most restrictive is **stability under products**. Multiplying two polynomials gives another polynomial, but multiplying two ReLU networks generally does not give a ReLU network. We do not need exact multiplication, though: it is enough that products belong to the **uniform closure** of the class. This follows directly from the usual theorem.
 
 <!--more-->
 
@@ -91,8 +91,6 @@ Three familiar examples illustrate the hypotheses:
 - **Exponential networks.** On a compact $$K\subset\mathbb R^d$$, the finite real linear combinations of $$x\mapsto e^{w\cdot x}$$ form a unital algebra: $$w=0$$ gives constants, and $$e^{u\cdot x}e^{v\cdot x}=e^{(u+v)\cdot x}$$. They separate points because the exponential is injective and linear forms separate points. Thus one-hidden-layer networks with exponential activation are uniformly dense in $$C(K,\mathbb R)$$.
 
 ## Approximate closure under multiplication {#an-algebra-only-in-the-closure}
-
-Here is the useful reformulation.
 
 <span id="theorem-2"></span>
 **Theorem 2 (approximate products suffice).** Let $$\mathcal F\subset C(K,\mathbb R)$$ be a real linear subspace containing $$1$$ and separating points. Suppose that
@@ -199,8 +197,6 @@ Therefore $$fg\in\overline{\mathcal N}$$. The closure theorem yields the claim.
 
 </div>
 </details>
-
-The networks themselves cannot multiply exactly, but their closure can.
 
 ## Universality for two-layer ReLU networks {#two-layer-networks}
 

@@ -45,7 +45,7 @@ $$
 \qquad \mu>0.
 $$
 
-It rules out stationary points with a nonoptimal value, without requiring a convex landscape.
+It rules out stationary points with a nonoptimal value, and can hold even for a nonconvex function.
 
 <!--more-->
 

@@ -43,7 +43,7 @@ figure: barycentric
 proofs: true
 ---
 
-How do you turn a transport plan into a map? This question appears as soon as we transport a small point cloud to a much larger one: the Kantorovich solution splits each source point's mass among several destinations. Entropic regularization makes that splitting even more explicit.
+A transport plan can send one source point's mass to several destinations. This happens, for example, when we transport a small point cloud to a much larger one. If we want a map instead, we need to choose one destination per source point.
 
 The **barycentric projection** replaces those destinations by their conditional mean. For an arbitrary coupling, the resulting map need not be optimal. If the coupling solves **quadratic Kantorovich OT or quadratic entropic OT**, however, its barycentric projection is an unregularized quadratic Monge map—but **to its own image measure, not generally to the original target**. In the entropic case, this follows from a smooth convex log-sum-exp potential derived from the optimal dual potentials.
 
@@ -142,7 +142,7 @@ The terminology already appears in Ambrosio, Gigli and Savaré's **2005** book, 
 
 ## Projection onto deterministic couplings
 
-The word *projection* can be understood literally at the level of couplings, not only as least-squares prediction of the destination. The key is to choose a distance that **keeps the source point fixed**.
+We can also view this as a projection of the coupling itself. For that, we need a distance that **keeps the source point fixed**.
 
 Fix $$\alpha\in\mathcal P_2(\mathbb R^d)$$. Let $$\mathcal C_\alpha$$ be the probability measures on $$\mathbb R^d\times\mathbb R^d$$ with finite second moments and first marginal $$\alpha$$; their second marginal is free. For $$\pi,\rho\in\mathcal C_\alpha$$, write their conditional laws as $$\pi_x,\rho_x$$ and define
 
@@ -331,7 +331,7 @@ This is a log-sum-exp of affine functions, hence smooth and convex for a finite 
 <summary>Proof: the covariance Hessian of log sum exp</summary>
 <div class="blog-proof-body" markdown="1">
 
-Differentiating once more makes the convexity particularly transparent:
+Differentiating once more gives a covariance Hessian:
 
 $$
 \nabla^2\Phi_\varepsilon(x)

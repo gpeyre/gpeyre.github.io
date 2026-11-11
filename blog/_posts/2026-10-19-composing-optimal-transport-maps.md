@@ -42,7 +42,7 @@ embedded_experiment: true
 
 Transport a distribution optimally to an intermediate distribution, then transport that one optimally to a final target. Is the resulting correspondence optimal between the original and final distributions? On the real line, yes: increasing maps compose into increasing maps. In higher dimensions, the answer is generally no.
 
-This is more subtle than saying that a journey through a waypoint can be long. Here we compare the *direct endpoint displacement* of the composed map with the direct optimal cost. The composition itself may assign the wrong endpoints. A two-dimensional Gaussian example explains why, and also clarifies a common confusion between monotone maps and gradients of convex functions. See [Remark 2.42 of my book](https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.2.6.42) [[1]](#ref-book).
+We compare the *direct endpoint displacement* of the composed map with the optimal cost, not the length of the route through the intermediate distribution. The composition may assign different endpoints from the optimal map. A two-dimensional Gaussian example shows why, and explains the distinction between monotone maps and gradients of convex functions. See [Remark 2.42 of my book](https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.2.6.42) [[1]](#ref-book).
 
 <!--more-->
 
@@ -214,7 +214,7 @@ Rotate the eigenbasis and watch the skew defect $$\|BA-(BA)^\top\|_{\mathrm F}$$
 </figcaption>
 </figure>
 
-At commuting angles the excess vanishes. Away from them, the product introduces a component that can be removed while preserving the output covariance. Optimality is a property of the whole source–target correspondence, and is not inherited automatically by stacking individually optimal layers.
+At commuting angles the excess vanishes. Otherwise, a rotation can be removed while preserving the output covariance and lowering the cost. Composing optimal layers therefore need not give an optimal map.
 
 ## References
 

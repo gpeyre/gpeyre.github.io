@@ -100,7 +100,7 @@ Every $$\ell_z$$ is affine in $$\theta$$. A supremum of affine functions is conv
 </div>
 </details>
 
-Notice what the proof does **not** require: convexity of $$F_\theta$$ in $$z$$. Solving the forward problem may still be difficult, but the exact gap has this convexity property. It does require a parameter-independent feasible set and a fixed observation. A nonlinear neural parameterization of the objective does not automatically preserve it.
+The proof does **not** require convexity of $$F_\theta$$ in $$z$$. The forward problem may still be difficult to solve. It does require a parameter-independent feasible set and a fixed observation; a nonlinear neural parameterization of the objective does not automatically preserve convexity of the gap.
 
 When a forward minimizer $$z_\theta$$ exists, an associated subgradient is
 

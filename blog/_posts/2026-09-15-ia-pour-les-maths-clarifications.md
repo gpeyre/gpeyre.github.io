@@ -53,11 +53,11 @@ Dans l’extrait diffusé, mon intervention s’arrête sur cet enthousiasme. Or
 
 Comment garantir à toutes et à tous l’accès à ces outils ? Comment faire en sorte qu’ils contribuent réellement à l’amélioration de l’enseignement et de l’apprentissage des mathématiques ? Et comment préserver la circulation des connaissances et l’autonomie de la recherche, alors que les grandes entreprises de l’IA concentrent une part croissante des ressources et des savoirs ?
 
-Ces enjeux ne sont pas accessoires : ils conditionnent la manière dont les bénéfices scientifiques de ces technologies pourront être partagés.
+Ces questions déterminent qui pourra bénéficier des progrès scientifiques de ces technologies.
 
 Mon intervention se terminait donc par un appel aux pouvoirs publics à investir massivement dans la recherche publique et dans l’éducation scientifique, en particulier en mathématiques et en informatique. Au vu des coupes budgétaires que subissent nos institutions, cette priorité ne semble malheureusement pas aller de soi.
 
-Je souhaitais rétablir ici cet équilibre : l’enthousiasme face aux perspectives scientifiques, indissociable d’une exigence forte en matière d’accès, d’éducation et de soutien à la recherche publique.
+Je voulais donc préciser ma position : je suis enthousiaste face aux perspectives scientifiques de l’IA, mais cet enthousiasme va de pair avec des exigences d’accès, d’éducation et de soutien à la recherche publique.
 
 [Écouter la chronique sur France Inter](https://www.radiofrance.fr/franceinter/podcasts/nos-vies-numeriques/nos-vies-numeriques-du-jeudi-10-septembre-2026-6149706).
 
@@ -78,11 +78,11 @@ In the broadcast excerpt, my contribution ends on this enthusiasm. Yet it contin
 
 How can we ensure that everyone has access to these tools? How can we make sure they genuinely improve the teaching and learning of mathematics? And how can we preserve the circulation of knowledge and the independence of research when large AI companies concentrate an increasing share of resources and expertise?
 
-These are not secondary issues: they determine how widely the scientific benefits of these technologies can be shared.
+These questions determine who will benefit from the scientific advances these technologies may bring.
 
 My interview therefore ended with a call for public authorities to invest massively in public research and scientific education, especially in mathematics and computer science. Given the budget cuts affecting our institutions, this priority unfortunately seems far from assured.
 
-I wanted to restore that balance here: enthusiasm for the scientific possibilities, inseparable from a strong commitment to access, education, and support for public research.
+I wanted to be clear about my position: I am enthusiastic about the scientific possibilities of AI, but that goes together with a commitment to access, education, and support for public research.
 
 [Listen to the programme on France Inter (in French)](https://www.radiofrance.fr/franceinter/podcasts/nos-vies-numeriques/nos-vies-numeriques-du-jeudi-10-septembre-2026-6149706).
 

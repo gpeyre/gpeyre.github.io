@@ -47,9 +47,9 @@ proofs: true
 embedded_experiment: true
 ---
 
-<p>A discrepancy between probability distributions can be built in two quite different ways. We can compare their density ratio at each point. Or we can measure how far a convex functional lies above its tangent plane. The first construction comes from statistical information; the second comes from convex geometry and optimization.</p>
+<p>Two common ways to compare probability distributions are to use their density ratio, or to measure the remainder above the tangent plane of a convex functional. These give the families of f-divergences and Bregman divergences, respectively.</p>
 <p>Kullback–Leibler divergence belongs to both families. Under the smoothness assumptions below, it is the <em>only</em> common member, up to scale. The proof identifies the restrictions imposed by requiring both constructions to agree.</p>
-<p>The finite-alphabet characterization is Theorem 5 of Jiao, Courtade, No, Venkat, and Weissman <a href="#ref-jiao">[1]</a>. The measure-level formulation below follows <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.8.8.34">Proposition 8.34 of <em>Optimal Transport for Machine Learners</em></a> <a href="#ref-book">[2]</a>. We start with the two definitions, because similar-looking quadratic formulas can disguise genuinely different geometries.</p>
+<p>The finite-alphabet characterization is Theorem 5 of Jiao, Courtade, No, Venkat, and Weissman <a href="#ref-jiao">[1]</a>. The measure-level formulation below follows <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.8.8.34">Proposition 8.34 of <em>Optimal Transport for Machine Learners</em></a> <a href="#ref-book">[2]</a>. We will start with the definitions and examples, paying attention to the reference measure used in each construction.</p>
 
 <!--more-->
 
@@ -252,7 +252,7 @@ $$
 $$
 
 <p>A Lagrange multiplier for total mass makes \(\log(p_i/q_i)+\eta c_i\) constant, which gives the formula. Entropy geometry turns an additive change in dual coordinates into multiplicative reweighting in probability coordinates.</p>
-<p>The overlap theorem explains why KL simultaneously enjoys a density-ratio interpretation and a tangent-plane interpretation. It does not say that other divergences are inferior. Pearson, Hellinger, squared density error, and feature-mean errors encode different choices. What it rules out is freely exchanging their geometric formulas merely because all of them measure a discrepancy.</p>
+<p>The theorem explains why KL has both a density-ratio interpretation and a tangent-plane interpretation. Other divergences make different choices: Pearson, Hellinger, squared density error, and feature-mean errors are not interchangeable just because each measures a discrepancy.</p>
 
 ## Numerical experimentation: divergences on the probability simplex {#numerical-experimentation-a-triangle-of-probabilities}
 

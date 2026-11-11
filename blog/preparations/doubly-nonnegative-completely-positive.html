@@ -10,7 +10,7 @@
 <header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Doubly nonnegative and completely positive matrices</h1><p class="subtitle">Nonnegative entries, nonnegative quadratic forms, and nonnegative features are three different requirements.</p><p class="byline">Gabriel Peyré</p></div></header>
 <main class="wrap"><article class="blog-prose">
 <p>I learned about this distinction from <a href="https://meyerscetbon.github.io/">Meyer Scetbon</a>, and I am grateful to him for introducing it to me, as well as for the work we did together with Marco Cuturi on factorizing optimal transport couplings <a href="#ref-lowrank">[1]</a>. The distinction matters when constructing nonnegative features for transport algorithms.</p>
-<p>When we say that a matrix is <em>positive</em>, do we mean that its entries are positive, that its quadratic form is nonnegative, or that it can be built from nonnegative features? These properties sound similar, but they answer different questions. The last requirement is stronger than the first two combined.</p>
+<p>When we say that a matrix is <em>positive</em>, do we mean that its entries are positive, that its quadratic form is nonnegative, or that it can be built from nonnegative features? These are different requirements. Having nonnegative features is stronger than the first two combined.</p>
 <p>This post develops the matrix distinction behind the discussion of positive features in Section 10.4 of my book <a href="#ref-book">[2]</a>. We begin with matrix examples and counterexamples, then discuss kernels and prove complete positivity for generalized Gaussians.</p>
 
 <h2>Positive semidefiniteness and entrywise nonnegativity</h2>
@@ -48,7 +48,7 @@
  \qquad z^\top Az=\|B^\top z\|^2\ge0,
  \quad A_{ij}=\sum_\ell B_{i\ell}B_{j\ell}\ge0.
 \]
-<p>Here is a completely explicit example:</p>
+<p>For example:</p>
 \[
  B=\begin{pmatrix}1&0\\1&1\\0&1\end{pmatrix},\qquad
  A=BB^\top=\begin{pmatrix}1&1&0\\1&2&1\\0&1&1\end{pmatrix}.
@@ -78,7 +78,7 @@
 <p>The trace-one slice of \(\mathrm{CP}_n\) is exactly \(\operatorname{conv}(\mathcal K)\). In a finite-dimensional space the convex hull of a compact set is compact: Carathéodory’s theorem bounds the number of points needed in a convex combination. Here the trace-one hyperplane has dimension \(n(n+1)/2-1\), so at most \(n(n+1)/2\) rank-one terms suffice.</p>
 <p>For a convergent sequence of CP matrices, normalize by the trace and use this compact slice. If the limiting trace is zero, the PSD limit is the zero matrix, which is also CP. This proves closedness. In particular, an integrable nonnegative mixture of CP matrices is CP. \(\square\)</p>
 </div></details>
-<p>The width bound is an existence result, not a promise that a small or useful factor is easy to find <a href="#ref-cp-book">[4]</a>. Complete positivity imposes an extra geometric constraint, not just another easy spectral check.</p>
+<p>The width bound establishes that a factor exists, but does not give an efficient way to find it <a href="#ref-cp-book">[4]</a>. Complete positivity requires more than an eigenvalue test.</p>
 
 <h2>A five-dimensional counterexample</h2>
 <p>Let \(C\) be the adjacency matrix of a cycle on five vertices. For \(t\ge0\), set</p>
@@ -92,7 +92,7 @@
  t&0&0&t&1
  \end{pmatrix}.
 \]
-<figure><img src="assets/cp-matrices/five-cycle.svg" width="360" height="330" style="display:block;margin:0 auto" alt="A five-cycle: a nonnegative feature cannot be positive on two nonadjacent vertices. Each feature therefore occupies at most one edge, forcing diagonal mass at least twice the total edge mass."><figcaption>Zero entries cannot be produced by cancellation between nonnegative features. They force every feature to live on a vertex or one edge of this pentagon.</figcaption></figure>
+<figure><img src="assets/cp-matrices/five-cycle.svg" width="360" height="330" style="display:block;margin:0 auto" alt="A five-cycle: a nonnegative feature cannot be positive on two nonadjacent vertices. Each feature therefore occupies at most one edge, forcing diagonal mass at least twice the total edge mass."><figcaption>Zero entries cannot be produced by cancellation between nonnegative features. They force every feature to be supported on a vertex or one edge of this pentagon.</figcaption></figure>
 <p id="theorem-1"><strong>Theorem 1 (an explicit gap).</strong> With \(\varphi=(1+\sqrt5)/2\),</p>
 \[
  A_t\in\mathrm{DNN}_5\ \Longleftrightarrow\ 0\le t\le\varphi^{-1},
@@ -168,7 +168,7 @@
 
 <h3>Gaussian and generalized Gaussian kernels</h3>
 <figure class="portrait-single"><img src="../imgs/schoenberg-1971.jpg" width="277" height="400" loading="lazy" decoding="async" alt="Isaac Jacob Schoenberg, photographed in 1971 by Konrad Jacobs"><figcaption>Isaac Jacob Schoenberg, 1971. Konrad Jacobs, Archives of the Mathematisches Forschungsinstitut Oberwolfach, <a href="https://opc.mfo.de/detail?photo_id=3723">photo 3723</a>. Unmodified image from <a href="https://commons.wikimedia.org/wiki/File:SchoenbergIJ.jpeg">Wikimedia Commons</a>, licensed <a href="https://creativecommons.org/licenses/sa/1.0/">CC ShareAlike 1.0</a>.</figcaption></figure>
-<p>Gaussian kernels are better behaved: they have genuinely positive features. More generally, the same is true of</p>
+<p>Gaussian kernels do have positive features. More generally, the same is true of</p>
 \[
  k_{p,\epsilon}(x,y)=\exp\!\left(-\frac{\|x-y\|^p}{\epsilon}\right),
  \qquad 0&lt;p\le2,\quad\epsilon>0.
@@ -220,7 +220,7 @@
  =\frac{2(4-2^p)}{\epsilon}h^p+O(h^{2p})&lt;0
 \]
 <p>for sufficiently small \(h>0\). It is not even PSD. Concretely, \(p=4\), \(\epsilon=1\), and \(h=1/2\) give \(v^\top Kv\approx-0.7795\).</p>
-<p>Finally, an exact positive representation is not automatically a fast approximation. Sampling \(r\) independent features gives an unbiased, entrywise-positive Gram approximation \(\widetilde K=BB^\top\), with \(B_{i\ell}=\phi(x_i;\Lambda_\ell,Z_\ell)/\sqrt r\). But the Monte Carlo summands, the products \(\phi(x)\phi(y)\), can have enormous or even infinite variance. At \(x=y\ne x_0\), their second moment is \(\mathbb E e^{8\Lambda\|x-x_0\|^2}\), which is infinite for \(p&lt;2\). Complete positivity guarantees the geometry, not a useful rank-versus-accuracy bound. The controlled positive features of Scetbon and Cuturi address that additional approximation question <a href="#ref-features">[9]</a>.</p>
+<p>Finally, an exact positive representation is not automatically a fast approximation. Sampling \(r\) independent features gives an unbiased, entrywise-positive Gram approximation \(\widetilde K=BB^\top\), with \(B_{i\ell}=\phi(x_i;\Lambda_\ell,Z_\ell)/\sqrt r\). But the Monte Carlo summands, the products \(\phi(x)\phi(y)\), can have enormous or even infinite variance. At \(x=y\ne x_0\), their second moment is \(\mathbb E e^{8\Lambda\|x-x_0\|^2}\), which is infinite for \(p&lt;2\). Complete positivity guarantees nonnegative features, but does not give a useful rank-versus-accuracy bound. The controlled positive features of Scetbon and Cuturi address that additional approximation question <a href="#ref-features">[9]</a>.</p>
 
 <h2>Bibliography</h2>
 <ol class="references">

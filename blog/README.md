@@ -326,6 +326,13 @@ do not replace them with uniformly impersonal prose. Editorial changes must
 preserve mathematical assumptions, statements, proofs, notation, and citations.
 Retain existing section anchors when renaming headings.
 
+Use the same tone in queued Bluesky announcements: describe the question or
+result in one or two complete sentences, keeping any assumptions needed to
+make the claim accurate. Avoid promotional invitations, slogan-like lists,
+and repeated question-and-reveal formulas. Keep the original preview URL and
+readiness checkbox. Revise only unsent announcements; messages already sent,
+the publication journal, and the completed archive are historical records.
+
 The shared published-post layout adds the endnote linking to
 `/blog/ai-disclosure/`. Every standalone forthcoming article must include the
 same `p.blog-ai-disclosure` endnote immediately after `</article>`, outside the

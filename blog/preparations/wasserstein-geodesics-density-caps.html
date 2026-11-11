@@ -37,8 +37,8 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p class="byline">Gabriel Peyré</p>
 </div></header>
 <main class="wrap"><article class="blog-prose">
-<p>Suppose a population must move from one density to another, and we prohibit overcrowding anywhere along the way. One expects this constraint to change the transport. Yet in a convex Euclidean domain, if both endpoint densities already lie below the same constant cap, the ordinary quadratic optimal transport path satisfies that cap automatically.</p>
-<p>The reason is not a quirk of an algorithm. It is <em>displacement convexity</em>: convexity along the straight trajectories of optimally matched particles. The same geometry explains why potential energies, entropy, and certain density constraints behave well in Wasserstein space. Let us build up to the cap theorem, discussed in <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.15.2.22">Proposition 15.22 of <em>Optimal Transport for Machine Learners</em></a> <a href="#ref-book">[1]</a>.</p>
+<p>Suppose a population must move from one density to another, without exceeding a prescribed density along the way. In a convex Euclidean domain, the ordinary quadratic optimal transport path already meets this requirement whenever both endpoint densities lie below the same constant cap. There is no need to modify the path.</p>
+<p>This follows from <em>displacement convexity</em>: convexity along the straight trajectories of optimally matched particles. We first recall this notion, then use a change-of-variables argument to prove the density bound. The result is discussed in <a href="https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.15.2.22">Proposition 15.22 of <em>Optimal Transport for Machine Learners</em></a> <a href="#ref-book">[1]</a>.</p>
 
 <h2>Mixture and displacement interpolation</h2>
 <p>Let \(\alpha_0,\alpha_1\in\mathcal P_2(\mathbb R^d)\), the probability laws with finite second moment. The ordinary mixture \((1-t)\alpha_0+t\alpha_1\) removes mass from one distribution and adds it to the other. Displacement interpolation instead matches particles and moves them. If \(\pi\) is a quadratic optimal coupling, define</p>
@@ -67,7 +67,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
  \quad\Longrightarrow\quad
  \mathcal V\text{ is }\lambda\text{-displacement convex}.
 \]
-<p>The converse follows by testing Dirac masses. This also gives a quick warning: \(\mathcal V\) is always linear along mixtures, even when \(V\) is nonconvex, so mixture convexity is not the relevant test.</p>
+<p>The converse follows by testing Dirac masses. Mixture convexity is different: \(\mathcal V\) is always linear along mixtures, even when \(V\) is nonconvex, so it does not test the convexity of the potential.</p>
 <p>Similarly, if \(W(x,y)\) is jointly convex, then \(\frac12\iint W(x,y)\,d\alpha(x)d\alpha(y)\) is displacement convex. Apply the convexity of \(W\) to two independent copies of the optimal particle coupling. Internal energies, which depend on the density, require a different argument.</p>
 
 <h2>The change-of-variables formula</h2>
@@ -76,7 +76,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
  \rho_t(T_t(x))
  =\frac{\rho_0(x)}{\det((1-t)I+tDT(x))}.
 \]
-<p>The matrix \(DT\) is positive semidefinite because \(T\) is the gradient of a convex function. This positivity is exactly what makes determinant inequalities available.</p>
+<p>The matrix \(DT\) is positive semidefinite because \(T\) is the gradient of a convex function. We can therefore apply the following determinant inequality.</p>
 <p id="lemma-1"><strong>Lemma 1 (density along an optimal trajectory).</strong> For quadratic displacement interpolation between absolutely continuous measures,</p>
 \[
  \begin{aligned}
@@ -141,7 +141,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
  =\inf\int_0^1\int|v_t(x)|^2\,d\alpha_t(x)\,dt.
 \]
 <p>When motion is restricted to \(\Omega\), require each \(\alpha_t\) to be concentrated there and impose the continuity equation on \(\mathbb R^d\) after extension by zero; this encodes no flux through the boundary. Add the requirement \(\rho_t\le\kappa\). This can only increase the infimum. But Theorem 1 says that the ordinary optimal geodesic is feasible for the constrained problem, and its action is already \(W_2^2\). Thus the constrained and unconstrained values are equal.</p>
-<p>Every hypothesis matters. A nonconvex domain may force particles around obstacles; a varying cap \(\kappa(x)\) may create a bottleneck; an additional running cost may favor paths other than the ordinary geodesic. Genuine crowd-motion and congestion models can therefore behave very differently. The theorem concerns a constant cap, a convex Euclidean domain, admissible endpoints, and pure kinetic transport.</p>
+<p>The conclusion need not hold after changing these assumptions. A nonconvex domain may force particles around obstacles; a varying cap \(\kappa(x)\) may create a bottleneck; an additional running cost may favor paths other than the ordinary geodesic. Crowd-motion and congestion models can therefore behave differently. The theorem concerns a constant cap, a convex Euclidean domain, admissible endpoints, and pure kinetic transport.</p>
 
 <h2>Numerical experimentation: one-dimensional density bounds</h2>
 <p>On the line, write \(Q_i\) for the endpoint quantiles. The interpolation is simply \(Q_t=(1-t)Q_0+tQ_1\). In the smooth strictly increasing example below, density satisfies \(\rho_t(Q_t(r))=1/Q_t'(r)\). A cap means \(Q_i'\ge1/\kappa\), a condition immediately preserved by interpolation.</p>

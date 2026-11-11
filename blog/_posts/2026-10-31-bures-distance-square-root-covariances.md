@@ -25,7 +25,7 @@ $$
 A=\mathbb E[XX^\top],\qquad z^\top A z=\mathbb E[(z^\top X)^2]\ge0.
 $$
 
-Conversely, every $$A\succeq0$$ defines a centered Gaussian $$\mu_A=\mathcal N(0,A)$$. If $$A$$ is singular, this is a perfectly valid Gaussian concentrated on a subspace, rather than a distribution with a density on all of $$\mathbb R^d$$.
+Conversely, every $$A\succeq0$$ defines a centered Gaussian $$\mu_A=\mathcal N(0,A)$$. If $$A$$ is singular, the Gaussian is concentrated on a subspace and has no density on all of $$\mathbb R^d$$.
 
 The spectral theorem gives $$A=V\operatorname{diag}(\lambda_i)V^\top$$, with $$V$$ orthogonal and $$\lambda_i\ge0$$. A scalar function acts on eigenvalues:
 

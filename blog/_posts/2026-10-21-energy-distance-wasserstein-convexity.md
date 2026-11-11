@@ -44,9 +44,9 @@ proofs: true
 embedded_experiment: true
 ---
 
-Suppose we want to move a distribution towards a target. A natural loss attracts its points towards the target while repelling them from one another: attraction finds the right location, and repulsion prevents everything from collapsing to a single point. The *energy distance* implements exactly this idea using ordinary Euclidean distances.
+To move a distribution towards a target, we can attract its points towards the target while repelling them from one another. Repulsion keeps the points from collapsing to a single location. The *energy distance* combines these two terms using ordinary Euclidean distances.
 
-Looking at the repulsive interaction, one might expect a difficult nonconvex problem. On the real line, however, its Wasserstein geometry is particularly simple: the repulsion is linear in quantile coordinates, and the whole objective is convex. The explanation has less to do with smoothness than with the fact that particles can be ordered. This is the mechanism behind the interaction criterion in [Proposition 15.18 of my book](https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.15.2.18) [[1]](#ref-book) and the quantile-flow analysis of Duong and collaborators [[2]](#ref-flow).
+The repulsive term is not convex as a function of particle positions. On the real line, though, it is linear in quantile coordinates, making the whole objective Wasserstein convex. The ordering of particles is what makes this possible. This is the mechanism behind the interaction criterion in [Proposition 15.18 of my book](https://www.gpeyre.com/ot4ml/OT4ML/OT4ML.pdf#nameddest=thm.15.2.18) [[1]](#ref-book) and the quantile-flow analysis of Duong and collaborators [[2]](#ref-flow).
 
 <!--more-->
 

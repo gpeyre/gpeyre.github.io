@@ -51,7 +51,7 @@ embedded_experiment: true
 
 *Stable Fluids* is one of my favorite papers. Its blend of mathematics, numerical analysis, computer graphics, and physics has been a tremendous source of inspiration for me: a few elegant ideas become a simulation one can immediately see and interact with.
 
-Jos Stam’s *Stable Fluids* <a href="#ref-stam">[1]</a> combines operations with clear geometric meanings: carry a field along trajectories, smooth it, and enforce incompressibility by an orthogonal projection. It brings these methods, drawn from an older numerical-analysis tradition, into an accessible solver for interactive graphics.
+Jos Stam’s *Stable Fluids* <a href="#ref-stam">[1]</a> combines characteristic advection, diffusion, and an orthogonal projection enforcing incompressibility. These methods come from earlier work in numerical analysis; Stam adapts them into a solver for interactive graphics.
 
 The solver splits the fluid equation into subproblems, each treated by a method chosen for its stability. On a periodic domain, the pressure solve projects each Fourier coefficient onto a line perpendicular to its wave vector. Stam’s later implementation notes <a href="#ref-stam2003">[4]</a> and Bridson’s book <a href="#ref-bridson">[5]</a> give further implementation details.
 

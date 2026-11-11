@@ -42,9 +42,9 @@ proofs: true
 embedded_experiment: true
 ---
 
-<p>Suppose a point must satisfy several constraints, and projecting onto each constraint separately is easy. Can we project onto their intersection by alternating these elementary operations? This is an attractive idea in imaging, statistics, optimization—and even Sudoku.</p>
+<p>In imaging, statistics, and optimization, we often need a point satisfying several constraints, each with an easy projection. It is tempting to alternate these projections to reach the intersection. Sudoku gives a less usual example of the same approach.</p>
 <p>The answer depends on what we mean by “project.” Reaching <em>some</em> feasible point and reaching the <em>nearest</em> feasible point are different tasks. A picture with two halfplanes is enough to separate them. We will compare three algorithms: alternating projections, Dykstra’s corrections, and Douglas–Rachford reflections.</p>
-<p>We will first work with closed convex sets, where convergence is understood, then apply the same operations to a nonconvex puzzle. In that second setting, a successful animation is an experiment, not a convergence theorem.</p>
+<p>We will first work with closed convex sets, for which these algorithms have convergence guarantees. We will then apply the same operations to the nonconvex Sudoku constraints, where those guarantees no longer apply.</p>
 
 <!--more-->
 
@@ -56,7 +56,7 @@ $$
  P_Az=\operatorname*{arg\,min}_{a\in A}\frac12\lVert z-a\rVert^2.
 $$
 
-<p>The displacement \(z-P_Az\) is normal to \(A\) at the projected point. The useful quantitative form is the following.</p>
+<p>The displacement \(z-P_Az\) is normal to \(A\) at the projected point. The following inequality expresses this property.</p>
 <p id="lemma-1"><strong>Lemma 1 (projection inequality).</strong> For every \(a\in A\),</p>
 
 $$

@@ -47,7 +47,7 @@ A possible way to simplify a quadratic optimization problem is to introduce a se
 
 Hiroshi Konno established exactness for convex quadratic maximization, or equivalently concave quadratic minimization [[1]](#ref-1). Under the appropriate sign condition, releasing the equality $$x=y$$ does not change the optimal value, and either component of an optimal pair solves the original problem. A quadratic identity proves both statements.
 
-With Thibault Séjourné and François-Xavier Vialard, we used an extension of this idea in our work on unbalanced Gromov–Wasserstein transport [[3]](#ref-3). The extension permits a general additional term, including entropy. Let us first isolate the elementary principle, then see what it does—and does not—say for transport algorithms.
+With Thibault Séjourné and François-Xavier Vialard, we used an extension of this idea in our work on unbalanced Gromov–Wasserstein transport [[3]](#ref-3). The extension permits a general additional term, including entropy. We will prove the splitting identity first, then discuss its consequences and limitations for transport algorithms.
 
 <!--more-->
 
@@ -336,7 +336,7 @@ Substitute $$S(u)=\mathrm{KL}(u\mid a)+M-1$$ and $$T(v)=\mathrm{KL}(v\mid b)+N-1
 
 However, $$\pi-\gamma$$ no longer has zero marginals, so the cancellation in Theorem 2 is unavailable. Moreover, tensorized marginal penalties are not simply a sum $$r(\pi)+r(\gamma)$$. The general exactness theorem must therefore not be applied automatically. Our paper proves tightness for balanced entropic GW and for its separate conic formulation under the stated kernel conditions; it leaves tightness of the general unbalanced divergence relaxation open [[3, Section 3.1]](#ref-3).
 
-Konno’s identity provides an exactness guarantee, while convexity of the separate terms provides tractable updates. Neither property makes a local search globally reliable. Exactness of the relaxation and convergence of an algorithm must be checked separately.
+Konno’s identity can guarantee that the relaxation is exact, and convexity makes each separate update tractable. Alternating these updates can still stop at a suboptimal point: exactness and algorithmic convergence are separate questions.
 
 ## References
 

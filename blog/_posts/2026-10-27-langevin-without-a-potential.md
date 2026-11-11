@@ -134,7 +134,7 @@ $$
  \le C_0(1+|x|^2)e^{-\kappa t}.
 $$
 
-These conditions are sufficient, not necessary. They constrain the inward component, not the tangential one. A large swirl can be perfectly compatible with confinement. A better adapted, nonradial Lyapunov function may also succeed when the radial test fails.
+These conditions are sufficient, not necessary. They constrain the inward component of the drift, not its tangential component, so circulation can coexist with confinement. A nonradial Lyapunov function may also succeed when the radial test fails.
 
 ## Linear diffusions and Gaussian invariant measures {#the-linear-case-is-completely-explicit}
 
