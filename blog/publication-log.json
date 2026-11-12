@@ -767,7 +767,7 @@
       "date": "2026-11-12",
       "url": "https://www.gpeyre.com/blog/2026/11/12/intrinsic-factor-training-dynamics/",
       "message": "Training a matrix factorization usually depends on more than its product. With suitable initialization, a conserved imbalance gives a closed equation for the product itself. https://www.gpeyre.com/blog/2026/11/12/intrinsic-factor-training-dynamics/",
-      "status": "prepared",
+      "status": "announced",
       "source_sha256": "9d14a6305399d57abc64e8e80d553aff113557588d55fa06d6475654cfce835b",
       "base_commit": "ec63bdb3d9754d676434f97a83190367cae67f45",
       "files": [
@@ -777,14 +777,23 @@
         "js/blog-search-index.js",
         "blog/publication-log.json"
       ],
-      "publication_commit": null,
-      "bluesky_uri": null,
-      "bluesky_cid": null,
+      "publication_commit": "b3aac8e8eab623f9aec93316772db621c28e815c",
+      "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3n235z4as22ud",
+      "bluesky_cid": "bafyreihxgggzobvjnbdswljhry5y3vwbytph4njetbqkatmdjl455jspoq",
       "working_sha256": {
         "blog/_posts/2026-11-12-intrinsic-factor-training-dynamics.md": "5d4c367ceed4a8517f126476adf1b12987b45077fc7f9ce212adb26ca4cf80ad",
         "blog/preparations/intrinsic-factor-training-dynamics.html": "49b3c22fdf612dab866d4f2775ab5680c95511899c5627d32b54cbd0d9bb8dc1",
         "blog/preparations/index.html": "c7dea27346dcc0b5a77f1b777f3724529bf1a1bc3d3726bf232df0fabc421822",
         "js/blog-search-index.js": "871c20744fda5a36883c68ddcf9a2a483209e3dd516d9125eac321e4ba48e10f"
+      },
+      "announcement_image": {
+        "path": "/blog/imgs/summaries/intrinsic-factor-training-dynamics.jpg",
+        "alt": "Factor-space paths along conserved-imbalance hyperbolas and the product evolution at three different imbalances.",
+        "width": 1200,
+        "height": 566,
+        "sha256": "aea2d4ecef55d4b4dd2a09c0fcbeff19314154c6599edd7370c500d479a1e8fd",
+        "mime_type": "image/jpeg",
+        "size": 46645
       }
     }
   ]
