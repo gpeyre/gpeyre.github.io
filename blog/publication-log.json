@@ -760,6 +760,32 @@
         "mime_type": "image/jpeg",
         "size": 81279
       }
+    },
+    {
+      "slug": "intrinsic-factor-training-dynamics",
+      "title": "Intrinsic dynamics of overparameterized dynamics",
+      "date": "2026-11-12",
+      "url": "https://www.gpeyre.com/blog/2026/11/12/intrinsic-factor-training-dynamics/",
+      "message": "Training a matrix factorization usually depends on more than its product. With suitable initialization, a conserved imbalance gives a closed equation for the product itself. https://www.gpeyre.com/blog/2026/11/12/intrinsic-factor-training-dynamics/",
+      "status": "prepared",
+      "source_sha256": "9d14a6305399d57abc64e8e80d553aff113557588d55fa06d6475654cfce835b",
+      "base_commit": "ec63bdb3d9754d676434f97a83190367cae67f45",
+      "files": [
+        "blog/_posts/2026-11-12-intrinsic-factor-training-dynamics.md",
+        "blog/preparations/intrinsic-factor-training-dynamics.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null,
+      "working_sha256": {
+        "blog/_posts/2026-11-12-intrinsic-factor-training-dynamics.md": "5d4c367ceed4a8517f126476adf1b12987b45077fc7f9ce212adb26ca4cf80ad",
+        "blog/preparations/intrinsic-factor-training-dynamics.html": "49b3c22fdf612dab866d4f2775ab5680c95511899c5627d32b54cbd0d9bb8dc1",
+        "blog/preparations/index.html": "c7dea27346dcc0b5a77f1b777f3724529bf1a1bc3d3726bf232df0fabc421822",
+        "js/blog-search-index.js": "871c20744fda5a36883c68ddcf9a2a483209e3dd516d9125eac321e4ba48e10f"
+      }
     }
   ]
 }

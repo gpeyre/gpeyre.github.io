@@ -1,0 +1,208 @@
+---
+title: "Intrinsic dynamics of overparameterized dynamics"
+subtitle: "When can training a matrix factorization be described directly in terms of its product?"
+description: "Conserved imbalance closes the gradient-flow dynamics of a factored matrix: a scalar warmup, balanced and relaxed-balanced formulas, and an interactive comparison of invariant factor trajectories."
+date: "2026-11-12"
+topic: "Training dynamics and matrix factorization"
+keywords:
+  - "intrinsic training dynamics"
+  - "matrix factorization"
+  - "linear neural networks"
+  - "overparameterization"
+  - "gradient flow"
+  - "conserved quantities"
+  - "conservation laws"
+  - "balancedness"
+  - "relaxed balancedness"
+  - "isotropic imbalance"
+  - "latent Gram matrix"
+  - "positive semidefinite square root"
+  - "fixed-rank manifold"
+  - "orthogonal projector"
+  - "mobility operator"
+  - "Riemannian gradient flow"
+  - "initialization dependence"
+  - "factor rescaling"
+  - "implicit bias"
+  - "scalar factor model"
+  - "invariant hyperbolas"
+  - "autonomous dynamics"
+  - "Sibylle Marcotte"
+  - "Rémi Gribonval"
+  - "Gabriel Peyré"
+  - "LoRA"
+  - "entraînement intrinsèque"
+  - "équilibrage"
+proofs: true
+embedded_experiment: true
+---
+
+<p>A matrix can have many factorizations. Multiplying one factor by a scalar and dividing the other by the same scalar changes neither the matrix nor its predictions. Euclidean gradient descent acts on the factors, so two representations of the same model can start moving at different speeds.</p>
+<p>In our work with <a href="https://arxiv.org/abs/2508.07370">Sibylle Marcotte and Rémi Gribonval</a> <a href="#ref-intrinsic">[1]</a>, we study when training admits an <em>intrinsic description</em>, directly in terms of the represented model. This requires retaining some conserved quantities from initialization. We can calculate them explicitly for a two-factor linear model.</p>
+<p>I owe my understanding of these dynamics to Sibylle Marcotte. In particular, the results on relaxed balancedness presented below are due to her, as developed in our joint work with Rémi Gribonval.</p>
+
+<!--more-->
+
+## Closed dynamics for the represented model
+
+<p>Let a smooth parameterization \(z=\phi(\theta)\) represent the model, with loss \(F(z)\). The chain rule gives</p>
+
+$$
+ \dot\theta=-D\phi(\theta)^*\nabla F(z),\qquad
+ \dot z=-K(\theta)\nabla F(z),
+$$
+
+$$
+ K(\theta)=D\phi(\theta)D\phi(\theta)^*.
+$$
+
+<p>The star denotes the Euclidean adjoint. The operator \(K\) is a <em>mobility</em>: it converts a loss gradient into a model velocity. A closed equation for \(z\) requires recovering \(K(\theta)\) from \(z\), possibly together with quantities fixed at initialization. The equation must hold for all smooth losses \(F\), rather than describe only one particular trajectory.</p>
+<p>The distinction matters for implicit bias. A reparameterized Euclidean flow generally is not Euclidean gradient flow in model space; the induced mobility records the geometry of the parameterization <a href="#ref-arora">[2]</a>, <a href="#ref-bah">[3]</a>. We should not call \(K\) itself a metric: where invertible on the relevant tangent space, it is the <em>inverse</em> metric.</p>
+
+## Scalar factorization and conserved imbalance
+
+<p>Start with \(z=ab\), where \(a,b\in\mathbb R\), and train \(F(ab)\). Then</p>
+
+$$
+ \dot a=-bF'(z),\qquad \dot b=-aF'(z),\qquad
+ \dot z=-(a^2+b^2)F'(z).
+$$
+
+<p>The same product need not have the same mobility: \((a,b)=(1,1)\) and \((2,1/2)\) both represent \(z=1\), but their mobilities are \(2\) and \(17/4\). What is missing is the conserved imbalance</p>
+
+$$
+ \lambda=a^2-b^2,\qquad \dot\lambda=0.
+$$
+
+<p>Indeed, \((a^2+b^2)^2=(a^2-b^2)^2+4a^2b^2\). We therefore obtain an exact, closed equation:</p>
+
+$$
+ \dot z=-\sqrt{\lambda^2+4z^2}\,F'(z).
+$$
+
+<p>All dependence on the factors has collapsed into one number \(\lambda\). For the square loss \(F(z)=\tfrac12(z-z_*)^2\), the represented model relaxes toward its target with a state-dependent speed. Balanced initialization means \(\lambda=0\), with mobility \(2|z|\); a nonzero imbalance removes its degeneracy at \(z=0\). This last observation concerns the scalar equation; it does not remove the rank assumptions in the matrix theorem below.</p>
+
+## Balanced matrix factorizations
+
+<p>Let \(A\in\mathbb R^{n\times r}\), \(B\in\mathbb R^{m\times r}\), and \(Z=AB^\top\). Write \(G=\nabla F(Z)\), using the Frobenius inner product. Factor gradient flow reads</p>
+
+$$
+ \dot A=-GB,\qquad \dot B=-G^\top A,
+ \qquad \dot Z=-AA^\top G-G BB^\top.
+$$
+
+<p id="proposition-1"><strong>Proposition 1 (conservation of latent imbalance).</strong> Along this flow,</p>
+
+$$
+ A(t)^\top A(t)-B(t)^\top B(t)
+ =A(0)^\top A(0)-B(0)^\top B(0).
+$$
+
+<details class="blog-proof">
+
+<summary>Proof: the two Gram matrices have the same derivative</summary>
+
+<div class="blog-proof-body" markdown="1">
+
+$$
+ \frac{d}{dt}(A^\top A)
+ =-B^\top G^\top A-A^\top GB
+ =\frac{d}{dt}(B^\top B).
+$$
+
+<p>Subtract the two identities. The loss and the dimensions play no further role. \(\square\)</p>
+
+</div>
+
+</details>
+
+<p>This is the familiar balancedness conservation law, studied in deep homogeneous models <a href="#ref-du">[4]</a> and in the systematic analysis of conservation laws <a href="#ref-conservation">[5]</a>. If the two latent Gram matrices are equal initially, they stay equal. In that case,</p>
+
+$$
+ (AA^\top)^2=A(B^\top B)A^\top=ZZ^\top.
+$$
+
+<p>Since \(AA^\top\) is positive semidefinite, it must be the unique positive semidefinite square root of \(ZZ^\top\). The same argument applies to \(BB^\top\).</p>
+<p id="theorem-1"><strong>Theorem 1 (balanced intrinsic flow).</strong> Under balanced initialization \(A(0)^\top A(0)=B(0)^\top B(0)\), the product satisfies</p>
+
+$$
+ \dot Z=-(ZZ^\top)^{1/2}\nabla F(Z)
+          -\nabla F(Z)(Z^\top Z)^{1/2}.
+$$
+
+<p>The preceding square-root calculation is the proof. There is no need to choose singular vectors, which may fail to be unique. On a fixed-rank stratum this is the familiar intrinsic geometry of balanced linear-network training <a href="#ref-arora">[2]</a>, <a href="#ref-bah">[3]</a>.</p>
+
+## Relaxed balancedness with scalar imbalance
+
+<p>Balance is not the only useful level set. Assume that both factors have full column rank \(r\leq\min(n,m)\) and that</p>
+
+$$
+ A^\top A-B^\top B=\lambda I_r.
+$$
+
+<p>This is <em>relaxed balancedness</em> in <a href="#ref-intrinsic">[1]</a>: an exact isotropic imbalance, not an arbitrary small departure from balance. Proposition 1 makes \(\lambda\) constant. Let \(P_Z\) be the orthogonal projector onto the column space of \(Z\), and \(P_{Z^\top}\) the projector onto its row space.</p>
+<p id="theorem-2"><strong>Theorem 2 (relaxed-balanced intrinsic flow).</strong> For as long as both factors have full column rank, define</p>
+
+$$
+ \mathcal A_\lambda(Z)
+ =\tfrac12 P_Z\bigl(\lambda I_n+\sqrt{\lambda^2I_n+4ZZ^\top}\bigr),
+$$
+
+$$
+ \mathcal B_\lambda(Z)
+ =\tfrac12 P_{Z^\top}\bigl(-\lambda I_m+\sqrt{\lambda^2I_m+4Z^\top Z}\bigr).
+$$
+
+<p>Then \(AA^\top=\mathcal A_\lambda(Z)\), \(BB^\top=\mathcal B_\lambda(Z)\), and</p>
+
+$$
+ \dot Z=-\mathcal A_\lambda(Z)\nabla F(Z)
+         -\nabla F(Z)\mathcal B_\lambda(Z).
+$$
+
+<details class="blog-proof">
+
+<summary>Proof: solve a quadratic equation on the correct subspace</summary>
+
+<div class="blog-proof-body" markdown="1">
+
+<p>Put \(X=AA^\top\). Relaxed balancedness gives</p>
+
+$$
+ ZZ^\top=A(A^\top A-\lambda I_r)A^\top=X^2-\lambda X.
+$$
+
+<p>Thus \(X\) commutes with \(ZZ^\top\). Full column rank implies \(\operatorname{range}(Z)=\operatorname{range}(A)\). On this range, \(ZZ^\top\) is positive definite and the only positive root of the scalar equation \(x^2-\lambda x=s\), for \(s&gt;0\), is</p>
+
+$$
+ x=\frac{\lambda+\sqrt{\lambda^2+4s}}2.
+$$
+
+<p>Functional calculus gives the displayed formula for \(X\) on the range of \(Z\). On its orthogonal complement, \(X=0\): this is exactly what \(P_Z\) enforces. Likewise, \((BB^\top)^2+\lambda BB^\top=Z^\top Z\) gives the second formula. Substitute into the product equation. \(\square\)</p>
+
+</div>
+
+</details>
+
+<aside class="note"><p><strong>Why keep the projectors?</strong> When \(r&lt;n\) or \(r&lt;m\), the product has null spaces. For example, if \(\lambda&gt;0\), the unprojected first square-root expression would equal \(\lambda I\) on the column-space complement, although \(AA^\top\) must vanish there. If \(n=m=r\), both projectors are identities. At \(\lambda=0\), they are redundant and Theorem 1 is recovered.</p></aside>
+
+## Numerical experimentation
+
+<p>Keep the initial product fixed, then move between imbalance levels. The left panel shows the factors traveling along the invariant curves \(a^2-b^2=\lambda\); the right shows their products. Equal initial predictions do not imply equal training trajectories.</p>
+<figure><iframe class="idea-experiment" data-experiment="intrinsic" src="{{ '/blog/preparations/assets/optimization-geometry/index.html?topic=intrinsic' | relative_url }}" title="Interactive scalar factor gradient flow and invariant hyperbolas" loading="lazy" style="width:100%;height:850px;border:0;"></iframe><figcaption>The curves are recomputed from the scalar ODE, with factors reconstructed from the conserved quantity. Playback starts paused. The same target and physical time scale are used for every imbalance.</figcaption></figure>
+
+## Dependence on initialization
+
+<p>Once the conserved initialization label is fixed, the model has an autonomous equation. Its dynamics still depend on initialization: different \(\lambda\)'s produce different mobilities. Nor do arbitrary matrix-valued imbalances automatically lead to such a simple closed product flow. Our paper analyzes precisely when conservation laws provide enough information, with further results for deeper linear networks and path-lifted ReLU networks <a href="#ref-intrinsic">[1]</a>.</p>
+<p>Factorization changes the geometry of the flow and can thereby change optimization and implicit regularization <a href="#ref-gunasekar">[6]</a>. The companion post <a href="{{ '/blog/preparations/balanced-low-rank-conditioning.html' | relative_url }}">One low-rank matrix, many optimization speeds</a> asks a complementary question: among representations of the same matrix, which are best conditioned? <a href="{{ '/blog/preparations/sign-gradient-descent-geometry.html' | relative_url }}">The geometry of sign gradient descent</a> then changes the optimizer rather than the representation.</p>
+
+## Bibliography
+
+<ol class="references">
+<li id="ref-intrinsic">Sibylle Marcotte, Gabriel Peyré, and Rémi Gribonval. <a href="https://arxiv.org/abs/2508.07370"><em>Intrinsic training dynamics of deep neural networks.</em></a> ICLR, 2026.</li>
+<li id="ref-arora">Sanjeev Arora, Nadav Cohen, and Elad Hazan. <a href="https://proceedings.mlr.press/v80/arora18a.html"><em>On the optimization of deep networks: implicit acceleration by overparameterization.</em></a> ICML, 2018.</li>
+<li id="ref-bah">Bubacarr Bah, Holger Rauhut, Ulrich Terstiege, and Michael Westdickenberg. <a href="https://arxiv.org/abs/1910.05505"><em>Learning deep linear neural networks: Riemannian gradient flows and convergence to global minimizers.</em></a> Information and Inference, 11(1), 307–353, 2022.</li>
+<li id="ref-du">Simon S. Du, Wei Hu, and Jason D. Lee. <a href="https://arxiv.org/abs/1806.00900"><em>Algorithmic regularization in learning deep homogeneous models: layers are automatically balanced.</em></a> NeurIPS, 2018.</li>
+<li id="ref-conservation">Sibylle Marcotte, Rémi Gribonval, and Gabriel Peyré. <a href="https://arxiv.org/abs/2307.00144"><em>Abide by the law and follow the flow: conservation laws for gradient flows.</em></a> NeurIPS, 2023.</li>
+<li id="ref-gunasekar">Suriya Gunasekar, Blake E. Woodworth, Srinadh Bhojanapalli, Behnam Neyshabur, and Nathan Srebro. <a href="https://arxiv.org/abs/1705.09280"><em>Implicit regularization in matrix factorization.</em></a> NeurIPS, 2017.</li>
+</ol>
