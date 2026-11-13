@@ -802,7 +802,7 @@
       "date": "2026-11-13",
       "url": "https://www.gpeyre.com/blog/2026/11/13/weak-transport-and-convex-order/",
       "message": "With quadratic cost, weak transport can be written as a Wasserstein projection under convex order. This post explains the role of conditional means and mean-preserving spreads. https://www.gpeyre.com/blog/2026/11/13/weak-transport-and-convex-order/",
-      "status": "prepared",
+      "status": "announced",
       "source_sha256": "8161a0f16ff2b1292a8e91f42dcb3304cea669315cc244e6515d93db0bb864bd",
       "base_commit": "f0f22075b3e6dc612f13568170208213340291fd",
       "files": [
@@ -812,14 +812,23 @@
         "js/blog-search-index.js",
         "blog/publication-log.json"
       ],
-      "publication_commit": null,
-      "bluesky_uri": null,
-      "bluesky_cid": null,
+      "publication_commit": "a824ef39d9a581b162892ebc05c0a9292ea19057",
+      "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3n25ohzpk22o6",
+      "bluesky_cid": "bafyreielhnnpljv77a4m6bwtgvqmmlso5kv3h57qgf2aw2yh3txnyzftdq",
       "working_sha256": {
         "blog/_posts/2026-11-13-weak-transport-and-convex-order.md": "f3737cceb8e92c23b7b5793f277b170f55b56e936de2cd3c6253a527c7c6e6e2",
         "blog/preparations/weak-transport-and-convex-order.html": "294f09290f68d350871973434785eb76d0bc32e55c5f548d18a235c6da7281d3",
         "blog/preparations/index.html": "30b6dd6b776e0fdf63642c444753f746c209d1bce89fd23ff3096d7074f03fdb",
         "js/blog-search-index.js": "e103d7c31863272d00f31380e8b6f15f6b5490def33d2241fbcd2791b6ecc466"
+      },
+      "announcement_image": {
+        "path": "/blog/imgs/summaries/weak-transport-and-convex-order.jpg",
+        "alt": "A quadratic optimal-transport coupling, its barycentric projection, and the conditional means of a weak-transport solution.",
+        "width": 1200,
+        "height": 450,
+        "sha256": "b75982f731be263d0619d4b27aeb6013c7d16b481a0ec7b9944080ab870496e7",
+        "mime_type": "image/jpeg",
+        "size": 37515
       }
     }
   ]
