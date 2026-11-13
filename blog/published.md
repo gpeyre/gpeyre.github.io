@@ -173,3 +173,73 @@ Topic: Other topics
 Published: 2026-11-05 · [Read post](https://www.gpeyre.com/blog/2026/11/05/quantum-pinsker-sign-observable/)
 
 > How does entropy control the distance between quantum states? A direct proof of quantum Pinsker tests entropy curvature against a sign observable. The sharp constant survives noncommutativity. https://www.gpeyre.com/blog/preparations/quantum-pinsker-sign-observable.html
+
+## 19. Wasserstein singular vectors: a distance that defines itself
+
+Topic: OT / Wasserstein geometry
+
+- [x] Ready to publish
+
+Published: 2026-11-06 · [Read post](https://www.gpeyre.com/blog/2026/11/06/wasserstein-singular-vectors/)
+
+> How can transport compare histograms with no given ground geometry? Wasserstein singular vectors learn sample and feature distances from each other. A fixed-point argument closes the loop. https://www.gpeyre.com/blog/preparations/wasserstein-singular-vectors.html
+
+## 20. Why KL belongs to two divergence families
+
+Topic: Other topics
+
+- [x] Ready to publish
+
+Published: 2026-11-07 · [Read post](https://www.gpeyre.com/blog/2026/11/07/divergences-and-bregman-geometry/)
+
+> KL compares density ratios and gaps above entropy tangent planes. Under smoothness assumptions, it is the only measure-level divergence in both families, up to scale. https://www.gpeyre.com/blog/preparations/divergences-and-bregman-geometry.html
+
+## 21. An Axiomatic Definition of the Wasserstein Distance
+
+Topic: OT / Wasserstein geometry
+
+- [x] Ready to publish
+
+Published: 2026-11-08 · [Read post](https://www.gpeyre.com/blog/2026/11/08/optimal-transport-convex-extension/)
+
+> On compact spaces, Kantorovich transport is the largest jointly convex, lower-semicontinuous extension of a continuous pointwise cost to measures. A short geometric proof. https://www.gpeyre.com/blog/preparations/optimal-transport-convex-extension.html
+
+## 22. The perspective transform: convexity on measures
+
+Topic: OT / Wasserstein geometry
+
+- [x] Ready to publish
+
+Published: 2026-11-09 · [Read post](https://www.gpeyre.com/blog/2026/11/09/perspective-transform-on-measures/)
+
+> A small convexity trick connects f-divergences and dynamic optimal transport: the perspective transform. It turns density ratios into convex functionals of mass and momentum. https://www.gpeyre.com/blog/preparations/perspective-transform-on-measures.html
+
+## 23. Training (very) deep ResNets
+
+Topic: Other topics
+
+- [x] Ready to publish
+
+Published: 2026-11-10 · [Read post](https://www.gpeyre.com/blog/2026/11/10/training-very-deep-resnets/)
+
+> Depth becomes time in a ResNet. Explore adjoint training, noncommuting linear flows, and a loss with no bad local minima—but increasingly flat saddles. https://www.gpeyre.com/blog/preparations/training-very-deep-resnets.html
+
+## 24. Iterative projections: Dykstra and Douglas–Rachford
+
+Topic: Other topics
+
+- [x] Ready to publish
+
+Published: 2026-11-11 · [Read post](https://www.gpeyre.com/blog/2026/11/11/projections-corrections-reflections/)
+
+> Alternating projections find a feasible point, not necessarily the nearest one. Dykstra adds corrections; Douglas–Rachford uses reflections. Explore the geometry—and a Sudoku experiment. https://www.gpeyre.com/blog/preparations/projections-corrections-reflections.html
+
+## 25. Intrinsic dynamics of overparameterized dynamics
+
+Topic: Other topics
+
+- [x] Ready to publish
+
+Published: 2026-11-12 · [Read post](https://www.gpeyre.com/blog/2026/11/12/intrinsic-factor-training-dynamics/)
+
+> Training a matrix factorization usually depends on more than its product. With suitable initialization, a conserved imbalance gives a closed equation for the product itself. https://www.gpeyre.com/blog/preparations/intrinsic-factor-training-dynamics.html

@@ -95,7 +95,7 @@ const expectedTopicCounts = {
       [baseline.replace(/^> /m, "  > Indented extra line\n> "), /unexpected content/],
       [baseline.replace(/\.html(?=\n)/, ".html extra words"), /exact gpeyre.com preview URL/],
       [baseline.replace(/^(> .+)$/m, "$1\nUnquoted continuation"), /unexpected content/],
-      [baseline.replace(/^- \[x\] Ready to publish$/m, "- [x] Ready to publish\n- [ ] Ready to publish"), /exact readiness checkbox/]
+      [baseline.replace(/^- \[[ x]\] Ready to publish$/m, "$&\n- [ ] Ready to publish"), /exact readiness checkbox/]
     ];
     for (const [invalid, error] of malformed) {
       await page.evaluate(source => { window.testQueue.source = source; }, invalid);
