@@ -1,8 +1,13 @@
 # Blog publication and announcement queue
 
-Last reconciled on 13 November 2026. All 20 forthcoming posts are listed below; none is currently marked ready to publish. Completed posts are archived in [published.md](published.md), with their publication dates and final article links. `publication-log.json` remains the authoritative retry and deduplication record.
+Last reconciled on 13 November 2026. All 20 forthcoming posts are listed below; the first two are explicitly approved, in the order requested below. Completed posts are archived in [published.md](published.md), with their publication dates and final article links. `publication-log.json` remains the authoritative retry and deduplication record.
 
-The publication order approved on 1 November has been completed. The remaining entries keep their existing order, alternating optimal transport and other topics.
+Explicit publication order approved on 13 November 2026 for the next daily publications:
+
+1. [Weak transport and mean-preserving spreads](https://www.gpeyre.com/blog/preparations/weak-transport-and-convex-order.html)
+2. [In-context composition](https://www.gpeyre.com/blog/preparations/in-context-composition.html)
+
+The earlier publication order approved on 1 November has been completed. The other entries keep their existing order, alternating optimal transport and other topics.
 
 The daily workflow publishes at most one approved article and its Bluesky announcement, at 07:00 Europe/Paris. A delayed run retains queue order and the one-post-per-day limit. No announcement is sent before the dated official article is verified live.
 
@@ -16,7 +21,7 @@ This is a private editorial file, excluded from the website build. Readiness cha
 
 Topic: OT / Wasserstein geometry
 
-- [ ] Ready to publish
+- [x] Ready to publish
 
 > With quadratic cost, weak transport can be written as a Wasserstein projection under convex order. This post explains the role of conditional means and mean-preserving spreads. https://www.gpeyre.com/blog/preparations/weak-transport-and-convex-order.html
 
@@ -24,7 +29,7 @@ Topic: OT / Wasserstein geometry
 
 Topic: Other topics
 
-- [ ] Ready to publish
+- [x] Ready to publish
 
 > Each attention layer changes both a token and its context. Our in-context composition accounts for both updates; on the space of measure–point pairs, it is ordinary composition. https://www.gpeyre.com/blog/preparations/in-context-composition.html
 
