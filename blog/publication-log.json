@@ -795,6 +795,32 @@
         "mime_type": "image/jpeg",
         "size": 46645
       }
+    },
+    {
+      "slug": "weak-transport-and-convex-order",
+      "title": "Weak transport and mean-preserving spreads",
+      "date": "2026-11-13",
+      "url": "https://www.gpeyre.com/blog/2026/11/13/weak-transport-and-convex-order/",
+      "message": "With quadratic cost, weak transport can be written as a Wasserstein projection under convex order. This post explains the role of conditional means and mean-preserving spreads. https://www.gpeyre.com/blog/2026/11/13/weak-transport-and-convex-order/",
+      "status": "prepared",
+      "source_sha256": "8161a0f16ff2b1292a8e91f42dcb3304cea669315cc244e6515d93db0bb864bd",
+      "base_commit": "f0f22075b3e6dc612f13568170208213340291fd",
+      "files": [
+        "blog/_posts/2026-11-13-weak-transport-and-convex-order.md",
+        "blog/preparations/weak-transport-and-convex-order.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null,
+      "working_sha256": {
+        "blog/_posts/2026-11-13-weak-transport-and-convex-order.md": "f3737cceb8e92c23b7b5793f277b170f55b56e936de2cd3c6253a527c7c6e6e2",
+        "blog/preparations/weak-transport-and-convex-order.html": "294f09290f68d350871973434785eb76d0bc32e55c5f548d18a235c6da7281d3",
+        "blog/preparations/index.html": "30b6dd6b776e0fdf63642c444753f746c209d1bce89fd23ff3096d7074f03fdb",
+        "js/blog-search-index.js": "e103d7c31863272d00f31380e8b6f15f6b5490def33d2241fbcd2791b6ecc466"
+      }
     }
   ]
 }
