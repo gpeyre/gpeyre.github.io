@@ -830,6 +830,32 @@
         "mime_type": "image/jpeg",
         "size": 37515
       }
+    },
+    {
+      "slug": "in-context-composition",
+      "title": "In-context composition",
+      "date": "2026-11-14",
+      "url": "https://www.gpeyre.com/blog/2026/11/14/in-context-composition/",
+      "message": "Each attention layer changes both a token and its context. Our in-context composition accounts for both updates; on the space of measure–point pairs, it is ordinary composition. https://www.gpeyre.com/blog/2026/11/14/in-context-composition/",
+      "status": "prepared",
+      "source_sha256": "ca37bfbbb2bf3e493b44b36a55ab6e8617d4fd183131e214fefb288d9dcc1215",
+      "base_commit": "fd20b639ff156089a54d2b168af27e5d453524dc",
+      "files": [
+        "blog/_posts/2026-11-14-in-context-composition.md",
+        "blog/preparations/in-context-composition.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null,
+      "working_sha256": {
+        "blog/_posts/2026-11-14-in-context-composition.md": "1e2f61d96a758ebebcc3c304b7ff850fbac85d0e6af318760b03fd7107397722",
+        "blog/preparations/in-context-composition.html": "1487269b87cafbadb6cd16b3211c4ac715ecd4bc77576e8971e4c246e1fb021f",
+        "blog/preparations/index.html": "42b71a653c33d484f17b06eff7610586655bb8ca8d3e426696530432aad08065",
+        "js/blog-search-index.js": "795d17c3585b7450810bcae73b601fee0474a19410bfd804daaacb2866a74903"
+      }
     }
   ]
 }
