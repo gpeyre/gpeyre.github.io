@@ -8,4 +8,6 @@ input[type=range]{width:200px;max-width:100%;accent-color:var(--teal)}button,sel
 svg{display:block;width:100%;height:auto}svg text{font-family:system-ui,sans-serif;font-size:11px;fill:var(--muted)}svg.draggable{touch-action:none;cursor:grab}svg.draggable:active{cursor:grabbing}
 .status{font-size:12px;line-height:1.8;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:18px 0 14px;padding:12px 0;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.caveat{font-size:12px;line-height:1.65;color:var(--muted);margin-bottom:0}noscript{display:block;background:#fff4db;padding:15px}
 @media(max-width:680px){main{padding:16px 12px}.plots,.plots.two{grid-template-columns:1fr;gap:16px}.plot h3{min-height:0}.controls{padding:12px;gap:14px}.controls label{flex:1 1 180px}input[type=range]{width:100%}h2{font-size:19px}}
-@media print{.controls{display:none}}
+.controls.mixture-count-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.controls.mixture-count-controls input[type=range]{width:100%}
+@media(max-width:680px){.controls.mixture-count-controls{grid-template-columns:1fr}}
+@media print{.controls,.controls.mixture-count-controls{display:none}}

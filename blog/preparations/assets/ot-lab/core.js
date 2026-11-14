@@ -241,8 +241,8 @@
       means.some(x=>!Number.isFinite(x)) || weights.some(w=>!(w>0) || !Number.isFinite(w)) ||
       Math.abs(sum(weights)-1)>1e-12)throw new RangeError("Invalid Gaussian mixture");
     const scale=1/(sigma*Math.sqrt(2*Math.PI));
-    const density=x=>sum(means.map((m,i)=>weights[i]*scale*Math.exp(-.5*((x-m)/sigma)**2)));
-    const cdf=x=>sum(means.map((m,i)=>weights[i]*gaussianCDF((x-m)/sigma)));
+    const density=x=>{let value=0;for(let i=0;i<means.length;i++)value+=weights[i]*scale*Math.exp(-.5*((x-means[i])/sigma)**2);return value;};
+    const cdf=x=>{let value=0;for(let i=0;i<means.length;i++)value+=weights[i]*gaussianCDF((x-means[i])/sigma);return value;};
     function quantile(r) {
       if(!(r>0 && r<1))throw new RangeError("A finite Gaussian quantile needs 0 < rank < 1");
       let lo=Math.min(...means)-9*sigma,hi=Math.max(...means)+9*sigma;
@@ -253,12 +253,44 @@
     }
     return {means:[...means],weights:[...weights],sigma,density,cdf,quantile};
   }
-  function gaussianDensityCapScene(sigma=.22,resolution=501) {
+  function gaussianMixtureDensityCap(law,cells=1024) {
+    if(!Number.isInteger(cells) || cells<1)throw new RangeError("The cap partition needs a positive integer cell count");
+    const lo=Math.min(...law.means),hi=Math.max(...law.means),scale=1/(law.sigma*Math.sqrt(2*Math.PI));
+    if(lo===hi)return scale*sum(law.weights);
+    // Outside the convex hull of the component centers, the density is
+    // monotone towards that hull. On each cell, replace every Gaussian by
+    // its maximum over that cell. The largest cell bound is a GLOBAL bound,
+    // not the maximum of samples. Refining the partition tightens it.
+    let cap=0;
+    for(let i=0;i<cells;i++){
+      const a=lo+(hi-lo)*i/cells,b=lo+(hi-lo)*(i+1)/cells;
+      let bound=0;
+      for(let j=0;j<law.means.length;j++){
+        const distance=Math.max(a-law.means[j],law.means[j]-b,0);
+        bound+=law.weights[j]*Math.exp(-.5*(distance/law.sigma)**2);
+      }
+      cap=Math.max(cap,scale*bound);
+    }
+    return cap;
+  }
+  function gaussianDensityCapScene(sigma=.22,resolution=501,sourceCount=2,targetCount=2) {
     if(!(sigma>=.1 && sigma<=.32))throw new RangeError("Bandwidth outside the experiment range");
-    const source=gaussianMixture1D([-1.5,.2],[.55,.45],sigma);
-    const target=gaussianMixture1D([-.2,1.5],[.4,.6],sigma);
+    if(!Number.isInteger(resolution) || resolution<33)throw new RangeError("The plotting grid needs at least 33 points");
+    if([sourceCount,targetCount].some(k=>!Number.isInteger(k) || k<1 || k>8))throw new RangeError("Each mixture needs between one and eight components");
+    const endpoint=(count,isTarget)=>{
+      const means=count===2?(isTarget?[-.2,1.5]:[-1.5,.2]):
+        Array.from({length:count},(_,i)=>(isTarget?.65:-.65)+1.7*(i-(count-1)/2));
+      // Keep the original two-component experiment exactly. Other counts
+      // use positive linearly tilted weights, normalized without randomness.
+      const raw=count===2?(isTarget?[.4,.6]:[.55,.45]):
+        Array.from({length:count},(_,i)=>count===1?1:1+(isTarget?-.3:.3)*(1-2*i/(count-1)));
+      const total=sum(raw),weights=raw.map(w=>w/total);
+      return gaussianMixture1D(means,weights,sigma);
+    };
+    const source=endpoint(sourceCount,false),target=endpoint(targetCount,true);
     const endpoints=[source,target],tail=1e-9;
-    const xmin=-1.5-7*sigma,xmax=1.5+7*sigma;
+    const xmin=Math.min(...source.means,...target.means)-7*sigma;
+    const xmax=Math.max(...source.means,...target.means)+7*sigma;
     const x=Array.from({length:resolution},(_,i)=>xmin+(xmax-xmin)*i/(resolution-1));
     // Rank samples inherited from both spatial grids resolve narrow peaks and
     // low-density gaps, which a uniform quantile grid alone can miss.
@@ -270,14 +302,8 @@
       (i===0 || v-ranks[i-1]>1e-14)),1-tail];
     const q0=r.map(source.quantile),q1=r.map(target.quantile);
     const d0=q0.map(source.density),d1=q1.map(target.density);
-    // On either side of the component midpoint, one component is at least
-    // half the separation away. This is a rigorous global upper bound, and
-    // is close to the true peak for the localized mixtures used here.
-    const cap=Math.max(...endpoints.map(law=>{
-      const [u,v]=law.weights,gap=Math.abs(law.means[1]-law.means[0]);
-      return (Math.max(u,v)+Math.min(u,v)*Math.exp(-gap*gap/(8*sigma*sigma)))/(sigma*Math.sqrt(2*Math.PI));
-    }));
-    return {source,target,sigma,r,q0,q1,d0,d1,cap,x,xmin,xmax,tail};
+    const cap=Math.max(...endpoints.map(law=>gaussianMixtureDensityCap(law)));
+    return {source,target,sourceCount,targetCount,sigma,r,q0,q1,d0,d1,cap,x,xmin,xmax,tail};
   }
   function gaussianDensityCapGeodesic(scene,t) {
     if(!(t>=0 && t<=1))throw new RangeError("Geodesic time must be in [0,1]");
@@ -324,7 +350,7 @@
   const api={sum,dot,zeros,dist2,rng,gaussian,transport,bary,objective,feasibility,
     weakStep,weakAwayStep,weakCertificate,crossing,catalan,sampleMatching,sqrtSPD,matmul,transpose,solve,
     twoPointPlan,twoPointTransport,bernstein,uniformQuantization,uniformMongeGap,mongeRegression,
-    gaussianCDF,gaussianMixture1D,gaussianDensityCapScene,gaussianDensityCapGeodesic,
+    gaussianCDF,gaussianMixture1D,gaussianMixtureDensityCap,gaussianDensityCapScene,gaussianDensityCapGeodesic,
     bernoulliErrorCurve,convexEnvelope,cdfSquaredDistance};
   if(typeof module!=="undefined" && module.exports)module.exports=api;
   root.BlogMath=api;

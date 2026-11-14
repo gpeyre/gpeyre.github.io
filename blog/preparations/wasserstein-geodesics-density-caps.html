@@ -145,27 +145,28 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 
 <h2>Numerical experimentation: one-dimensional density bounds</h2>
 <p>On the line, write \(Q_i\) for the endpoint quantiles. The interpolation is simply \(Q_t=(1-t)Q_0+tQ_1\). In the smooth strictly increasing example below, density satisfies \(\rho_t(Q_t(r))=1/Q_t'(r)\). A cap means \(Q_i'\ge1/\kappa\), a condition immediately preserved by interpolation.</p>
-<p>Both endpoints are mixtures of two localized Gaussians. With \(\varphi_\sigma(x)=(2\pi\sigma^2)^{-1/2}e^{-x^2/(2\sigma^2)}\), the figure uses</p>
+<p>Both endpoints are mixtures of localized Gaussians. Separate sliders select the source and target component counts \(k_0,k_1\), from one to eight; they need not be equal. With \(\varphi_\sigma(x)=(2\pi\sigma^2)^{-1/2}e^{-x^2/(2\sigma^2)}\), the initial choice \(k_0=k_1=2\) is</p>
 \[
  \begin{aligned}
  \rho_0(x)&=0.55\varphi_\sigma(x+1.5)+0.45\varphi_\sigma(x-0.2),\\
  \rho_1(x)&=0.40\varphi_\sigma(x+0.2)+0.60\varphi_\sigma(x-1.5).
  \end{aligned}
 \]
-<p>The time slider follows their Wasserstein geodesic, not their linear mixture. The bandwidth slider makes the four Gaussian components narrower or broader. We invert the two Gaussian-mixture CDFs numerically, then evaluate the intermediate density using</p>
+<p>The time slider follows their Wasserstein geodesic, not their linear mixture. The bandwidth slider makes the Gaussian components narrower or broader. We invert the two Gaussian-mixture CDFs numerically, then evaluate the intermediate density using</p>
 \[
  \rho_t(Q_t(r))=
  \left(\frac{1-t}{\rho_0(Q_0(r))}
        +\frac{t}{\rho_1(Q_1(r))}\right)^{-1}.
 \]
-<p>The dashed horizontal line is a certified common endpoint cap, close to the larger peak. For a mixture with weights \(w,1-w\), common bandwidth \(\sigma\), and separation \(\Delta\), one such bound is</p>
+<p>The dashed horizontal line is a certified common endpoint cap, close to the larger peak. For a mixture \(\rho(x)=\sum_{j=1}^k w_j\varphi_\sigma(x-m_j)\), all maxima lie between the extreme component centers: outside that interval every Gaussian varies in the same direction. Partition this interval into small cells \(I\). On each cell,</p>
 \[
- \|\rho\|_\infty\le
- \frac{\max(w,1-w)+\min(w,1-w)e^{-\Delta^2/(8\sigma^2)}}
-      {\sigma\sqrt{2\pi}}.
+ \sup_{x\in I}\rho(x)\le
+ \frac{1}{\sigma\sqrt{2\pi}}
+ \sum_{j=1}^k w_j
+ e^{-\operatorname{dist}(m_j,I)^2/(2\sigma^2)}.
 \]
-<p>Indeed, on either side of the midpoint between the component centers, the more distant Gaussian lies at least \(\Delta/2\) away. Bound it by its value at that distance and bound the other by its peak. The density plot uses a tight vertical range starting at zero; the right panel shows the corresponding quantiles.</p>
-<figure><iframe class="idea-experiment" data-experiment="caps" title="Wasserstein interpolation between two two-Gaussian mixtures, with a certified density cap" src="assets/ot-lab/index.html?topic=caps" loading="lazy"></iframe><figcaption>Source density in red, target in blue, and the interpolated density in teal. Both endpoint laws live on the whole real line; the plotted rank interval omits only \(2\times10^{-9}\) of the mass, without renormalization. The bound follows from the harmonic-density formula, rather than from a constraint imposed by a solver.</figcaption></figure>
+<p>Each term is bounded by evaluating its Gaussian at the closest point of the cell to its center. Taking the largest cell bound gives a global cap; for a single Gaussian, its peak is known exactly. The figure recomputes this bound for both mixtures when their counts or bandwidth change. The density plot uses a tight vertical range starting at zero; the right panel shows the corresponding quantiles.</p>
+<figure><iframe class="idea-experiment" data-experiment="caps" title="Wasserstein interpolation between Gaussian mixtures with independently adjustable component counts and a certified density cap" src="assets/ot-lab/index.html?topic=caps" loading="lazy"></iframe><figcaption>Source density in red, target in blue, and the interpolated density in teal. Both endpoint laws live on the whole real line; the plotted rank interval omits only \(2\times10^{-9}\) of the mass, without renormalization. The bound follows from the harmonic-density formula, rather than from a constraint imposed by a solver.</figcaption></figure>
 
 <h2>References</h2>
 <ol class="references">

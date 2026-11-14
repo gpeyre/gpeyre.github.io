@@ -772,7 +772,7 @@
       "source": "/blog/preparations/assets/ot-lab/index.html?topic=caps",
       "settings": {
         "title": "Density bounds along Wasserstein geodesics",
-        "status": "time 0.50 | bandwidth 0.220 | sampled intermediate peak 0.91869 ≤ certified cap 1.0884 | total mass 1",
+        "status": "source 2 components | target 2 components | time 0.50 | bandwidth 0.220 | sampled intermediate peak 0.91869 ≤ certified cap 1.0880 | total mass 1",
         "controls": [
           {
             "label": "Geodesic time: 0.5",
@@ -781,6 +781,14 @@
           {
             "label": "Gaussian bandwidth σ: 0.22",
             "value": "0.22"
+          },
+          {
+            "label": "Source components k₀: 2",
+            "value": "2"
+          },
+          {
+            "label": "Target components k₁: 2",
+            "value": "2"
           }
         ],
         "count": 2,
@@ -808,7 +816,7 @@
         },
         "domain": "normalized mixtures on the whole real line; displayed tails omitted without renormalization"
       },
-      "sha256": "7846b7c405c20e5f023738ae0f074f45d0d235e8a18657adc517df19f334a6a0"
+      "sha256": "1d4c384c27bd03d0557acbda0836fc6f7d41fbf6fce865149f409e21d97e2879"
     },
     "wasserstein-singular-vectors": {
       "path": "/blog/imgs/summaries/wasserstein-singular-vectors.jpg",

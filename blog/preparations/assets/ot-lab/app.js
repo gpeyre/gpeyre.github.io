@@ -343,10 +343,12 @@ function moments(){
 
 function caps(){
   setup("5 / Density bounds along Wasserstein geodesics",
-    "Red and blue are two mixtures of two localized Gaussians. Teal is their quadratic Wasserstein interpolation. The dashed line is a common endpoint density cap; the vertical scale follows the density values.",
+    "Choose the number of Gaussian components in the red source and blue target independently. Teal is their quadratic Wasserstein interpolation. The dashed line is a common endpoint density cap; the vertical scale follows the density values.",
     "Each mixture is normalized on the whole real line. Gaussian CDFs are inverted by bisection; the intermediate density is the harmonic interpolation of endpoint densities at matched quantiles. The graph omits at most 2 × 10⁻⁹ of mass, without truncating or renormalizing either law. No density cap is imposed by the computation.",2);
+  $("controls").classList.add("mixture-count-controls");
   const s=slider("Geodesic time",0,1,.5,.01),bandwidth=slider("Gaussian bandwidth σ",.1,.32,.22,.005);
-  let scene=M.gaussianDensityCapScene(+bandwidth.value);
+  const sourceCount=slider("Source components k₀",1,8,2,1),targetCount=slider("Target components k₁",1,8,2,1);
+  let scene=M.gaussianDensityCapScene(+bandwidth.value,501,+sourceCount.value,+targetCount.value);
   function redraw(){const t=+s.value,current=M.gaussianDensityCapGeodesic(scene,t),cap=scene.cap;
     $("plots").replaceChildren();
     const p=plot("Densities: red ρ₀ · teal ρₜ · blue ρ₁",[scene.xmin,scene.xmax],[0,1.025*cap]);
@@ -360,11 +362,11 @@ function caps(){
     density+=p.path([[scene.xmin,cap],[scene.xmax,cap]],GRAY,1,1,"5 4");
     density+=p.path(current.points,TEAL,2.3);
     quantiles+=q.path(current.quantiles,TEAL,2.3);p.draw(density);q.draw(quantiles);
-    $("status").textContent=`time ${t.toFixed(2)} | bandwidth ${scene.sigma.toFixed(3)} | sampled intermediate peak ${fmt(current.peak,5)} ≤ certified cap ${fmt(cap,5)} | total mass 1`;
-    window.DensityCapsExperiment={getState:()=>({time:t,bandwidth:scene.sigma,cap,peak:current.peak,yMax:1.025*cap,rankSamples:scene.r.length,omittedTailMass:2*scene.tail})};
+    $("status").textContent=`source ${scene.sourceCount} components | target ${scene.targetCount} components | time ${t.toFixed(2)} | bandwidth ${scene.sigma.toFixed(3)} | sampled intermediate peak ${fmt(current.peak,5)} ≤ certified cap ${fmt(cap,5)} | total mass 1`;
+    window.DensityCapsExperiment={getState:()=>({time:t,bandwidth:scene.sigma,sourceCount:scene.sourceCount,targetCount:scene.targetCount,cap,peak:current.peak,yMax:1.025*cap,rankSamples:scene.r.length,omittedTailMass:2*scene.tail})};
   }
   s.addEventListener("input",redraw);
-  bandwidth.addEventListener("input",()=>{scene=M.gaussianDensityCapScene(+bandwidth.value);redraw();});redraw();
+  for(const control of [bandwidth,sourceCount,targetCount])control.addEventListener("input",()=>{scene=M.gaussianDensityCapScene(+bandwidth.value,501,+sourceCount.value,+targetCount.value);redraw();});redraw();
 }
 
 function independence(){
