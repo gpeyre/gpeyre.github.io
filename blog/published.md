@@ -243,3 +243,23 @@ Topic: Other topics
 Published: 2026-11-12 · [Read post](https://www.gpeyre.com/blog/2026/11/12/intrinsic-factor-training-dynamics/)
 
 > Training a matrix factorization usually depends on more than its product. With suitable initialization, a conserved imbalance gives a closed equation for the product itself. https://www.gpeyre.com/blog/preparations/intrinsic-factor-training-dynamics.html
+
+## 26. Weak transport and mean-preserving spreads
+
+Topic: OT / Wasserstein geometry
+
+- [x] Ready to publish
+
+Published: 2026-11-13 · [Read post](https://www.gpeyre.com/blog/2026/11/13/weak-transport-and-convex-order/)
+
+> With quadratic cost, weak transport can be written as a Wasserstein projection under convex order. This post explains the role of conditional means and mean-preserving spreads. https://www.gpeyre.com/blog/preparations/weak-transport-and-convex-order.html
+
+## 27. In-context composition
+
+Topic: Other topics
+
+- [x] Ready to publish
+
+Published: 2026-11-14 · [Read post](https://www.gpeyre.com/blog/2026/11/14/in-context-composition/)
+
+> Each attention layer changes both a token and its context. Our in-context composition accounts for both updates; on the space of measure–point pairs, it is ordinary composition. https://www.gpeyre.com/blog/preparations/in-context-composition.html

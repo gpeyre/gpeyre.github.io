@@ -234,6 +234,60 @@
     for(let k=1;k<200;k++){term*=t*t/(2*k+1);total+=term;if(term<total*1e-16)break;}
     return .5+Math.sign(x)*Math.exp(-t*t/2)*total/Math.sqrt(2*Math.PI);
   }
+  // Normalized Gaussian mixtures on the whole real line. Quantiles are
+  // obtained by bracketed bisection, not by renormalizing a plotting window.
+  function gaussianMixture1D(means,weights,sigma) {
+    if(!(sigma>0) || !Number.isFinite(sigma) || means.length!==weights.length || !means.length ||
+      means.some(x=>!Number.isFinite(x)) || weights.some(w=>!(w>0) || !Number.isFinite(w)) ||
+      Math.abs(sum(weights)-1)>1e-12)throw new RangeError("Invalid Gaussian mixture");
+    const scale=1/(sigma*Math.sqrt(2*Math.PI));
+    const density=x=>sum(means.map((m,i)=>weights[i]*scale*Math.exp(-.5*((x-m)/sigma)**2)));
+    const cdf=x=>sum(means.map((m,i)=>weights[i]*gaussianCDF((x-m)/sigma)));
+    function quantile(r) {
+      if(!(r>0 && r<1))throw new RangeError("A finite Gaussian quantile needs 0 < rank < 1");
+      let lo=Math.min(...means)-9*sigma,hi=Math.max(...means)+9*sigma;
+      while(cdf(lo)>r)lo-=9*sigma;
+      while(cdf(hi)<r)hi+=9*sigma;
+      for(let k=0;k<52;k++){const mid=(lo+hi)/2;if(cdf(mid)<r)lo=mid;else hi=mid;}
+      return (lo+hi)/2;
+    }
+    return {means:[...means],weights:[...weights],sigma,density,cdf,quantile};
+  }
+  function gaussianDensityCapScene(sigma=.22,resolution=501) {
+    if(!(sigma>=.1 && sigma<=.32))throw new RangeError("Bandwidth outside the experiment range");
+    const source=gaussianMixture1D([-1.5,.2],[.55,.45],sigma);
+    const target=gaussianMixture1D([-.2,1.5],[.4,.6],sigma);
+    const endpoints=[source,target],tail=1e-9;
+    const xmin=-1.5-7*sigma,xmax=1.5+7*sigma;
+    const x=Array.from({length:resolution},(_,i)=>xmin+(xmax-xmin)*i/(resolution-1));
+    // Rank samples inherited from both spatial grids resolve narrow peaks and
+    // low-density gaps, which a uniform quantile grid alone can miss.
+    const ranks=Array.from({length:resolution},(_,i)=>tail+(1-2*tail)*i/(resolution-1));
+    for(const law of endpoints)for(const z of x){const r=law.cdf(z);if(r>tail && r<1-tail)ranks.push(r);}
+    for(let k=1;k<=9;k++)ranks.push(10**(-k),1-10**(-k));
+    ranks.sort((a,b)=>a-b);
+    const r=[tail,...ranks.filter((v,i)=>v>tail+1e-14 && v<1-tail-1e-14 &&
+      (i===0 || v-ranks[i-1]>1e-14)),1-tail];
+    const q0=r.map(source.quantile),q1=r.map(target.quantile);
+    const d0=q0.map(source.density),d1=q1.map(target.density);
+    // On either side of the component midpoint, one component is at least
+    // half the separation away. This is a rigorous global upper bound, and
+    // is close to the true peak for the localized mixtures used here.
+    const cap=Math.max(...endpoints.map(law=>{
+      const [u,v]=law.weights,gap=Math.abs(law.means[1]-law.means[0]);
+      return (Math.max(u,v)+Math.min(u,v)*Math.exp(-gap*gap/(8*sigma*sigma)))/(sigma*Math.sqrt(2*Math.PI));
+    }));
+    return {source,target,sigma,r,q0,q1,d0,d1,cap,x,xmin,xmax,tail};
+  }
+  function gaussianDensityCapGeodesic(scene,t) {
+    if(!(t>=0 && t<=1))throw new RangeError("Geodesic time must be in [0,1]");
+    const points=scene.r.map((r,i)=>{
+      const x=(1-t)*scene.q0[i]+t*scene.q1[i];
+      const density=1/((1-t)/scene.d0[i]+t/scene.d1[i]);
+      return [x,density];
+    });
+    return {points,quantiles:scene.r.map((r,i)=>[r,points[i][0]]),peak:Math.max(...points.map(p=>p[1]))};
+  }
   function bernoulliErrorCurve(n,extent=4) {
     const mode=Math.floor(n/2),mass=Array(n+1).fill(0);mass[mode]=1;
     for(let i=mode;i>0;i--)mass[i-1]=mass[i]*i/(n-i+1);
@@ -270,7 +324,8 @@
   const api={sum,dot,zeros,dist2,rng,gaussian,transport,bary,objective,feasibility,
     weakStep,weakAwayStep,weakCertificate,crossing,catalan,sampleMatching,sqrtSPD,matmul,transpose,solve,
     twoPointPlan,twoPointTransport,bernstein,uniformQuantization,uniformMongeGap,mongeRegression,
-    gaussianCDF,bernoulliErrorCurve,convexEnvelope,cdfSquaredDistance};
+    gaussianCDF,gaussianMixture1D,gaussianDensityCapScene,gaussianDensityCapGeodesic,
+    bernoulliErrorCurve,convexEnvelope,cdfSquaredDistance};
   if(typeof module!=="undefined" && module.exports)module.exports=api;
   root.BlogMath=api;
 })(typeof window!=="undefined"?window:globalThis);

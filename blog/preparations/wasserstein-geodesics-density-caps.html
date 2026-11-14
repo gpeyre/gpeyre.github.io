@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,follow">
 <meta name="keywords" content="Wasserstein geodesics, density cap, displacement interpolation, displacement convexity, geodesic convexity, congestion constraint, crowd motion, quadratic optimal transport, Brenier map, convex potential, Jacobian determinant, determinant-root inequality, mass conservation, change of variables, reciprocal density, entropy convexity, relative entropy, interaction energies, Benamou–Brenier formulation, kinetic action, continuity equation, no-flux boundary condition, convex domains, quantile interpolation, Robert McCann, Jean-David Benamou, Yann Brenier, Filippo Santambrogio, Gabriel Peyré, borne de densité, contrainte de congestion, convexité par déplacement, géodésiques de Wasserstein, conservation de la masse">
-  <meta name="description" content="Preservation of a constant upper density bound along quadratic Wasserstein geodesics, with a determinant-based proof and exact one-dimensional experiments.">
+  <meta name="description" content="Preservation of a constant upper density bound along quadratic Wasserstein geodesics, with a determinant-based proof and a one-dimensional Gaussian-mixture experiment.">
 <title>Why optimal transport respects a density cap — Alpha preview — Gabriel Peyré</title>
 <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/wasserstein-geodesics-density-caps.html">
 <link rel="stylesheet" href="assets/drafts.css">
@@ -19,12 +19,12 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 
 <!-- Generated numerical summary image: start -->
 <meta property="og:image" content="https://www.gpeyre.com/blog/imgs/summaries/wasserstein-geodesics-density-caps.jpg">
-<meta property="og:image:alt" content="Densities and quantile derivatives along a Wasserstein geodesic remain within the endpoint density cap.">
+<meta property="og:image:alt" content="Two localized Gaussian mixtures and their intermediate Wasserstein density, below a common dashed density cap, beside their interpolated quantiles.">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://www.gpeyre.com/blog/imgs/summaries/wasserstein-geodesics-density-caps.jpg">
-<meta name="twitter:image:alt" content="Densities and quantile derivatives along a Wasserstein geodesic remain within the endpoint density cap.">
+<meta name="twitter:image:alt" content="Two localized Gaussian mixtures and their intermediate Wasserstein density, below a common dashed density cap, beside their interpolated quantiles.">
 <!-- Generated numerical summary image: end -->
 </head>
 <body>
@@ -99,7 +99,7 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
  \sum_{|S|=k}\prod_{i\in S}\lambda_i
  \ge\binom dk g^k.
 \]
-<p>Indeed, each eigenvalue occurs in exactly \(\binom{d-1}{k-1}\) subsets. Applying this bound to every coefficient in the expansion yields \(\det((1-t)I+tA)\ge((1-t)+tg)^d\). Zero eigenvalues follow by continuity.</p>
+<p>Indeed, each eigenvalue occurs in exactly \(\binom{d-1}{k-1}\) subsets. Applying this bound to every coefficient in the expansion yields <span class="equation-scroll" style="display:inline-block;vertical-align:middle">\(\det((1-t)I+tA)\ge((1-t)+tg)^d\)</span>. Zero eigenvalues follow by continuity.</p>
 </div></details>
 <p>For nonsmooth optimal maps, use their almost-everywhere approximate derivative and the change-of-variables theorem for Brenier maps. The derivative is symmetric positive semidefinite, and the same Jacobian identities hold almost everywhere on the positive-density sets. This is the standard optimal-Jacobian result underlying McCann's displacement-convexity theorem <a href="#ref-mccann">[2]</a>; smoothness of the map is not an additional hypothesis of the lemma. \(\square\)</p>
 </div></details>
@@ -145,19 +145,27 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 
 <h2>Numerical experimentation: one-dimensional density bounds</h2>
 <p>On the line, write \(Q_i\) for the endpoint quantiles. The interpolation is simply \(Q_t=(1-t)Q_0+tQ_1\). In the smooth strictly increasing example below, density satisfies \(\rho_t(Q_t(r))=1/Q_t'(r)\). A cap means \(Q_i'\ge1/\kappa\), a condition immediately preserved by interpolation.</p>
-<p>The example uses, for \(0\le r\le1\) and \(0\le a&lt;1\),</p>
+<p>Both endpoints are mixtures of two localized Gaussians. With \(\varphi_\sigma(x)=(2\pi\sigma^2)^{-1/2}e^{-x^2/(2\sigma^2)}\), the figure uses</p>
 \[
  \begin{aligned}
- Q_0(r)&=r+\frac{a}{2\pi}\sin(2\pi r),\\
- Q_1(r)&=0.6+r-\frac{a}{2\pi}\sin(2\pi r).
+ \rho_0(x)&=0.55\varphi_\sigma(x+1.5)+0.45\varphi_\sigma(x-0.2),\\
+ \rho_1(x)&=0.40\varphi_\sigma(x+0.2)+0.60\varphi_\sigma(x-1.5).
  \end{aligned}
 \]
-<p>The common endpoint cap is \(\kappa=(1-a)^{-1}\), while the intermediate maximum is exactly</p>
+<p>The time slider follows their Wasserstein geodesic, not their linear mixture. The bandwidth slider makes the four Gaussian components narrower or broader. We invert the two Gaussian-mixture CDFs numerically, then evaluate the intermediate density using</p>
 \[
- \|\rho_t\|_\infty
- =\frac{1}{1-|1-2t|a}\le\kappa.
+ \rho_t(Q_t(r))=
+ \left(\frac{1-t}{\rho_0(Q_0(r))}
+       +\frac{t}{\rho_1(Q_1(r))}\right)^{-1}.
 \]
-<figure><iframe class="idea-experiment" data-experiment="caps" title="Exact Wasserstein geodesic preserving a constant density cap" src="assets/ot-lab/index.html?topic=caps" loading="lazy"></iframe><figcaption>Move time and modulation to see how the density relaxes below the endpoint cap. At halfway time the quantile is affine and the density is uniform. The cap is a consequence of the exact interpolation, not a numerical constraint imposed by a solver.</figcaption></figure>
+<p>The dashed horizontal line is a certified common endpoint cap, close to the larger peak. For a mixture with weights \(w,1-w\), common bandwidth \(\sigma\), and separation \(\Delta\), one such bound is</p>
+\[
+ \|\rho\|_\infty\le
+ \frac{\max(w,1-w)+\min(w,1-w)e^{-\Delta^2/(8\sigma^2)}}
+      {\sigma\sqrt{2\pi}}.
+\]
+<p>Indeed, on either side of the midpoint between the component centers, the more distant Gaussian lies at least \(\Delta/2\) away. Bound it by its value at that distance and bound the other by its peak. The density plot uses a tight vertical range starting at zero; the right panel shows the corresponding quantiles.</p>
+<figure><iframe class="idea-experiment" data-experiment="caps" title="Wasserstein interpolation between two two-Gaussian mixtures, with a certified density cap" src="assets/ot-lab/index.html?topic=caps" loading="lazy"></iframe><figcaption>Source density in red, target in blue, and the interpolated density in teal. Both endpoint laws live on the whole real line; the plotted rank interval omits only \(2\times10^{-9}\) of the mass, without renormalization. The bound follows from the harmonic-density formula, rather than from a constraint imposed by a solver.</figcaption></figure>
 
 <h2>References</h2>
 <ol class="references">

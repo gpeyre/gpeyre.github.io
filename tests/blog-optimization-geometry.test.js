@@ -1,6 +1,7 @@
 "use strict";
 const assert = require("node:assert/strict");
 const fs = require("node:fs"), path = require("node:path");
+const {articleSource}=require("./blog-article-source.js");
 const G = require("../blog/preparations/assets/optimization-geometry/core.js");
 const close = (a, b, tol = 1e-10) => assert.ok(Math.abs(a-b) <= tol*Math.max(1,Math.abs(a),Math.abs(b)), `${a} != ${b}`);
 // Independent symmetric Jacobi diagonalization of J*J (12 parameters), not the
@@ -84,9 +85,10 @@ for(const mode of ["soft","mixed","hard"]) {
 assert.throws(()=>G.lowRankCondition(0),RangeError);assert.throws(()=>G.pairConstants(3),RangeError);assert.throws(()=>G.signTrajectory({method:"unscaled"}),RangeError);
 const posts=["intrinsic-factor-training-dynamics","balanced-low-rank-conditioning","sign-gradient-descent-geometry"];
 for(const slug of posts){
-  const html=fs.readFileSync(path.join(__dirname,"../blog/preparations",slug+".html"),"utf8");
-  assert.ok(html.includes('content="noindex,follow"'));assert.ok(html.includes("Alpha preview · Work in progress"));
-  const keywords=html.match(/<meta name="keywords" content="([^"]+)"/)[1].split(",").map(x=>x.trim());
+  const article=articleSource(slug),html=article.source;
+  if(article.published){assert.match(html,/^proofs: true$/m);assert.match(html,/^embedded_experiment: true$/m);}
+  else{assert.ok(html.includes('content="noindex,follow"'));assert.ok(html.includes("Alpha preview · Work in progress"));}
+  const keywords=article.keywords;
   assert.ok(keywords.length>=22);assert.equal(new Set(keywords).size,keywords.length);
   const ids=new Set(Array.from(html.matchAll(/\bid="([^"]+)"/g),m=>m[1]));
   for(const m of html.matchAll(/href="#([^"]+)"/g))assert.ok(ids.has(m[1]),slug+" missing "+m[1]);
@@ -106,17 +108,18 @@ if(process.env.BLOG_OPTIMIZATION_BROWSER==="1") (async()=>{
     const page=await browser.newPage({viewport:{width:1200,height:1000},reducedMotion:"reduce"});
     page.on("pageerror",e=>errors.push(e.message));
     for(const [index,slug] of posts.entries()){
-      const response=await page.goto(base+"/blog/preparations/"+slug+".html");assert.equal(response.status(),200);
+      const response=await page.goto(base+articleSource(slug).url);assert.equal(response.status(),200);
       await page.waitForFunction(()=>window.MathJax?.isReady,{}, {timeout:45000});await page.evaluate(()=>new Promise(resolve=>MathJax.Hub.Queue(resolve)));
       assert.ok(await page.evaluate(()=>MathJax.Hub.getAllJax().length)>20);assert.equal(await page.locator(".MathJax_Error,.merror").count(),0);
       assert.ok(await page.locator("details.blog-proof").evaluateAll(nodes=>nodes.every(n=>!n.open)));
       await page.evaluate(()=>document.querySelectorAll("details.blog-proof").forEach(n=>n.open=true));await page.evaluate(()=>new Promise(resolve=>MathJax.Hub.Queue(resolve)));
       const frameEl=page.locator("iframe.idea-experiment");await frameEl.scrollIntoViewIfNeeded();await page.waitForFunction(()=>document.querySelector("iframe.idea-experiment").dataset.ready==="true");
       const frame=await(await frameEl.elementHandle()).contentFrame();await frame.waitForSelector("#metrics");
-      if(index===0){assert.equal(await frame.locator("#play").getAttribute("aria-pressed"),"false");assert.equal(await frame.locator("#time").inputValue(),"0");}
+      if(index<=1){assert.equal(await frame.locator("#play").getAttribute("aria-pressed"),"false");assert.equal(await frame.locator("#time").inputValue(),"0");}
       const sliders=frame.locator("input[type=range]");
       for(let i=0;i<await sliders.count();i++)for(const endpoint of ["min","max"]){await sliders.nth(i).evaluate((el,endpoint)=>{el.value=el[endpoint];el.dispatchEvent(new Event("input",{bubbles:true}));},endpoint);assert.ok(!/NaN|Infinity|undefined/.test(await frame.locator("#metrics").innerText()));}
-      if(index===0){await frame.getByRole("button",{name:"Reset time"}).click();await frame.getByRole("button",{name:"Play",exact:true}).click();await page.waitForTimeout(250);assert.ok(+(await frame.locator("#time").inputValue())>0);await frame.getByRole("button",{name:"Pause",exact:true}).click();}
+      if(index<=1){await frame.getByRole("button",{name:"Reset time"}).click();await frame.getByRole("button",{name:"Play",exact:true}).click();await page.waitForTimeout(250);assert.ok(+(await frame.locator("#time").inputValue())>0);await frame.getByRole("button",{name:"Pause",exact:true}).click();}
+      if(index===1){const s=await frame.evaluate(()=>LowRankConditioningApp.getState());assert.equal(s.paths.length,3);for(const p of s.paths){close(p.current.a*p.current.b,p.current.z);close(p.current.a*p.current.a-p.current.b*p.current.b,p.lambda);close(p.current.kappa,(p.current.sigmaMax/p.current.sigmaMin)**2);}assert.equal(await frame.locator("canvas").count(),3);}
       if(index===2)for(const mode of ["soft","hard","mixed"]){await frame.locator("#direction").selectOption(mode);assert.ok(!/NaN|Infinity|undefined/.test(await frame.locator("#metrics").innerText()));}
       for(const width of [1200,375,320]){await page.setViewportSize({width,height:1000});await page.waitForTimeout(150);assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),slug+" page overflow "+width);assert.ok(await frame.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),slug+" frame overflow "+width);const dims=await frameEl.evaluate(el=>({height:el.clientHeight,content:el.contentDocument.documentElement.scrollHeight}));assert.ok(dims.height>=dims.content-2,slug+" iframe clipping");}
       if(process.env.BLOG_SCREENSHOT_DIR)await frameEl.screenshot({path:path.join(process.env.BLOG_SCREENSHOT_DIR,slug+"-mobile.png")});

@@ -9,7 +9,7 @@
   function size() { if (parent !== window) parent.postMessage({type:"ot-experiment-size",topic,height:Math.ceil(root.getBoundingClientRect().height)}, location.protocol === "file:" ? "*" : location.origin); }
   window.addEventListener("message", e => { if (e.source === parent && e.data && e.data.type === "ot-experiment-measure") size(); });
   function axes(id, xmin, xmax, ymin, ymax, xlabel, ylabel, options = {}) {
-    const canvas = $(id), rect = canvas.getBoundingClientRect(), width = Math.max(250,rect.width), height = width / (innerWidth <= 650 ? 1.2 : 1.25), ratio = Math.min(2,devicePixelRatio || 1);
+    const canvas = $(id), rect = canvas.getBoundingClientRect(), width = Math.max(250,rect.width), height = width / (options.aspect || (innerWidth <= 650 ? 1.2 : 1.25)), ratio = Math.min(2,devicePixelRatio || 1);
     canvas.width = Math.round(width * ratio); canvas.height = Math.round(height * ratio);
     const c = canvas.getContext("2d"); c.scale(ratio,ratio); c.clearRect(0,0,width,height);
     const right=14,bottom=47;let left=52,top=20,w=width-left-right,h=height-top-bottom;
@@ -54,21 +54,40 @@
     $("reset").addEventListener("click",()=>{stop();$("time").value=0;render();});
     for(const id of ["product","imbalance","time"])$(id).addEventListener("input",()=>{stop();render();});
   } else if(topic === "lowrank") {
-    root.innerHTML='<h2>Conditioning of rescaled rank-two factorizations</h2><p class="intro">Y = diag(4, 1, 0) stays fixed. Change the scale of Aₛ and its inverse scale in Bₛ; compare local GD with the balanced reference.</p><div class="controls"><label for="scale">Factor scale s (logarithmic)<input id="scale" type="range" min="-2" max="2" step="0.05" value="1"><output id="scale-value" for="scale"></output></label><label for="iterations">Iteration horizon<input id="iterations" type="range" min="200" max="5000" step="100" value="1800"><output id="iterations-value" for="iterations"></output></label></div><div class="panels">'+panel("condition","Exact positive Hessian condition number","Condition number versus factor scaling, with the selected scale marked")+panel("loss","Actual local training and its linearization","Normalized loss of gradient descent near balanced and rescaled minimizers")+'</div>'+legend([["selected scale",colors[0]],["balanced s = 1",colors[1]],["Hessian linearization",gray,true]])+'<div class="metrics" id="metrics" aria-live="polite"></div><p class="footnote">Solid curves: actual simultaneous factor GD. Dashed: the quadratic Hessian model, not fitted data. Each run starts with the same factor-space perturbation norm δ = 0.001, split between A₃₂ and B₂₃, and uses its own step η = 0.8/Lₛ. Losses are divided by their own initial loss. The graph stops at 10⁻¹² for readability; this is a local experiment, not a global convergence comparison.</p>';
-    let cache=new Map();
+    root.innerHTML='<h2>Factor trajectories and conditioning</h2><p class="intro">Train (ab − 1)² from the same initial product, with three values of the conserved imbalance λ = a² − b². The colors identify the same run in every plot.</p><div class="controls"><label for="product">Initial product z₀<input id="product" type="range" min="0.02" max="0.8" step="0.01" value="0.08"><output id="product-value" for="product"></output></label><label for="imbalance">Largest imbalance λ<input id="imbalance" type="range" min="0.2" max="4" step="0.1" value="3"><output id="imbalance-value" for="imbalance"></output></label><div class="wide"><label for="time">Time<input id="time" type="range" min="0" max="3" step="0.01" value="0"><output id="time-value" for="time"></output></label><div class="playback"><button id="play" type="button" aria-pressed="false">Play</button><button id="reset" type="button">Reset time</button></div></div></div><div class="panels" id="lowrank-plots">'+panel("factors","Gradient flow in the (a, b) plane","Three positive-factor trajectories and the dashed minimizer hyperbola ab equals one")+'<div><section class="panel"><h3>Gauss–Newton condition number κ₊</h3><canvas id="condition" style="aspect-ratio:2.25" role="img" aria-label="Positive Gauss Newton condition number during the same three training runs, on a logarithmic vertical scale"></canvas></section><section class="panel" style="margin-top:16px"><h3>Extreme positive singular values of J</h3><canvas id="singulars" style="aspect-ratio:2.25" role="img" aria-label="Largest and smallest positive singular values of the ambient matrix product Jacobian during training"></canvas></section></div></div><div id="legend"></div><div class="metrics" id="metrics" aria-live="polite"></div><p class="footnote">Dashed black curve: ab = 1. On the singular-value plot, solid lines are σmax(J), dashed lines are σmin⁺(J). The scalar trajectories are embedded in the rank-one 2 × 2 problem A = (a, 0)ᵀ, B = (b, 0), Y = diag(1, 0). Conditioning refers to its ambient Gauss–Newton matrix 2J*J, not the Hessian of a scalar model. It equals the true Hessian at exact fit. Before convergence the true Hessian can be indefinite. Only the positive-factor branch is shown; exchanging a and b reflects the paths.</p>';
+    const horizon=3,samples=1200,target=1;
+    let paths=[],key="";
     render=()=>{
-      const log=+$("scale").value,s=2**log,n=+$("iterations").value,c=G.lowRankCondition(s);
-      const get=q=>{const key=q+":"+n;if(!cache.has(key)){cache.set(key,G.lowRankTrajectory(q,n));if(cache.size>8)cache.delete(cache.keys().next().value);}return cache.get(key);};
-      const selected=get(s),balanced=get(1);
-      $("scale-value").textContent="s = "+fmt(s);$("iterations-value").textContent=n;
-      const a=axes("condition",-2,2,.8,3.2,"log₂ scale s","κ₊ (log scale)",{xticks:[-2,-1,0,1,2],yticks:[1,2,3],yformat:x=>fmt(10**x)});
-      a.line(Array.from({length:201},(_,j)=>{const x=-2+4*j/200;return [x,Math.log10(G.lowRankCondition(2**x).kappa)];}),colors[0]);a.line([[-2,Math.log10(8)],[2,Math.log10(8)]],colors[1],[4,4],1);a.point(log,Math.log10(c.kappa),colors[0]);
-      const b=axes("loss",0,n,-12,0,"GD iteration k","loss / initial loss",{yticks:[0,-3,-6,-9,-12],yformat:y=>y===0?"1":"10^"+y});
-      [selected,balanced].forEach((tr,i)=>{b.line(tr.result.map(p=>[p.k,Math.log10(Math.max(1e-12,p.relative))]),colors[i]);b.line(tr.result.map(p=>[p.k,Math.log10(Math.max(1e-12,p.linearized))]),colors[i],[5,5],1);});
-      $("metrics").textContent="Selected: κ₊ = "+fmt(c.kappa)+", L = "+fmt(c.L)+", μ₊ = "+fmt(c.mu)+", η = "+fmt(selected.eta)+". At k = "+n+", relative loss = "+fmt(selected.result[n].relative)+". Balanced: κ₊ = 8, relative loss = "+fmt(balanced.result[n].relative)+".";
+      const z0=+$("product").value,L=+$("imbalance").value,t=+$("time").value,newKey=[z0,L].join();
+      if(key!==newKey){paths=[0,L/2,L].map(lambda=>G.rankOneTrainingTrajectory(z0,lambda,target,horizon,samples));key=newKey;}
+      const step=Math.min(samples,Math.round(t*samples/horizon));
+      $("product-value").textContent=fmt(z0);$("imbalance-value").textContent=fmt(L);$("time-value").textContent=t.toFixed(2);
+      const max=Math.ceil((G.scalarFactors(target,L).a+.15)*2)/2;
+      const factorTicks=Array.from({length:Math.round(max*2)+1},(_,i)=>i/2);
+      const a=axes("factors",0,max,0,max,"a","b",{equal:true,xticks:factorTicks,yticks:factorTicks});
+      a.line(Array.from({length:501},(_,j)=>{const x=max*j/500;return [x,x>0?target/x:NaN];}),"#35464b",[6,5],1.5);
+      const kmax=Math.max(...paths.map(p=>p[0].kappa))*1.08;
+      const kymin=Math.log10(1.65),kymax=Math.log10(Math.max(3,kmax));
+      const kticks=[2,10,100,1000,10000,100000].filter(v=>v<=kmax*1.001).map(Math.log10);
+      const b=axes("condition",0,horizon,kymin,kymax,"time t","κ₊ (log scale)",{aspect:2.25,xticks:[0,1,2,3],yticks:kticks,yformat:y=>fmt(10**y)});
+      const smax=Math.ceil(Math.max(...paths.map(p=>p.at(-1).sigmaMax))*1.08*2)/2;
+      const c=axes("singulars",0,horizon,0,smax,"time t","singular value",{aspect:2.25,xticks:[0,1,2,3],yticks:[0,smax/2,smax]});
+      paths.forEach((p,i)=>{
+        a.line(p.map(v=>[v.a,v.b]),colors[i]+"55",[],1.5);a.line(p.slice(0,step+1).map(v=>[v.a,v.b]),colors[i],[],3);
+        a.point(p[0].a,p[0].b,colors[i]);a.point(p[step].a,p[step].b,colors[i]);
+        b.line(p.map(v=>[v.t,Math.log10(v.kappa)]),colors[i]);b.point(t,Math.log10(p[step].kappa),colors[i]);
+        c.line(p.map(v=>[v.t,v.sigmaMax]),colors[i]);c.line(p.map(v=>[v.t,v.sigmaMin]),colors[i],[5,4],1.7);
+        c.point(t,p[step].sigmaMax,colors[i]);c.point(t,p[step].sigmaMin,colors[i]);
+      });
+      b.line([[t,kymin],[t,kymax]],"#a6b9bc",[2,4],1);c.line([[t,0],[t,smax]],"#a6b9bc",[2,4],1);
+      $("legend").innerHTML=legend(paths.map((p,i)=>["λ = "+fmt(p[0].lambda)+(i===0?" (balanced)":""),colors[i]]));
+      $("metrics").textContent="At t = "+t.toFixed(2)+": "+paths.map(p=>"λ = "+fmt(p[0].lambda)+": ab = "+fmt(p[step].z)+", κ₊ = "+fmt(p[step].kappa)).join("; ")+".";
+      window.LowRankConditioningApp={getState:()=>({target,z0,largestImbalance:L,time:t,playing:running,paths:paths.map((p,i)=>({lambda:p[0].lambda,color:colors[i],current:{...p[step]},initial:{...p[0]},final:{...p.at(-1)}}))})};
       size();
     };
-    for(const id of ["scale","iterations"])$(id).addEventListener("input",render);
+    $("play").addEventListener("click",()=>{if(running){stop();return;}if(+$("time").value>=horizon)$("time").value=0;running=true;previous=performance.now();$("play").textContent="Pause";$("play").setAttribute("aria-pressed","true");const tick=now=>{if(!running)return;const dt=Math.min(.08,(now-previous)/1000);previous=now;$("time").value=Math.min(horizon,+$("time").value+dt);render();if(+$("time").value>=horizon)stop();else raf=requestAnimationFrame(tick);};raf=requestAnimationFrame(tick);});
+    $("reset").addEventListener("click",()=>{stop();$("time").value=0;render();});
+    for(const id of ["product","imbalance","time"])$(id).addEventListener("input",()=>{stop();render();});
   } else if(topic === "sign") {
     root.innerHTML='<h2>Sign descent on isospectral quadratic objectives</h2><p class="intro">Dimension d = 20, ε = 0.01. Initial vectors are matched by an orthogonal rotation Q: x₀,spread = Q x₀,axis. Ordinary GD therefore has identical loss in both panels.</p><div class="controls"><label for="direction">Matched initial direction<select id="direction"><option value="mixed">Mixed: soft + hard eigenspaces</option><option value="soft">Soft eigenvector</option><option value="hard">Hard eigenspace</option></select></label><label for="iterations">Iteration horizon<input id="iterations" type="range" min="100" max="2500" step="100" value="1200"><output id="iterations-value" for="iterations"></output></label></div><div class="panels">'+panel("axis","Soft direction aligned with a coordinate","Ordinary and scaled sign gradient descent on the axis-aligned quadratic")+panel("spread","Soft direction spread over coordinates","Ordinary and scaled sign gradient descent on the rotated quadratic")+'</div>'+legend([["ordinary GD",gray],["scaled sign-GD",colors[0]],["theorem bound (matching color)",gray,true]])+'<div class="metrics"><table><caption class="sr-only">Exact geometry-dependent constants</caption><thead><tr><th>Geometry</th><th>L∞</th><th>μ∞</th><th>κ∞</th></tr></thead><tbody><tr><th>Axis</th><td>19.01</td><td>0.01</td><td>1901</td></tr><tr><th>Spread</th><td>20</td><td>20/119</td><td>119</td></tr></tbody></table><p id="metrics" aria-live="polite"></p></div><p class="footnote">Solid lines are recomputed iterates, not exponential fits. Every method uses η = 1/L in its own geometry. Dashed curves are the rigorous bound (1 − μ/L)ᵏ, not predicted equalities. Values below 10⁻¹² are clipped. Changing the initial direction can reverse individual-trajectory comparisons; a worst-case condition number does not order every run. The update is −η‖g‖₁ sign(g), not unscaled sign descent.</p>';
     render=()=>{

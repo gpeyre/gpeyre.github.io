@@ -76,6 +76,26 @@
     }
     return {result, initialLoss, delta, L, mu, kappa, eta};
   }
+  // The scalar flow lives in the invariant rank-one matrix slice
+  // A=(a,0)^T, B=(b,0), Y=diag(target,0). The nonzero singular values
+  // of the AMBIENT product Jacobian are |a|, |b|, hypot(a,b).
+  // A literal scalar product has only one nonzero singular value instead.
+  function rankOneSpectrum(a, b) {
+    if (!Number.isFinite(a) || !Number.isFinite(b) || a === 0 || b === 0)
+      throw new RangeError("nonzero finite factors required");
+    const small = Math.min(Math.abs(a), Math.abs(b));
+    const large = Math.hypot(a, b);
+    return {singularValues: [Math.abs(a), Math.abs(b), large].sort((x,y)=>x-y),
+      sigmaMin: small, sigmaMax: large,
+      gaussNewtonEigenvalues: [2*a*a, 2*b*b, 2*(a*a+b*b)].sort((x,y)=>x-y),
+      kappa: (large / small) ** 2};
+  }
+  function rankOneTrainingTrajectory(z0, lambda, target = 1, horizon = 3, samples = 1200) {
+    // scalarTrajectory uses half-squared loss. Running it for twice as long
+    // gives the factor flow for (ab-target)^2, with the displayed clock t.
+    return scalarTrajectory(z0, lambda, target, 2*horizon, samples).map(p =>
+      ({...p, t: p.t/2, loss: (p.z-target)**2, ...rankOneSpectrum(p.a,p.b)}));
+  }
   function pairConstants(d = 20, epsilon = .01, spread = false) {
     if (!Number.isInteger(d) || d < 2 || d % 2 || !Number.isFinite(epsilon) || epsilon <= 0 || epsilon >= 1) throw new RangeError("even dimension and epsilon in (0,1) required");
     const L2 = 1, mu2 = epsilon;
@@ -118,5 +138,6 @@
     return {result, x, initialLoss, eta, L, mu, ...constants};
   }
   return {scalarFactors, scalarVelocity, scalarTrajectory, lowRankCondition, lowRankFactors, lowRankLossGradient, lowRankTrajectory,
+    rankOneSpectrum, rankOneTrainingTrajectory,
     pairConstants, rotateToSpread, pairGradient, initialDirection, signTrajectory, norm, dot};
 });

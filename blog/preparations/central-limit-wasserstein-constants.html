@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,follow">
-<meta name="keywords" content="central limit theorem, CLT, Wasserstein-1 distance, W1, Gaussian approximation, sharp asymptotic constants, Bernoulli sums, symmetric lattice distributions, continuous uniform distribution, Irwin–Hall distribution, Edgeworth expansion, continuity correction, sawtooth error, lattice span, fourth cumulant, kurtosis, skewness, Hermite polynomials, Cramér condition, characteristic functions, cumulative distribution functions, CDF error, integrated remainder, tail estimates, Valentin Petrov, Rabi Bhattacharya, Ranga Rao, Gabriel Peyré, théorème central limite, approximation gaussienne, lois sur réseau, développement d'Edgeworth, vitesse de convergence">
-<meta name="description" content="Bernoulli and continuous uniform sums have different sharp Wasserstein-1 central-limit rates. Exact constants, lattice corrections, and interactive CDF error plots.">
-<title>Two symmetric central limit theorems, two rates — Alpha preview — Gabriel Peyré</title>
+<meta name="keywords" content="central limit theorem, CLT, Wasserstein-1 distance, W1, Gaussian approximation, sharp asymptotic constants, Bernoulli sums, symmetric lattice distributions, continuous uniform distribution, Irwin–Hall distribution, Edgeworth expansion, continuity correction, sawtooth error, lattice span, fourth cumulant, kurtosis, skewness, Hermite polynomials, Cramér condition, characteristic functions, cumulative distribution functions, CDF error, integrated remainder, tail estimates, Berry–Esseen theorem, Andrew Campbell Berry, Carl-Gustav Esseen, Kolmogorov distance, quantitative central limit theorem, Valentin Petrov, Rabi Bhattacharya, Ranga Rao, Gabriel Peyré, théorème central limite, approximation gaussienne, lois sur réseau, développement d'Edgeworth, vitesse de convergence">
+<meta name="description" content="Why quantitative central limit theorems matter, and why symmetric Bernoulli and continuous uniform sums have different Wasserstein-1 convergence rates. Exact constants, lattice corrections, and interactive CDF error plots.">
+<title>Different convergence rates in the central limit theorem — Alpha preview — Gabriel Peyré</title>
 <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/central-limit-wasserstein-constants.html">
 <link rel="stylesheet" href="assets/drafts.css">
 <script defer src="assets/drafts.js"></script>
@@ -32,12 +32,15 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <a class="draft-back" href="index.html">← Forthcoming posts</a>
 <p class="draft-status">Alpha preview · Work in progress</p>
 <p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p>
-<h1>Two symmetric central limit theorems, two rates</h1>
+<h1>Different convergence rates in the central limit theorem</h1>
 <p class="subtitle">Why Bernoulli and uniform sums approach a Gaussian at different Wasserstein rates.</p>
 <p class="byline">Gabriel Peyré</p>
 </div></header>
 <main class="wrap"><article class="blog-prose">
-<p>The central limit theorem describes the Gaussian limit of normalized sums of independent random variables. The rate of convergence depends on the distribution: two symmetric, bounded, unit-variance distributions can approach the Gaussian at different powers of the sample size.</p>
+<p>The central limit theorem justifies replacing a normalized sum of independent random variables by a Gaussian. This approximation underlies much of statistics, from estimating measurement errors to calculating threshold probabilities. But a limiting theorem alone does not tell us how many observations are needed for the approximation to be accurate.</p>
+<p>Andrew C. Berry in 1941 and Carl-Gustav Esseen in 1942 independently gave quantitative bounds <a href="#ref-berry">[5]</a>, <a href="#ref-esseen">[6]</a>. For centered, unit-variance independent copies of a variable with finite third absolute moment, the Berry–Esseen theorem bounds the largest CDF error by a universal constant times that moment divided by \(\sqrt n\). Such an estimate controls the error in using Gaussian probabilities at any threshold. It is an upper bound, and particular distributions can converge faster.</p>
+<p>Here we study this question in the Wasserstein distance \(W_1\), which integrates the absolute CDF error rather than taking its maximum. We compute the leading error for two simple distributions. Even though both are symmetric and bounded, they converge at different powers of the sample size. These sharper Wasserstein asymptotics are distinct from the original Berry–Esseen estimates.</p>
+<figure class="portrait-pair"><div class="portrait-pair-images"><div><img src="../imgs/andrew-campbell-berry.jpg" width="147" height="184" alt="Andrew Campbell Berry, smiling and wearing glasses" loading="lazy"><p>Andrew C. Berry</p></div><div><img src="../imgs/carl-gustav-esseen.jpg" width="395" height="441" alt="Carl-Gustav Esseen seated by a window, wearing glasses and a cardigan" loading="lazy"><p>Carl-Gustav Esseen</p></div></div><figcaption>Their independent quantitative analyses provide the historical starting point for our comparison. Berry's portrait is reproduced in <a href="https://pdyszewski.github.io/rpr1/tempo-zbie%C5%BCno%C5%9Bci-w-ctg.html">Dariusz Buraczewski and Piotr Dyszewski's probability lecture notes at the University of Wrocław</a>. Esseen's photograph comes from <a href="https://bernoullisociety.org/oldnews/02a/bn_3.html">Allan Gut and Lars Holst's obituary in <em>Bernoulli News</em>, May 2002</a>.</figcaption></figure>
 <p>Compare a fair coin taking values \(\pm1\) with a continuous uniform variable on \([-\sqrt3,\sqrt3]\). Both have mean zero, variance one, and zero skewness. Yet their normalized sums satisfy</p>
 \[
  \begin{aligned}
@@ -176,6 +179,8 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <li id="ref-computational">Gabriel Peyré and Marco Cuturi. <a href="https://arxiv.org/abs/1803.00567"><em>Computational Optimal Transport</em></a>. Foundations and Trends in Machine Learning 11(5–6), 355–607, 2019.</li>
 <li id="ref-petrov">Valentin V. Petrov. <a href="https://doi.org/10.1007/978-3-642-65809-9"><em>Sums of Independent Random Variables</em></a>. Springer, 1975. Chapters VI–VII.</li>
 <li id="ref-br">Rabi N. Bhattacharya and R. Ranga Rao. <a href="https://doi.org/10.1137/1.9780898719895"><em>Normal Approximation and Asymptotic Expansions</em></a>. SIAM, 2010; original edition 1976. Chapters 4–5.</li>
+<li id="ref-berry">Andrew C. Berry. <a href="https://doi.org/10.1090/S0002-9947-1941-0003498-3"><em>The accuracy of the Gaussian approximation to the sum of independent variates</em></a>. Transactions of the American Mathematical Society 49(1), 122–136, 1941.</li>
+<li id="ref-esseen">Carl-Gustav Esseen. <a href="https://jugander.github.io/rare/Esseen1942_OnTheLiapounoffLimitOfError.pdf"><em>On the Liapounoff limit of error in the theory of probability</em></a>. Arkiv för Matematik, Astronomi och Fysik 28A(9), 1–19, 1942.</li>
 </ol>
 </article>
 <p class="blog-ai-disclosure">How these posts and numerical experiments were prepared: <a href="../ai-disclosure/">AI disclosure</a>.</p>

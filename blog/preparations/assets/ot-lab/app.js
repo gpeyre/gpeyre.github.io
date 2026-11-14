@@ -343,20 +343,28 @@ function moments(){
 
 function caps(){
   setup("5 / Density bounds along Wasserstein geodesics",
-    "Interpolate two increasing quantile functions. Endpoint density peaks saturate their common cap; intermediate densities remain below it without an extra constraint in the solver.",
-    "This is an exact one-dimensional example on a convex Euclidean domain. Q0(r) = r + a sin(2 pi r)/(2 pi), Q1(r) = 0.6 + r - a sin(2 pi r)/(2 pi). The cap is kappa = 1/(1-a). Obstacles or spatially varying caps are different problems.",2);
-  const s=slider("Geodesic time",0,1,.5,.01),amp=slider("Quantile modulation a",0,.8,.5,.01);
-  const p=plot("Density along the geodesic",[-.1,1.7],[0,5.3]),q=plot("Quantile derivatives and cap threshold",[0,1],[0,2]);
-  function redraw(){const t=+s.value,a=+amp.value,cap=1/(1-a),r=Array.from({length:401},(_,i)=>i/400);
-    const Q=(r,t)=>.6*t+r+(1-2*t)*a*Math.sin(2*Math.PI*r)/(2*Math.PI),der=(r,t)=>1+(1-2*t)*a*Math.cos(2*Math.PI*r);
-    let ss="",zz="";for(const [time,col,opacity] of [[0,RED,.4],[1,BLUE,.4],[t,TEAL,1]]){
-      ss+=p.path(r.map(r=>[Q(r,time),1/der(r,time)]),col,1.8,opacity);
-      zz+=q.path(r.map(r=>[r,der(r,time)]),col,1.8,opacity);
+    "Red and blue are two mixtures of two localized Gaussians. Teal is their quadratic Wasserstein interpolation. The dashed line is a common endpoint density cap; the vertical scale follows the density values.",
+    "Each mixture is normalized on the whole real line. Gaussian CDFs are inverted by bisection; the intermediate density is the harmonic interpolation of endpoint densities at matched quantiles. The graph omits at most 2 × 10⁻⁹ of mass, without truncating or renormalizing either law. No density cap is imposed by the computation.",2);
+  const s=slider("Geodesic time",0,1,.5,.01),bandwidth=slider("Gaussian bandwidth σ",.1,.32,.22,.005);
+  let scene=M.gaussianDensityCapScene(+bandwidth.value);
+  function redraw(){const t=+s.value,current=M.gaussianDensityCapGeodesic(scene,t),cap=scene.cap;
+    $("plots").replaceChildren();
+    const p=plot("Densities: red ρ₀ · teal ρₜ · blue ρ₁",[scene.xmin,scene.xmax],[0,1.025*cap]);
+    const q=plot("Quantiles: red Q₀ · teal Qₜ · blue Q₁",[0,1],[scene.xmin,scene.xmax]);
+    p.svg.dataset.yMin="0";p.svg.dataset.yMax=String(1.025*cap);p.svg.dataset.cap=String(cap);
+    let density="",quantiles="";
+    for(const [law,qq,col] of [[scene.source,scene.q0,RED],[scene.target,scene.q1,BLUE]]){
+      density+=p.path(scene.x.map(x=>[x,law.density(x)]),col,1.65,.65);
+      quantiles+=q.path(scene.r.map((r,i)=>[r,qq[i]]),col,1.65,.65);
     }
-    ss+=p.path([[-.1,cap],[1.7,cap]],GRAY,.8);zz+=q.path([[0,1/cap],[1,1/cap]],GRAY,.8);p.draw(ss);q.draw(zz);
-    const peak=1/(1-Math.abs(1-2*t)*a);
-    $("status").textContent=`cap ${fmt(cap,5)} | exact intermediate peak ${fmt(peak,5)} | minimum quantile derivative ${fmt(1-Math.abs(1-2*t)*a,5)} >= ${fmt(1/cap,5)} | total mass 1`;
-  }s.addEventListener("input",redraw);amp.addEventListener("input",redraw);redraw();
+    density+=p.path([[scene.xmin,cap],[scene.xmax,cap]],GRAY,1,1,"5 4");
+    density+=p.path(current.points,TEAL,2.3);
+    quantiles+=q.path(current.quantiles,TEAL,2.3);p.draw(density);q.draw(quantiles);
+    $("status").textContent=`time ${t.toFixed(2)} | bandwidth ${scene.sigma.toFixed(3)} | sampled intermediate peak ${fmt(current.peak,5)} ≤ certified cap ${fmt(cap,5)} | total mass 1`;
+    window.DensityCapsExperiment={getState:()=>({time:t,bandwidth:scene.sigma,cap,peak:current.peak,yMax:1.025*cap,rankSamples:scene.r.length,omittedTailMass:2*scene.tail})};
+  }
+  s.addEventListener("input",redraw);
+  bandwidth.addEventListener("input",()=>{scene=M.gaussianDensityCapScene(+bandwidth.value);redraw();});redraw();
 }
 
 function independence(){

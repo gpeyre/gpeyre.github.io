@@ -4,7 +4,7 @@ const fs = require("fs"), path = require("path");
 const {stripMetadata,dimensions}=require("./blog-summary-jpeg.cjs");
 const { chromium } = require(process.env.BLOG_PLAYWRIGHT_PATH || "/Users/gpeyre/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright");
 const jobs = [
-  {slug:"balanced-low-rank-conditioning",source:"blog/preparations/assets/optimization-geometry/index.html?topic=lowrank",alt:"Exact Hessian condition number versus factor scale and local gradient-descent losses for balanced and unbalanced factorizations.",settings:{factor_scale:2,iterations:1800}},
+  {slug:"balanced-low-rank-conditioning",source:"blog/preparations/assets/optimization-geometry/index.html?topic=lowrank",alt:"Three colored scalar-factor training trajectories approach the minimizer hyperbola ab equals one; matching curves show the ambient rank-one Gauss–Newton conditioning and extreme positive Jacobian singular values.",settings:{initial_product:.08,largest_imbalance:3,time:1.1,target:1,loss:"(ab − 1)²",conditioning:"ambient rank-one Gauss–Newton matrix"}},
   {slug:"c-transforms-and-averaging",source:"blog/preparations/assets/transport-geometry/c-transform.html",alt:"Averaged cost profiles, their cost transform, and the nonzero gap to the double transform for a cubic cost.",settings:{p:3,grid_points:241,preset:"symmetric"}},
   {slug:"convex-max-softmax-approximation",source:"blog/preparations/convex-max-softmax-approximation.html",alt:"Independently Adam-trained convex max-affine and smooth log-sum-exp approximation surfaces, shown with identical lighting and height scales.",settings:{width:6,temperature:"automatic",optimizer:"Adam, 2000 steps"}},
   {slug:"hump-algebra",source:"blog/preparations/assets/hump-algebra/index.html",alt:"Contour plots of two five-bump Gaussian mixtures and their product, with separate labelled color scales showing the product's narrower overlapping peaks.",settings:{bumps:5,phase:.18,separate_scales:true,grid:181,paused:true}},
@@ -82,7 +82,15 @@ async function capture(page,job,output,base="http://127.0.0.1:4197/") {
       const diagnostic=ProjectionDemo.getDiagnostic();
       if(!diagnostic.solved||diagnostic.violations!==0)throw Error("Sudoku capture did not reach a valid board");
     });
-  } else if(["balanced-low-rank-conditioning","intrinsic-factor-training-dynamics","sign-gradient-descent-geometry"].includes(job.slug)){
+  } else if(job.slug==="balanced-low-rank-conditioning"){
+    await page.waitForFunction(()=>window.LowRankConditioningApp);
+    await range(page,"product",job.settings.initial_product);
+    await range(page,"imbalance",job.settings.largest_imbalance);
+    await range(page,"time",job.settings.time);
+    await frame(page,["#lowrank-plots","#legend"],"#summary-capture #lowrank-plots{grid-template-columns:1fr 1.12fr!important;align-items:start}#summary-capture .legend{display:flex!important;gap:10px 20px;flex-wrap:wrap}#summary-capture .legend span::before{content:'';display:inline-block;background:var(--c);height:3px;width:20px;vertical-align:middle;margin-right:6px}");
+    const state=await page.evaluate(()=>LowRankConditioningApp.getState());
+    if(state.playing||state.paths.length!==3||state.paths.some(p=>!Number.isFinite(p.current.kappa)||Math.abs(p.current.a*p.current.b-p.current.z)>1e-10))throw Error("Invalid scalar-factor conditioning capture state");
+  } else if(["intrinsic-factor-training-dynamics","sign-gradient-descent-geometry"].includes(job.slug)){
     const selectors=[".panels",job.slug==="intrinsic-factor-training-dynamics"?"#legend":".legend"];
     await frame(page,selectors);
     if(job.slug==="intrinsic-factor-training-dynamics")await range(page,"time",1.7);

@@ -43,7 +43,7 @@
  \Sigma_\eta=\eta\sigma^2 I+O(\eta^2).
 \]
 <p>It is isotropic even when the loss has very different curvatures in different directions. The reason is a cancellation: steeper directions both pull more strongly toward the minimizer and receive more stochastic forcing. At the next order, fourth moments of the features break this balance.</p>
-<aside class="note"><p>I thank <a href="https://samuro95.github.io/">Samuel Hurault</a> for bringing this calculation to my attention during our work with <a href="https://tommoral.github.io/">Thomas Moreau</a> on error control for diffusion models.</p></aside>
+<aside class="note"><p>I owe much of my understanding of these covariance calculations to <a href="https://samuro95.github.io/">Samuel Hurault</a>, through our work with <a href="https://tommoral.github.io/">Thomas Moreau</a> on analyzing the training of diffusion models.</p></aside>
 <p>The broader invariant-distribution approach is developed by Aymeric Dieuleveut, Alain Durmus, and Francis Bach <a href="#ref-dieuleveut">[1]</a>, who study constant-step SGD through its invariant Markov-chain distribution. Here, a direct least-squares calculation gives exact moment equations and a short proof of the small-step expansion.</p>
 
 <h2>Least-squares SGD with independent samples</h2>
