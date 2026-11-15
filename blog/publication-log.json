@@ -856,6 +856,32 @@
         "blog/preparations/index.html": "42b71a653c33d484f17b06eff7610586655bb8ca8d3e426696530432aad08065",
         "js/blog-search-index.js": "795d17c3585b7450810bcae73b601fee0474a19410bfd804daaacb2866a74903"
       }
+    },
+    {
+      "slug": "orthostochastic-matrices",
+      "title": "Orthostochastic matrices and optimal transport",
+      "date": "2026-11-15",
+      "url": "https://www.gpeyre.com/blog/2026/11/15/orthostochastic-matrices/",
+      "message": "Squaring an orthogonal matrix entrywise gives a doubly stochastic matrix. Optimizing a linear transport cost this way preserves the optimum, but can introduce suboptimal local minima. https://www.gpeyre.com/blog/2026/11/15/orthostochastic-matrices/",
+      "status": "prepared",
+      "source_sha256": "d3bf2fabc7e9c9deb0f918e0367dc64b3efb7717380b67636951704410310702",
+      "base_commit": "3d79c9d89c93d00d15ddeecf70186be4e8d45618",
+      "files": [
+        "blog/_posts/2026-11-15-orthostochastic-matrices.md",
+        "blog/preparations/orthostochastic-matrices.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null,
+      "working_sha256": {
+        "blog/_posts/2026-11-15-orthostochastic-matrices.md": "8cddf14945c1fda8a0d9a2b1c851b56dce40cbd39968de3067b3269f4a8aa60f",
+        "blog/preparations/orthostochastic-matrices.html": "dbccda5f143df0ef2660f9a2b104faa12b5aaa939c3ba9fd52f79d0b781022f6",
+        "blog/preparations/index.html": "bcbdc97c3d7d099940f2f6d0ace150cc4e5508908c473cb8ac869b1d5c005c26",
+        "js/blog-search-index.js": "36d5f4c80a8caf28105725c63c1d2dc6a425943fde832e8d3bb43c54e1885f3d"
+      }
     }
   ]
 }
