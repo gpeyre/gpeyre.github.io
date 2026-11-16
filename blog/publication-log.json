@@ -891,6 +891,32 @@
         "mime_type": "image/jpeg",
         "size": 41921
       }
+    },
+    {
+      "slug": "wasserstein-polynomials",
+      "title": "Polynomials of probability measures",
+      "date": "2026-11-16",
+      "url": "https://www.gpeyre.com/blog/2026/11/16/wasserstein-polynomials/",
+      "message": "On a compact domain, polynomials of probability measures approximate every continuous functional. The proof is an application of Stone–Weierstrass. https://www.gpeyre.com/blog/2026/11/16/wasserstein-polynomials/",
+      "status": "prepared",
+      "source_sha256": "9891a9d36dd7f31cf4029a8d2ad03a6a4f2df901016c47ef9a8ea0927a17ffb0",
+      "base_commit": "c3efa4d4bda1894a4ec5a9ea0a3e8f33945b9ee4",
+      "files": [
+        "blog/_posts/2026-11-16-wasserstein-polynomials.md",
+        "blog/preparations/wasserstein-polynomials.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null,
+      "working_sha256": {
+        "blog/_posts/2026-11-16-wasserstein-polynomials.md": "319b509367f5f0b2065331f23cb075badc55fb1a15e075babefbb2d99c9d1ba6",
+        "blog/preparations/wasserstein-polynomials.html": "471e812d9267cf74acf141b42529118900258eec2b78e12657dee8d20c6bb227",
+        "blog/preparations/index.html": "952e623496c63ab97195a6451e149513e13f41cbe2245c9c54836d70287889bd",
+        "js/blog-search-index.js": "c0233ecbb19cf7d7e4f3500252d4f58087d1be519190a41e0774120f240f46c2"
+      }
     }
   ]
 }
