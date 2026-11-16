@@ -898,7 +898,7 @@
       "date": "2026-11-16",
       "url": "https://www.gpeyre.com/blog/2026/11/16/wasserstein-polynomials/",
       "message": "On a compact domain, polynomials of probability measures approximate every continuous functional. The proof is an application of Stone–Weierstrass. https://www.gpeyre.com/blog/2026/11/16/wasserstein-polynomials/",
-      "status": "prepared",
+      "status": "announced",
       "source_sha256": "9891a9d36dd7f31cf4029a8d2ad03a6a4f2df901016c47ef9a8ea0927a17ffb0",
       "base_commit": "c3efa4d4bda1894a4ec5a9ea0a3e8f33945b9ee4",
       "files": [
@@ -908,9 +908,15 @@
         "js/blog-search-index.js",
         "blog/publication-log.json"
       ],
-      "publication_commit": null,
-      "bluesky_uri": null,
-      "bluesky_cid": null,
+      "publication_commit": "3cb153e9532371240918100e2226a8f96413a8bb",
+      "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3n2f7us3s22xl",
+      "bluesky_cid": "bafyreiboep4hac4pb2j42gj3o4cbasy64dvlzfrnh7ri2ctpqz55vowc74",
+      "rendering_repair": {
+        "commit": "d48aaf9e23c5e52bd26b978de803215bcc3d20cd",
+        "path": "blog/_posts/2026-11-16-wasserstein-polynomials.md",
+        "sha256": "7a6449bc61ef540b855af0d50bf549cf9632b663d695a342fd44c2a5bc2fed97",
+        "description": "Replace an HTML entity with the equivalent TeX less-than command."
+      },
       "working_sha256": {
         "blog/_posts/2026-11-16-wasserstein-polynomials.md": "319b509367f5f0b2065331f23cb075badc55fb1a15e075babefbb2d99c9d1ba6",
         "blog/preparations/wasserstein-polynomials.html": "471e812d9267cf74acf141b42529118900258eec2b78e12657dee8d20c6bb227",
