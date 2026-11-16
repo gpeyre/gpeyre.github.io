@@ -111,7 +111,7 @@ $$
 <p id="theorem-1"><strong>Theorem 1 (polynomial universality).</strong> For every continuous \(F:\mathcal P(K)\to\mathbb R\) and every \(\varepsilon&gt;0\), there is a moment polynomial \(P\) such that</p>
 
 $$
-\sup_{\mu\in\mathcal P(K)}|F(\mu)-P(\mu)|&lt;\varepsilon.
+\sup_{\mu\in\mathcal P(K)}|F(\mu)-P(\mu)|\lt\varepsilon.
 $$
 
 <p>In particular, Wasserstein polynomials are uniformly dense. This classical argument appears explicitly in Cardaliaguet’s notes on mean field games, §5.3, Proposition 5.9 <a href="#ref-cardaliaguet">[2]</a>.</p>
