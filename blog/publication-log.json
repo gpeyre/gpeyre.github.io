@@ -923,6 +923,32 @@
         "blog/preparations/index.html": "952e623496c63ab97195a6451e149513e13f41cbe2245c9c54836d70287889bd",
         "js/blog-search-index.js": "c0233ecbb19cf7d7e4f3500252d4f58087d1be519190a41e0774120f240f46c2"
       }
+    },
+    {
+      "slug": "wasserstein-geodesics-density-caps",
+      "title": "Why optimal transport respects a density cap",
+      "date": "2026-11-17",
+      "url": "https://www.gpeyre.com/blog/2026/11/17/wasserstein-geodesics-density-caps/",
+      "message": "If two densities share a constant upper bound, so does their quadratic Wasserstein interpolation on a convex Euclidean domain. The proof uses a determinant inequality. https://www.gpeyre.com/blog/2026/11/17/wasserstein-geodesics-density-caps/",
+      "status": "prepared",
+      "source_sha256": "e599be79b6d4a9acf2783a1c8917a68e79cf8cb8238e171efb0c9b48f4719454",
+      "base_commit": "b40582a2a45279bebcff403795ad0197d5d7dde2",
+      "files": [
+        "blog/_posts/2026-11-17-wasserstein-geodesics-density-caps.md",
+        "blog/preparations/wasserstein-geodesics-density-caps.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null,
+      "working_sha256": {
+        "blog/_posts/2026-11-17-wasserstein-geodesics-density-caps.md": "b83daf66330e442c6a37b9c7e51dd9aa1c584990aead1aa377db8c310b6c4e51",
+        "blog/preparations/wasserstein-geodesics-density-caps.html": "b7e88a06483c04f68843a0730ddf92fdaad404f8c54635238cd84d205839763c",
+        "blog/preparations/index.html": "f67b994a3da41fb2361f56ce2f04314f19037daff4a23bfa6e144c1008e2f223",
+        "js/blog-search-index.js": "0cbc474372d28b4c36bf3bed5314037adc60393135ac39378b5790f66d5c4068"
+      }
     }
   ]
 }
