@@ -1,8 +1,8 @@
 # Blog publication and announcement queue
 
-Last reconciled on 14 November 2026; a new unchecked Stein-operator article was added on 17 November. All forthcoming posts are listed below. The first 9 entries retain the explicit approval and order requested below; some have since been published and await the next archive reconciliation. Completed posts are archived in [published.md](published.md), with their publication dates and final article links. `publication-log.json` remains the authoritative retry and deduplication record.
+Last reconciled on 14 November 2026; the Stein-operator article was approved on 17 November and appended to the ready sequence. All forthcoming posts are listed below. The first 10 entries are approved in the order below; some have since been published and await the next archive reconciliation. Completed posts are archived in [published.md](published.md), with their publication dates and final article links. `publication-log.json` remains the authoritative retry and deduplication record.
 
-Explicit publication order approved on 14 November 2026 for the next daily publications:
+Explicit publication order approved on 14 November 2026, with the Stein article appended on 17 November:
 
 1. [Orthostochastic matrices and optimal transport](https://www.gpeyre.com/blog/preparations/orthostochastic-matrices.html)
 2. [Polynomials of probability measures](https://www.gpeyre.com/blog/preparations/wasserstein-polynomials.html)
@@ -13,6 +13,7 @@ Explicit publication order approved on 14 November 2026 for the next daily publi
 7. [Optimal conditioning of low-rank adaptation](https://www.gpeyre.com/blog/preparations/balanced-low-rank-conditioning.html)
 8. [When the best low-rank tensor approximation does not exist](https://www.gpeyre.com/blog/preparations/tensor-rank-without-best-approximation.html)
 9. [Universality and invariance](https://www.gpeyre.com/blog/preparations/universality-and-invariance.html)
+10. [Stein operators and probability discrepancies](https://www.gpeyre.com/blog/preparations/stein-operators-discrepancies.html)
 
 The previous approved sequence is complete. This new sequence begins with the next daily publication, on 15 November. The author's explicit order takes precedence over topic alternation; the other entries remain unchecked and alternate optimal transport and other topics where possible. The local `announcement-queue.html` is the editorial view of this list, not an article to publish.
 
@@ -96,7 +97,15 @@ Topic: Other topics
 
 > Expressive sum-message-passing GNNs distinguish the 1-WL classes. On compact sets of bounded-size graphs, a final MLP gives approximation of continuous functions constant on those classes. https://www.gpeyre.com/blog/preparations/universality-and-invariance.html
 
-## 10. Sinkhorn on Gaussians: an exact convergence rate
+## 10. Stein operators and probability discrepancies
+
+Topic: Other topics
+
+- [x] Ready to publish
+
+> Gaussian integration by parts characterizes the normal law. Taking the largest failure of a Stein identity over a unit ball relates Fisher information to sample-based discrepancies. https://www.gpeyre.com/blog/preparations/stein-operators-discrepancies.html
+
+## 11. Sinkhorn on Gaussians: an exact convergence rate
 
 Topic: OT / Wasserstein geometry
 
@@ -104,7 +113,7 @@ Topic: OT / Wasserstein geometry
 
 > For centered 1D Gaussians, Sinkhorn reduces to a scalar recursion. We can compute its convergence rate exactly and see how it depends on regularization. https://www.gpeyre.com/blog/preparations/gaussian-sinkhorn-convergence.html
 
-## 11. Bernstein polynomials on probability measures
+## 12. Bernstein polynomials on probability measures
 
 Topic: Other topics
 
@@ -112,7 +121,7 @@ Topic: Other topics
 
 > Bernstein's averaging construction also applies to continuous functions of probability measures. On a compact space it gives uniform approximation, with an error controlled by sampling. https://www.gpeyre.com/blog/preparations/bernstein-polynomials-on-measures.html
 
-## 12. Wasserstein distance without quantiles
+## 13. Wasserstein distance without quantiles
 
 Topic: OT / Wasserstein geometry
 
@@ -120,7 +129,7 @@ Topic: OT / Wasserstein geometry
 
 > In 1D, quadratic Wasserstein distance can be computed directly from CDFs, without inverting them. A triangle-area argument gives the formula. https://www.gpeyre.com/blog/preparations/wasserstein-distance-without-quantiles.html
 
-## 13. Conditioning of Non-Euclidean Gradient Descent
+## 14. Conditioning of Non-Euclidean Gradient Descent
 
 Topic: Other topics
 
@@ -128,7 +137,7 @@ Topic: Other topics
 
 > Euclidean gradient descent is rotation invariant; scaled sign descent is not. The relevant condition number depends on the norm used for descent. https://www.gpeyre.com/blog/preparations/sign-gradient-descent-geometry.html
 
-## 14. Different convergence rates in the central limit theorem
+## 15. Different convergence rates in the central limit theorem
 
 Topic: OT / Wasserstein geometry
 
@@ -136,7 +145,7 @@ Topic: OT / Wasserstein geometry
 
 > Coin flips and continuous uniform variables are both symmetric, but their normalized sums converge at different W1 rates: 1/√n and 1/n. The lattice explains the difference. https://www.gpeyre.com/blog/preparations/central-limit-wasserstein-constants.html
 
-## 15. Universal approximation from one nonlinearity
+## 16. Universal approximation from one nonlinearity
 
 Topic: Other topics
 
@@ -144,7 +153,7 @@ Topic: Other topics
 
 > On a compact space, a separating real linear family containing constants is dense if its closure is stable under one fixed continuous non-affine operation. https://www.gpeyre.com/blog/preparations/universality-from-one-nonlinearity.html
 
-## 16. Spectral Wasserstein distances
+## 17. Spectral Wasserstein distances
 
 Topic: OT / Wasserstein geometry
 
@@ -152,7 +161,7 @@ Topic: OT / Wasserstein geometry
 
 > Spectral Wasserstein distances account for the directions of transport displacements. I explain their robust-cost and dynamic formulations, with a point-cloud experiment. https://www.gpeyre.com/blog/preparations/spectral-wasserstein-distances.html
 
-## 17. Doubly nonnegative and completely positive matrices
+## 18. Doubly nonnegative and completely positive matrices
 
 Topic: Other topics
 
@@ -160,18 +169,10 @@ Topic: Other topics
 
 > A positive semidefinite matrix with nonnegative entries need not have nonnegative Gram factors. A five-cycle gives a counterexample; Gaussian kernels do admit such features. https://www.gpeyre.com/blog/preparations/doubly-nonnegative-completely-positive.html
 
-## 18. c-transform as a generalized Legendre transform
+## 19. c-transform as a generalized Legendre transform
 
 Topic: OT / Wasserstein geometry
 
 - [ ] Ready to publish
 
 > Averages of transport potentials stay in the class for metric costs and quadratic Euclidean costs. Other power costs can fail, as a one-dimensional counterexample shows. https://www.gpeyre.com/blog/preparations/c-transforms-and-averaging.html
-
-## 19. Stein operators and probability discrepancies
-
-Topic: Other topics
-
-- [ ] Ready to publish
-
-> Gaussian integration by parts characterizes the normal law. Taking the largest failure of a Stein identity over a unit ball relates Fisher information to sample-based discrepancies. https://www.gpeyre.com/blog/preparations/stein-operators-discrepancies.html
