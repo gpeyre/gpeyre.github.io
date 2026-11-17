@@ -51,6 +51,8 @@ async function main() {
     assert.equal(await page.locator("h1").textContent(), title);
     assert.equal(await page.locator('link[rel="canonical"]').getAttribute("href"), "https://www.gpeyre.com" + article.url);
     if (!article.published) assert.equal(await page.locator('meta[name="robots"]').getAttribute("content"), "noindex,follow");
+    assert.equal(await page.locator("#flat-distance").textContent(), "Bounded-Lipschitz tests and unbalanced transport");
+    assert.match(await page.locator("#theorem-3").textContent(), /flat-distance bound/);
     assert.ok(await page.evaluate(() => {
       const identity = document.getElementById("gaussian-identity"), experiment = document.getElementById("experiment"), theorem = document.getElementById("gaussian-characterization");
       return !!(identity.compareDocumentPosition(experiment) & Node.DOCUMENT_POSITION_FOLLOWING) && !!(experiment.compareDocumentPosition(theorem) & Node.DOCUMENT_POSITION_FOLLOWING);
@@ -93,7 +95,7 @@ async function main() {
         };
       });
       assert.deepEqual(report.errors, []); assert.equal(report.fallbacks, 0);
-      assert.ok(report.expressions > 100); assert.equal(report.proofs, 5); assert.equal(report.references, 7);
+      assert.ok(report.expressions > 200); assert.equal(report.proofs, 6); assert.equal(report.references, 9);
       assert.ok(report.scroll <= width + 1, JSON.stringify(report));
       assert.ok(report.childScroll <= report.childWidth + 1, JSON.stringify(report));
       assert.ok(report.iframeHeight >= report.contentHeight - 1, JSON.stringify(report));
@@ -121,6 +123,9 @@ async function main() {
       report.histogramZeroCentered = true; report.functionSketches = histogram.bars.length;
       layouts.push(report);
       await iframe.screenshot({ path: `/private/tmp/stein-revised-${live ? "live-" : ""}${width}.png` });
+      await page.locator("#theorem-3").evaluate(node => node.scrollIntoView({ block: "start", behavior: "instant" }));
+      await page.waitForFunction(() => Math.abs(document.getElementById("theorem-3").getBoundingClientRect().top) < 2);
+      await page.screenshot({ path: `/private/tmp/stein-flat-bound-${live ? "live-" : ""}${width}.png` });
     }
     async function stateAt(theta, position) {
       await frame.evaluate(({ theta, position }) => {

@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,follow">
-<meta name="description" content="Gaussian integration by parts characterizes the normal law. Its divergence-form extension gives Langevin Stein operators, relative Fisher information, and kernel Stein discrepancies, with an interactive Gaussian-mixture example.">
-<meta name="keywords" content="Stein operator, Stein identity, Stein characterization, Charles Stein, Gaussian integration by parts, normal distribution, Gaussian mixture, score function, logarithmic derivative, divergence form, Langevin Stein operator, Langevin diffusion, Ornstein Uhlenbeck, diffusion generator, Fokker Planck equation, Stein discrepancy, relative Fisher information, Fisher divergence, score matching, Hyvarinen, kernel Stein discrepancy, KSD, reproducing kernel Hilbert space, RKHS, goodness of fit, normalizing constant, Stein equation, probability metric, Kullback Leibler divergence, entropy dissipation, Wasserstein gradient flow, compactly supported test function, Gaussian moments, operateur de Stein">
+<meta name="description" content="Stein identities characterize probability distributions. Their residuals control flat and Wasserstein distances; other test spaces give Fisher information and kernel discrepancies, with an interactive Gaussian-mixture example.">
+<meta name="keywords" content="Stein operator, Stein identity, Stein characterization, Charles Stein, Gaussian integration by parts, normal distribution, Gaussian mixture, score function, logarithmic derivative, divergence form, Langevin Stein operator, Langevin diffusion, Ornstein Uhlenbeck, diffusion generator, Fokker Planck equation, Stein discrepancy, relative Fisher information, Fisher divergence, score matching, Hyvarinen, kernel Stein discrepancy, KSD, reproducing kernel Hilbert space, RKHS, goodness of fit, normalizing constant, Stein equation, probability metric, Kullback Leibler divergence, entropy dissipation, Wasserstein gradient flow, compactly supported test function, Gaussian moments, operateur de Stein, flat distance, bounded Lipschitz norm, unbalanced optimal transport, Kantorovich Rubinstein duality, Stein factors">
 <title>Stein operators and probability discrepancies — Alpha preview — Gabriel Peyré</title>
 <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/stein-operators-discrepancies.html">
 <link rel="stylesheet" href="assets/drafts.css"><script defer src="assets/drafts.js"></script><script defer src="assets/idea-experiments.js"></script><script defer src="../../js/site-analytics.js"></script>
@@ -22,7 +22,7 @@
 <header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Stein operators and probability discrepancies</h1><p class="subtitle">Characterizing distributions by integration by parts, and measuring the failure of these identities.</p><p class="byline">Gabriel Peyré</p></div></header>
 <main class="wrap"><article class="blog-prose">
 <p>For a standard Gaussian random variable \(Z\), integration by parts gives \(\mathbb E[f'(Z)]=\mathbb E[Zf(Z)]\). This is more than a formula for computing expectations: if a probability distribution satisfies it for every suitable test function, that distribution must be Gaussian.</p>
-<p>Charles Stein used this characterization to study normal approximation <a href="#ref-stein">[1]</a>. Here we prove the identity and its converse, then extend them to smooth densities in several dimensions. Taking the largest violation over a unit ball of test functions gives a <em>Stein discrepancy</em>. The choice of norm matters: one choice recovers relative Fisher information, while another leads to a discrepancy computable from samples.</p>
+<p>Charles Stein used this characterization to study normal approximation <a href="#ref-stein">[1]</a>. Here we prove the identity and its converse, then extend them to smooth densities in several dimensions. Taking the largest violation over a unit ball of test functions gives a <em>Stein discrepancy</em>. Bounded-Lipschitz tests provide bounds on transport distances. Other choices of norm recover relative Fisher information or give a discrepancy computable from samples.</p>
 <figure class="portrait-single"><img src="../imgs/charles-stein-1982.jpg" width="400" height="283" loading="lazy" decoding="async" alt="Charles Stein in Berkeley in 1982, photographed by George M. Bergman"><figcaption>Charles Stein, Berkeley, 1982. George M. Bergman, Archives of the Mathematisches Forschungsinstitut Oberwolfach. Unmodified photograph, <a href="../imgs/charles-stein-LICENSE.txt">GNU Free Documentation License 1.2</a>. <a href="https://opc.mfo.de/detail?photo_id=6059">Source</a> · <a href="https://commons.wikimedia.org/wiki/Template:George_Bergman_GFDL-1.2">Reuse permission</a>.</figcaption></figure>
 
 <h2 id="gaussian-identity">Gaussian integration by parts</h2>
@@ -164,6 +164,78 @@
 <p>Usually \(\mathcal F\) is a unit ball in a normed function space. The norm prevents a nonzero residual from being made arbitrarily large just by multiplying its test field. If the ball is symmetric, the absolute value can be omitted.</p>
 <p>This quantity vanishes when \(Q=P\). Whether the converse holds depends on the test class: Theorem 2 uses all compactly supported fields, whereas a few polynomial tests miss many distributions. A Stein discrepancy is generally asymmetric, and is not automatically a distance or a divergence separating every pair of probability measures. The operator alone does not specify the discrepancy.</p>
 
+<h3 id="flat-distance">Bounded-Lipschitz tests and unbalanced transport</h3>
+<p>Bounding both a function and its Lipschitz constant defines the <em>flat distance</em>, also called the bounded-Lipschitz distance. For finite positive measures \(\mu,\nu\) on \(\mathbb R\), put</p>
+\[
+ d_{\mathrm{flat}}(\mu,\nu)
+ =\sup_{\substack{\|h\|_\infty\le1\\ \operatorname{Lip}(h)\le1}}
+ \left|\int h\,d(\mu-\nu)\right|.
+\]
+<p>This is a norm of the signed measure \(\mu-\nu\), restricted to a distance between positive measures. Unlike \(W_1\), it allows different total masses. Its unbalanced transport formulation is <a href="#ref-piccoli-rossi">[8]</a></p>
+\[
+ \begin{aligned}
+ d_{\mathrm{flat}}(\mu,\nu)
+ =\inf_{\substack{\pi\ge0\\\pi_1\le\mu,\;\pi_2\le\nu}}
+ \bigg\{&\int_{\mathbb R^2}|x-y|\,d\pi(x,y)\\
+ &+(\mu-\pi_1)(\mathbb R)
+ +(\nu-\pi_2)(\mathbb R)\bigg\}.
+ \end{aligned}
+\]
+<p>Here \(\pi_1,\pi_2\) are the marginals of a nonnegative transport plan. Its transported mass pays the usual distance cost. Unmatched source mass is removed at unit cost, and unmatched target mass is created at unit cost. Transporting one unit farther than distance \(2\) is therefore unnecessary. For instance, \(d_{\mathrm{flat}}(\delta_x,\delta_y)=\min\{|x-y|,2\}\). This is unbalanced transport with total-variation penalties, not the Wasserstein–Fisher–Rao distance.</p>
+<p>We can bound this distance using the Gaussian Stein operator. For a finite positive measure \(\mu\) with \(\int|x|\,d\mu(x)\lt\infty\), define</p>
+\[
+ S_\gamma(\mu)
+ =\sup_{\substack{f\in C^1(\mathbb R)\\
+ \|f\|_\infty\le1,\;\|f'\|_\infty\le1}}
+ \left|\int(f'(x)-xf(x))\,d\mu(x)\right|.
+\]
+<p>The first-moment assumption makes every integral finite. Boundedness of \(f\) removes the Gaussian boundary term, so \(S_\gamma(\gamma)=0\).</p>
+<p id="theorem-3"><strong>Theorem 3 (flat-distance bound).</strong> Under these assumptions,</p>
+\[
+ \boxed{\quad
+ d_{\mathrm{flat}}(\mu,\gamma)
+ \le S_\gamma(\mu)+|\mu(\mathbb R)-1|.
+ \quad}
+\]
+<p>In particular, \(d_{\mathrm{flat}}(Q,\gamma)\le S_\gamma(Q)\) for a probability measure \(Q\) with finite first moment.</p>
+<details class="blog-proof"><summary>Proof using the Gaussian Stein equation</summary><div class="blog-proof-body">
+<p>Take \(h\) with \(\|h\|_\infty\le1\) and \(\operatorname{Lip}(h)\le1\). Write \(\gamma(h)=\int h\,d\gamma\). The solution</p>
+\[
+ f_h(x)=\frac1{\gamma(x)}\int_{-\infty}^x
+ (h(t)-\gamma(h))\gamma(t)\,dt
+\]
+<p>belongs to \(C^1\) and satisfies \(\mathcal T_\gamma f_h=h-\gamma(h)\). The classical Gaussian <em>Stein-factor bounds</em> give <a href="#ref-gaunt">[9]</a></p>
+\[
+ \begin{aligned}
+ \|f_h\|_\infty&\le\operatorname{Lip}(h),\\
+ \|f_h'\|_\infty&\le\sqrt{2/\pi}\,\operatorname{Lip}(h).
+ \end{aligned}
+\]
+<p>Thus \(f_h\) belongs to the class defining \(S_\gamma\). Integrating the equation against \(\mu\) yields</p>
+\[
+ \begin{aligned}
+ \int h\,d(\mu-\gamma)
+ &=\int\mathcal T_\gamma f_h\,d\mu\\
+ &\quad +(\mu(\mathbb R)-1)\gamma(h),\\
+ \left|\int h\,d(\mu-\gamma)\right|
+ &\le S_\gamma(\mu)+|\mu(\mathbb R)-1|.
+ \end{aligned}
+\]
+<p>Taking the supremum over \(h\) proves the claim. \(\square\)</p>
+</div></details>
+<p>The mass correction cannot be omitted. If \(\mu=c\gamma\), with \(c\ge0\), all Stein residuals vanish, whereas \(d_{\mathrm{flat}}(c\gamma,\gamma)=|c-1|\). Stein identities determine the shape of a measure, not its normalization.</p>
+<p>For probabilities, the same argument also controls ordinary \(W_1\). Kantorovich–Rubinstein duality uses all 1-Lipschitz \(h\), without the bound on \(\|h\|_\infty\). The same Stein-factor estimates hold for these observables, and their expectations exist under the first-moment assumption. Hence</p>
+\[
+ \begin{aligned}
+ W_1(Q,\gamma)
+ &=\sup_{\operatorname{Lip}(h)\le1}
+ \left|\mathbb E_Q[\mathcal T_\gamma f_h]\right|,\\
+ d_{\mathrm{flat}}(Q,\gamma)
+ &\le W_1(Q,\gamma)\le S_\gamma(Q).
+ \end{aligned}
+\]
+<p>These are bounds, not an identification of the Stein discrepancy with the flat distance. In transport duality the constraint acts on the observable \(h\); in \(S_\gamma\) it acts on the test function \(f\), before applying \(\mathcal T_\gamma\). The Stein equation connects the two classes. Also, a Lipschitz bound on \(f\) alone would allow arbitrary constants: if \(\int x\,d\mu\ne0\), their Stein residuals make that supremum infinite.</p>
+
 <h3 id="fisher-information">An L² unit ball: relative Fisher information</h3>
 <p>Suppose now that \(q,p\) are positive \(C^1\) densities on the same connected domain. Take the candidate-dependent unit ball</p>
 \[
@@ -270,6 +342,8 @@
 <li id="ref-liu">Qiang Liu, Jason Lee, and Michael Jordan. <em>A Kernelized Stein Discrepancy for Goodness-of-fit Tests</em>. ICML, PMLR 48, 276–284, 2016. <a href="https://proceedings.mlr.press/v48/liub16.html">Paper</a>.</li>
 <li id="ref-chwialkowski">Kacper Chwialkowski, Heiko Strathmann, and Arthur Gretton. <em>A Kernel Test of Goodness of Fit</em>. ICML, PMLR 48, 2606–2615, 2016. <a href="https://proceedings.mlr.press/v48/chwialkowski16.html">Paper</a>.</li>
 <li id="ref-gorham">Jackson Gorham and Lester Mackey. <em>Measuring Sample Quality with Kernels</em>. ICML, PMLR 70, 1292–1301, 2017. <a href="https://proceedings.mlr.press/v70/gorham17a.html">Paper</a>.</li>
+<li id="ref-piccoli-rossi">Benedetto Piccoli and Francesco Rossi. <em>On Properties of the Generalized Wasserstein Distance</em>. Archive for Rational Mechanics and Analysis 222, 1339–1365, 2016. <a href="https://arxiv.org/abs/1304.7014">Paper</a>.</li>
+<li id="ref-gaunt">Robert E. Gaunt. <em>On Stein factors in Stein's method for normal approximation</em>. Statistics &amp; Probability Letters 219, 110339, 2025. <a href="https://arxiv.org/abs/2410.05475">Paper</a>.</li>
 </ol>
 </article>
 <p class="blog-ai-disclosure">How these posts and numerical experiments were prepared: <a href="../ai-disclosure/">AI disclosure</a>.</p>

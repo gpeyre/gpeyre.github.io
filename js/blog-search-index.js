@@ -2856,7 +2856,7 @@ window.BLOG_SEARCH_RECORDS = [
     "status": "forthcoming",
     "date": null,
     "title": "Stein operators and probability discrepancies",
-    "description": "Gaussian integration by parts characterizes the normal law. Its divergence-form extension gives Langevin Stein operators, relative Fisher information, and kernel Stein discrepancies, with an interactive Gaussian-mixture example.",
+    "description": "Stein identities characterize probability distributions. Their residuals control flat and Wasserstein distances; other test spaces give Fisher information and kernel discrepancies, with an interactive Gaussian-mixture example.",
     "keywords": [
       "Stein operator",
       "Stein identity",
@@ -2891,7 +2891,12 @@ window.BLOG_SEARCH_RECORDS = [
       "Wasserstein gradient flow",
       "compactly supported test function",
       "Gaussian moments",
-      "operateur de Stein"
+      "operateur de Stein",
+      "flat distance",
+      "bounded Lipschitz norm",
+      "unbalanced optimal transport",
+      "Kantorovich Rubinstein duality",
+      "Stein factors"
     ]
   },
   {

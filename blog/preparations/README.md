@@ -33,6 +33,10 @@ Stein operator from the scalar Langevin generator, derives relative Fisher
 information by L2 duality, and gives the RKHS discrepancy and its empirical
 V-statistic. Boundary conditions, disconnected supports, kernel separation,
 and the difference between smooth densities and empirical measures are explicit.
+The bounded-Lipschitz subsection gives the flat distance's TV-penalized unbalanced
+transport formulation and proves its Gaussian Stein bound, including the necessary
+mass correction for unnormalized measures. It also explains the W1 bound and the
+distinction between Lipschitz observables and Stein test functions.
 
 The experiment immediately follows the initial one-dimensional Gaussian identity.
 `assets/stein-operator/` compares a standard Gaussian with an exactly evaluated
