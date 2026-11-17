@@ -304,7 +304,7 @@ $$
 
 $$
  E(e^\Omega)-E(I)
- =\frac13\sum_{i&lt;j}(C_{ij}+C_{ji}-C_{ii}-C_{jj})\Omega_{ij}^2
+ =\frac13\sum_{i\lt j}(C_{ij}+C_{ji}-C_{ii}-C_{jj})\Omega_{ij}^2
    +O(\|\Omega\|_{\mathrm F}^3).
 $$
 
