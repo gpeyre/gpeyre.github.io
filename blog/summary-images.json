@@ -1,6 +1,19 @@
 {
   "version": 1,
   "images": {
+    "stein-operators-discrepancies": {
+      "path": "/blog/imgs/summaries/stein-operators-discrepancies.jpg",
+      "width": 1200,
+      "height": 630,
+      "alt": "A three-component Gaussian mixture with the same mean and variance as the dashed standard Gaussian, beside six exact Stein residuals. The constant and linear tests vanish, while higher-order and trigonometric tests detect the non-Gaussian shape.",
+      "source": "/blog/preparations/assets/stein-operator/index.html",
+      "settings": {
+        "theta": 1,
+        "selected": "cubic",
+        "renderer": "shared stein-operator core.js and view.js, native canvas"
+      },
+      "sha256": "cbcb78358fcf130ad0edffabf8db515eab06dc9c8f28a48767b8ff79287b9816"
+    },
     "optimal-transport-convex-extension": {
       "path": "/blog/imgs/summaries/optimal-transport-convex-extension.jpg",
       "width": 1200,

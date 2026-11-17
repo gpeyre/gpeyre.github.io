@@ -24,6 +24,26 @@ New standalone articles must include the shared analytics loader
 It counts only top-level visits on the production domain, not local tests or
 embedded experiments. See the audience-measurement section in `../README.md`.
 
+## Stein operators and probability discrepancies
+
+`stein-operators-discrepancies.html` proves the Gaussian Stein characterization
+using compactly supported tests, then the divergence-form characterization for
+positive C1 densities on connected open domains. It distinguishes the vector-field
+Stein operator from the scalar Langevin generator, derives relative Fisher
+information by L2 duality, and gives the RKHS discrepancy and its empirical
+V-statistic. Boundary conditions, disconnected supports, kernel separation,
+and the difference between smooth densities and empirical measures are explicit.
+
+`assets/stein-operator/` compares a standard Gaussian with an exactly evaluated
+three-component mixture controlled by a signed deformation slider. Every mixture
+has mean zero and variance one; the midpoint is exactly Gaussian. Polynomial and
+trigonometric probes show their ordinary expectations and Stein residuals.
+Run `node tests/blog-stein-operator.test.js`; reproduce its numerical summary with
+`node scripts/render-blog-stein-summary.cjs` using the shared numerical renderer.
+The unmodified Charles Stein portrait is by George M. Bergman, Berkeley 1982,
+MFO photo 6059, under GFDL 1.2 only; attribution, permission, and a local copy of
+the license accompany the image.
+
 ## Doubly nonnegative and completely positive matrices
 
 `doubly-nonnegative-completely-positive.html` develops the matrix distinction

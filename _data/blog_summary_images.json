@@ -692,6 +692,19 @@
       },
       "sha256": "52ae06fd3e7450d5297b5053291378eb702997add013c1e79f1e739a4d995286"
     },
+    "stein-operators-discrepancies": {
+      "path": "/blog/imgs/summaries/stein-operators-discrepancies.jpg",
+      "width": 1200,
+      "height": 630,
+      "alt": "A three-component Gaussian mixture with the same mean and variance as the dashed standard Gaussian, beside six exact Stein residuals. The constant and linear tests vanish, while higher-order and trigonometric tests detect the non-Gaussian shape.",
+      "source": "/blog/preparations/assets/stein-operator/index.html",
+      "settings": {
+        "theta": 1,
+        "selected": "cubic",
+        "renderer": "shared stein-operator core.js and view.js, native canvas"
+      },
+      "sha256": "cbcb78358fcf130ad0edffabf8db515eab06dc9c8f28a48767b8ff79287b9816"
+    },
     "straight-flows-and-euler-error": {
       "path": "/blog/imgs/summaries/straight-flows-and-euler-error.jpg",
       "alt": "A curved exact flow in teal and its orange Euler polygon, showing the accumulated discretization error with eight steps.",

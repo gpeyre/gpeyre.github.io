@@ -1,6 +1,6 @@
 # Blog publication and announcement queue
 
-Last reconciled on 14 November 2026. All 18 forthcoming posts are listed below; the first 9 are explicitly approved in the order requested below. Completed posts are archived in [published.md](published.md), with their publication dates and final article links. `publication-log.json` remains the authoritative retry and deduplication record.
+Last reconciled on 14 November 2026; a new unchecked Stein-operator article was added on 17 November. All forthcoming posts are listed below. The first 9 entries retain the explicit approval and order requested below; some have since been published and await the next archive reconciliation. Completed posts are archived in [published.md](published.md), with their publication dates and final article links. `publication-log.json` remains the authoritative retry and deduplication record.
 
 Explicit publication order approved on 14 November 2026 for the next daily publications:
 
@@ -167,3 +167,11 @@ Topic: OT / Wasserstein geometry
 - [ ] Ready to publish
 
 > Averages of transport potentials stay in the class for metric costs and quadratic Euclidean costs. Other power costs can fail, as a one-dimensional counterexample shows. https://www.gpeyre.com/blog/preparations/c-transforms-and-averaging.html
+
+## 19. Stein operators and probability discrepancies
+
+Topic: Other topics
+
+- [ ] Ready to publish
+
+> Gaussian integration by parts characterizes the normal law. Taking the largest failure of a Stein identity over a unit ball relates Fisher information to sample-based discrepancies. https://www.gpeyre.com/blog/preparations/stein-operators-discrepancies.html
