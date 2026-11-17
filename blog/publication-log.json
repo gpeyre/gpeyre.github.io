@@ -930,7 +930,7 @@
       "date": "2026-11-17",
       "url": "https://www.gpeyre.com/blog/2026/11/17/wasserstein-geodesics-density-caps/",
       "message": "If two densities share a constant upper bound, so does their quadratic Wasserstein interpolation on a convex Euclidean domain. The proof uses a determinant inequality. https://www.gpeyre.com/blog/2026/11/17/wasserstein-geodesics-density-caps/",
-      "status": "prepared",
+      "status": "announced",
       "source_sha256": "e599be79b6d4a9acf2783a1c8917a68e79cf8cb8238e171efb0c9b48f4719454",
       "base_commit": "b40582a2a45279bebcff403795ad0197d5d7dde2",
       "files": [
@@ -940,14 +940,23 @@
         "js/blog-search-index.js",
         "blog/publication-log.json"
       ],
-      "publication_commit": null,
-      "bluesky_uri": null,
-      "bluesky_cid": null,
+      "publication_commit": "a95fc1e92e95f65bfd05e76a89525516737dde0a",
+      "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3n2hqdpkk22l2",
+      "bluesky_cid": "bafyreifomh34xghyxger4bl2uveisknmjpllid7a7piehsehpyxtxbyqce",
       "working_sha256": {
         "blog/_posts/2026-11-17-wasserstein-geodesics-density-caps.md": "b83daf66330e442c6a37b9c7e51dd9aa1c584990aead1aa377db8c310b6c4e51",
         "blog/preparations/wasserstein-geodesics-density-caps.html": "b7e88a06483c04f68843a0730ddf92fdaad404f8c54635238cd84d205839763c",
         "blog/preparations/index.html": "f67b994a3da41fb2361f56ce2f04314f19037daff4a23bfa6e144c1008e2f223",
         "js/blog-search-index.js": "0cbc474372d28b4c36bf3bed5314037adc60393135ac39378b5790f66d5c4068"
+      },
+      "announcement_image": {
+        "path": "/blog/imgs/summaries/wasserstein-geodesics-density-caps.jpg",
+        "alt": "Two localized Gaussian mixtures and their intermediate Wasserstein density, below a common dashed density cap, beside their interpolated quantiles.",
+        "width": 1200,
+        "height": 630,
+        "sha256": "1d4c384c27bd03d0557acbda0836fc6f7d41fbf6fce865149f409e21d97e2879",
+        "mime_type": "image/jpeg",
+        "size": 62569
       }
     }
   ]
