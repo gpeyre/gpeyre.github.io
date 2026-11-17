@@ -34,10 +34,14 @@ information by L2 duality, and gives the RKHS discrepancy and its empirical
 V-statistic. Boundary conditions, disconnected supports, kernel separation,
 and the difference between smooth densities and empirical measures are explicit.
 
+The experiment immediately follows the initial one-dimensional Gaussian identity.
 `assets/stein-operator/` compares a standard Gaussian with an exactly evaluated
-three-component mixture controlled by a signed deformation slider. Every mixture
-has mean zero and variance one; the midpoint is exactly Gaussian. Polynomial and
-trigonometric probes show their ordinary expectations and Stein residuals.
+three-component mixture. Two sliders separate/narrow the bumps and translate
+them; resetting both to zero gives the reference Gaussian. Six signed vertical
+bars display Stein residuals around a centered zero line, with fixed per-test
+normalizations and small function sketches beneath. Raw expectations and scales
+remain available in the numerical details; bar heights are not comparable across
+different tests. The mixture's mean and variance are no longer fixed.
 Run `node tests/blog-stein-operator.test.js`; reproduce its numerical summary with
 `node scripts/render-blog-stein-summary.cjs` using the shared numerical renderer.
 The unmodified Charles Stein portrait is by George M. Bergman, Berkeley 1982,

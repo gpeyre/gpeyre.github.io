@@ -696,14 +696,22 @@
       "path": "/blog/imgs/summaries/stein-operators-discrepancies.jpg",
       "width": 1200,
       "height": 630,
-      "alt": "A three-component Gaussian mixture with the same mean and variance as the dashed standard Gaussian, beside six exact Stein residuals. The constant and linear tests vanish, while higher-order and trigonometric tests detect the non-Gaussian shape.",
+      "alt": "A translated three-component Gaussian mixture beside six signed Stein-residual bars centered at zero. Each bar has a fixed independent scale and a miniature sketch of its test function below it.",
       "source": "/blog/preparations/assets/stein-operator/index.html",
       "settings": {
         "theta": 1,
-        "selected": "cubic",
+        "position": -0.4,
+        "residualScales": [
+          1.5,
+          3.3,
+          8.4,
+          20.7,
+          1,
+          1.03
+        ],
         "renderer": "shared stein-operator core.js and view.js, native canvas"
       },
-      "sha256": "cbcb78358fcf130ad0edffabf8db515eab06dc9c8f28a48767b8ff79287b9816"
+      "sha256": "ad56ab328e45efcc2bce78bdcb1df0445eb022e736979cf041531360208b3a70"
     },
     "straight-flows-and-euler-error": {
       "path": "/blog/imgs/summaries/straight-flows-and-euler-error.jpg",

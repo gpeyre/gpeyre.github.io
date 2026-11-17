@@ -11,12 +11,12 @@
 
 <!-- Generated numerical summary image: start -->
 <meta property="og:image" content="https://www.gpeyre.com/blog/imgs/summaries/stein-operators-discrepancies.jpg">
-<meta property="og:image:alt" content="A three-component Gaussian mixture with the same mean and variance as the dashed standard Gaussian, beside six exact Stein residuals. The constant and linear tests vanish, while higher-order and trigonometric tests detect the non-Gaussian shape.">
+<meta property="og:image:alt" content="A translated three-component Gaussian mixture beside six signed Stein-residual bars centered at zero. Each bar has a fixed independent scale and a miniature sketch of its test function below it.">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://www.gpeyre.com/blog/imgs/summaries/stein-operators-discrepancies.jpg">
-<meta name="twitter:image:alt" content="A three-component Gaussian mixture with the same mean and variance as the dashed standard Gaussian, beside six exact Stein residuals. The constant and linear tests vanish, while higher-order and trigonometric tests detect the non-Gaussian shape.">
+<meta name="twitter:image:alt" content="A translated three-component Gaussian mixture beside six signed Stein-residual bars centered at zero. Each bar has a fixed independent scale and a miniature sketch of its test function below it.">
 <!-- Generated numerical summary image: end -->
 </head><body>
 <header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Stein operators and probability discrepancies</h1><p class="subtitle">Characterizing distributions by integration by parts, and measuring the failure of these identities.</p><p class="byline">Gabriel Peyré</p></div></header>
@@ -42,6 +42,29 @@
  \mathbb E[(Z-m)f(Z)]=\sigma^2\mathbb E[f'(Z)].
 \]
 <p>This follows either by rescaling or by differentiating the Gaussian density. Multiplying a Stein operator by a nonzero constant does not change its zero-expectation identities.</p>
+
+<h2 id="experiment">Numerical experiment: Gaussian-mixture tests</h2>
+<p>The dashed reference is always \(P=\mathcal N(0,1)\). Two sliders change the candidate distribution: the first separates and narrows three Gaussian components, while the second moves them together along the real line. Neither slider represents time. For \(\theta,b\in[-1,1]\), put</p>
+\[
+ a=2\theta,\qquad \sigma=1-0.75|\theta|,
+ \qquad m=1.5b,
+\]
+\[
+ \begin{aligned}
+ Q_{\theta,b}={}&0.2\,\mathcal N(m-1.1a,\sigma^2)\\
+ &+0.5\,\mathcal N(m-0.1a,\sigma^2)
+ +0.3\,\mathcal N(m+0.9a,\sigma^2).
+ \end{aligned}
+\]
+<p>At \(\theta=0\), the components coincide and give a single Gaussian. Setting both sliders to zero recovers the standard Gaussian exactly. As \(|\theta|\) increases, the bumps separate and their standard deviation decreases from \(1\) to \(1/4\); changing its sign reflects their relative arrangement. The position slider translates all three bumps without changing their weights or widths. In this family, the mean is \(m\) and the variance is \(\sigma^2+0.49a^2\): neither is constrained to match the reference.</p>
+<p>The left panel displays the density. Each bar in the right panel corresponds to one test function \(f\) and shows its signed <em>Stein residual</em></p>
+\[
+ R_f(\theta,b)=\mathbb E_{Q_{\theta,b}}[f'(X)]-
+               \mathbb E_{Q_{\theta,b}}[Xf(X)].
+\]
+<p>Zero is at the vertical center: positive residuals extend upward, negative ones downward. A small sketch of \(f\) appears below each bar. To make every test's variation visible, its bar uses a separate fixed scale \(c_f\), calibrated over the full two-slider range, and displays \(R_f/c_f\). These scales do not change when a slider moves. Bar heights are therefore <em>not</em> directly comparable across tests; the numerical details give the unscaled expectations and scale factors. The function sketches also use their own vertical scales.</p>
+<figure><iframe class="idea-experiment" data-experiment="stein" title="Gaussian mixtures and signed Stein residuals with separation and position controls" src="assets/stein-operator/index.html" loading="lazy" style="width:100%;height:950px;border:0;"></iframe><figcaption>Move and separate the bumps, then reset to the standard Gaussian to see all bars return to zero. The plotted values are expectations of \(f'-xf\), not of \(f\) alone. Expectations are computed analytically from Gaussian moments and characteristic functions, rather than estimated from random samples.</figcaption></figure>
+<p>For example, the tests \(f=1\) and \(f=x\) have residuals \(-\mathbb E X\) and \(1-\mathbb E X^2\). The next two, \(f=x^2-1\) and \(f=x^3-3x\), give \(3\mathbb E X-\mathbb E X^3\) and \(6\mathbb E X^2-\mathbb E X^4-3\). They probe more than the mean and variance. A finite panel of tests is not a certificate that an arbitrary distribution is Gaussian; the following characterization requires an entire function class.</p>
 
 <h2 id="gaussian-characterization">Characterization of the Gaussian law</h2>
 <p id="theorem-1"><strong>Theorem 1.</strong> A probability measure \(Q\) on \(\mathbb R\) is the standard Gaussian law if and only if</p>
@@ -237,25 +260,6 @@
  \end{aligned}
 \]
 <p>Here smoothness, integrability, and decay are needed to justify differentiation and remove boundary terms. This is the same quantity that appears in <a href="logarithmic-sobolev-wasserstein-pl.html">logarithmic Sobolev inequalities and convergence of Langevin diffusion</a>. A small Fisher information measures a small entropy gradient; converting it into an entropy or distance bound needs an additional inequality.</p>
-
-<h2 id="experiment">Numerical experiment: Gaussian-mixture tests</h2>
-<p>The reference is always \(P=\mathcal N(0,1)\). The slider changes the candidate law \(Q_\theta\), not the target and not a simulation time. For \(-1\le\theta\le1\), put</p>
-\[
- a=1.35\theta,\qquad v=1-0.49a^2,
-\]
-\[
- Q_\theta=0.2\,\mathcal N(-1.1a,v)
-          +0.5\,\mathcal N(-0.1a,v)
-          +0.3\,\mathcal N(0.9a,v).
-\]
-<p>The second argument here is the <em>variance</em>, and it stays positive throughout the slider range. At its midpoint, \(\theta=0\), all three components coincide and give exactly the standard Gaussian. At nonzero settings they separate; changing the sign reflects the density. The component offsets have weighted mean zero and variance \(0.49\), so <em>every</em> distribution shown has mean zero and variance one.</p>
-<p>The left plot compares the mixture density with the dashed reference Gaussian. Select a test function to see \(f(x)\) and its transform \(\mathcal T_\gamma f(x)=f'(x)-xf(x)\) on the right. The table reports its ordinary expectation as well as the two sides of the Stein identity and their signed difference:</p>
-\[
- R_f(\theta)=\mathbb E_{Q_\theta}[f'(X)]-
-             \mathbb E_{Q_\theta}[Xf(X)].
-\]
-<figure><iframe class="idea-experiment" data-experiment="stein" title="Stein identities tested on Gaussian mixtures with fixed mean and variance" src="assets/stein-operator/index.html" loading="lazy" style="width:100%;height:950px;border:0;"></iframe><figcaption>Every residual vanishes at the Gaussian midpoint. The tests \(f=1\) and \(f=x\) remain zero throughout, since they only check the mean and variance. Higher-order and trigonometric tests respond to the changing shape. Expectations are evaluated analytically from Gaussian moments and characteristic functions, rather than estimated from random samples.</figcaption></figure>
-<p>For instance, \(f=x^2-1\) has residual \(-\mathbb E X^3\), while \(f=x^3-3x\) has residual \(3-\mathbb E X^4\) along this family. Their Gaussian values are zero, but their <em>ordinary expectations</em> need not have the same interpretation. A finite panel of tests illustrates the characterization; passing them is not a certificate that an arbitrary distribution is Gaussian.</p>
 
 <h2 id="bibliography">Bibliography</h2>
 <ol class="references">
