@@ -2856,7 +2856,7 @@ window.BLOG_SEARCH_RECORDS = [
     "status": "forthcoming",
     "date": null,
     "title": "Stein operators and probability discrepancies",
-    "description": "Stein identities characterize probability distributions. Their residuals control flat and Wasserstein distances; other test spaces give Fisher information and kernel discrepancies, with an interactive Gaussian-mixture example.",
+    "description": "Stein identities characterize probability distributions. Their residuals control the Wasserstein distance; other test spaces give Fisher information and kernel discrepancies, with an interactive Gaussian-mixture example.",
     "keywords": [
       "Stein operator",
       "Stein identity",
@@ -2892,9 +2892,8 @@ window.BLOG_SEARCH_RECORDS = [
       "compactly supported test function",
       "Gaussian moments",
       "operateur de Stein",
-      "flat distance",
-      "bounded Lipschitz norm",
-      "unbalanced optimal transport",
+      "Wasserstein distance",
+      "Lipschitz observable",
       "Kantorovich Rubinstein duality",
       "Stein factors"
     ]
