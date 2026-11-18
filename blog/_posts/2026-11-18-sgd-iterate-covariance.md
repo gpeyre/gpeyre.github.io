@@ -1,0 +1,418 @@
+---
+title: "The covariance of SGD iterates"
+subtitle: "Computing the covariance of constant-step SGD for least squares."
+description: "An exact covariance recursion for constant-step least-squares SGD explains first-order isotropy, fourth-moment corrections, and the different relaxation times of flat and steep directions."
+date: "2026-11-18"
+topic: "Stochastic optimization"
+keywords:
+  - "stochastic gradient descent"
+  - "SGD"
+  - "constant step size"
+  - "least squares"
+  - "LMS"
+  - "stationary covariance"
+  - "invariant distribution"
+  - "Markov chains"
+  - "homoscedastic noise"
+  - "heteroscedastic noise"
+  - "fourth-moment operator"
+  - "Lyapunov equation"
+  - "isotropic noise floor"
+  - "anisotropic relaxation"
+  - "small-step expansion"
+  - "step-size stability"
+  - "Wasserstein contraction"
+  - "Gaussian features"
+  - "kurtosis"
+  - "Ornstein–Uhlenbeck process"
+  - "OU approximation"
+  - "stochastic modified equations"
+  - "iterate averaging"
+  - "diffusion discretization"
+  - "Aymeric Dieuleveut"
+  - "Alain Durmus"
+  - "Francis Bach"
+  - "Alexandre Défossez"
+  - "Samuel Hurault"
+  - "Thomas Moreau"
+  - "Stephan Mandt"
+  - "descente de gradient stochastique"
+  - "covariance stationnaire"
+  - "moindres carrés"
+  - "pas constant"
+proofs: true
+embedded_experiment: true
+---
+
+<p>With a fixed learning rate, stochastic gradient descent usually does not settle at a single point. It keeps fluctuating. Their size and shape determine the residual optimization error. They also help us assess continuous approximations of a discrete training algorithm.</p>
+<p>For least squares, the covariance can be computed explicitly. Under constant conditional observation-noise variance, the stationary covariance of SGD is, to first order,</p>
+
+$$
+ \Sigma_\eta=\eta\sigma^2 I+O(\eta^2).
+$$
+
+<p>It is isotropic even when the loss has very different curvatures in different directions. The reason is a cancellation: steeper directions both pull more strongly toward the minimizer and receive more stochastic forcing. At the next order, fourth moments of the features break this balance.</p>
+<aside class="note"><p>I owe much of my understanding of these covariance calculations to <a href="https://samuro95.github.io/">Samuel Hurault</a>, through our work with <a href="https://tommoral.github.io/">Thomas Moreau</a> on analyzing the training of diffusion models.</p></aside>
+<p>The broader invariant-distribution approach is developed by Aymeric Dieuleveut, Alain Durmus, and Francis Bach <a href="#ref-dieuleveut">[1]</a>, who study constant-step SGD through its invariant Markov-chain distribution. Here, a direct least-squares calculation gives exact moment equations and a short proof of the small-step expansion.</p>
+
+<!--more-->
+
+## Least-squares SGD with independent samples
+
+<p>Consider the population loss</p>
+
+$$
+ f(\theta)=\mathbb E[(X^\top\theta-Y)^2],
+ \qquad \theta\in\mathbb R^d.
+$$
+
+<p>Assume a well-specified linear model with homoscedastic noise:</p>
+
+$$
+ Y=X^\top\theta_*+\xi,\qquad
+ \mathbb E[\xi\mid X]=0,\qquad
+ \mathbb E[\xi^2\mid X]=\sigma^2.
+$$
+
+<p>Let \(G=\mathbb E[XX^\top]\succ0\), assume \(\mathbb E\|X\|^4&lt;\infty\), and take \(\sigma^2&gt;0\). The matrix \(G\) is the second moment of the features, and \(2G\) is the Hessian of \(f\). The features need not be centered or Gaussian, and \(\xi\) need not be independent of \(X\).</p>
+<p>At every iteration, draw a new independent pair \((X_{k+1},Y_{k+1})\). With step size \(\eta&gt;0\) and error \(e_k=\theta_k-\theta_*\), SGD reads</p>
+
+$$
+ e_{k+1}=(I-2\eta X_{k+1}X_{k+1}^\top)e_k
+          +2\eta\xi_{k+1}X_{k+1}.
+$$
+
+<p>The initialization is independent of these samples and has finite second moment. This is an online, i.i.d. sampling model; sampling without replacement or making deterministic or shuffled passes through a fixed dataset requires a different dependence analysis.</p>
+<aside class="note"><p><strong>The factor of two.</strong> We use squared loss without a factor \(1/2\). For half-squared loss with the same numerical step size \(\eta\), replace every \(\eta\) below by \(\eta/2\). In particular, the leading stationary covariance then becomes \(\eta\sigma^2I/2\).</p></aside>
+
+## Mean, second moment, and covariance
+
+<p>It is useful to keep two quantities separate:</p>
+
+$$
+ m_k=\mathbb E[e_k],\qquad
+ M_k=\mathbb E[e_ke_k^\top].
+$$
+
+<p>The actual covariance is</p>
+
+$$
+ \operatorname{Cov}(\theta_k)=M_k-m_km_k^\top.
+$$
+
+<p>For example, a deterministic initialization away from the optimum has zero covariance, but nonzero \(M_0=e_0e_0^\top\). If \(m_0=0\), the mean stays zero and \(M_k\) is the covariance at every step.</p>
+<p>Define the linear fourth-moment operator</p>
+
+$$
+ \mathcal T(M)=\mathbb E[(X^\top MX)XX^\top].
+$$
+
+<p>Despite its fourth-order dependence on \(X\), this is linear in \(M\). Operators of this kind are central to precise least-mean-squares analyses, including the work of Défossez and Bach <a href="#ref-defossez">[2]</a>.</p>
+<p id="theorem-1"><strong>Theorem 1 (exact moment recursion).</strong> Under the assumptions above,</p>
+
+$$
+ m_{k+1}=(I-2\eta G)m_k,
+$$
+
+$$
+ \begin{aligned}
+ M_{k+1}={}&M_k-2\eta(GM_k+M_kG)\\
+           &+4\eta^2\mathcal T(M_k)+4\eta^2\sigma^2G.
+ \end{aligned}
+$$
+
+<details class="blog-proof">
+
+<summary>Proof: expand one update, then condition on the fresh features</summary>
+
+<div class="blog-proof-body" markdown="1">
+
+<p>Write \(A_X=I-2\eta XX^\top\). Independence of the new sample and \(e_k\) gives \(\mathbb E[A_Xe_k]=(I-2\eta G)m_k\). The additive term has zero mean because \(\mathbb E[\xi\mid X]=0\).</p>
+<p>Expanding the outer product gives</p>
+
+$$
+ \begin{aligned}
+ M_{k+1}
+ &=\mathbb E[A_X M_k A_X]+4\eta^2\mathbb E[\xi^2XX^\top]\\
+ &=M_k-2\eta(GM_k+M_kG)
+       +4\eta^2\mathcal T(M_k)+4\eta^2\sigma^2G.
+ \end{aligned}
+$$
+
+<p>Both mixed terms vanish after conditioning on \(X,e_k\). No Gaussian integration or continuous-time approximation is involved. \(\square\)</p>
+
+</div>
+
+</details>
+
+<p>The last term is the noise injected at the optimum. The fourth-moment term is the contribution of the random curvature \(XX^\top\). Replacing this random matrix by its mean \(G\) would change that term and miss part of the finite-step correction.</p>
+
+## Existence of a stationary distribution
+
+<p>Choose a finite constant \(R\) such that</p>
+
+$$
+ \mathbb E[\|X\|^2XX^\top]\preceq RG.
+$$
+
+<p>Such an \(R\) exists because \(G\succ0\) and the fourth moment is finite. If \(\|X\|^2\le R\) almost surely, the same constant works. The order \(U\preceq V\) means that \(V-U\) is positive semidefinite.</p>
+<p id="theorem-2"><strong>Theorem 2 (stationarity at a safe step size).</strong> If \(0&lt;\eta&lt;1/R\), SGD has a unique stationary law with finite second moment. From any admissible initialization, its law converges to this stationary law in \(W_2\). Its mean is exactly \(\theta_*\), and its covariance \(\Sigma_\eta\) satisfies</p>
+
+$$
+ G\Sigma_\eta+\Sigma_\eta G
+ =2\eta\sigma^2G+2\eta\mathcal T(\Sigma_\eta).
+$$
+
+<p>This is an exact <em>linear</em> matrix equation for \(\Sigma_\eta\). The step-size condition is sufficient, not asserted to be sharp for every feature distribution.</p>
+
+<details class="blog-proof">
+
+<summary>Proof: couple two runs with the same samples</summary>
+
+<div class="blog-proof-body" markdown="1">
+
+<p>Drive two copies of the algorithm with the same fresh \((X,\xi)\). Their difference \(\Delta\) evolves as \(\Delta^+=(I-2\eta XX^\top)\Delta\). Hence, with \(\mu=\lambda_{\min}(G)\),</p>
+
+$$
+ \begin{aligned}
+ \mathbb E[\|\Delta^+\|^2\mid\Delta]
+ &\le\|\Delta\|^2-4\eta(1-\eta R)\Delta^\top G\Delta\\
+ &\le q\|\Delta\|^2,
+ \end{aligned}
+ \qquad q=1-4\eta(1-\eta R)\mu\lt 1.
+$$
+
+<p>Here \(q\ge0\), as is also clear from the nonnegative left-hand side. Thus one SGD step contracts the quadratic Wasserstein distance by at most \(\sqrt q\). The quadratic Wasserstein distance \(W_2\) is the smallest root-mean-square separation over couplings of two laws.</p>
+
+<details class="blog-proof">
+
+<summary>Why the contraction gives an invariant probability law</summary>
+
+<div class="blog-proof-body" markdown="1">
+
+<p>The one-step update sends finite-second-moment laws to finite-second-moment laws: the multiplicative term uses \(\mathbb E\|X\|^4&lt;\infty\), and the additive term uses \(\mathbb E[\xi^2\|X\|^2]=\sigma^2\operatorname{tr}(G)&lt;\infty\). The space \((\mathcal P_2(\mathbb R^d),W_2)\) is complete. Applying the contraction mapping theorem to this one-step map gives a unique fixed law in \(\mathcal P_2\) and convergence to it. In particular, first and second moments converge.</p>
+
+</div>
+
+</details>
+
+<p>At stationarity the mean equation gives \(Gm=0\), hence \(m=0\). Setting \(M_{k+1}=M_k=\Sigma_\eta\) in Theorem 1 and dividing by \(2\eta\) gives the covariance equation. \(\square\)</p>
+
+</div>
+
+</details>
+
+## The leading-order stationary covariance
+
+<p>The stationary covariance is of order \(\eta\), so \(2\eta\mathcal T(\Sigma_\eta)\) only enters at order \(\eta^2\). At first order, the equation becomes</p>
+
+$$
+ G\Sigma_\eta+\Sigma_\eta G\simeq2\eta\sigma^2G.
+$$
+
+<p>The solution is \(\eta\sigma^2I\). Both the restoring force and the injected-noise covariance contain the same \(G\), and they cancel in the stationary balance. This is a feature of this noise model, not a universal property of SGD.</p>
+<p id="theorem-3"><strong>Theorem 3 (small-step covariance expansion).</strong> As \(\eta\to0\),</p>
+
+$$
+ \Sigma_\eta=\eta\sigma^2I+\eta^2D+O(\eta^3),
+$$
+
+<p>where the remainder is in matrix norm and the positive-semidefinite matrix \(D\) is the unique solution of</p>
+
+$$
+ GD+DG=2\sigma^2\mathbb E[\|X\|^2XX^\top].
+$$
+
+<p>Only fourth moments of \(X\) are needed. In coordinates where \(G=\operatorname{diag}(\lambda_1,\ldots,\lambda_d)\), the correction is explicit:</p>
+
+$$
+ D_{ij}=\frac{2\sigma^2\mathbb E[\|X\|^2X_iX_j]}{\lambda_i+\lambda_j}.
+$$
+
+<details class="blog-proof">
+
+<summary>Proof: expand an invertible linear operator</summary>
+
+<div class="blog-proof-body" markdown="1">
+
+<p>Let \(\mathcal L(M)=GM+MG\). The stationary equation is</p>
+
+$$
+ (\mathcal L-2\eta\mathcal T)\Sigma_\eta=2\eta\sigma^2G.
+$$
+
+<p>In an eigenbasis of \(G\), \(\mathcal L\) multiplies entry \((i,j)\) by \(\lambda_i+\lambda_j&gt;0\). It is therefore invertible. Since \(\mathcal T\) is a fixed finite-dimensional linear operator, the inverse of \(\mathcal L-2\eta\mathcal T\) has a convergent Taylor expansion near zero. In particular \(\Sigma_\eta=O(\eta)\), and substitution gives successively</p>
+
+$$
+ \mathcal L(\sigma^2I)=2\sigma^2G,
+ \qquad
+ \mathcal L(D)=2\sigma^2\mathcal T(I).
+$$
+
+<p>This proves the expansion and the entrywise expression. Repeated compositions of \(\mathcal T\) do not require higher moments of \(X\): they are compositions of an already defined linear operator, not higher powers of the same sampled feature.</p>
+
+<details class="blog-proof">
+
+<summary>Why the correction is positive semidefinite</summary>
+
+<div class="blog-proof-body" markdown="1">
+
+<p>For any symmetric matrix \(H\), the solution of \(GU+UG=H\) is</p>
+
+$$
+ U=\int_0^\infty e^{-tG}H e^{-tG}\,dt.
+$$
+
+<p>Differentiate the integrand to verify the equation. If \(H\succeq0\), every integrand is positive semidefinite. Taking \(H=2\sigma^2\mathcal T(I)\) gives \(D\succeq0\). \(\square\)</p>
+
+</div>
+
+</details>
+
+</div>
+
+</details>
+
+<p>There is even an exact inequality throughout the safe step-size regime:</p>
+
+$$
+ \Sigma_\eta\succeq\eta\sigma^2I.
+$$
+
+<p>Indeed, the stationary equation gives \(\mathcal L(\Sigma_\eta-\eta\sigma^2I)=2\eta\mathcal T(\Sigma_\eta)\succeq0\), and the integral formula in the proof shows that \(\mathcal L^{-1}\) preserves positive semidefiniteness. Thus the leading isotropic approximation underestimates the variance in every direction.</p>
+
+## Scalar and Gaussian-feature examples
+
+### Scalar features and fourth moments
+
+<p>Write \(g=\mathbb E[X^2]&gt;0\), \(h=\mathbb E[X^4]\). The stationary equation is just \(2gv=2\eta\sigma^2g+2\eta hv\), so</p>
+
+$$
+ v=\frac{\eta\sigma^2}{1-\eta h/g},
+ \qquad 0\lt \eta\lt g/h.
+$$
+
+<p>Two feature distributions with the same second moment have the same leading covariance, but different fourth moments can produce very different finite-step noise floors. For example, \(X=\pm\sqrt g\) with equal probabilities gives \(h=g^2\), whereas \(X\sim\mathcal N(0,g)\) gives \(h=3g^2\).</p>
+
+### Gaussian feature vectors
+
+<p>If \(X\sim\mathcal N(0,G)\), Gaussian fourth moments give</p>
+
+$$
+ \mathcal T(M)=2GMG+\operatorname{tr}(GM)G.
+$$
+
+<p>In particular, \(\mathcal T(I)=2G^2+\operatorname{tr}(G)G\), and therefore</p>
+
+$$
+ D=\sigma^2[\operatorname{tr}(G)I+2G].
+$$
+
+<p>At second order, directions with larger curvature have larger variance. A sufficient stability constant is \(R=\operatorname{tr}(G)+2\lambda_{\max}(G)\).</p>
+<p>For isotropic features, \(G=\lambda I_d\), the exact answer is</p>
+
+$$
+ \Sigma_\eta=\frac{\eta\sigma^2}{1-\eta\lambda(d+2)}I_d,
+ \qquad 0\lt \eta\lt \frac1{\lambda(d+2)}.
+$$
+
+<details class="blog-proof">
+
+<summary>Proof: fourth-moment pairing and a scalar fixed point</summary>
+
+<div class="blog-proof-body" markdown="1">
+
+<p>For a centered Gaussian vector,</p>
+
+$$
+ \mathbb E[X_iX_jX_rX_s]
+ =G_{ij}G_{rs}+G_{ir}G_{js}+G_{is}G_{jr}.
+$$
+
+<p>Contracting with the entries of a symmetric \(M\) yields the formula for \(\mathcal T\). The expression for \(D\) follows by substitution into its Lyapunov equation.</p>
+<p>When \(G=\lambda I_d\), start from \(M_0=0\). The exact moment recursion preserves the form \(M_k=v_kI_d\), so convergence from Theorem 2 implies \(\Sigma_\eta=vI_d\). Substitution gives \(v=\eta\sigma^2+\eta\lambda(d+2)v\). Solving proves the formula. No rotational symmetry of the full conditional noise law is needed. \(\square\)</p>
+
+</div>
+
+</details>
+
+<p>The denominator shows a stability limit that the first-order approximation misses. As \(\eta\lambda(d+2)\) approaches one, the second moment blows up, even though the mean recursion may still be stable.</p>
+<aside class="note"><p><strong>Gaussian features do not imply Gaussian iterates.</strong> The update multiplies the current error by a random matrix and adds a random vector. These formulas describe its exact covariance, not an exact Gaussian invariant law. A covariance ellipse below is a second-moment summary, not a density contour or a claimed probability region.</p></aside>
+
+## Transient covariance and curvature dependence
+
+<p>Start at \(\theta_0=\theta_*\). The covariance initially vanishes and gradually builds up. On the time scale \(t=k\eta\), the leading behavior is especially simple.</p>
+<p id="proposition-4"><strong>Proposition 4 (small-step transient).</strong> For each fixed \(T&lt;\infty\), uniformly over integers \(k\) with \(0\le k\eta\le T\),</p>
+
+$$
+ \operatorname{Cov}(\theta_k)
+ =\eta\sigma^2(I-e^{-4k\eta G})+O_T(\eta^2).
+$$
+
+<p>In eigendirection \(i\), the variance is approximately \(\eta\sigma^2(1-e^{-4\lambda_i t})\). The limiting variance is the same in every direction at first order, but a direction with small \(\lambda_i\) takes longer to reach it.</p>
+
+<details class="blog-proof">
+
+<summary>Proof: a scaled moment equation and Euler’s method</summary>
+
+<div class="blog-proof-body" markdown="1">
+
+<p>Since \(m_0=0\), write \(N_k=M_k/\eta\). The exact recursion becomes</p>
+
+$$
+ N_{k+1}=N_k-2\eta\mathcal L(N_k)
+                  +4\eta^2\mathcal T(N_k)+4\eta\sigma^2G.
+$$
+
+<p>On any bounded time interval, the matrices \(N_k\) are uniformly bounded by a discrete Gronwall estimate. Thus this is Euler’s method, with an additional local \(O(\eta^2)\) term, for</p>
+
+$$
+ \dot N=-2(GN+NG)+4\sigma^2G,\qquad N(0)=0.
+$$
+
+<p>Its solution is \(N(t)=\sigma^2(I-e^{-4tG})\). Euler’s global error is \(O_T(\eta)\); multiplying by \(\eta\) proves the stated \(O_T(\eta^2)\) covariance error. This argument uses only the finite fourth-moment operator. \(\square\)</p>
+
+</div>
+
+</details>
+
+<p>The same leading covariance equation is realized by the Ornstein–Uhlenbeck surrogate</p>
+
+$$
+ de_t=-2Ge_t\,dt+2\sqrt\eta\,\sigma G^{1/2}dB_t,
+$$
+
+<p>where \(B_t\) is standard Brownian motion. Its invariant covariance is exactly \(\eta\sigma^2I\). This gives useful intuition, but the discrete fourth-moment correction is absent from this surrogate. The OU perspective is prominent in Mandt, Hoffman, and Blei <a href="#ref-mandt">[3]</a>; stochastic modified equations make finite-step corrections systematic <a href="#ref-li">[4]</a>. A finite-time diffusion approximation does not, by itself, justify exchanging the small-step and infinite-time limits.</p>
+
+## Numerical experimentation
+
+<p>The figure uses two-dimensional Gaussian features with eigenvalues \(1\) and \(1/\kappa\), observation-noise variance \(\sigma^2=1\), and initialization \(\theta_*\). Vary the curvature ratio \(\kappa\), the safe step fraction \(\eta R\), and the number of iterations. The exact covariance is computed from the moment recursion, not estimated from Monte Carlo runs.</p>
+<iframe class="idea-experiment" data-experiment="sgd" src="{{ '/blog/preparations/assets/ot-lab/index.html?topic=sgd' | relative_url }}" title="Covariance of constant-step least-squares SGD" loading="lazy"></iframe>
+<p class="caption">All variances are divided by \(\eta\sigma^2\), so the first-order stationary approximation is the unit circle. Solid curves show exact moments; dashed curves show the first-order transient. The stationary comparison includes the second-order expansion, with relative errors measured in Frobenius norm. The safe bound \(\eta R&lt;1\) is sufficient, not necessarily the exact stability threshold for anisotropic features.</p>
+
+## Extensions beyond homoscedastic least squares
+
+<p><em>Nonconstant conditional noise.</em> Keep \(\mathbb E[\xi\mid X]=0\), assume \(\mathbb E[\xi^2]&lt;\infty\) so that the loss remains finite, and suppose \(C=\mathbb E[\xi^2XX^\top]\) is finite. Then replace \(\sigma^2G\) by \(C\) in the exact equations. The expansion becomes</p>
+
+$$
+ \Sigma_\eta=\eta S+\eta^2D+O(\eta^3),
+$$
+
+$$
+ GS+SG=2C,\qquad GD+DG=2\mathcal T(S).
+$$
+
+<p>The first term need not be isotropic. It is the alignment of \(C\) with \(G\), not quadraticity alone, that produced our cancellation.</p>
+<p><em>Nonquadratic objectives.</em> Dieuleveut, Durmus, and Bach <a href="#ref-dieuleveut">[1, Proposition 2 and Theorem 4]</a> establish invariant-law convergence and small-step moment expansions under suitable strong-convexity, regularity, and noise assumptions. Their leading second moment solves a Lyapunov equation involving the Hessian and the gradient-noise covariance at the minimizer. Unlike least squares, nonlinear objectives generally also have a step-size-dependent stationary mean bias. Their theory is broader; the direct argument here needs only the stated least-squares moment assumptions.</p>
+<p><em>Averaging iterates is a different question.</em> We have studied the covariance of a single late iterate. The covariance of \(\bar\theta_n=n^{-1}\sum_{k=1}^n\theta_k\) also depends on correlations between times. In general, it is not \(\Sigma_\eta/n\). Precise least-squares averaging results appear in <a href="#ref-defossez">[2]</a>, and the general Markov-chain approach also analyzes this distinction <a href="#ref-dieuleveut">[1]</a>.</p>
+<p>These finite-step effects also motivate our work on diffusion discretization <a href="#ref-hurault">[5]</a>. The leading continuous approximation gives an isotropic noise floor. The finite-step correction accounts for its dependence on feature geometry.</p>
+
+## References
+
+<ol class="references">
+  <li id="ref-dieuleveut">Aymeric Dieuleveut, Alain Durmus, and Francis Bach. <a href="https://doi.org/10.1214/19-AOS1850"><em>Bridging the gap between constant step size stochastic gradient descent and Markov chains.</em></a> Annals of Statistics 48(3), 1348–1382, 2020. <a href="https://arxiv.org/abs/1707.06386">Open-access preprint.</a></li>
+  <li id="ref-defossez">Alexandre Défossez and Francis Bach. <a href="https://proceedings.mlr.press/v38/defossez15.html"><em>Averaged Least-Mean-Squares: Bias-Variance Trade-offs and Optimal Sampling Distributions.</em></a> AISTATS, Proceedings of Machine Learning Research 38, 205–213, 2015.</li>
+  <li id="ref-mandt">Stephan Mandt, Matthew D. Hoffman, and David M. Blei. <a href="https://jmlr.org/papers/v18/17-214.html"><em>Stochastic Gradient Descent as Approximate Bayesian Inference.</em></a> Journal of Machine Learning Research 18(134), 1–35, 2017.</li>
+  <li id="ref-li">Qianxiao Li, Cheng Tai, and Weinan E. <a href="https://jmlr.org/papers/v20/17-526.html"><em>Stochastic Modified Equations and Dynamics of Stochastic Gradient Algorithms I: Mathematical Foundations.</em></a> Journal of Machine Learning Research 20(40), 1–47, 2019.</li>
+  <li id="ref-hurault">Samuel Hurault, Thomas Moreau, and Gabriel Peyré. <a href="https://arxiv.org/abs/2605.08392"><em>Geometry-Aware Discretization Error of Diffusion Models.</em></a> arXiv:2605.08392, 2026.</li>
+</ol>

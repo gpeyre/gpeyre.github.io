@@ -958,6 +958,32 @@
         "mime_type": "image/jpeg",
         "size": 62569
       }
+    },
+    {
+      "slug": "sgd-iterate-covariance",
+      "title": "The covariance of SGD iterates",
+      "date": "2026-11-18",
+      "url": "https://www.gpeyre.com/blog/2026/11/18/sgd-iterate-covariance/",
+      "message": "For least squares with constant noise variance, fixed-step SGD has an isotropic stationary covariance to first order. Fourth moments determine the next correction. https://www.gpeyre.com/blog/2026/11/18/sgd-iterate-covariance/",
+      "status": "prepared",
+      "source_sha256": "19d8094567eda0f98a1b607b903aa03309c52bb726abba2a24fbbdcfac6e96b6",
+      "base_commit": "0a2f306770862172a2472a3ffc44972c68feda43",
+      "files": [
+        "blog/_posts/2026-11-18-sgd-iterate-covariance.md",
+        "blog/preparations/sgd-iterate-covariance.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null,
+      "working_sha256": {
+        "blog/_posts/2026-11-18-sgd-iterate-covariance.md": "701a426cc11a41c34e7cbe2b697415ddd9657a8047834a990f1a15dd7c669964",
+        "blog/preparations/sgd-iterate-covariance.html": "944d3888fe9aa751935933b94d9b56fb05275f194a52bec56f079bff48aa3de0",
+        "blog/preparations/index.html": "079b822f56fbc35200b7615857f143ec6aa10bea23b8d5178b5b7c89529fd3ae",
+        "js/blog-search-index.js": "29c006417a1bcfd577e9fde9f37a9d3de87cad473e1cf3948f7d3c2f3b266895"
+      }
     }
   ]
 }
