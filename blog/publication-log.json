@@ -965,7 +965,7 @@
       "date": "2026-11-18",
       "url": "https://www.gpeyre.com/blog/2026/11/18/sgd-iterate-covariance/",
       "message": "For least squares with constant noise variance, fixed-step SGD has an isotropic stationary covariance to first order. Fourth moments determine the next correction. https://www.gpeyre.com/blog/2026/11/18/sgd-iterate-covariance/",
-      "status": "prepared",
+      "status": "announced",
       "source_sha256": "19d8094567eda0f98a1b607b903aa03309c52bb726abba2a24fbbdcfac6e96b6",
       "base_commit": "0a2f306770862172a2472a3ffc44972c68feda43",
       "files": [
@@ -975,14 +975,23 @@
         "js/blog-search-index.js",
         "blog/publication-log.json"
       ],
-      "publication_commit": null,
-      "bluesky_uri": null,
-      "bluesky_cid": null,
+      "publication_commit": "88b603f8afa7aaa95931b88a40c0db61067002ba",
+      "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3n2kasmzc226o",
+      "bluesky_cid": "bafyreigecb7m7iahivm7azur2jyeler2okg4bgb3nkpxjdvtibpzwactkq",
       "working_sha256": {
         "blog/_posts/2026-11-18-sgd-iterate-covariance.md": "701a426cc11a41c34e7cbe2b697415ddd9657a8047834a990f1a15dd7c669964",
         "blog/preparations/sgd-iterate-covariance.html": "944d3888fe9aa751935933b94d9b56fb05275f194a52bec56f079bff48aa3de0",
         "blog/preparations/index.html": "079b822f56fbc35200b7615857f143ec6aa10bea23b8d5178b5b7c89529fd3ae",
         "js/blog-search-index.js": "29c006417a1bcfd577e9fde9f37a9d3de87cad473e1cf3948f7d3c2f3b266895"
+      },
+      "announcement_image": {
+        "path": "/blog/imgs/summaries/sgd-iterate-covariance.jpg",
+        "alt": "Exact covariance ellipses and transient and stationary variance curves for constant-step least-squares SGD.",
+        "width": 1200,
+        "height": 450,
+        "sha256": "b49161c94f0313cead33e542d561fed5870813e94dc7924a1a5bdf57eb9dd604",
+        "mime_type": "image/jpeg",
+        "size": 45088
       }
     }
   ]
