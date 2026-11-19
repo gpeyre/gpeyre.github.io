@@ -993,6 +993,32 @@
         "mime_type": "image/jpeg",
         "size": 45088
       }
+    },
+    {
+      "slug": "autonomous-wasserstein-statistics",
+      "title": "Which statistics evolve on their own?",
+      "date": "2026-11-19",
+      "url": "https://www.gpeyre.com/blog/2026/11/19/autonomous-wasserstein-statistics/",
+      "message": "When does a statistic satisfy a closed equation during a Wasserstein gradient flow? For energies depending on one observable, a condition on its gradient gives the answer. https://www.gpeyre.com/blog/2026/11/19/autonomous-wasserstein-statistics/",
+      "status": "prepared",
+      "source_sha256": "dfc72489519401cddefd8ed2cabc54986c6d562bc17c265d0f0ce20f6f513dd4",
+      "base_commit": "05131197c781134b2b761c7ff6868f9a2a330c63",
+      "files": [
+        "blog/_posts/2026-11-19-autonomous-wasserstein-statistics.md",
+        "blog/preparations/autonomous-wasserstein-statistics.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null,
+      "working_sha256": {
+        "blog/_posts/2026-11-19-autonomous-wasserstein-statistics.md": "b69d9fe6ee2c83fcbe7a7e62aa402888121188d20dca8ef420549d865ae55e08",
+        "blog/preparations/autonomous-wasserstein-statistics.html": "8adc2118942d80981fc5f7b442ba822f53baa73bc59b9d20d0d360d5097d12ce",
+        "blog/preparations/index.html": "ee7850fed680bd5da3cbae5f72868b029fc4db151a97092a911b126bee7942b1",
+        "js/blog-search-index.js": "cf97616dd900a92a5471cb7a15dc074e48fca5d396b845abeca55550c34cd3e6"
+      }
     }
   ]
 }

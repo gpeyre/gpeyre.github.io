@@ -2410,10 +2410,10 @@ window.BLOG_SEARCH_RECORDS = [
     ]
   },
   {
-    "id": "blog/preparations/autonomous-wasserstein-statistics.html",
-    "url": "/blog/preparations/autonomous-wasserstein-statistics.html",
-    "status": "forthcoming",
-    "date": null,
+    "id": "blog/_posts/2026-11-19-autonomous-wasserstein-statistics.md",
+    "url": "/blog/2026/11/19/autonomous-wasserstein-statistics/",
+    "status": "published",
+    "date": "2026-11-19",
     "title": "Which statistics evolve on their own?",
     "description": "A scalar statistic has an autonomous Wasserstein evolution precisely when its squared gradient is affine in the statistic. A short proof and curved signed-distance examples.",
     "keywords": [
