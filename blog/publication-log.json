@@ -1035,7 +1035,7 @@
       "date": "2026-11-20",
       "url": "https://www.gpeyre.com/blog/2026/11/20/optimal-particles-versus-random-sampling/",
       "message": "For a uniform distribution on an interval, optimally placed particles have squared W2 error of order 1/n². Independent sampling gives order 1/n in expectation. https://www.gpeyre.com/blog/2026/11/20/optimal-particles-versus-random-sampling/",
-      "status": "prepared",
+      "status": "announced",
       "source_sha256": "7958214876776680c40017bdb63fedda408a7c767c8716d283ac86eea3f6a395",
       "base_commit": "4166577ef06ae9aa786ab82283f1a0fcd8911094",
       "files": [
@@ -1045,14 +1045,23 @@
         "js/blog-search-index.js",
         "blog/publication-log.json"
       ],
-      "publication_commit": null,
-      "bluesky_uri": null,
-      "bluesky_cid": null,
+      "publication_commit": "2435f1320433c3626f258640c12772c644c51d59",
+      "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3n2pbqhws22dc",
+      "bluesky_cid": "bafyreictlobuopdwnabt5aea6mouqc3kg4xx4bncsbiz2gsczjtxkz3yee",
       "working_sha256": {
         "blog/_posts/2026-11-20-optimal-particles-versus-random-sampling.md": "ed426dcd9d3c64b4fff3e9104e87f55a367e10470c1faa9a800d070ddb4acd9a",
         "blog/preparations/optimal-particles-versus-random-sampling.html": "5075ec1612707952e592493bae4cd24f2ce1ddc8fecd618f4c2890f8776cc332",
         "blog/preparations/index.html": "24eec1ca82ce1e2333a994ade6c7b4383c11b758d201e51bfdd5138b8357de13",
         "js/blog-search-index.js": "a945ad66b0b1137b02a52236b46d513c7c7d953f8eed96fa92dcf8ca935653e8"
+      },
+      "announcement_image": {
+        "path": "/blog/imgs/summaries/optimal-particles-versus-random-sampling.jpg",
+        "alt": "Empirical CDFs of random and optimally placed particles, compared with their exact Wasserstein error rates.",
+        "width": 1200,
+        "height": 630,
+        "sha256": "db56e4f52b53be08b58a4fecc8b5dfce985b5dcad3d015f699ca439bf2daa239",
+        "mime_type": "image/jpeg",
+        "size": 48160
       }
     }
   ]
