@@ -1028,6 +1028,32 @@
         "mime_type": "image/jpeg",
         "size": 35667
       }
+    },
+    {
+      "slug": "optimal-particles-versus-random-sampling",
+      "title": "Carefully placed particles versus random samples",
+      "date": "2026-11-20",
+      "url": "https://www.gpeyre.com/blog/2026/11/20/optimal-particles-versus-random-sampling/",
+      "message": "For a uniform distribution on an interval, optimally placed particles have squared W2 error of order 1/n². Independent sampling gives order 1/n in expectation. https://www.gpeyre.com/blog/2026/11/20/optimal-particles-versus-random-sampling/",
+      "status": "prepared",
+      "source_sha256": "7958214876776680c40017bdb63fedda408a7c767c8716d283ac86eea3f6a395",
+      "base_commit": "4166577ef06ae9aa786ab82283f1a0fcd8911094",
+      "files": [
+        "blog/_posts/2026-11-20-optimal-particles-versus-random-sampling.md",
+        "blog/preparations/optimal-particles-versus-random-sampling.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null,
+      "working_sha256": {
+        "blog/_posts/2026-11-20-optimal-particles-versus-random-sampling.md": "ed426dcd9d3c64b4fff3e9104e87f55a367e10470c1faa9a800d070ddb4acd9a",
+        "blog/preparations/optimal-particles-versus-random-sampling.html": "5075ec1612707952e592493bae4cd24f2ce1ddc8fecd618f4c2890f8776cc332",
+        "blog/preparations/index.html": "24eec1ca82ce1e2333a994ade6c7b4383c11b758d201e51bfdd5138b8357de13",
+        "js/blog-search-index.js": "a945ad66b0b1137b02a52236b46d513c7c7d953f8eed96fa92dcf8ca935653e8"
+      }
     }
   ]
 }
