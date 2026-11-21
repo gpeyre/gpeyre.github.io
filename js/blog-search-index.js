@@ -2495,10 +2495,10 @@ window.BLOG_SEARCH_RECORDS = [
     ]
   },
   {
-    "id": "blog/preparations/balanced-low-rank-conditioning.html",
-    "url": "/blog/preparations/balanced-low-rank-conditioning.html",
-    "status": "forthcoming",
-    "date": null,
+    "id": "blog/_posts/2026-11-21-balanced-low-rank-conditioning.md",
+    "url": "/blog/2026/11/21/balanced-low-rank-conditioning/",
+    "status": "published",
+    "date": "2026-11-21",
     "title": "Optimal conditioning of low-rank adaptation",
     "description": "An elementary Hessian calculation explains why balanced representations of a low-rank matrix have optimal local conditioning, with scalar factor trajectories and the evolution of the ambient Gauss–Newton spectrum.",
     "keywords": [
