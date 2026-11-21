@@ -1070,7 +1070,7 @@
       "date": "2026-11-21",
       "url": "https://www.gpeyre.com/blog/2026/11/21/balanced-low-rank-conditioning/",
       "message": "Rescaling matrix factors can slow training without changing their product. For exact low-rank matrix recovery, balancing gives optimal positive Hessian conditioning. https://www.gpeyre.com/blog/2026/11/21/balanced-low-rank-conditioning/",
-      "status": "prepared",
+      "status": "announced",
       "source_sha256": "d480382497c8e4efa7f2638838d6bde592251cc01ffd74bee409d66c61465b3f",
       "base_commit": "af82a9963667a38631689aedd318d07932d6cccb",
       "files": [
@@ -1080,14 +1080,23 @@
         "js/blog-search-index.js",
         "blog/publication-log.json"
       ],
-      "publication_commit": null,
-      "bluesky_uri": null,
-      "bluesky_cid": null,
+      "publication_commit": "fc7bbdbb39a8488f01a0b752d17983ad43218909",
+      "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3n2rs7ffk22ms",
+      "bluesky_cid": "bafyreifynozokdptgjie5ayzxrzje7l4mgjlln2g3pccjzaazteprjkanu",
       "working_sha256": {
         "blog/_posts/2026-11-21-balanced-low-rank-conditioning.md": "61df3e42779a7b83ba3b500af4b6fc1257ad3450b4f16d64432dabcc55804388",
         "blog/preparations/balanced-low-rank-conditioning.html": "00f4e4c1e254153b9c2eb11cc6bde7a596e786101a07e08fff3abc0df4223d96",
         "blog/preparations/index.html": "23d4ce8d3b4ead199a76276d0ac3e8e1468c2c0ca221a8abc7c8015da154f6bf",
         "js/blog-search-index.js": "17b24a212fdb750eaf1e30720f36ccf2b1a97cf8dceddfa0633d7575293610a4"
+      },
+      "announcement_image": {
+        "path": "/blog/imgs/summaries/balanced-low-rank-conditioning.jpg",
+        "alt": "Three colored scalar-factor training trajectories approach the minimizer hyperbola ab equals one; matching curves show the ambient rank-one Gauss–Newton conditioning and extreme positive Jacobian singular values.",
+        "width": 1200,
+        "height": 695,
+        "sha256": "91a27f216a0bd905d3fddbd03f11bcaa7f261169984c17892335ca07014cf764",
+        "mime_type": "image/jpeg",
+        "size": 65269
       }
     }
   ]
