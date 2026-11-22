@@ -1105,7 +1105,7 @@
       "date": "2026-11-22",
       "url": "https://www.gpeyre.com/blog/2026/11/22/tensor-rank-without-best-approximation/",
       "message": "A best low-rank tensor approximation need not exist: a sequence of rank-two tensors can converge to a rank-three tensor. Here is an example with a short proof. https://www.gpeyre.com/blog/2026/11/22/tensor-rank-without-best-approximation/",
-      "status": "prepared",
+      "status": "announced",
       "source_sha256": "7f57e3884d5ae307a4e059573a82ba019d291ef99116d5af565945b8d448d40a",
       "base_commit": "fccb5fbd71683fad8f5fa06accf6f328c7661dd4",
       "files": [
@@ -1115,9 +1115,9 @@
         "js/blog-search-index.js",
         "blog/publication-log.json"
       ],
-      "publication_commit": null,
-      "bluesky_uri": null,
-      "bluesky_cid": null,
+      "publication_commit": "a87ce770dae952e2b7924947d2b971b36e0575af",
+      "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3n2ucocuc22l7",
+      "bluesky_cid": "bafyreihut4c5n3v5r2gjqxdkgzrfqqs2ab37yh6pr4gdunwwqmailf7bsu",
       "working_sha256": {
         "blog/_posts/2026-11-22-tensor-rank-without-best-approximation.md": "0ef845de0bb09397cd28499eb5936a9ab721fa4244f7ddf7dc729bafed7741c4",
         "blog/preparations/tensor-rank-without-best-approximation.html": "5885a2eb4e5b0ba1ff9b5835d4b820efe8a47717402db855c892b3b6d8028811",
