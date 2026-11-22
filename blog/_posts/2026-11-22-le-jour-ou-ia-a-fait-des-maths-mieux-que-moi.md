@@ -47,7 +47,7 @@ Les avancées récentes de l’IA dans le domaine des mathématiques sont à pei
 
 Voilà un peu plus d’un an et demi que je suis de près les modèles dits « de raisonnement » à l’origine de toutes ces avancées en mathématiques. À l’époque, j’étais toutefois loin d’imaginer qu’ils iraient aussi loin en si peu de temps.
 
-Jusqu’à l’été 2026, mes collègues des mathématiques fondamentales avaient pour leur part eu peu d’occasions de voir ces outils à l’œuvre sur leurs propres sujets de recherche. Quand on a consacré des années à une question et qu’une réponse arrive du jour au lendemain, je peux comprendre que cela donne le vertige.
+Jusqu’à l’été 2026, mes collègues mathématiciens avaient pour leur part eu peu d’occasions de voir ces outils à l’œuvre sur leurs propres sujets de recherche. Quand on a consacré des années à une question et qu’une réponse arrive du jour au lendemain, je peux comprendre que cela donne le vertige.
 
 Il faut pourtant se rendre à l’évidence : l’IA est désormais capable de trouver des démonstrations qui auraient échappé au mathématicien que je suis. Mais savoir qui de l’homme ou de la machine « fait mieux des maths » n’a pas beaucoup de sens et, au fond, assez peu d’importance. Car ce qui fait le sel de notre métier, c’est de s’apercevoir, en discutant avec un collègue, que la même idée pourrait éclairer deux problèmes qu’on pensait très éloignés. On essaie alors de comprendre ce qui les rapproche et, peu à peu, on construit ensemble un concept que d’autres mathématiciens pourront ensuite utiliser. Les preuves font partie intégrante de ce travail. Encore faut-il poser les bonnes questions et pressentir qu’un rapprochement mérite qu’on s’y attarde. Sur ces aspects de la recherche, l’IA reste encore très perfectible.
 
@@ -68,7 +68,7 @@ Recent advances in AI for mathematics are hard to believe. In September, an Open
 
 For a little over a year and a half, I have been closely following the so-called “reasoning” models behind all these advances in mathematics. At the time, though, I was far from imagining that they would get so far so quickly.
 
-Until the summer of 2026, my colleagues in pure mathematics had had few opportunities to see these tools at work on their own research topics. When you have spent years on a question and an answer arrives overnight, I can understand how unsettling that can be.
+Until the summer of 2026, my fellow mathematicians had had few opportunities to see these tools at work on their own research topics. When you have spent years on a question and an answer arrives overnight, I can understand how unsettling that can be.
 
 Yet we have to face the facts: AI can now find proofs that would have eluded me as a mathematician. But asking whether humans or machines are “better at maths” does not make much sense and, ultimately, matters relatively little. What makes our work rewarding is realising, in a conversation with a colleague, that the same idea might shed light on two problems we thought were very far apart. We then try to understand what connects them and, little by little, develop a concept together that other mathematicians can use. Proofs are an integral part of this work. But we also need to ask the right questions and sense when a connection is worth exploring. On these aspects of research, AI still has considerable room for improvement.
 
