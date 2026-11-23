@@ -1124,6 +1124,32 @@
         "blog/preparations/index.html": "7f36e2c3d090047fea642566bd583dccd0741ae4025b83c34a1299ea37b0be2b",
         "js/blog-search-index.js": "7a491ca2e126706099330a788e18023086f0ff1c6c21876b0263a452d705ddb2"
       }
+    },
+    {
+      "slug": "universality-and-invariance",
+      "title": "Universality and invariance",
+      "date": "2026-11-23",
+      "url": "https://www.gpeyre.com/blog/2026/11/23/universality-and-invariance/",
+      "message": "Expressive sum-message-passing GNNs distinguish the 1-WL classes. On compact sets of bounded-size graphs, a final MLP gives approximation of continuous functions constant on those classes. https://www.gpeyre.com/blog/2026/11/23/universality-and-invariance/",
+      "status": "prepared",
+      "source_sha256": "2f755165aa06ea59607b47df79ec48caba1c4e4367cf41a45a73d1a92c6d91dc",
+      "base_commit": "0d3c335b584f027613873eab62dcd52a1249ffb6",
+      "files": [
+        "blog/_posts/2026-11-23-universality-and-invariance.md",
+        "blog/preparations/universality-and-invariance.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null,
+      "working_sha256": {
+        "blog/_posts/2026-11-23-universality-and-invariance.md": "f05bac7e91dd8a7aa04af7a8ba4a98e85ac13205a7595a02273509755e65ba4c",
+        "blog/preparations/universality-and-invariance.html": "3a812998ec7e797fd65d74f700c4c21bf9ec7127ecd86d8e0168d51783b5f015",
+        "blog/preparations/index.html": "631b95dd7c5e8d459c87ec597afc127288755b0c657f4f9910999c4bb853cc64",
+        "js/blog-search-index.js": "1f82ca4ee02146b7ef694380023144a00bfe832f62ef5dde1f92ac87df09b0cd"
+      }
     }
   ]
 }
