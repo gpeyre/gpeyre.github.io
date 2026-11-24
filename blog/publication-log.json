@@ -1150,6 +1150,32 @@
         "blog/preparations/index.html": "631b95dd7c5e8d459c87ec597afc127288755b0c657f4f9910999c4bb853cc64",
         "js/blog-search-index.js": "1f82ca4ee02146b7ef694380023144a00bfe832f62ef5dde1f92ac87df09b0cd"
       }
+    },
+    {
+      "slug": "stein-operators-discrepancies",
+      "title": "Stein operators and probability discrepancies",
+      "date": "2026-11-24",
+      "url": "https://www.gpeyre.com/blog/2026/11/24/stein-operators-discrepancies/",
+      "message": "Gaussian integration by parts characterizes the normal law. Taking the largest failure of a Stein identity over a unit ball relates Fisher information to sample-based discrepancies. https://www.gpeyre.com/blog/2026/11/24/stein-operators-discrepancies/",
+      "status": "prepared",
+      "source_sha256": "a405308d7cfedd65d5e1ebbeaf145af567ab867c5e9f665a2b6e154f902de8ad",
+      "base_commit": "3d4897fd91c0fbd358be6dd6a818ae1d0568d956",
+      "files": [
+        "blog/_posts/2026-11-24-stein-operators-discrepancies.md",
+        "blog/preparations/stein-operators-discrepancies.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null,
+      "working_sha256": {
+        "blog/_posts/2026-11-24-stein-operators-discrepancies.md": "388980974161239623e31fab6ebf6b359ef058f52fea032c29b792b476932bf8",
+        "blog/preparations/stein-operators-discrepancies.html": "3d43bb26f0728205eb5ef1462a5b4a0e863f920b5c1d1fd4883a3da8bc551aa7",
+        "blog/preparations/index.html": "cf0a27f9c1aeda9f087a6685db24d64fed8a42f005381e0b2d57b8629648df33",
+        "js/blog-search-index.js": "dd3f567c107d49d89513abf46f03c7527e2e8fcfd657dfe4721ad687c246b8ed"
+      }
     }
   ]
 }
