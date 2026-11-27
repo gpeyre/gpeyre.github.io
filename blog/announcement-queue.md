@@ -11,8 +11,10 @@ Explicit publication order approved on 27 November 2026:
 5. [c-transform as a generalized Legendre transform](https://www.gpeyre.com/blog/preparations/c-transforms-and-averaging.html)
 6. [Wasserstein distance without quantiles](https://www.gpeyre.com/blog/preparations/wasserstein-distance-without-quantiles.html)
 7. [Spectral Wasserstein distances](https://www.gpeyre.com/blog/preparations/spectral-wasserstein-distances.html)
+8. [Bernstein polynomials on probability measures](https://www.gpeyre.com/blog/preparations/bernstein-polynomials-on-measures.html)
+9. [Universal approximation from one nonlinearity](https://www.gpeyre.com/blog/preparations/universality-from-one-nonlinearity.html)
 
-The author's explicit order takes precedence over topic alternation. The remaining entries are unchecked. The local `announcement-queue.html` is the editorial view of this list, not an article to publish.
+The author's explicit order takes precedence over topic alternation. The local `announcement-queue.html` is the editorial view of this list, not an article to publish.
 
 The daily workflow publishes at most one approved article and its Bluesky announcement, at 07:00 Europe/Paris. A delayed run retains queue order and the one-post-per-day limit. No announcement is sent before the dated official article is verified live.
 
@@ -74,7 +76,7 @@ Topic: OT / Wasserstein geometry
 
 Topic: Other topics
 
-- [ ] Ready to publish
+- [x] Ready to publish
 
 > Bernstein's averaging construction also applies to continuous functions of probability measures. On a compact space it gives uniform approximation, with an error controlled by sampling. https://www.gpeyre.com/blog/preparations/bernstein-polynomials-on-measures.html
 
@@ -82,6 +84,6 @@ Topic: Other topics
 
 Topic: Other topics
 
-- [ ] Ready to publish
+- [x] Ready to publish
 
 > On a compact space, a separating real linear family containing constants is dense if its closure is stable under one fixed continuous non-affine operation. https://www.gpeyre.com/blog/preparations/universality-from-one-nonlinearity.html
