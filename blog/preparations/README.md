@@ -454,6 +454,10 @@ The preview index groups articles by subject, with no publication dates.
 
 The Bernstein article complements the existing qualitative
 `wasserstein-polynomials.html` article with a constructive operator and rates.
+Its experiment changes the centers and weights of a two-component Gaussian
+mixture and tracks absolute Bernstein bias for five population quantiles.
+The curves use deterministic integration of the order-statistic density,
+not sampled quantiles. Run `node tests/blog-bernstein-quantiles.test.js`.
 
 The CDF-only Wasserstein experiment uses two independently adjustable
 sinusoidal densities on [0,1]. It displays both densities, their CDFs and the

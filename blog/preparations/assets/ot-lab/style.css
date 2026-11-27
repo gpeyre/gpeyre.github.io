@@ -25,6 +25,13 @@ svg{display:block;width:100%;height:auto}svg text{font-family:system-ui,sans-ser
 .cdf-lab .plot h3{min-height:0;font-size:14px}
 .cdf-lab svg text{font-size:14px;fill:#475d63}
 @media(max-width:680px){.cdf-lab .controls{grid-template-columns:1fr}}
+.bernstein-lab .controls label{width:100%;max-width:460px}
+.bernstein-lab .controls input{width:100%}
+.bernstein-lab .plot h3{min-height:0;font-size:14px}
+.bernstein-lab .plot svg text{font-size:13px;fill:#475d63}
+.bernstein-legend{display:flex;justify-content:center;gap:5px 16px;flex-wrap:wrap;font:12px/1.5 system-ui,sans-serif;color:#475d63;margin-bottom:10px}
+.bernstein-legend span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.bernstein-legend svg{width:21px;height:8px;flex:none}
 .gaussian-lab #plots{grid-template-columns:minmax(0,500fr) minmax(0,430fr);gap:16px}
 .gaussian-lab .controls{display:grid;grid-template-columns:1fr 1fr auto auto;align-items:end;gap:12px 18px}
 .gaussian-lab .controls label{min-width:0}.gaussian-lab input[type=range]{width:100%}

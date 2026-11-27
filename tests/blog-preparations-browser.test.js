@@ -27,10 +27,6 @@ const forthcomingSlugs=new Set(forthcomingRecords.map(post=>path.basename(post.u
         assert.ok(!/ERROR|Numerical error|NaN|Infinity|undefined/.test(status),topic+": "+status);
         assert.ok(await page.locator("svg polyline, svg circle, svg polygon").count()>0,topic+" must render");
       }
-      if(topic==="bernstein")for(const option of ["square","linear","corner"]) {
-        await page.locator("select").selectOption(option);
-        if(option==="linear")assert.match(await page.locator("#status").innerText(),/error (?:0|[\d.]+e-1[4567])/);
-      }
       if(topic==="gaussian"||topic==="sgd") {
         const controlIndex=topic==="gaussian"?1:2;
         await page.getByRole("button",{name:topic==="gaussian"?"Play cycles":"Play iterations",exact:true}).click();
@@ -50,7 +46,10 @@ const forthcomingSlugs=new Set(forthcomingRecords.map(post=>path.basename(post.u
       if(topic==="weak") {
         await page.getByRole("button",{name:"Reset clouds"}).click();
         for(const cloud of ["x","y"]) {
+          // The refinement redraw replaces SVG nodes on each animation frame.
+          await page.waitForFunction(()=>!document.querySelector("#status").textContent.includes("refining"));
           const point=await page.locator("svg").first().locator(`circle[data-cloud=${cloud}]`).first().boundingBox();
+          assert.ok(point, "The current point must have a stable position before dragging");
           await page.mouse.move(point.x+point.width/2,point.y+point.height/2);await page.mouse.down();
           await page.mouse.move(point.x+24,point.y+15,{steps:3});await page.mouse.up();
           await page.waitForTimeout(300);

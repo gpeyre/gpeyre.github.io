@@ -255,24 +255,24 @@
     },
     "bernstein-polynomials-on-measures": {
       "path": "/blog/imgs/summaries/bernstein-polynomials-on-measures.jpg",
-      "alt": "The Bernstein particle polynomial smooths the corner of the absolute-value functional of a two-point probability law.",
+      "alt": "A two-component Gaussian mixture with five marked quantiles, beside color-matched curves of the absolute Bernstein bias against sample size.",
       "width": 1200,
       "height": 630,
       "source": "/blog/preparations/assets/ot-lab/index.html?topic=bernstein",
       "settings": {
-        "title": "Bernstein polynomials of a probability law",
-        "status": "order 10 | grid supremum error 0.123047",
+        "title": "Bernstein approximation of quantiles",
+        "status": "Component means: -1.12, 1.17 · weights: 0.47, 0.53 · common standard deviation: 0.52 · signed median bias at n = 120: -0.1286",
         "controls": [
           {
-            "label": "Polynomial order n: 10",
-            "value": "10"
+            "label": "Mixture shape: 0.2",
+            "value": "0.2"
           }
         ],
-        "count": 1,
+        "count": 2,
         "finite": true,
-        "marks": 8
+        "marks": 21
       },
-      "sha256": "75b56efacee661383f8b6f1646eaaab65116e7f73d347aca9505c19823551057"
+      "sha256": "10682c80e6b75b77703b5bf11788e69532b7a6f5420a96cd976926fe2bc10f78"
     },
     "c-transforms-and-averaging": {
       "path": "/blog/imgs/summaries/c-transforms-and-averaging.jpg",

@@ -253,6 +253,57 @@
     }
     return {means:[...means],weights:[...weights],sigma,density,cdf,quantile};
   }
+  const bernsteinQuantileRanks=Object.freeze([[1,10],[1,4],[1,2],[3,4],[9,10]].map(Object.freeze));
+  const bernsteinQuantileLevels=Object.freeze(bernsteinQuantileRanks.map(([a,b])=>a/b));
+  function bernsteinQuantileMixture(s) {
+    if(!Number.isFinite(s) || s< -1 || s>1)throw new RangeError("Mixture setting must be in [-1, 1]");
+    return gaussianMixture1D([-1.25+.65*s,1.1+.35*s],[.52-.25*s,.48+.25*s],.52);
+  }
+  function bernsteinQuantileExperiment(s,{maxN=120,intervals=1200}={}) {
+    if(!Number.isSafeInteger(maxN) || maxN<1)throw new RangeError("The sample-size horizon must be a positive integer");
+    if(!Number.isSafeInteger(intervals) || intervals<2 || intervals%2!==0)throw new RangeError("Simpson quadrature needs an even number of intervals");
+    const law=bernsteinQuantileMixture(s);
+    const lower=Math.min(...law.means)-9*law.sigma,upper=Math.max(...law.means)+9*law.sigma;
+    const step=(upper-lower)/intervals,weights=new Float64Array(intervals+1),weightedX=new Float64Array(intervals+1);
+    const logF=new Float64Array(intervals+1),logSurvival=new Float64Array(intervals+1);
+    for(let i=0;i<=intervals;i++) {
+      const x=lower+step*i;
+      let F=0,survival=0;
+      for(let j=0;j<law.means.length;j++) {
+        const z=(x-law.means[j])/law.sigma;
+        // Compute the small tail by reflection, without subtracting a CDF
+        // rounded close to one. Clip tiny negative roundoff in the tail.
+        const tail=Math.max(0,gaussianCDF(-Math.abs(z))),w=law.weights[j];
+        F+=w*(z<=0?tail:1-tail);
+        survival+=w*(z<=0?1-tail:tail);
+      }
+      logF[i]=Math.log(F);logSurvival[i]=Math.log(survival);
+      weights[i]=law.density(x)*(i===0 || i===intervals?1:i%2===0?2:4)*step/3;
+      weightedX[i]=x*weights[i];
+    }
+    const factorialLog=new Float64Array(maxN);
+    for(let i=2;i<maxN;i++)factorialLog[i]=factorialLog[i-1]+Math.log(i);
+    const curves=bernsteinQuantileRanks.map(([numerator,denominator],index)=>{
+      const t=bernsteinQuantileLevels[index],quantile=law.quantile(t),points=[];
+      for(let n=1;n<=maxN;n++) {
+        // The displayed t are rational, so ceil(n*t) is computed with their
+        // exact integer numerators and denominators rather than rounded ranks.
+        const rank=Math.ceil(n*numerator/denominator),a=rank-1,b=n-rank;
+        const logCoefficient=Math.log(n)+factorialLog[n-1]-factorialLog[a]-factorialLog[b];
+        let estimate=0,mass=0;
+        for(let i=0;i<=intervals;i++) {
+          const beta=Math.exp(logCoefficient+(a===0?0:a*logF[i])+(b===0?0:b*logSurvival[i]));
+          estimate+=beta*weightedX[i];mass+=beta*weights[i];
+        }
+        // No finite-window renormalization: this is the integral of the
+        // order-statistic density, whose sampled mass is reported separately.
+        const signedError=estimate-quantile;
+        points.push({n,rank,estimate,error:Math.abs(signedError),signedError,mass});
+      }
+      return {t,quantile,points};
+    });
+    return {law,levels:bernsteinQuantileLevels,curves,quadrature:{lower,upper,intervals}};
+  }
   function gaussianMixtureDensityCap(law,cells=1024) {
     if(!Number.isInteger(cells) || cells<1)throw new RangeError("The cap partition needs a positive integer cell count");
     const lo=Math.min(...law.means),hi=Math.max(...law.means),scale=1/(law.sigma*Math.sqrt(2*Math.PI));
@@ -360,7 +411,8 @@
   const api={sum,dot,zeros,dist2,rng,gaussian,transport,bary,objective,feasibility,
     weakStep,weakAwayStep,weakCertificate,crossing,catalan,sampleMatching,sqrtSPD,matmul,transpose,solve,
     twoPointPlan,twoPointTransport,bernstein,uniformQuantization,uniformMongeGap,mongeRegression,
-    gaussianCDF,gaussianMixture1D,gaussianMixtureDensityCap,gaussianDensityCapScene,gaussianDensityCapGeodesic,
+    gaussianCDF,gaussianMixture1D,bernsteinQuantileMixture,bernsteinQuantileExperiment,
+    gaussianMixtureDensityCap,gaussianDensityCapScene,gaussianDensityCapGeodesic,
     bernoulliErrorCurve,convexEnvelope,sinusoidalLaw,cdfIntegrand,cdfSquaredDistance};
   if(typeof module!=="undefined" && module.exports)module.exports=api;
   root.BlogMath=api;

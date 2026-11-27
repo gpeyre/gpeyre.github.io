@@ -19,12 +19,12 @@
 
 <!-- Generated numerical summary image: start -->
 <meta property="og:image" content="https://www.gpeyre.com/blog/imgs/summaries/bernstein-polynomials-on-measures.jpg">
-<meta property="og:image:alt" content="The Bernstein particle polynomial smooths the corner of the absolute-value functional of a two-point probability law.">
+<meta property="og:image:alt" content="A two-component Gaussian mixture with five marked quantiles, beside color-matched curves of the absolute Bernstein bias against sample size.">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://www.gpeyre.com/blog/imgs/summaries/bernstein-polynomials-on-measures.jpg">
-<meta name="twitter:image:alt" content="The Bernstein particle polynomial smooths the corner of the absolute-value functional of a two-point probability law.">
+<meta name="twitter:image:alt" content="A two-component Gaussian mixture with five marked quantiles, beside color-matched curves of the absolute Bernstein bias against sample size.">
 <!-- Generated numerical summary image: end -->
 </head>
 <body>
@@ -203,10 +203,20 @@
 \]
 <p>Thus the \(n^{-1/2}\) fluctuation scale is genuinely visible at a nonsmooth observable, even on a two-point space. It is the error of this particular operator; it does not rule out better polynomial approximations chosen by another method.</p>
 
-<h2>Numerical experimentation</h2>
+<h2 id="quantile-experiment">Numerical experiment: quantiles of Gaussian mixtures</h2>
+<p>Take \(F_t(\mu)=Q_\mu(t)\), the \(t\)-quantile of a one-dimensional law, with \(0&lt;t&lt;1\). The level \(t=0.5\) gives the median. For Gaussian mixtures, the endpoint quantiles are not finite, so the figure uses interior levels only. This functional is not a polynomial of the measure: on \((1-a)\delta_0+a\delta_1\), it jumps from zero to one when \(a\) crosses \(1-t\). The example below evaluates the sampling operator on a smooth family, not the uniform approximation theorem on a compact space.</p>
+<p>Let \(X_{(k)}\) denote the \(k\)-th smallest of \(n\) independent samples from \(\mu\). With the left-inverse convention for quantiles, the empirical \(t\)-quantile is \(X_{(k)}\) for \(k=\lceil nt\rceil\). Therefore</p>
+\[
+ B_nF_t(\mu)=\mathbb E[X_{(k)}],\qquad k=\lceil nt\rceil.
+\]
+<p>The experiment integrates this expectation directly. If \(G\) and \(\rho\) are the mixture CDF and density, respectively, the density of \(X_{(k)}\) at \(x\) is</p>
+\[
+ n\binom{n-1}{k-1}G(x)^{k-1}(1-G(x))^{n-k}\rho(x).
+\]
+<p>Indeed, one sample lies near \(x\), with \(k-1\) samples below it and \(n-k\) above. We integrate \(x\) against this density by quadrature, with negligible Gaussian tails outside the integration window. This avoids Monte Carlo noise. The rank \(\lceil nt\rceil\) changes in jumps, so the errors need not decrease at every integer \(n\).</p>
 <figure>
-  <iframe class="idea-experiment" data-experiment="bernstein" title="Bernstein approximation of three functionals of a two-point probability law" src="assets/ot-lab/index.html?topic=bernstein" loading="lazy"></iframe>
-  <figcaption>Change the interaction order \(n\) and compare a linear function, a square, and an absolute-value corner. The polynomial is evaluated by the full binomial sum, not Monte Carlo. The linear function is reproduced exactly; the square has the explicit \(a(1-a)/n\) bias; the corner is rounded on the sampling scale.</figcaption>
+  <iframe class="idea-experiment" data-experiment="bernstein" title="Gaussian mixture densities and Bernstein errors for five quantiles" src="assets/ot-lab/index.html?topic=bernstein" loading="lazy"></iframe>
+  <figcaption>The slider changes the two Gaussian centers and their weights, shifting the mixture and changing the heights of its peaks. The left panel marks the population quantiles; the matching colors on the right show \(|B_nF_t(\mu)-F_t(\mu)|\) against \(n\). This is the absolute bias of the Bernstein operator, not the expected absolute error of one empirical quantile.</figcaption>
 </figure>
 
 <h2>Interaction order and representation complexity</h2>
