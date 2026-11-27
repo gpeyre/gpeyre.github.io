@@ -13,7 +13,7 @@ const jobs = [
   {slug:"lagrangian-density-interpolation",source:"blog/preparations/assets/new-dynamics/index.html?topic=moser",alt:"Moser interpolation halfway between multimodal periodic densities: transported particles alongside speed and flux directions.",settings:{time:.5,particles:420,uniform_background:.14}},
   {slug:"langevin-without-a-potential",source:"blog/preparations/assets/new-dynamics/index.html?topic=langevin",alt:"Circulating Ornstein–Uhlenbeck particles approaching the stationary Gaussian ellipse, with drift arrows and recent particle trails.",settings:{time:1.4,particles:180,circulation:1.4,noise:.55}},
   {slug:"projections-corrections-reflections",source:"blog/preparations/assets/projection-lab/index.html",alt:"A Sudoku solved by product-space Douglas–Rachford reflections: teal clues and the verified completed grid, beside the violation and unrounded-residual histories.",settings:{puzzle:0,seed:1,stop:"first independently checked valid Sudoku"}},
-  {slug:"sign-gradient-descent-geometry",source:"blog/preparations/assets/optimization-geometry/index.html?topic=sign",alt:"Ordinary and scaled sign-gradient descent losses for two isospectral quadratics, with the soft eigendirection aligned or spread across coordinates.",settings:{iterations:1200,initial_direction:"mixed"}},
+  {slug:"sign-gradient-descent-geometry",source:"blog/preparations/assets/sign-geometry/index.html",alt:"Five colored scaled sign descent paths on the same two-dimensional quadratic before and after a 45-degree rotation. Matching colors identify corresponding starting points.",settings:{exponent:"Infinity",iteration:6,eigenvalues:[.16,1],angles_degrees:[0,45],starts_eigenbasis:[[.9,.66],[-.77,.83],[-1.13,-.39],[.62,-.94],[1.09,-.28]]}},
   {slug:"spectral-wasserstein-distances",source:"blog/preparations/assets/spectral-transport/index.html",alt:"Spectral Wasserstein coupling between two irregular point clouds and the ellipse of their displacement second moment for Schatten exponent two.",settings:{points:48,p:2,time:.5}},
   {slug:"stable-fluids",source:"blog/preparations/assets/new-dynamics/index.html?topic=fluids",alt:"A stirred periodic Stable Fluids simulation: transported teal dye beside the velocity field and signed vorticity.",settings:{steps:18,time_step:.035,viscosity:.0008,dye_diffusivity:.00015,stirring:"four deterministic pointer-drag passes"}},
   {slug:"wasserstein-singular-vectors",source:"blog/preparations/assets/transport-geometry/wasserstein-vectors.html",alt:"Input translated histograms, the learned circular feature geometry, and feature/sample cost matrices after sixteen exact transport-transform cycles.",settings:{family:"periodic translations",cycles:16,regularization:.1}}
@@ -108,10 +108,24 @@ async function capture(page,job,output,base="http://127.0.0.1:4197/") {
     await frame(page,["#lowrank-plots","#legend"],"#summary-capture #lowrank-plots{grid-template-columns:1fr 1.12fr!important;align-items:start}#summary-capture .legend{display:flex!important;gap:10px 20px;flex-wrap:wrap}#summary-capture .legend span::before{content:'';display:inline-block;background:var(--c);height:3px;width:20px;vertical-align:middle;margin-right:6px}");
     const state=await page.evaluate(()=>LowRankConditioningApp.getState());
     if(state.playing||state.paths.length!==3||state.paths.some(p=>!Number.isFinite(p.current.kappa)||Math.abs(p.current.a*p.current.b-p.current.z)>1e-10))throw Error("Invalid scalar-factor conditioning capture state");
-  } else if(["intrinsic-factor-training-dynamics","sign-gradient-descent-geometry"].includes(job.slug)){
-    const selectors=[".panels",job.slug==="intrinsic-factor-training-dynamics"?"#legend":".legend"];
-    await frame(page,selectors);
-    if(job.slug==="intrinsic-factor-training-dynamics")await range(page,"time",1.7);
+  } else if(job.slug==="sign-gradient-descent-geometry"){
+    await page.waitForFunction(()=>window.SignGeometryApp?.getState().trajectories.length===2);
+    const lastExponent=await page.locator("#exponent").getAttribute("max");
+    await range(page,"exponent",lastExponent);
+    await range(page,"iteration",job.settings.iteration);
+    await frame(page,["#plots","#legend"],`
+      #summary-capture #plots{max-width:1030px;margin-inline:auto;grid-template-columns:repeat(2,minmax(0,1fr))!important}
+      #summary-capture #legend{justify-content:center;margin:16px auto 0!important}
+    `);
+    const state=await page.evaluate(()=>{
+      const {p,iteration,trajectories}=SignGeometryApp.getState();
+      return {isSign:p===Infinity,iteration,starts:SignGeometryCore.seeds,runCounts:trajectories.map(t=>t.runs.length)};
+    });
+    if(!state.isSign||state.iteration!==job.settings.iteration||state.runCounts.some(count=>count!==5)||
+       JSON.stringify(state.starts)!==JSON.stringify(job.settings.starts_eigenbasis))throw Error("Invalid sign-geometry capture state");
+  } else if(job.slug==="intrinsic-factor-training-dynamics"){
+    await frame(page,[".panels","#legend"]);
+    await range(page,"time",1.7);
     await page.evaluate(()=>window.dispatchEvent(new Event("resize")));
   } else {
     await frame(page,["#plots"],job.slug==="langevin-without-a-potential"?"#summary-capture .wide{aspect-ratio:1.9!important}":"#summary-capture .plots canvas{aspect-ratio:1.15!important}");

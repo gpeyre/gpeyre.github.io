@@ -263,7 +263,7 @@ normalizations, and hypotheses have been checked against the primary papers.
 | `quantum-pinsker-sign-observable.html` | Classical and matrix proofs, plus three synchronized probability triangles |
 | `intrinsic-factor-training-dynamics.html` | Conserved scalar imbalance and factor trajectories |
 | `balanced-low-rank-conditioning.html` | Positive Hessian spectrum and actual local training |
-| `sign-gradient-descent-geometry.html` | Ordinary versus scaled sign descent on isospectral quadratics |
+| `sign-gradient-descent-geometry.html` | Two-dimensional quadratic contours and iterates for the full range of norm exponents |
 | `wasserstein-singular-vectors.html` | Unregularized minimum-cost-flow transforms in a worker |
 | `tensor-rank-without-best-approximation.html` | Rank-three/border-rank-two proof and a schematic diagram |
 | `c-transforms-and-averaging.html` | Editable function, power costs, and discrete double-transform closure |
@@ -279,12 +279,23 @@ reflection update; a board is accepted only after exact independent checks.
 The transport experiments do not silently add entropy. Their finite-grid cost
 closure and projective iterate changes are not continuum/error certificates.
 
+The norm-steepest experiment in `assets/sign-geometry/` compares the same
+two-dimensional quadratic and five color-matched starting points before and
+after a 45° rotation.
+The exponent slider includes greedy coordinate descent, Euclidean descent, and
+scaled sign descent. A common smoothness bound gives a safe fixed step for
+both orientations at each exponent. The panels use matched axes, contour
+levels and iteration indices. Readers can isolate a start or overlay the
+Euclidean reference. The loss plot averages normalized losses over the visible
+starts. The original twenty-dimensional comparison remains linked from the article.
+
 Run these numerical and source checks:
 
 ```
 node tests/blog-new-dynamics.test.js
 node tests/blog-projection-lab.test.js
 node tests/blog-optimization-geometry.test.js
+node tests/blog-sign-geometry.test.js
 node tests/blog-transport-geometry.test.js
 node tests/blog-developed-ideas.test.js
 ```

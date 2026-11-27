@@ -97,6 +97,179 @@ for(const slug of posts){
 }
 console.log("Optimization geometry: scalar invariants and independent factor ODE, Hessian spectra, gradient checks, local training, isospectral rotations, smoothness constants, and descent bounds passed.");
 
+async function signGeometryBrowser(frame) {
+  await frame.waitForFunction(() => window.SignGeometryApp?.getState().trajectories.length === 2);
+  const geometry = frame.locator("#exponent"), iteration = frame.locator("#iteration");
+  const reference = frame.locator("#show-euclidean");
+  const exponents = await frame.evaluate(() => window.SignGeometryCore.exponents);
+  const seeds = [[.90,.66],[-.77,.83],[-1.13,-.39],[.62,-.94],[1.09,-.28]];
+  assert.equal(exponents[0], 1);
+  assert.equal(exponents.at(-1), Infinity);
+  const horizon = +(await iteration.getAttribute("max"));
+  assert.ok(horizon >= 20);
+
+  async function setRange(input, value) {
+    await input.evaluate((el, value) => {
+      el.value = String(value);
+      el.dispatchEvent(new Event("input", {bubbles:true}));
+    }, value);
+  }
+  const drawn = () => frame.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+
+  // Rendered pixels, rather than just the computed state, must change as the
+  // slider moves. Compare each plot before and after revealing a trajectory.
+  async function pixels(id) {
+    return frame.locator(id).evaluate(canvas => {
+      const {width, height} = canvas.getBoundingClientRect();
+      const data = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height).data;
+      const colors = new Set();
+      const palette = SignGeometryView.runColors.map(color=>parseInt(color.slice(1),16));
+      const paletteCounts = palette.map(()=>0);
+      let hash = 2166136261;
+      for (let i=0; i<data.length; i+=4) {
+        const color = (data[i]<<16) | (data[i+1]<<8) | data[i+2];
+        if (data[i+3] && i%44===0) colors.add(color);
+        const index = palette.indexOf(color);
+        if (index>=0 && data[i+3]===255) paletteCounts[index]++;
+        hash = Math.imul(hash^color, 16777619);
+      }
+      return {width, height, colors: colors.size, hash, paletteCounts};
+    });
+  }
+
+  const ids = ["#axis-plot", "#rotated-plot"];
+  for (const id of [...ids, "#loss-plot"]) await frame.locator(id).waitFor({state:"visible"});
+  await setRange(iteration, 0);
+  await frame.waitForFunction(() => SignGeometryApp.getState().iteration === 0);
+  await drawn();
+  const atStart = await Promise.all(ids.map(pixels));
+  for (const plot of atStart) {
+    assert.ok(plot.width >= 150 && Math.abs(plot.width-plot.height) <= 1, "objective plot is a visible square");
+    assert.ok(plot.colors > 8, "objective contours and filled bands are painted");
+  }
+  close(atStart[0].width, atStart[1].width);
+  assert.notEqual(atStart[0].hash, atStart[1].hash, "the rotated contours and starting position differ");
+
+  const firstSteps = [], firstPlotHashes = new Set();
+  await setRange(iteration, 6);
+  for (const p of [1, 1.5, 2, Infinity]) {
+    const index = exponents.indexOf(p);
+    assert.notEqual(index, -1);
+    await setRange(geometry, index);
+    await frame.waitForFunction(({p, k}) => {
+      const s=SignGeometryApp.getState();
+      return s.iteration===k && s.p===p;
+    }, {p, k:6});
+    const state = await frame.evaluate(() => SignGeometryApp.getState());
+    assert.equal(await reference.isDisabled(),p===2);
+    assert.ok(state.eta > 0 && Number.isFinite(state.eta));
+    assert.equal(state.trajectories.length, 2);
+    assert.doesNotMatch(await frame.locator("#metrics").innerText(), /NaN|undefined|Infinity/);
+    for (const {hessian:[a,b,c], runs} of state.trajectories) {
+      // The same eigenvalues .16 and 1 have the same trace and determinant.
+      close(a+c, 1.16);
+      close(a*c-b*b, .16);
+      assert.equal(runs.length, seeds.length);
+      for (const {selected,euclidean} of runs) {
+        for (const path of [selected, euclidean]) {
+          assert.equal(path.length, horizon+1);
+          path.forEach(({x, y, loss}, i) => {
+            assert.ok([x,y,loss].every(Number.isFinite) && loss>=0);
+            close(loss, .5*(a*x*x+2*b*x*y+c*y*y));
+            if(i)assert.ok(loss<=path[i-1].loss+1e-12);
+          });
+        }
+        close(selected[0].x, euclidean[0].x);
+        close(selected[0].y, euclidean[0].y);
+        if(p===2)selected.forEach(({x,y},i)=>{close(x,euclidean[i].x);close(y,euclidean[i].y);});
+        if(p===1)selected.slice(1).forEach(({x,y},i)=>assert.ok(x===selected[i].x || y===selected[i].y));
+        if(p===Infinity)close(Math.abs(selected[1].x-selected[0].x),Math.abs(selected[1].y-selected[0].y));
+      }
+    }
+    const [axis,rotated] = state.trajectories;
+    assert.ok(Math.abs(axis.hessian[1])<1e-12 && Math.abs(rotated.hessian[1])>.3);
+    const c = Math.cos(rotated.angle), s = Math.sin(rotated.angle);
+    axis.runs.forEach(({euclidean}, j) => {
+      close(euclidean[0].x,seeds[j][0]); close(euclidean[0].y,seeds[j][1]);
+      euclidean.forEach(({x,y,loss},i) => {
+        const other=rotated.runs[j].euclidean[i];
+        close(other.x,c*x-s*y); close(other.y,s*x+c*y); close(other.loss,loss);
+      });
+    });
+    firstSteps.push(axis.runs[0].selected[1]);
+    await drawn();
+    firstPlotHashes.add((await pixels(ids[0])).hash);
+  }
+  assert.equal(firstPlotHashes.size, firstSteps.length, "each tested geometry changes the rendered path");
+  for(let i=0;i<firstSteps.length;i++)for(let j=0;j<i;j++) {
+    assert.ok(Math.hypot(firstSteps[i].x-firstSteps[j].x, firstSteps[i].y-firstSteps[j].y)>1e-3,
+      "changing the ℓp geometry changes the first iterate");
+  }
+  for (const [i,id] of ids.entries()) {
+    await frame.waitForFunction(({id, previous}) => {
+      const canvas = document.querySelector(id);
+      const data = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height).data;
+      let hash = 2166136261;
+      for (let j=0; j<data.length; j+=4) hash=Math.imul(hash^((data[j]<<16)|(data[j+1]<<8)|data[j+2]),16777619);
+      return hash!==previous;
+    }, {id, previous:atStart[i].hash});
+  }
+  await setRange(iteration, horizon);
+  await frame.waitForFunction(horizon => SignGeometryApp.getState().iteration === horizon, horizon);
+  await setRange(iteration, 6);
+  await drawn();
+
+  // All five trajectory colors are painted on both canvases, and focus and
+  // reference controls change both state and the visible plot.
+  async function checkLossReadout(focus, withReference=false) {
+    const {iteration,trajectories}=await frame.evaluate(()=>SignGeometryApp.getState());
+    const metrics=await frame.locator("#metrics").innerText();
+    const get=(label)=>Number(metrics.match(new RegExp(label+String.raw`: ([\d.e-]+)`,"i"))?.[1].replace(/\.$/,""));
+    const check=(label,runs,key)=>{
+      const visible=focus===null?runs:[runs[focus]];
+      const expected=visible.reduce((sum,run)=>sum+run[key][iteration].loss/run[key][0].loss,0)/visible.length;
+      const displayed=get(label);
+      assert.ok(Math.abs(displayed-expected)<=.006*expected,`${label} ${displayed} != ${expected}`);
+    };
+    check("aligned",trajectories[0].runs,"selected");
+    check("rotated",trajectories[1].runs,"selected");
+    if(withReference)check(String.raw`Euclidean \(both\)`,trajectories[0].runs,"euclidean");
+  }
+  const palette = await frame.evaluate(() => SignGeometryView.runColors);
+  assert.equal(new Set(palette).size, seeds.length);
+  const all = await Promise.all(ids.map(pixels));
+  all.forEach(({paletteCounts})=>assert.ok(paletteCounts.every(n=>n>0),"five paths must be painted"));
+  await checkLossReadout(null);
+  const focus = frame.locator("[data-start='2']"), showAll = frame.locator("[data-start='all']");
+  assert.equal(await showAll.getAttribute("aria-pressed"), "true");
+  assert.equal(await reference.isChecked(), false);
+  await focus.click();
+  await frame.waitForFunction(() => SignGeometryApp.getState().focus === 2);
+  assert.equal(await focus.getAttribute("aria-pressed"), "true");
+  assert.equal(await showAll.getAttribute("aria-pressed"), "false");
+  await drawn();
+  const focused = await Promise.all(ids.map(pixels));
+  focused.forEach(({hash,paletteCounts},i)=>{
+    assert.notEqual(hash,all[i].hash,"focus must change displayed paths");
+    assert.ok(paletteCounts.every((n,j)=>j===2?n>0:n===0),"only the focused path is painted");
+  });
+  await checkLossReadout(2);
+
+  await reference.check();
+  await frame.waitForFunction(() => SignGeometryApp.getState().showReference === true);
+  await drawn();
+  const withReference = await Promise.all(ids.map(pixels));
+  withReference.forEach(({hash},i)=>assert.notEqual(hash,focused[i].hash,"reference toggle must change displayed paths"));
+  await checkLossReadout(2,true);
+  await reference.uncheck();
+  await showAll.click();
+  await frame.waitForFunction(() => {
+    const {focus,showReference}=SignGeometryApp.getState();
+    return focus===null && !showReference;
+  });
+  await drawn();
+}
+
 // Optional browser pass:
 // BLOG_OPTIMIZATION_BROWSER=1 BLOG_PLAYWRIGHT_PATH=/path/to/playwright
 // BLOG_PREVIEW_URL=http://127.0.0.1:PORT node tests/blog-optimization-geometry.test.js
@@ -108,6 +281,7 @@ if(process.env.BLOG_OPTIMIZATION_BROWSER==="1") (async()=>{
     const page=await browser.newPage({viewport:{width:1200,height:1000},reducedMotion:"reduce"});
     page.on("pageerror",e=>errors.push(e.message));
     for(const [index,slug] of posts.entries()){
+      await page.setViewportSize({width:1200,height:1000});
       const response=await page.goto(base+articleSource(slug).url);assert.equal(response.status(),200);
       await page.waitForFunction(()=>window.MathJax?.isReady,{}, {timeout:45000});await page.evaluate(()=>new Promise(resolve=>MathJax.Hub.Queue(resolve)));
       assert.ok(await page.evaluate(()=>MathJax.Hub.getAllJax().length)>20);assert.equal(await page.locator(".MathJax_Error,.merror").count(),0);
@@ -120,8 +294,26 @@ if(process.env.BLOG_OPTIMIZATION_BROWSER==="1") (async()=>{
       for(let i=0;i<await sliders.count();i++)for(const endpoint of ["min","max"]){await sliders.nth(i).evaluate((el,endpoint)=>{el.value=el[endpoint];el.dispatchEvent(new Event("input",{bubbles:true}));},endpoint);assert.ok(!/NaN|Infinity|undefined/.test(await frame.locator("#metrics").innerText()));}
       if(index<=1){await frame.getByRole("button",{name:"Reset time"}).click();await frame.getByRole("button",{name:"Play",exact:true}).click();await page.waitForTimeout(250);assert.ok(+(await frame.locator("#time").inputValue())>0);await frame.getByRole("button",{name:"Pause",exact:true}).click();}
       if(index===1){const s=await frame.evaluate(()=>LowRankConditioningApp.getState());assert.equal(s.paths.length,3);for(const p of s.paths){close(p.current.a*p.current.b,p.current.z);close(p.current.a*p.current.a-p.current.b*p.current.b,p.lambda);close(p.current.kappa,(p.current.sigmaMax/p.current.sigmaMin)**2);}assert.equal(await frame.locator("canvas").count(),3);}
-      if(index===2)for(const mode of ["soft","hard","mixed"]){await frame.locator("#direction").selectOption(mode);assert.ok(!/NaN|Infinity|undefined/.test(await frame.locator("#metrics").innerText()));}
-      for(const width of [1200,375,320]){await page.setViewportSize({width,height:1000});await page.waitForTimeout(150);assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),slug+" page overflow "+width);assert.ok(await frame.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),slug+" frame overflow "+width);const dims=await frameEl.evaluate(el=>({height:el.clientHeight,content:el.contentDocument.documentElement.scrollHeight}));assert.ok(dims.height>=dims.content-2,slug+" iframe clipping");}
+      if(index===2){
+        await signGeometryBrowser(frame);
+        if(process.env.BLOG_SCREENSHOT_DIR)await frameEl.screenshot({path:path.join(process.env.BLOG_SCREENSHOT_DIR,slug+"-desktop.png")});
+      }
+      for(const width of [1200,375,320]){
+        await page.setViewportSize({width,height:1000});
+        await page.waitForFunction(() => {
+          const el=document.querySelector("iframe.idea-experiment");
+          return el.clientHeight>=el.contentDocument.documentElement.scrollHeight-2;
+        }, null, {timeout:5000});
+        assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),slug+" page overflow "+width);
+        assert.ok(await frame.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),slug+" frame overflow "+width);
+        if(index===2){
+          const squares=await frame.locator("#plots canvas").evaluateAll(nodes=>nodes.map(node=>{
+            const {width,height}=node.getBoundingClientRect();return {width,height};
+          }));
+          assert.equal(squares.length,2);
+          assert.ok(squares.every(({width,height})=>width>150&&Math.abs(width-height)<=1),slug+" non-square contours at "+width);
+        }
+      }
       if(process.env.BLOG_SCREENSHOT_DIR)await frameEl.screenshot({path:path.join(process.env.BLOG_SCREENSHOT_DIR,slug+"-mobile.png")});
       console.log("Optimization geometry browser passed:",slug);
     }

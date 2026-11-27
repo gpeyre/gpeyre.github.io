@@ -10,12 +10,12 @@
 
 <!-- Generated numerical summary image: start -->
 <meta property="og:image" content="https://www.gpeyre.com/blog/imgs/summaries/sign-gradient-descent-geometry.jpg">
-<meta property="og:image:alt" content="Ordinary and scaled sign-gradient descent losses for two isospectral quadratics, with the soft eigendirection aligned or spread across coordinates.">
+<meta property="og:image:alt" content="Five colored scaled sign descent paths on the same two-dimensional quadratic before and after a 45-degree rotation. Matching colors identify corresponding starting points.">
 <meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="566">
+<meta property="og:image:height" content="622">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://www.gpeyre.com/blog/imgs/summaries/sign-gradient-descent-geometry.jpg">
-<meta name="twitter:image:alt" content="Ordinary and scaled sign-gradient descent losses for two isospectral quadratics, with the soft eigendirection aligned or spread across coordinates.">
+<meta name="twitter:image:alt" content="Five colored scaled sign descent paths on the same two-dimensional quadratic before and after a 45-degree rotation. Matching colors identify corresponding starting points.">
 <!-- Generated numerical summary image: end -->
 </head><body>
 <header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Conditioning of Non-Euclidean Gradient Descent</h1><p class="subtitle">Why rotating a quadratic can change the convergence of sign gradient descent.</p><p class="byline">Gabriel Peyré</p></div></header>
@@ -158,9 +158,12 @@
 </div></details>
 <p>At \(d=20\) and \(\varepsilon=0.01\), the Euclidean condition number is \(100\) for both, but the sign condition numbers are \(1901\) and \(119\). A rotated quadratic with the same spectrum can therefore have a substantially different worst-case guarantee for scaled sign descent.</p>
 
-<h2>Numerical experimentation</h2>
-<p>The experiment matches initial vectors by an orthogonal change of coordinates. Ordinary GD then has exactly the same loss in both problems, up to floating-point arithmetic. Scaled sign descent does not. Select soft, hard, or mixed initial directions to distinguish an actual trajectory from a worst-case upper bound.</p>
-<figure><iframe class="idea-experiment" data-experiment="sign" src="assets/optimization-geometry/index.html?topic=sign" title="Interactive isospectral quadratic comparison for ordinary and scaled sign gradient descent" loading="lazy" style="width:100%;height:850px;border:0;"></iframe><figcaption>Each method uses the geometry-specific step \(1/L_p\). Solid lines are computed losses; dashed lines are Theorem 1's upper bounds. The better condition number is not a promise that every individual run will be faster. No stochastic gradients or momentum are used.</figcaption></figure>
+<h2 id="descent-paths">Numerical experiment: descent paths in two dimensions</h2>
+<p>The left panel shows the quadratic \(f_0(x)=\tfrac12(0.16x_1^2+x_2^2)\). The right panel shows the same quadratic rotated by \(45^\circ\): \(f_\theta(x)=f_0(R_\theta^\top x)\), where \(R_\theta\) is the rotation matrix. Five runs start at different points, and each starting point is rotated by the same angle as the quadratic. Follow a single color across the panels to compare runs with the same starting loss.</p>
+<p>The geometry slider changes the norm \(\ell^p\) used to take a step, not the objective or its contours. At \(p=1\), greedy descent moves along one coordinate at a time. At \(p=2\), each path on the right is a rotated copy of its counterpart on the left. At \(p=\infty\), scaled sign descent moves along a diagonal whenever both gradient components are nonzero. For instance, start A zigzags near the horizontal axis on the left, but its first step on the right lands on the long axis of the ellipses.</p>
+<p>Each run uses the update \(x_{k+1}=x_k+\eta_p d_p(\nabla f_\theta(x_k))\), with \(\eta_p=1/\max(1,2^{1-2/p})\) and \(1/\infty=0\). This step is safe for both orientations: the largest Hessian eigenvalue is \(1\), and \(\|v\|_2^2\leq \max(1,2^{1-2/p})\|v\|_p^2\) in two dimensions. The denominator is a common smoothness bound, not necessarily the sharp \(L_p\) for either panel.</p>
+<figure><iframe class="idea-experiment" data-experiment="sign-geometry" src="assets/sign-geometry/index.html" title="Two-dimensional quadratic contours and steepest descent paths from five starting points" loading="lazy" style="width:100%;height:1100px;border:0;"></iframe><figcaption>Both squares use the same axis limits and objective levels. The dots show the iterates; the larger markers show the selected step. Choose A–E to isolate a pair of paths, or select All to view them together. The loss plot averages over the visible runs after dividing each run’s loss by its starting value.</figcaption></figure>
+<p>For the constants in Proposition 2, the <a href="assets/optimization-geometry/index.html?topic=sign">twenty-dimensional comparison</a> shows computed losses alongside the theorem’s bounds.</p>
 
 <h2>Dependence of conditioning on the optimizer</h2>
 <p>The relevant condition number depends on the optimizer. For Euclidean steepest descent it comes from the spectrum; for a coordinatewise method it also depends on the orientation of the objective. This is why the distinction between balanced and hyperbalanced representations in <a href="balanced-low-rank-conditioning.html">low-rank adaptation</a> becomes meaningful when the optimizer responds to coordinates <a href="#ref-balora">[1]</a>.</p>

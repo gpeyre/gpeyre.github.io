@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Steepest descent in two dimensions</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="core.js"></script>
+  <script defer src="view.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+<main>
+  <header class="intro">
+    <p class="eyebrow">Numerical experiment</p>
+    <h1>Steepest descent in two dimensions</h1>
+    <p>The same quadratic and five starting points are shown before and after a 45° rotation. Change the norm to see which descent paths change.</p>
+  </header>
+  <div class="controls">
+    <div>
+      <label for="exponent">Norm exponent <output id="exponent-value" for="exponent">∞</output></label>
+      <input type="range" id="exponent" min="0" max="16" step="1" value="16">
+      <div class="presets" role="group" aria-label="Common geometries">
+        <button type="button" data-exponent="1">1 · Coordinate</button>
+        <button type="button" data-exponent="2">2 · Euclidean</button>
+        <button type="button" data-exponent="Infinity">∞ · Sign</button>
+      </div>
+    </div>
+    <div>
+      <label for="iteration">Iteration <output id="iteration-value" for="iteration">6 / 48</output></label>
+      <input type="range" id="iteration" min="0" max="48" step="1" value="6" aria-describedby="iteration-description">
+      <p id="iteration-description" class="control-note">Follow the iterates from the starting point to the current step.</p>
+    </div>
+  </div>
+  <div class="start-controls">
+    <div class="starts" id="start-controls" role="group" aria-label="Starting points">
+      <span>Starting points</span>
+      <button type="button" data-start="all" aria-pressed="true">All</button>
+    </div>
+    <label class="baseline"><input type="checkbox" id="show-euclidean"> Show Euclidean reference</label>
+  </div>
+  <div class="plots" id="plots">
+    <section class="panel" aria-labelledby="axis-title">
+      <h2 id="axis-title">Axis-aligned quadratic</h2>
+      <canvas id="axis-plot" role="img" aria-label="Quadratic level sets and descent paths, axis aligned.">The level sets are ellipses with principal axes along the coordinate axes.</canvas>
+    </section>
+    <section class="panel" aria-labelledby="rotated-title">
+      <h2 id="rotated-title">Quadratic rotated by 45°</h2>
+      <canvas id="rotated-plot" role="img" aria-label="Quadratic level sets and descent paths, rotated by 45 degrees.">The level sets are the same ellipses, rotated by 45 degrees.</canvas>
+    </section>
+  </div>
+  <div id="legend" class="legend">
+    <span class="key" id="shown-starts">All five starts</span>
+    <span class="start-key" id="start-key" aria-hidden="true"></span>
+    <span class="key" id="selected-key">Selected norm</span>
+    <span class="key" id="reference-key" hidden><i class="sample reference" aria-hidden="true"></i> Euclidean reference</span>
+    <span class="key"><i class="sample current" aria-hidden="true"></i><span id="current-key">Current iterate</span></span>
+  </div>
+  <section class="panel convergence" aria-labelledby="loss-title">
+    <h2 id="loss-title">Mean relative loss by iteration</h2>
+    <canvas id="loss-plot" role="img" aria-label="Relative losses in the selected and Euclidean geometries over all 48 iterations.">The full-horizon objective curves are shown on a logarithmic vertical scale.</canvas>
+    <div class="legend loss-legend">
+      <span class="key"><i class="sample selected" aria-hidden="true"></i><span id="axis-loss-key">Selected · aligned</span></span>
+      <span class="key" id="rotated-loss-key"><i class="sample rotated" aria-hidden="true"></i>Selected · rotated</span>
+      <span class="key" id="reference-loss-key" hidden><i class="sample reference" aria-hidden="true"></i>Euclidean · both</span>
+    </div>
+    <p class="metrics" id="metrics" aria-live="polite"></p>
+  </section>
+  <p class="reading-note">A–E mark corresponding starts in the two plots. A dot marks each step; the larger open circle marks the current iterate. The minimum is at the origin. The loss chart shows all 48 steps and averages the relative losses of the visible starts. Losses below 10<sup>−8</sup> are drawn at 10<sup>−8</sup>.</p>
+  <noscript><p>This interactive figure requires JavaScript.</p></noscript>
+</main>
+</body>
+</html>
