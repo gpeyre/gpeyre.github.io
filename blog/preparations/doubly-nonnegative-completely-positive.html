@@ -1,11 +1,22 @@
 <!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,follow">
-<meta name="description" content="Positive semidefinite and entrywise nonnegative is not enough for a nonnegative Gram factorization. Concrete matrix examples, a five-cycle obstruction, copositive certificates, and constructive positive features for Gaussian and generalized Gaussian kernels.">
-<meta name="keywords" content="doubly nonnegative matrix, completely positive matrix, DNN cone, CP cone, positive semidefinite matrix, entrywise nonnegative matrix, nonnegative Gram factorization, nonnegative features, Gram matrix, principal square root, Cholesky factorization, cp rank, conic Caratheodory theorem, closed convex cone, five cycle, pentagon graph, copositive matrix, Horn matrix, separating certificate, Motzkin Straus theorem, Maxfield Minc theorem, positive kernel, Gaussian kernel, generalized Gaussian kernel, Laplace kernel, Schoenberg theorem, positive stable law, Bernstein functions, Gaussian scale mixture, random features, infinite variance, Sinkhorn sketching, low rank optimal transport, Meyer Scetbon, Marco Cuturi, Gabriel Peyre, matrice doublement nonnegative, matrice completement positive, factorisation nonnegative">
+<meta name="description" content="Positive semidefinite and entrywise nonnegative is not enough for a nonnegative Gram factorization. Matrix examples, a five-cycle obstruction, and positive features for generalized Gaussian kernels, with an interactive comparison of positive and Fourier sketches.">
+<meta name="keywords" content="doubly nonnegative matrix, completely positive matrix, DNN cone, CP cone, positive semidefinite matrix, entrywise nonnegative matrix, nonnegative Gram factorization, nonnegative features, Gram matrix, principal square root, Cholesky factorization, cp rank, conic Caratheodory theorem, closed convex cone, five cycle, pentagon graph, copositive matrix, Horn matrix, separating certificate, Motzkin Straus theorem, Maxfield Minc theorem, positive kernel, Gaussian kernel, generalized Gaussian kernel, Laplace kernel, Schoenberg theorem, positive stable law, Bernstein functions, Gaussian scale mixture, random features, random Fourier features, Bochner theorem, kernel approximation, infinite variance, Sinkhorn sketching, low rank optimal transport, Meyer Scetbon, Marco Cuturi, Gabriel Peyre, matrice doublement nonnegative, matrice completement positive, factorisation nonnegative">
 <title>Doubly nonnegative and completely positive matrices — Alpha preview — Gabriel Peyré</title>
 <link rel="canonical" href="https://www.gpeyre.com/blog/preparations/doubly-nonnegative-completely-positive.html"><link rel="stylesheet" href="assets/drafts.css"><script defer src="assets/drafts.js"></script><script defer src="../../js/site-analytics.js"></script>
+<script defer src="assets/idea-experiments.js"></script>
 <script type="text/x-mathjax-config">MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],processEscapes:true},SVG:{linebreaks:{automatic:true,width:'container'}}});</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS_SVG"></script>
+
+<!-- Generated numerical summary image: start -->
+<meta property="og:image" content="https://www.gpeyre.com/blog/imgs/summaries/doubly-nonnegative-completely-positive.jpg">
+<meta property="og:image:alt" content="The exact generalized Gaussian kernel, a nonnegative-feature sketch, and a signed Fourier sketch shown on the same square with contours and a fixed blue-to-orange color scale; blue patches reveal negative Fourier values.">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="639">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.gpeyre.com/blog/imgs/summaries/doubly-nonnegative-completely-positive.jpg">
+<meta name="twitter:image:alt" content="The exact generalized Gaussian kernel, a nonnegative-feature sketch, and a signed Fourier sketch shown on the same square with contours and a fixed blue-to-orange color scale; blue patches reveal negative Fourier values.">
+<!-- Generated numerical summary image: end -->
 </head><body>
 <header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Doubly nonnegative and completely positive matrices</h1><p class="subtitle">Nonnegative entries, nonnegative quadratic forms, and nonnegative features are three different requirements.</p><p class="byline">Gabriel Peyré</p></div></header>
 <main class="wrap"><article class="blog-prose">
@@ -222,6 +233,23 @@
 <p>for sufficiently small \(h>0\). It is not even PSD. Concretely, \(p=4\), \(\epsilon=1\), and \(h=1/2\) give \(v^\top Kv\approx-0.7795\).</p>
 <p>Finally, an exact positive representation is not automatically a fast approximation. Sampling \(r\) independent features gives an unbiased, entrywise-positive Gram approximation \(\widetilde K=BB^\top\), with \(B_{i\ell}=\phi(x_i;\Lambda_\ell,Z_\ell)/\sqrt r\). But the Monte Carlo summands, the products \(\phi(x)\phi(y)\), can have enormous or even infinite variance. At \(x=y\ne x_0\), their second moment is \(\mathbb E e^{8\Lambda\|x-x_0\|^2}\), which is infinite for \(p&lt;2\). Complete positivity guarantees nonnegative features, but does not give a useful rank-versus-accuracy bound. The controlled positive features of Scetbon and Cuturi address that additional approximation question <a href="#ref-features">[9]</a>.</p>
 
+<h2 id="numerical-experiment">Numerical experiment: positive and Fourier sketches</h2>
+<p>Each square below displays a function of two scalar positions \((x,y)\in[-2,2]^2\): a pixel is a kernel value, not a point in a two-dimensional data cloud. The first panel is the exact kernel \(k_p(x,y)=e^{-|x-y|^p}\). The other two approximate it with \(r\) real-valued features. The sliders vary \(p\) from \(0.5\) to \(2\) and \(r\) from \(1\) to \(2048\). The lower bound on the slider is a display choice; the construction itself applies to every \(0&lt;p\le2\).</p>
+<p>The positive sketch uses Theorem 2 with \(\epsilon=1\) and \(x_0=0\). For the Fourier sketch <a href="#ref-rff">[10]</a>, use the same scale \(\Lambda\) and Gaussian \(Z\), and an independent phase \(b\) uniform on \([0,2\pi)\):</p>
+\[
+ \omega=\sqrt{2\Lambda}\,Z,\qquad
+ \psi(x)=\sqrt2\cos(\omega x+b).
+\]
+<p>Averaging first over \(b\), then over \(Z\) and \(\Lambda\), gives \(\mathbb E[\psi(x)\psi(y)]=\mathbb E\cos(\omega(x-y))=k_p(x,y)\). The displayed approximations are therefore</p>
+\[
+ \widehat k_+(x,y)=\frac1r\sum_{\ell=1}^r\phi_\ell(x)\phi_\ell(y),
+ \qquad
+ \widehat k_{\rm F}(x,y)=\frac1r\sum_{\ell=1}^r\psi_\ell(x)\psi_\ell(y).
+\]
+<p>Both give PSD Gram matrices and are unbiased before sampling. Only the first guarantees nonnegative entries for every draw. The second can take negative values, visible in blue; this does not contradict positive semidefiniteness. Both use the same number \(r\) of scalar features. We keep a fixed random seed and nested samples as \(r\) increases, and reuse the underlying random numbers when \(p\) changes. The positive stable scales are sampled with Kanter’s formula <a href="#ref-stable-sampling">[11]</a>; at \(p=2\), the scale is exactly one.</p>
+<figure><iframe class="idea-experiment" data-experiment="kernel-sketches" src="assets/kernel-sketches/index.html" title="Generalized Gaussian kernel, positive-feature sketch and random Fourier sketch on a shared signed color scale" loading="lazy"></iframe><figcaption>All three panels use the same fixed color range \([-2,2]\) and the same contour levels. Blue denotes negative values, white zero, and warm colors positive values. Values above the color range retain their actual numerical values; saturation is reported, not used to clip the approximation. The minimum, maximum, negative fraction and root-mean-square error are measured on the displayed \(129\times129\) grid. Narrow peaks and rapid oscillations below its spacing need not be resolved.</figcaption></figure>
+<p>Positivity and accuracy are separate properties. The simple positive features used here can badly underestimate the diagonal away from the origin or occasionally overshoot; their infinite-variance warning above is relevant to this experiment. Increasing \(r\) need not improve either realization monotonically. These are the elementary features from the proof, not the controlled positive-feature approximation of <a href="#ref-features">[9]</a>.</p>
+
 <h2>Bibliography</h2>
 <ol class="references">
 <li id="ref-lowrank">Meyer Scetbon, Marco Cuturi, and Gabriel Peyré. <em>Low-Rank Sinkhorn Factorization</em>. ICML, PMLR 139, 9344–9354, 2021. <a href="https://proceedings.mlr.press/v139/scetbon21a.html">Paper</a>.</li>
@@ -233,6 +261,8 @@
 <li id="ref-schoenberg">Isaac J. Schoenberg. <em>Metric Spaces and Positive Definite Functions</em>. Transactions of the American Mathematical Society 44(3), 522–536, 1938. <a href="https://doi.org/10.1090/S0002-9947-1938-1501980-0">Paper</a> · <a href="https://www.math.ucdavis.edu/~saito/data/high-dimensions/schoenberg.pdf">Scan</a>.</li>
 <li id="ref-bernstein">René L. Schilling, Renming Song, and Zoran Vondraček. <em>Bernstein Functions: Theory and Applications</em>. Second edition, De Gruyter, 2012. <a href="https://doi.org/10.1515/9783110269338">Book</a>.</li>
 <li id="ref-features">Meyer Scetbon and Marco Cuturi. <em>Linear Time Sinkhorn Divergences using Positive Features</em>. Advances in Neural Information Processing Systems 33, 2020. <a href="https://proceedings.neurips.cc/paper_files/paper/2020/hash/9bde76f262285bb1eaeb7b40c758b53e-Abstract.html">Paper</a>.</li>
+<li id="ref-rff">Ali Rahimi and Benjamin Recht. <em>Random Features for Large-Scale Kernel Machines</em>. Advances in Neural Information Processing Systems 20, 2007. <a href="https://proceedings.neurips.cc/paper_files/paper/2007/file/013a006f03dbc5392effeb8f18fda755-Paper.pdf">Paper</a>.</li>
+<li id="ref-stable-sampling">Luc Devroye and Lancelot James. <em>On Simulation and Properties of the Stable Law</em>. 2013 preprint, introduction: Kanter’s positive-stable sampler. <a href="https://luc.devroye.org/devroye-james-stablesurvey-2013.pdf">Author’s manuscript</a>.</li>
 </ol>
 </article>
 <p class="blog-ai-disclosure">How these posts and numerical experiments were prepared: <a href="../ai-disclosure/">AI disclosure</a>.</p>

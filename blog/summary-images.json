@@ -1,6 +1,24 @@
 {
   "version": 1,
   "images": {
+    "doubly-nonnegative-completely-positive": {
+      "path": "/blog/imgs/summaries/doubly-nonnegative-completely-positive.jpg",
+      "width": 1200,
+      "height": 639,
+      "alt": "The exact generalized Gaussian kernel, a nonnegative-feature sketch, and a signed Fourier sketch shown on the same square with contours and a fixed blue-to-orange color scale; blue patches reveal negative Fourier values.",
+      "source": "/blog/preparations/assets/kernel-sketches/index.html",
+      "settings": {
+        "p": 1,
+        "features": 64,
+        "seed": 42,
+        "grid": 129,
+        "domain": [-2, 2],
+        "color_range": [-2, 2],
+        "positive_features": "Theorem 2, origin zero",
+        "fourier_features": "random-phase cosine, one scalar per feature"
+      },
+      "sha256": "e1ec969d5a9682d0afcef6b93e975cf096c12ec279d543155a05da4c5d33890c"
+    },
     "stein-operators-discrepancies": {
       "path": "/blog/imgs/summaries/stein-operators-discrepancies.jpg",
       "width": 1200,

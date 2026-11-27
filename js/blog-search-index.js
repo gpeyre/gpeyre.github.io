@@ -2807,7 +2807,7 @@ window.BLOG_SEARCH_RECORDS = [
     "status": "forthcoming",
     "date": null,
     "title": "Doubly nonnegative and completely positive matrices",
-    "description": "Positive semidefinite and entrywise nonnegative is not enough for a nonnegative Gram factorization. Concrete matrix examples, a five-cycle obstruction, copositive certificates, and constructive positive features for Gaussian and generalized Gaussian kernels.",
+    "description": "Positive semidefinite and entrywise nonnegative is not enough for a nonnegative Gram factorization. Matrix examples, a five-cycle obstruction, and positive features for generalized Gaussian kernels, with an interactive comparison of positive and Fourier sketches.",
     "keywords": [
       "doubly nonnegative matrix",
       "completely positive matrix",
@@ -2839,6 +2839,9 @@ window.BLOG_SEARCH_RECORDS = [
       "Bernstein functions",
       "Gaussian scale mixture",
       "random features",
+      "random Fourier features",
+      "Bochner theorem",
+      "kernel approximation",
       "infinite variance",
       "Sinkhorn sketching",
       "low rank optimal transport",

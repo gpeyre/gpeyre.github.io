@@ -7,6 +7,7 @@ const jobs = [
   {slug:"balanced-low-rank-conditioning",source:"blog/preparations/assets/optimization-geometry/index.html?topic=lowrank",alt:"Three colored scalar-factor training trajectories approach the minimizer hyperbola ab equals one; matching curves show the ambient rank-one Gauss–Newton conditioning and extreme positive Jacobian singular values.",settings:{initial_product:.08,largest_imbalance:3,time:1.1,target:1,loss:"(ab − 1)²",conditioning:"ambient rank-one Gauss–Newton matrix"}},
   {slug:"c-transforms-and-averaging",source:"blog/preparations/assets/transport-geometry/c-transform.html",alt:"Averaged cost profiles, their cost transform, and the nonzero gap to the double transform for a cubic cost.",settings:{p:3,grid_points:241,preset:"symmetric"}},
   {slug:"convex-max-softmax-approximation",source:"blog/preparations/convex-max-softmax-approximation.html",alt:"Independently Adam-trained convex max-affine and smooth log-sum-exp approximation surfaces, shown with identical lighting and height scales.",settings:{width:6,temperature:"automatic",optimizer:"Adam, 2000 steps"}},
+  {slug:"doubly-nonnegative-completely-positive",source:"blog/preparations/assets/kernel-sketches/index.html",alt:"The exact generalized Gaussian kernel, a nonnegative-feature sketch, and a signed Fourier sketch shown on the same square with contours and a fixed blue-to-orange color scale; blue patches reveal negative Fourier values.",settings:{p:1,features:64,seed:42,grid:129,domain:[-2,2],color_range:[-2,2],positive_features:"Theorem 2, origin zero",fourier_features:"random-phase cosine, one scalar per feature"}},
   {slug:"hump-algebra",source:"blog/preparations/assets/hump-algebra/index.html",alt:"Contour plots of two five-bump Gaussian mixtures and their product, with separate labelled color scales showing the product's narrower overlapping peaks.",settings:{bumps:5,phase:.18,separate_scales:true,grid:181,paused:true}},
   {slug:"intrinsic-factor-training-dynamics",source:"blog/preparations/assets/optimization-geometry/index.html?topic=intrinsic",alt:"Factor-space paths along conserved-imbalance hyperbolas and the product evolution at three different imbalances.",settings:{time:1.7,largest_imbalance:2,initial_product:.06}},
   {slug:"lagrangian-density-interpolation",source:"blog/preparations/assets/new-dynamics/index.html?topic=moser",alt:"Moser interpolation halfway between multimodal periodic densities: transported particles alongside speed and flux directions.",settings:{time:.5,particles:420,uniform_background:.14}},
@@ -40,6 +41,23 @@ async function capture(page,job,output,base="http://127.0.0.1:4197/") {
     await page.waitForFunction(()=>document.querySelector("#max-experiment")?.dataset.trainingState==="ready",{},{timeout:180000});
     await frame(page,["#max-surfaces .panel-grid"],"#summary-capture .plot-surface{aspect-ratio:1.08!important}");
     await range(page,"max-azimuth",-45);await range(page,"max-elevation",30);
+  } else if(job.slug==="doubly-nonnegative-completely-positive"){
+    await page.waitForFunction(()=>window.KernelSketchesApp?.getState().ready);
+    await range(page,"power",job.settings.p);
+    await range(page,"sketches",Math.log2(job.settings.features));
+    await page.waitForFunction(()=>KernelSketchesApp.getState().ready);
+    await frame(page,["h1","#plots",".scale-wrap","#saturation"],`
+      #summary-capture h1{text-align:center;font:600 23px/1.3 system-ui!important;margin:0 0 20px!important}
+      #summary-capture #plots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:16px!important}
+      #summary-capture .panel{padding:13px 7px!important}
+      #summary-capture .panel>p{display:block!important;font-size:11px!important}
+      #summary-capture .panel canvas{aspect-ratio:1!important}
+      #summary-capture .scale-wrap{max-width:580px;margin:18px auto 8px}
+      #summary-capture #colorbar{height:54px!important}
+      #summary-capture #saturation{text-align:center;font-size:12px}
+    `);
+    const state=await page.evaluate(()=>KernelSketchesApp.getState());
+    if(!state.ready||state.p!==job.settings.p||state.r!==job.settings.features||state.stats.positive.min<0||state.stats.fourier.min>=0)throw Error("Invalid kernel-sketch capture state");
   } else if(job.slug==="hump-algebra"){
     await page.waitForFunction(()=>window.HumpAlgebraApp);
     await range(page,"bumps",job.settings.bumps);
@@ -111,7 +129,8 @@ async function capture(page,job,output,base="http://127.0.0.1:4197/") {
     }
   }
   await page.waitForTimeout(650);
-  const diagnostics=await page.locator("#summary-capture canvas").evaluateAll(canvases=>canvases.map(c=>{
+  const numericalCanvases=job.slug==="doubly-nonnegative-completely-positive"?"#summary-capture canvas:not(#colorbar)":"#summary-capture canvas";
+  const diagnostics=await page.locator(numericalCanvases).evaluateAll(canvases=>canvases.map(c=>{
     const d=c.getContext("2d").getImageData(0,0,c.width,c.height).data;let min=255,max=0,colored=0;for(let i=0;i<d.length;i+=16){min=Math.min(min,d[i],d[i+1],d[i+2]);max=Math.max(max,d[i],d[i+1],d[i+2]);if(Math.max(d[i],d[i+1],d[i+2])-Math.min(d[i],d[i+1],d[i+2])>15)colored++;}
     return{width:c.width,height:c.height,min,max,colored};
   }));

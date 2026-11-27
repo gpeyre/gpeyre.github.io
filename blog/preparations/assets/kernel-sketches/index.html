@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,follow">
+<title>Positive and Fourier sketches of a generalized Gaussian kernel</title>
+<link rel="stylesheet" href="style.css">
+<script defer src="view.js"></script><script defer src="app.js"></script>
+</head><body><main>
+<p class="eyebrow">Numerical experiment</p>
+<h1>Positive and Fourier kernel sketches</h1>
+<p class="intro">Each square shows a function of two scalar inputs, x and y: the exact kernel exp(−|x−y|<sup>p</sup>), a positive-feature sketch, and a random Fourier sketch. Blue means negative; warm colors mean positive.</p>
+<div class="controls">
+  <label for="power"><span>Exponent p <output id="power-value" for="power">1.00</output></span><input id="power" type="range" min="0.5" max="2" step="0.05" value="1"></label>
+  <label for="sketches"><span>Number of features r <output id="sketches-value" for="sketches">64</output></span><input id="sketches" type="range" min="0" max="11" step="1" value="6"></label>
+</div>
+<p id="status" class="status" role="status" aria-live="polite">Computing the sketches…</p>
+<div id="plots" class="plots" aria-busy="true">
+  <section id="panel-exact" class="panel" aria-labelledby="title-exact"><h2 id="title-exact">Exact kernel</h2><p class="panel-note">exp(−|x−y|<sup>p</sup>)</p><canvas id="plot-exact" role="img" aria-label="Exact generalized Gaussian kernel on the square from minus two to two."></canvas><p id="stats-exact" class="stats"></p></section>
+  <section id="panel-positive" class="panel" aria-labelledby="title-positive"><h2 id="title-positive">Positive-feature sketch</h2><p class="panel-note">Nonnegative at every pair</p><canvas id="plot-positive" role="img" aria-label="Positive-feature Gram approximation on the same square and color scale."></canvas><p id="stats-positive" class="stats"></p></section>
+  <section id="panel-fourier" class="panel" aria-labelledby="title-fourier"><h2 id="title-fourier">Random Fourier sketch</h2><p class="panel-note">Signed values are possible</p><canvas id="plot-fourier" role="img" aria-label="Random Fourier feature Gram approximation on the same square and color scale."></canvas><p id="stats-fourier" class="stats"></p></section>
+</div>
+<div class="scale-wrap"><canvas id="colorbar" role="img" aria-label="Shared fixed linear color scale: negative blue at minus two, near-white at zero, and positive orange at two."></canvas><p>One fixed linear color scale for all panels and settings.</p></div>
+<p class="legend">Thin contours use the same levels in all three panels; the zero contour is dark and thicker. Both approximations are Gram matrices and are positive semidefinite, but only the positive-feature sketch guarantees nonnegative entries.</p>
+<p id="saturation" class="saturation"></p>
+<p class="note">The slider uses 0.5 ≤ p ≤ 2; these representations are valid for 0 &lt; p ≤ 2. Each sketch uses r real-valued features. A fixed random seed and nested feature prefixes make slider comparisons reproducible; changing p reuses the same underlying random draws. The positive features are the construction proved in the article, not a variance-controlled approximation. Their large fluctuations can persist even when r increases.</p>
+<p class="note">Statistics refer to the displayed 129 × 129 grid, not extrema over the whole square. Colors and contours interpolate that grid; very narrow peaks or rapid oscillations below its spacing may not be resolved. Numerical values are never clipped to the color range.</p>
+<noscript>This interactive comparison needs JavaScript. Its feature formulas and positivity properties are explained in the article.</noscript>
+</main></body></html>

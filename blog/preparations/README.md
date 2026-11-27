@@ -73,6 +73,25 @@ photograph, MFO, licensed CC ShareAlike 1.0, with source and license links.
 Run `node tests/blog-completely-positive-presentation.test.js` and the NumPy
 audit `tests/blog-completely-positive-math.test.py`.
 
+The companion `assets/kernel-sketches/` compares the exact one-dimensional
+generalized Gaussian kernel with two genuine rank-at-most-r Gram sketches on
+the square [-2,2]^2. The positive features are those of Theorem 2 at origin
+zero; Fourier features use sqrt(2) cos(sqrt(2 Lambda) Z x + b), with a uniform
+phase. Thus both methods use r real scalar features. Kanter's positive-stable
+sampler supplies Lambda, with Lambda=1 exactly at p=2. Controls cover p in
+[0.5,2] and r in powers of two from 1 to 2048. A fixed seed and nested prefixes
+make revisiting a parameter reproducible. The same base random variables
+are reused when p changes; no sample selection or diagonal normalization is
+performed. All plots share the linear signed color range [-2,2], contour
+levels and spatial axes. Out-of-range colors saturate without modifying the
+computed values; diagnostics describe only the 129-by-129 evaluation grid.
+The text retains the infinite-variance caveat for the elementary positive
+features, and does not claim monotonically improving accuracy. Computation
+runs in a worker; obsolete slider requests cannot replace newer results.
+Run `node tests/blog-kernel-sketches.test.js` and
+`node tests/blog-kernel-sketches-browser.test.cjs`; the latter also accepts
+`BLOG_SITE_ROOT` for a safe build or `--live` for the deployed article.
+
 ## Orthostochastic matrices and optimal transport
 
 `orthostochastic-matrices.html` defines bistochastic and real orthostochastic
