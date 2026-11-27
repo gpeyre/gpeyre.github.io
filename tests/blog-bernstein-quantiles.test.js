@@ -1,7 +1,7 @@
 "use strict";
 
 const assert = require("node:assert/strict");
-const { gaussianCDF, bernsteinQuantileMixture, bernsteinQuantileExperiment } = require("../blog/preparations/assets/ot-lab/core.js");
+const { gaussianCDF, bernsteinQuantileMixture, bernsteinQuantileExperiment, bernsteinQuantileRateSizes } = require("../blog/preparations/assets/ot-lab/core.js");
 
 function close(actual, expected, tolerance = 1e-11) {
   assert.ok(Math.abs(actual - expected) <= tolerance, `${actual} differs from ${expected} by more than ${tolerance}`);
@@ -87,8 +87,54 @@ for (const i of [1, 2, 3]) {
   }
   close(estimate, value, 2e-10);
 }
+
+const sizes = bernsteinQuantileRateSizes;
+assert.ok(Object.isFrozen(sizes));
+assert.equal(sizes[0], 20);
+assert.equal(sizes.at(-1), 20000);
+assert.ok(sizes.length >= 50);
+assert.ok(sizes.every((n, i) => n % 20 === 0 && (!i || n > sizes[i - 1])));
+
+for (const s of [-1, .2, 1]) {
+  const highN = bernsteinQuantileExperiment(s, { sampleSizes:sizes });
+  const refined = bernsteinQuantileExperiment(s, { sampleSizes:sizes, intervals:9600 });
+  assert.equal(highN.quadrature.intervals, 4800);
+  assert.deepEqual(highN.sampleSizes, sizes);
+  assert.notEqual(highN.sampleSizes, sizes);
+  assert.deepEqual(highN.curves, bernsteinQuantileExperiment(s, { sampleSizes:sizes }).curves);
+  for (const [i, curve] of highN.curves.entries()) {
+    const [a, b] = rankFractions[i];
+    assert.deepEqual(curve.points.map(point => point.n), sizes);
+    for (const [j, point] of curve.points.entries()) {
+      assert.equal(point.rank, point.n / b * a);
+      close(point.mass, 1, 5e-11);
+      close(point.signedError, refined.curves[i].points[j].signedError, 1e-12);
+    }
+    assert.ok(curve.points.at(-1).error > 1e-6);
+  }
+
+  // For aligned rank k=nt, the first-order n*bias limit is
+  // −t Q'(t) + t(1−t) Q''(t)/2, from the Beta mean and variance.
+  const asymptotic = bernsteinQuantileExperiment(s, { sampleSizes:[2000,20000] });
+  const { law } = asymptotic;
+  for (const { t, quantile, points } of asymptotic.curves) {
+    const density = law.density(quantile);
+    const derivative = law.means.reduce((acc, mean, i) => {
+      const z = (quantile - mean) / law.sigma;
+      return acc - law.weights[i] * z * standardDensity(z) / law.sigma ** 2;
+    }, 0);
+    const limit = -t / density - .5 * t * (1 - t) * derivative / density ** 3;
+    const discrepancies = points.map(p => Math.abs(p.n * p.signedError - limit));
+    assert.ok(discrepancies[1] < discrepancies[0]);
+    close(points[1].n * points[1].signedError, limit, .035 * Math.max(1, Math.abs(limit)));
+  }
+}
+assert.deepEqual(bernsteinQuantileExperiment(.2, { maxN:1, sampleSizes:[20,40] }).sampleSizes, [20,40]);
+for (const sampleSizes of [[], [1,1], [20,10], [20.5], [0,20], [20,undefined,80], null]) {
+  assert.throws(() => bernsteinQuantileExperiment(0, {sampleSizes}), RangeError);
+}
 for (const s of [-1.01, 1.01, NaN, Infinity, "0"]) assert.throws(() => bernsteinQuantileMixture(s), RangeError);
 for (const options of [{ maxN: 0 }, { maxN: 1.5 }, { intervals: 1199 }, { intervals: 0 }]) {
   assert.throws(() => bernsteinQuantileExperiment(0, options), RangeError);
 }
-console.log("Bernstein quantiles: exact rank rounding, support tails and mass, refined quadrature, sample means and extrema, symmetry, and inverse-CDF Beta reference passed.");
+console.log("Bernstein quantiles: exact ranks, support tails and mass, quadrature refinement, small-sample identities, inverse-CDF Beta reference, and 1/n bias through n=20,000 passed.");

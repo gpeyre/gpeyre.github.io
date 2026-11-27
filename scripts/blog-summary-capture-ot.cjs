@@ -12,7 +12,7 @@ const { chromium } = require(process.env.BLOG_PLAYWRIGHT_PATH || "/Users/gpeyre/
 const base = process.env.BLOG_CAPTURE_BASE || "http://127.0.0.1:4197";
 const definitions = [
   ["autonomous-wasserstein-statistics", "moments", "Two different particle clouds approach the unit circle while their common signed-distance moment follows the same exponential decay.", [1.6]],
-  ["bernstein-polynomials-on-measures", "bernstein", "A two-component Gaussian mixture with five marked quantiles, beside color-matched curves of the absolute Bernstein bias against sample size.", [0.2]],
+  ["bernstein-polynomials-on-measures", "bernstein", "Five marked quantiles of a two-component Gaussian mixture beside color-matched Bernstein bias curves on log–log axes from 20 to 20,000 samples, with a dashed inverse-sample-size guide.", [0.2]],
   ["central-limit-wasserstein-constants", "clt", "Normalized Bernoulli sums in blue and continuous uniform sums in red, shown as probability-preserving bars against dashed standard Gaussian curves, above their Wasserstein and rescaled CDF errors.", [7]],
   ["gaussian-sinkhorn-convergence", "gaussian", "A Gaussian Sinkhorn coupling ellipse with its aligned marginal densities above and to the left; dashed curves show the exact solution, and a dot marks the selected cycle on the marginal-error plot.", [-1, 2]],
   ["noncrossing-matchings-catalan", "matchings", "A noncrossing red-blue matching and the changing costs of one hundred uniformly sampled noncrossing matchings.", [10]],

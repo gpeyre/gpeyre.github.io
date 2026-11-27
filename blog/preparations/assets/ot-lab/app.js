@@ -367,51 +367,55 @@ function matchings(){
 function bernstein(){
   setup("Bernstein approximation of quantiles",
     "Move the slider to change the locations and weights of a two-Gaussian mixture. Five population quantiles on the left match the five Bernstein bias curves on the right.",
-    "The right plot takes the absolute value after averaging the sample quantile, not the average of absolute sampling errors. The empirical quantile is the observation of rank ⌈nt⌉, so the jumps as that rank changes are real. The expectation is computed by quadrature, without sampling. Only interior levels are shown: this Gaussian mixture has no finite endpoint quantiles. Errors below 10⁻⁶ are drawn at 10⁻⁶.",2);
+    "The right plot takes the absolute value after averaging the sample quantile, not the average of absolute sampling errors. Sample sizes are multiples of 20, so nt is an integer for each displayed level and the empirical rank ⌈nt⌉ equals nt. The expectations are computed by quadrature, without sampling or smoothing. The gray dashed 1/n guide is a reference slope, not a fit. Only interior levels are shown, and errors below 10⁻⁶ would be drawn at 10⁻⁶.",2);
   document.body.classList.add("bernstein-lab");
   const s=slider("Mixture shape", -1,1,.2,.05);s.id="bernstein-mixture";
   const colors=["#225f98","#087468","#b84d28","#795293","#88620c"];
   const dashes=["","5 3","","7 3 2 3","3 3"];
-  const densityDomain={x:[-4,4],y:[0,.7]},maxN=120,errorFloor=1e-6;
-  const errorDomain={x:[1,maxN],y:[errorFloor,4]};
+  const densityDomain={x:[-4,4],y:[0,.7]},sampleSizes=M.bernsteinQuantileRateSizes,errorFloor=1e-6;
+  const minN=sampleSizes[0],maxN=sampleSizes.at(-1),errorDomain={x:[minN,maxN],y:[errorFloor,1]};
   const density=plot("Mixture density and population quantiles",densityDomain.x,densityDomain.y,true,{
     x:[-4,-2,0,2,4].map(v=>[v,String(v)]),y:[0,.2,.4,.6].map(v=>[v,String(v)])});
-  const errors=plot("Absolute quantile bias",[1,maxN],[Math.log10(errorFloor),Math.log10(4)],true,{
-    x:[1,20,40,60,80,100,120].map(v=>[v,String(v)]),y:[[-6,"10⁻⁶"],[-4,"10⁻⁴"],[-2,"10⁻²"],[0,"1"]]});
+  const errors=plot("Absolute quantile bias (log–log)",errorDomain.x.map(Math.log10),errorDomain.y.map(Math.log10),true,{
+    x:[[20,"20"],[100,"100"],[1000,"1k"],[10000,"10k"],[20000,"20k"]].map(([n,label])=>[Math.log10(n),label]),
+    y:[[-6,"10⁻⁶"],[-4,"10⁻⁴"],[-2,"10⁻²"],[0,"1"]]});
   density.svg.id="bernstein-density";errors.svg.id="bernstein-errors";
   density.svg.setAttribute("aria-label","Density of the two-Gaussian mixture with five colored population quantiles.");
-  errors.svg.setAttribute("aria-label","Absolute bias of Bernstein quantile estimates, with a logarithmic vertical axis and sample sizes 1 through 120.");
+  errors.svg.setAttribute("aria-label","Absolute bias of Bernstein quantile estimates on logarithmic axes, with sample sizes 20 through 20,000 and a dashed slope-minus-one guide.");
   const legend=document.createElement("p");legend.className="bernstein-legend";$("plots").before(legend);
   const coordinates=Array.from({length:301},(_,i)=>-4+8*i/300);
+  const guideColor="#59686e",guideDash="6 4";
+  const guide=errors.path([minN,maxN].map(n=>[Math.log10(n),Math.log10(.25/n)]),guideColor,1.65,.85,guideDash)
+    .replace("<polyline ","<polyline class=\"bernstein-rate-guide\" ");
+  const swatch=(color,dash)=>`<svg viewBox="0 0 24 9" aria-hidden="true"><line x1="1" y1="5" x2="23" y2="5" stroke="${color}" stroke-width="2.2"${dash?` stroke-dasharray="${dash}"`:""}/></svg>`;
   const models=new Map();let current=null,pending=0;
   function redraw(){
     pending=0;
     const shape=+s.value;
-    if(!models.has(shape))models.set(shape,M.bernsteinQuantileExperiment(shape,{maxN}));
+    if(!models.has(shape))models.set(shape,M.bernsteinQuantileExperiment(shape,{sampleSizes,intervals:4800}));
     const {law,levels,curves}=models.get(shape);
     const profile=coordinates.map(x=>[x,law.density(x)]);
     const area=[[densityDomain.x[0],0],...profile,[densityDomain.x[1],0]];
     const areaPath=area.map((xy,i)=>(i===0?"M ":"L ")+density.project(xy).join(" ")).join(" ");
     let left=`<path d="${areaPath} Z" fill="#e6f3f1"/>`+
       density.path(profile,"#27716f",2.4).replace("<polyline ","<polyline class=\"bernstein-density-curve\" ");
-    let right="";
+    let right=guide;
     curves.forEach(({t,quantile,points},i)=>{
       const color=colors[i],p0=density.project([quantile,0]),p1=density.project([quantile,law.density(quantile)]);
       left+=`<line class="bernstein-quantile-guide" data-t="${t}" x1="${p0[0]}" y1="${p0[1]}" x2="${p1[0]}" y2="${p1[1]}"
         stroke="${color}" stroke-width="1.7" stroke-dasharray="4 3"/>`
         +dot(p1,color,4.2,`class="bernstein-quantile" data-t="${t}" stroke="white" stroke-width="1"`);
-      right+=errors.path(points.map(({n,error})=>[n,Math.log10(Math.max(errorFloor,error))]),color,1.65,1,dashes[i])
+      right+=errors.path(points.map(({n,error})=>[Math.log10(n),Math.log10(Math.max(errorFloor,error))]),color,1.65,1,dashes[i])
         .replace("<polyline ",`<polyline class="bernstein-error-curve" data-t="${t}" `);
     });
     density.draw(left+text([200,286],"Location x"));
     errors.draw(right+text([200,286],"Sample size n"));
-    legend.innerHTML=levels.map((t,i)=>`<span>
-      <svg viewBox="0 0 24 9" aria-hidden="true"><line x1="1" y1="5" x2="23" y2="5" stroke="${colors[i]}" stroke-width="2.2"${dashes[i]?` stroke-dasharray="${dashes[i]}"`:""}/></svg>
-      t = ${t.toFixed(2)}${t===.5?" (median)":""}</span>`).join("");
+    legend.innerHTML=levels.map((t,i)=>`<span>${swatch(colors[i],dashes[i])}t = ${t.toFixed(2)}${t===.5?" (median)":""}</span>`).join("")
+      +`<span>${swatch(guideColor,guideDash)}1/n guide</span>`;
     const list=values=>values.map(x=>x.toFixed(2)).join(", ");
-    const median=curves.find(curve=>curve.t===.5).points[maxN-1];
-    $("status").textContent=`Component means: ${list(law.means)} · weights: ${list(law.weights)} · common standard deviation: ${law.sigma.toFixed(2)} · signed median bias at n = ${maxN}: ${fmt(median.signedError,4)}`;
-    current={shape,law:{means:law.means,weights:law.weights,sigma:law.sigma},levels,curves,densityDomain,errorDomain,errorFloor};
+    const median=curves.find(curve=>curve.t===.5).points.at(-1);
+    $("status").textContent=`Component means: ${list(law.means)} · weights: ${list(law.weights)} · common standard deviation: ${law.sigma.toFixed(2)} · signed median bias at n = ${maxN.toLocaleString("en-US")}: ${fmt(median.signedError,4)}`;
+    current={shape,law:{means:law.means,weights:law.weights,sigma:law.sigma},levels,curves,sampleSizes,densityDomain,errorDomain,errorFloor};
   }
   s.addEventListener("input",()=>{if(!pending)pending=requestAnimationFrame(redraw);});
   cancel=()=>cancelAnimationFrame(pending);

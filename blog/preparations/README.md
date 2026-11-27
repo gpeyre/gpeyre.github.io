@@ -457,7 +457,10 @@ The Bernstein article complements the existing qualitative
 Its experiment changes the centers and weights of a two-component Gaussian
 mixture and tracks absolute Bernstein bias for five population quantiles.
 The curves use deterministic integration of the order-statistic density,
-not sampled quantiles. Run `node tests/blog-bernstein-quantiles.test.js`.
+not sampled quantiles. The log–log plot ranges from 20 to 20,000 samples,
+using multiples of 20 to avoid changes from rounding the empirical rank.
+The dashed inverse-sample-size line is a guide, not a fit.
+Run `node tests/blog-bernstein-quantiles.test.js`.
 
 The CDF-only Wasserstein experiment uses two independently adjustable
 sinusoidal densities on [0,1]. It displays both densities, their CDFs and the

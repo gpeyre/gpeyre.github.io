@@ -19,12 +19,12 @@
 
 <!-- Generated numerical summary image: start -->
 <meta property="og:image" content="https://www.gpeyre.com/blog/imgs/summaries/bernstein-polynomials-on-measures.jpg">
-<meta property="og:image:alt" content="A two-component Gaussian mixture with five marked quantiles, beside color-matched curves of the absolute Bernstein bias against sample size.">
+<meta property="og:image:alt" content="Five marked quantiles of a two-component Gaussian mixture beside color-matched Bernstein bias curves on log–log axes from 20 to 20,000 samples, with a dashed inverse-sample-size guide.">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://www.gpeyre.com/blog/imgs/summaries/bernstein-polynomials-on-measures.jpg">
-<meta name="twitter:image:alt" content="A two-component Gaussian mixture with five marked quantiles, beside color-matched curves of the absolute Bernstein bias against sample size.">
+<meta name="twitter:image:alt" content="Five marked quantiles of a two-component Gaussian mixture beside color-matched Bernstein bias curves on log–log axes from 20 to 20,000 samples, with a dashed inverse-sample-size guide.">
 <!-- Generated numerical summary image: end -->
 </head>
 <body>
@@ -214,9 +214,10 @@
  n\binom{n-1}{k-1}G(x)^{k-1}(1-G(x))^{n-k}\rho(x).
 \]
 <p>Indeed, one sample lies near \(x\), with \(k-1\) samples below it and \(n-k\) above. We integrate \(x\) against this density by quadrature, with negligible Gaussian tails outside the integration window. This avoids Monte Carlo noise. The rank \(\lceil nt\rceil\) changes in jumps, so the errors need not decrease at every integer \(n\).</p>
+<p>To compare rates, the log–log plot uses sample sizes from \(20\) to \(20{,}000\), all multiples of \(20\). This makes \(nt\) an integer for each displayed level and avoids oscillations from rounding the rank. The dashed guide has slope \(-1\), corresponding to \(1/n\) decay; it is not a fit. For these smooth mixtures, expanding the population quantile around \(t\) explains that scale: the mean shift and variance of the uniform order statistic both have order \(1/n\). The leading bias can cancel or take a while to dominate, especially near a low-density valley between the peaks.</p>
 <figure>
   <iframe class="idea-experiment" data-experiment="bernstein" title="Gaussian mixture densities and Bernstein errors for five quantiles" src="assets/ot-lab/index.html?topic=bernstein" loading="lazy"></iframe>
-  <figcaption>The slider changes the two Gaussian centers and their weights, shifting the mixture and changing the heights of its peaks. The left panel marks the population quantiles; the matching colors on the right show \(|B_nF_t(\mu)-F_t(\mu)|\) against \(n\). This is the absolute bias of the Bernstein operator, not the expected absolute error of one empirical quantile.</figcaption>
+  <figcaption>The slider changes the two Gaussian centers and their weights, shifting the mixture and changing the heights of its peaks. The left panel marks the population quantiles; the matching colors on the right show \(|B_nF_t(\mu)-F_t(\mu)|\) against \(n\) on log–log axes. This is the absolute bias of the Bernstein operator, not the expected absolute error of one empirical quantile.</figcaption>
 </figure>
 
 <h2>Interaction order and representation complexity</h2>
