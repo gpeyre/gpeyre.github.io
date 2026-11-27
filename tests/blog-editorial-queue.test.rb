@@ -56,7 +56,12 @@ class BlogEditorialQueueTest < Minitest::Test
       assert_equal ["#{logged.fetch('date')} · [Read post](#{logged.fetch('url')})"], entry[:body].scan(/^Published: (.+)$/).flatten
       assert_equal logged.fetch("message"), entry[:message].delete_suffix(entry[:preview]) + logged.fetch("url")
       assert logged["bluesky_uri"] && logged["bluesky_cid"]
-      assert @records.any? { |r| r["status"] == "published" && ORIGIN + r["url"] == logged["url"] }
+      indexed = @records.any? { |r| r["status"] == "published" && ORIGIN + r["url"] == logged["url"] }
+      if entry[:body].lines.any? { |line| line.strip == "Withdrawn from the website after publication; retained here for editorial history." }
+        refute indexed, "A withdrawn publication must remain out of the public catalogue"
+      else
+        assert indexed, "A publication without a withdrawal note must remain indexed"
+      end
     end
     @journal.reject { |entry| entry["status"] == "announced" }.each do |entry|
       assert @active.any? { |b| b[:slug] == entry["slug"] }, "Pending work must stay active"

@@ -13,7 +13,7 @@ const jobs = [
   {slug:"lagrangian-density-interpolation",source:"blog/preparations/assets/new-dynamics/index.html?topic=moser",alt:"Moser interpolation halfway between multimodal periodic densities: transported particles alongside speed and flux directions.",settings:{time:.5,particles:420,uniform_background:.14}},
   {slug:"langevin-without-a-potential",source:"blog/preparations/assets/new-dynamics/index.html?topic=langevin",alt:"Circulating Ornstein–Uhlenbeck particles approaching the stationary Gaussian ellipse, with drift arrows and recent particle trails.",settings:{time:1.4,particles:180,circulation:1.4,noise:.55}},
   {slug:"projections-corrections-reflections",source:"blog/preparations/assets/projection-lab/index.html",alt:"A Sudoku solved by product-space Douglas–Rachford reflections: teal clues and the verified completed grid, beside the violation and unrounded-residual histories.",settings:{puzzle:0,seed:1,stop:"first independently checked valid Sudoku"}},
-  {slug:"sign-gradient-descent-geometry",source:"blog/preparations/assets/sign-geometry/index.html",alt:"Five colored scaled sign descent paths on the same two-dimensional quadratic before and after a 45-degree rotation. Matching colors identify corresponding starting points.",settings:{exponent:"Infinity",iteration:6,eigenvalues:[.16,1],angles_degrees:[0,45],starts_eigenbasis:[[.9,.66],[-.77,.83],[-1.13,-.39],[.62,-.94],[1.09,-.28]]}},
+  {slug:"sign-gradient-descent-geometry",source:"blog/preparations/assets/sign-geometry/index.html",alt:"Five colored scaled sign descent paths at 1.6 times the default step, on a quadratic before and after rotation by 45 degrees. Matching colors identify corresponding starts.",settings:{exponent:"Infinity",iteration:6,step_multiplier:1.6,step_size:.8,eigenvalues:[.16,1],angles_degrees:[0,45],starts_eigenbasis:[[.9,.66],[-.77,.83],[-1.13,-.39],[.62,-.94],[1.09,-.28]]}},
   {slug:"spectral-wasserstein-distances",source:"blog/preparations/assets/spectral-transport/index.html",alt:"Spectral Wasserstein coupling between two irregular point clouds and the ellipse of their displacement second moment for Schatten exponent two.",settings:{points:48,p:2,time:.5}},
   {slug:"stable-fluids",source:"blog/preparations/assets/new-dynamics/index.html?topic=fluids",alt:"A stirred periodic Stable Fluids simulation: transported teal dye beside the velocity field and signed vorticity.",settings:{steps:18,time_step:.035,viscosity:.0008,dye_diffusivity:.00015,stirring:"four deterministic pointer-drag passes"}},
   {slug:"wasserstein-singular-vectors",source:"blog/preparations/assets/transport-geometry/wasserstein-vectors.html",alt:"Input translated histograms, the learned circular feature geometry, and feature/sample cost matrices after sixteen exact transport-transform cycles.",settings:{family:"periodic translations",cycles:16,regularization:.1}}
@@ -112,16 +112,20 @@ async function capture(page,job,output,base="http://127.0.0.1:4197/") {
     await page.waitForFunction(()=>window.SignGeometryApp?.getState().trajectories.length===2);
     const lastExponent=await page.locator("#exponent").getAttribute("max");
     await range(page,"exponent",lastExponent);
+    await range(page,"step-size",job.settings.step_multiplier);
     await range(page,"iteration",job.settings.iteration);
-    await frame(page,["#plots","#legend"],`
+    await frame(page,["#plots","#legend","#step-size-value"],`
       #summary-capture #plots{max-width:1030px;margin-inline:auto;grid-template-columns:repeat(2,minmax(0,1fr))!important}
       #summary-capture #legend{justify-content:center;margin:16px auto 0!important}
+      #summary-capture #step-size-value{display:block;text-align:center;margin-top:8px;font:600 14px/1.35 system-ui}
+      #summary-capture #step-size-value::before{content:"Step size: "}
     `);
     const state=await page.evaluate(()=>{
-      const {p,iteration,trajectories}=SignGeometryApp.getState();
-      return {isSign:p===Infinity,iteration,starts:SignGeometryCore.seeds,runCounts:trajectories.map(t=>t.runs.length)};
+      const {p,iteration,multiplier,eta,focus,showReference,trajectories}=SignGeometryApp.getState();
+      return {isSign:p===Infinity,iteration,multiplier,eta,focus,showReference,starts:SignGeometryCore.seeds,runCounts:trajectories.map(t=>t.runs.length)};
     });
-    if(!state.isSign||state.iteration!==job.settings.iteration||state.runCounts.some(count=>count!==5)||
+    if(!state.isSign||state.iteration!==job.settings.iteration||state.multiplier!==job.settings.step_multiplier||
+       state.eta!==job.settings.step_size||state.focus!==null||state.showReference||state.runCounts.some(count=>count!==5)||
        JSON.stringify(state.starts)!==JSON.stringify(job.settings.starts_eigenbasis))throw Error("Invalid sign-geometry capture state");
   } else if(job.slug==="intrinsic-factor-training-dynamics"){
     await frame(page,[".panels","#legend"]);

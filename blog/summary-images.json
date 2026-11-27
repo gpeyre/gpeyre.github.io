@@ -668,18 +668,20 @@
     },
     "sign-gradient-descent-geometry": {
       "path": "/blog/imgs/summaries/sign-gradient-descent-geometry.jpg",
-      "alt": "Five colored scaled sign descent paths on the same two-dimensional quadratic before and after a 45-degree rotation. Matching colors identify corresponding starting points.",
+      "alt": "Five colored scaled sign descent paths at 1.6 times the default step, on a quadratic before and after rotation by 45 degrees. Matching colors identify corresponding starts.",
       "width": 1200,
-      "height": 622,
+      "height": 649,
       "source": "/blog/preparations/assets/sign-geometry/index.html",
       "settings": {
         "exponent": "Infinity",
         "iteration": 6,
+        "step_multiplier": 1.6,
+        "step_size": 0.8,
         "eigenvalues": [0.16, 1],
         "angles_degrees": [0, 45],
         "starts_eigenbasis": [[0.9, 0.66], [-0.77, 0.83], [-1.13, -0.39], [0.62, -0.94], [1.09, -0.28]]
       },
-      "sha256": "d1c0d26f2ec2020d50b8074ce17b808c87b26da3660f4b54aaf0bf38ec0aeda8"
+      "sha256": "a5c4631498a0337022f8de1bc679bacc03d9a461ac2ad5277bc95cff34df1f6e"
     },
     "spectral-wasserstein-distances": {
       "path": "/blog/imgs/summaries/spectral-wasserstein-distances.jpg",

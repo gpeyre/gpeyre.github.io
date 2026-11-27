@@ -79,7 +79,7 @@ the square [-2,2]^2. The positive features are those of Theorem 2 at origin
 zero; Fourier features use sqrt(2) cos(sqrt(2 Lambda) Z x + b), with a uniform
 phase. Thus both methods use r real scalar features. Kanter's positive-stable
 sampler supplies Lambda, with Lambda=1 exactly at p=2. Controls cover p in
-[0.5,2] and r in powers of two from 1 to 2048. A fixed seed and nested prefixes
+[0.5,2] and r in powers of two from 1 to 65,536. A fixed seed and nested prefixes
 make revisiting a parameter reproducible. The same base random variables
 are reused when p changes; no sample selection or diagonal normalization is
 performed. All plots share the linear signed color range [-2,2], contour
@@ -283,8 +283,10 @@ The norm-steepest experiment in `assets/sign-geometry/` compares the same
 two-dimensional quadratic and five color-matched starting points before and
 after a 45° rotation.
 The exponent slider includes greedy coordinate descent, Euclidean descent, and
-scaled sign descent. A common smoothness bound gives a safe fixed step for
-both orientations at each exponent. The panels use matched axes, contour
+scaled sign descent. The step-size slider multiplies the reciprocal of a
+common smoothness bound by 0.1–1.9, with 1 as the default. This uses the same
+step in both orientations and scales the Euclidean reference by the same
+factor. The panels use matched axes, contour
 levels and iteration indices. Readers can isolate a start or overlay the
 Euclidean reference. The loss plot averages normalized losses over the visible
 starts. The original twenty-dimensional comparison remains linked from the article.

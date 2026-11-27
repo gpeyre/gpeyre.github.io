@@ -100,11 +100,15 @@ console.log("Optimization geometry: scalar invariants and independent factor ODE
 async function signGeometryBrowser(frame) {
   await frame.waitForFunction(() => window.SignGeometryApp?.getState().trajectories.length === 2);
   const geometry = frame.locator("#exponent"), iteration = frame.locator("#iteration");
+  const step = frame.locator("#step-size");
   const reference = frame.locator("#show-euclidean");
   const exponents = await frame.evaluate(() => window.SignGeometryCore.exponents);
   const seeds = [[.90,.66],[-.77,.83],[-1.13,-.39],[.62,-.94],[1.09,-.28]];
   assert.equal(exponents[0], 1);
   assert.equal(exponents.at(-1), Infinity);
+  for (const [key,value] of [["min",.1],["max",1.9],["step",.05],["value",1]]) {
+    assert.equal(+(await step.getAttribute(key)),value);
+  }
   const horizon = +(await iteration.getAttribute("max"));
   assert.ok(horizon >= 20);
 
@@ -115,6 +119,10 @@ async function signGeometryBrowser(frame) {
     }, value);
   }
   const drawn = () => frame.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  // The shared browser harness runs each slider through its endpoints before
+  // entering this helper. Restore the default for the prior comparisons.
+  await setRange(step,1);
+  await frame.waitForFunction(() => SignGeometryApp.getState().multiplier===1);
 
   // Rendered pixels, rather than just the computed state, must change as the
   // slider moves. Compare each plot before and after revealing a trajectory.
@@ -261,6 +269,63 @@ async function signGeometryBrowser(frame) {
   const withReference = await Promise.all(ids.map(pixels));
   withReference.forEach(({hash},i)=>assert.notEqual(hash,focused[i].hash,"reference toggle must change displayed paths"));
   await checkLossReadout(2,true);
+
+  const baselineLoss = (await pixels("#loss-plot")).hash;
+  const baseline = await frame.evaluate(() => SignGeometryApp.getState());
+  await setRange(step,.4);
+  await frame.waitForFunction(() => SignGeometryApp.getState().multiplier===.4);
+  const changed = await frame.evaluate(() => SignGeometryApp.getState());
+  assert.equal(changed.p,Infinity);
+  assert.equal(changed.iteration,6);
+  assert.equal(changed.focus,2);
+  assert.equal(changed.showReference,true);
+  close(changed.eta,.2);
+  close(changed.referenceEta,.4);
+  assert.match(await frame.locator("#step-size-value").innerText(),/0\.40×.*η = 0\.2/);
+  assert.match(await step.getAttribute("aria-valuetext"),/0\.40 times default.*step size 0\.2/);
+  changed.trajectories.forEach(({hessian:[a,b,c],runs},i)=>{
+    const {selected,euclidean}=runs[2];
+    const {x,y}=selected[0], gx=a*x+b*y, gy=b*x+c*y;
+    const scale=Math.abs(gx)+Math.abs(gy);
+    close(selected[1].x,x-.2*scale*Math.sign(gx));
+    close(selected[1].y,y-.2*scale*Math.sign(gy));
+    close(euclidean[1].x,x-.4*gx);
+    close(euclidean[1].y,y-.4*gy);
+    const before=baseline.trajectories[i].runs[2].selected[6];
+    assert.ok(Math.hypot(selected[6].x-before.x,selected[6].y-before.y)>.01,"the current point moves");
+  });
+  await drawn();
+  (await Promise.all(ids.map(pixels))).forEach(({hash},i)=>assert.notEqual(hash,withReference[i].hash));
+  assert.notEqual((await pixels("#loss-plot")).hash,baselineLoss,"step changes must redraw the loss chart");
+  await checkLossReadout(2,true);
+
+  for (const [key,value] of [["Home",.1],["End",1.9]]) {
+    await step.press(key);
+    await frame.waitForFunction(value=>SignGeometryApp.getState().multiplier===value,value);
+    const state=await frame.evaluate(()=>SignGeometryApp.getState());
+    close(state.eta,value/2);
+    close(state.referenceEta,value);
+    for(const {runs} of state.trajectories)for(const {selected,euclidean} of runs) {
+      for(const path of [selected,euclidean])path.slice(1).forEach(({loss},i)=>{
+        assert.ok(Number.isFinite(loss) && loss<=path[i].loss+1e-12);
+      });
+    }
+  }
+  await setRange(geometry,exponents.indexOf(2));
+  await frame.waitForFunction(()=>SignGeometryApp.getState().p===2);
+  const euclideanStep=await frame.evaluate(()=>SignGeometryApp.getState());
+  close(euclideanStep.eta,1.9);
+  close(euclideanStep.referenceEta,1.9);
+  assert.equal(euclideanStep.showReference,false);
+  const [axis,rotated]=euclideanStep.trajectories, co=Math.cos(rotated.angle), si=Math.sin(rotated.angle);
+  axis.runs.forEach(({selected},j)=>selected.forEach(({x,y,loss},i)=>{
+    const other=rotated.runs[j].selected[i];
+    close(other.x,co*x-si*y); close(other.y,si*x+co*y); close(other.loss,loss);
+    const reference=axis.runs[j].euclidean[i];
+    close(x,reference.x); close(y,reference.y);
+  }));
+  await setRange(geometry,exponents.indexOf(Infinity));
+  await setRange(step,1);
   await reference.uncheck();
   await showAll.click();
   await frame.waitForFunction(() => {

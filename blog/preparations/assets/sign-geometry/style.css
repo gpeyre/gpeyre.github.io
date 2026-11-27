@@ -26,7 +26,7 @@ h1 { font-size: clamp(1.08rem, 3vw, 1.56rem); line-height: 1.23; margin: .32rem 
 
 .controls {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px 18px;
   background: #e9f0f0;
   border: 1px solid #d4e1e0;
@@ -105,11 +105,20 @@ canvas { display: block; width: 100%; }
 .metrics { text-align: center; font-size: .73rem; line-height: 1.45; min-height: 1.45em; color: #3d545a; font-variant-numeric: tabular-nums; }
 .reading-note { margin-top: 9px; font-size: .74rem; line-height: 1.48; color: #45616a; }
 
+@media (max-width: 690px) {
+  .controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .controls > :last-child { grid-column: 1 / -1; }
+}
+
 @media (max-width: 510px) {
   main { padding: 11px; }
   .controls, .plots { grid-template-columns: minmax(0, 1fr); }
   .controls { padding: 9px 11px; }
   .panel h2 { font-size: .86rem; }
+}
+
+@media (max-width: 360px) {
+  .starts > span:first-child { flex-basis: 100%; }
 }
 
 @media (max-width: 360px) {

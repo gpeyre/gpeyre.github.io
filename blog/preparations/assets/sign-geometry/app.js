@@ -6,6 +6,7 @@
   const main = document.querySelector("main");
   const presets = Array.from(document.querySelectorAll("button[data-exponent]"));
   const exponent = $("exponent"), iteration = $("iteration"), baseline = $("show-euclidean");
+  const stepSize = $("step-size"), stepConfig = core.stepMultipliers;
   const runIds = core.seeds.map((_, i) => i);
   const letter = i => String.fromCharCode(65 + i);
   const colors = view.runColors;
@@ -27,7 +28,11 @@
   const startButtons = Array.from(document.querySelectorAll("button[data-start]"));
   exponent.max = String(core.exponents.length - 1);
   iteration.max = String(core.horizon);
-  let state = core.compute(core.exponents[Number(exponent.value)]), k = Number(iteration.value);
+  stepSize.min = String(stepConfig.min);
+  stepSize.max = String(stepConfig.max);
+  stepSize.step = String(stepConfig.step);
+  stepSize.defaultValue = String(stepConfig.default);
+  let state = core.compute(core.exponents[Number(exponent.value)], Number(stepSize.value)), k = Number(iteration.value);
   let animationFrame = 0, focus = null, curves;
 
   function label(p) { return p === Infinity ? "∞" : String(p); }
@@ -57,7 +62,7 @@
   }
 
   function updateText() {
-    const {p, trajectories} = state, comparison = showReference();
+    const {p, trajectories, multiplier, eta} = state, comparison = showReference();
     const [axis, rotated] = trajectories;
     curves = {
       aligned: relativeLossCurve(axis, "selected"),
@@ -66,6 +71,8 @@
     };
     $("exponent-value").textContent = label(p);
     exponent.setAttribute("aria-valuetext", "p = " + (p === Infinity ? "infinity" : p) + ", " + method(p));
+    $("step-size-value").textContent = multiplier.toFixed(2) + "× · η = " + format(eta);
+    stepSize.setAttribute("aria-valuetext", multiplier.toFixed(2) + " times default, step size " + format(eta));
     $("iteration-value").textContent = k + " / " + core.horizon;
     iteration.setAttribute("aria-valuetext", "Iteration " + k + " of " + core.horizon);
     presets.forEach(button => button.setAttribute("aria-pressed", String(Number(button.dataset.exponent) === p)));
@@ -117,12 +124,14 @@
   }
   function update() {
     const p = core.exponents[Number(exponent.value)];
-    if (p !== state.p) state = core.compute(p);
+    const multiplier = Number(stepSize.value);
+    if (p !== state.p || multiplier !== state.multiplier) state = core.compute(p, multiplier);
     k = Number(iteration.value);
     updateText();
     scheduleDraw();
   }
   exponent.addEventListener("input", update);
+  stepSize.addEventListener("input", update);
   iteration.addEventListener("input", update);
   baseline.addEventListener("change", update);
   startButtons.forEach(button => button.addEventListener("click", () => {

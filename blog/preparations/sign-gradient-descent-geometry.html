@@ -10,12 +10,12 @@
 
 <!-- Generated numerical summary image: start -->
 <meta property="og:image" content="https://www.gpeyre.com/blog/imgs/summaries/sign-gradient-descent-geometry.jpg">
-<meta property="og:image:alt" content="Five colored scaled sign descent paths on the same two-dimensional quadratic before and after a 45-degree rotation. Matching colors identify corresponding starting points.">
+<meta property="og:image:alt" content="Five colored scaled sign descent paths at 1.6 times the default step, on a quadratic before and after rotation by 45 degrees. Matching colors identify corresponding starts.">
 <meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="622">
+<meta property="og:image:height" content="649">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://www.gpeyre.com/blog/imgs/summaries/sign-gradient-descent-geometry.jpg">
-<meta name="twitter:image:alt" content="Five colored scaled sign descent paths on the same two-dimensional quadratic before and after a 45-degree rotation. Matching colors identify corresponding starting points.">
+<meta name="twitter:image:alt" content="Five colored scaled sign descent paths at 1.6 times the default step, on a quadratic before and after rotation by 45 degrees. Matching colors identify corresponding starts.">
 <!-- Generated numerical summary image: end -->
 </head><body>
 <header class="draft-header"><div class="wrap"><a class="draft-back" href="index.html">← Forthcoming posts</a><p class="draft-status">Alpha preview · Work in progress</p><p class="draft-notice">An early version of a forthcoming blog post. The text, proofs, and examples may still evolve.</p><h1>Conditioning of Non-Euclidean Gradient Descent</h1><p class="subtitle">Why rotating a quadratic can change the convergence of sign gradient descent.</p><p class="byline">Gabriel Peyré</p></div></header>
@@ -160,8 +160,13 @@
 
 <h2 id="descent-paths">Numerical experiment: descent paths in two dimensions</h2>
 <p>The left panel shows the quadratic \(f_0(x)=\tfrac12(0.16x_1^2+x_2^2)\). The right panel shows the same quadratic rotated by \(45^\circ\): \(f_\theta(x)=f_0(R_\theta^\top x)\), where \(R_\theta\) is the rotation matrix. Five runs start at different points, and each starting point is rotated by the same angle as the quadratic. Follow a single color across the panels to compare runs with the same starting loss.</p>
-<p>The geometry slider changes the norm \(\ell^p\) used to take a step, not the objective or its contours. At \(p=1\), greedy descent moves along one coordinate at a time. At \(p=2\), each path on the right is a rotated copy of its counterpart on the left. At \(p=\infty\), scaled sign descent moves along a diagonal whenever both gradient components are nonzero. For instance, start A zigzags near the horizontal axis on the left, but its first step on the right lands on the long axis of the ellipses.</p>
-<p>Each run uses the update \(x_{k+1}=x_k+\eta_p d_p(\nabla f_\theta(x_k))\), with \(\eta_p=1/\max(1,2^{1-2/p})\) and \(1/\infty=0\). This step is safe for both orientations: the largest Hessian eigenvalue is \(1\), and \(\|v\|_2^2\leq \max(1,2^{1-2/p})\|v\|_p^2\) in two dimensions. The denominator is a common smoothness bound, not necessarily the sharp \(L_p\) for either panel.</p>
+<p>The geometry slider changes the norm \(\ell^p\) used to take a step, not the objective or its contours. At \(p=1\), greedy descent moves along one coordinate at a time. At \(p=2\), each path on the right is a rotated copy of its counterpart on the left. At \(p=\infty\), scaled sign descent moves along a diagonal whenever both gradient components are nonzero. At the default step size, start A zigzags near the horizontal axis on the left, but its first step on the right lands on the long axis of the ellipses.</p>
+<p>Each run uses \(x_{k+1}=x_k+\eta\,d_p(\nabla f_\theta(x_k))\). The step-size slider sets a multiplier \(s\) from \(0.1\) to \(1.9\), with actual step size \(\eta=s/B_p\), where \(B_p=\max(1,2^{1-2/p})\) and \(1/\infty=0\). This is a common smoothness bound for both orientations, not necessarily the sharp \(L_p\): the largest Hessian eigenvalue is \(1\) and \(\|v\|_2^2\leq B_p\|v\|_p^2\) in two dimensions. The Euclidean reference uses the same multiplier with \(B_2=1\).</p>
+<p>Try \(p=2\) with a multiplier above \(1\): the iterates can cross the long axis from one step to the next even as the loss falls. With \(g=\nabla f_\theta(x)\) and \(x^+=x+\eta d_p(g)\), the quadratic upper bound and the identities for \(d_p\) give</p>
+\[
+ f_\theta(x^+)-f_\theta(x)\leq-\eta(1-s/2)\,\|g\|_q^2.
+\]
+<p>Thus every step allowed by the slider still decreases the loss when \(g\ne0\).</p>
 <figure><iframe class="idea-experiment" data-experiment="sign-geometry" src="assets/sign-geometry/index.html" title="Two-dimensional quadratic contours and steepest descent paths from five starting points" loading="lazy" style="width:100%;height:1100px;border:0;"></iframe><figcaption>Both squares use the same axis limits and objective levels. The dots show the iterates; the larger markers show the selected step. Choose A–E to isolate a pair of paths, or select All to view them together. The loss plot averages over the visible runs after dividing each run’s loss by its starting value.</figcaption></figure>
 <p>For the constants in Proposition 2, the <a href="assets/optimization-geometry/index.html?topic=sign">twenty-dimensional comparison</a> shows computed losses alongside the theorem’s bounds.</p>
 

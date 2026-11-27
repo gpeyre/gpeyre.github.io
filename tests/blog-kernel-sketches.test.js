@@ -107,14 +107,21 @@ assert.ok(saturated.stats.positive.max>2,"Values above the palette must not be c
 close(saturated.stats.positive.saturatedFraction,
   Array.from(saturated.positive).filter(value=>value>2).length/saturated.positive.length);
 close(initial.stats.fourier.rmse,Math.sqrt(sum(Array.from(initial.fourier,(value,i)=>(value-initial.exact[i])**2))/initial.fourier.length));
-for(const p of [.5,2])assert.ok(K.compute(p,4096,{size:17}).positive.every(Number.isFinite));
+assert.equal(K.maxSamples,65536);
+for(const p of [.5,2]){
+  const grid=K.compute(p,K.maxSamples,{size:17});
+  assert.equal(grid.r,65536);
+  assert.equal(grid.positive[8*17+8],1);
+  assert.equal(grid.stats.positive.negativeFraction,0);
+  for(const method of ["positive","fourier"])assert.ok(grid[method].every(Number.isFinite));
+}
 
 // Ordinary floating-point underflow may produce zero, but no negative
 // positive feature; its numerical value is not artificially floored.
 assert.equal(K.positiveFeature(1,{logLambda:1500,z:1}),0);
 assert.equal(K.positiveFeature(0,{logLambda:1500,z:1}),1);
 for(const invalid of [0,.49,2.01,NaN,Infinity])assert.throws(()=>K.compute(invalid,4),RangeError);
-for(const invalid of [0,-1,1.5,4097])assert.throws(()=>K.compute(1,invalid),RangeError);
+for(const invalid of [0,-1,1.5,K.maxSamples+1])assert.throws(()=>K.compute(1,invalid),RangeError);
 for(const invalid of [2,258,3.5])assert.throws(()=>K.compute(1,4,{size:invalid}),RangeError);
 
 console.log("Kernel sketches: stable-scale normalization, exact conditional features, PSD, positivity, fixed prefixes, genuine signed values and finite grids passed.");

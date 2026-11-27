@@ -11,7 +11,7 @@
 <p class="intro">Each square shows a function of two scalar inputs, x and y: the exact kernel exp(−|x−y|<sup>p</sup>), a positive-feature sketch, and a random Fourier sketch. Blue means negative; warm colors mean positive.</p>
 <div class="controls">
   <label for="power"><span>Exponent p <output id="power-value" for="power">1.00</output></span><input id="power" type="range" min="0.5" max="2" step="0.05" value="1"></label>
-  <label for="sketches"><span>Number of features r <output id="sketches-value" for="sketches">64</output></span><input id="sketches" type="range" min="0" max="11" step="1" value="6"></label>
+  <label for="sketches"><span>Number of features r <output id="sketches-value" for="sketches">64</output></span><input id="sketches" type="range" min="0" max="16" step="1" value="6" aria-describedby="feature-range"></label>
 </div>
 <p id="status" class="status" role="status" aria-live="polite">Computing the sketches…</p>
 <div id="plots" class="plots" aria-busy="true">
@@ -22,7 +22,7 @@
 <div class="scale-wrap"><canvas id="colorbar" role="img" aria-label="Shared fixed linear color scale: negative blue at minus two, near-white at zero, and positive orange at two."></canvas><p>One fixed linear color scale for all panels and settings.</p></div>
 <p class="legend">Thin contours use the same levels in all three panels; the zero contour is dark and thicker. Both approximations are Gram matrices and are positive semidefinite, but only the positive-feature sketch guarantees nonnegative entries.</p>
 <p id="saturation" class="saturation"></p>
-<p class="note">The slider uses 0.5 ≤ p ≤ 2; these representations are valid for 0 &lt; p ≤ 2. Each sketch uses r real-valued features. A fixed random seed and nested feature prefixes make slider comparisons reproducible; changing p reuses the same underlying random draws. The positive features are the construction proved in the article, not a variance-controlled approximation. Their large fluctuations can persist even when r increases.</p>
+<p class="note">The slider uses 0.5 ≤ p ≤ 2; these representations are valid for 0 &lt; p ≤ 2. <span id="feature-range">The feature count doubles at each step, up to 65,536 per sketch. Large counts may take a moment to compute.</span> A fixed seed and nested sample prefixes make comparisons reproducible; changing p reuses the same underlying draws. The positive features are the construction proved in the article, not a variance-controlled approximation. Their large fluctuations can persist even when r increases.</p>
 <p class="note">Statistics refer to the displayed 129 × 129 grid, not extrema over the whole square. Colors and contours interpolate that grid; very narrow peaks or rapid oscillations below its spacing may not be resolved. Numerical values are never clipped to the color range.</p>
 <noscript>This interactive comparison needs JavaScript. Its feature formulas and positivity properties are explained in the article.</noscript>
 </main></body></html>

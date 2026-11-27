@@ -12,6 +12,7 @@
   const seeds = Object.freeze([[.90, .66], [-.77, .83], [-1.13, -.39], [.62, -.94], [1.09, -.28]].map(Object.freeze));
   const angles = Object.freeze([0, Math.PI / 4]);
   const levels = Object.freeze([.006, .012, .025, .05, .09, .15, .24, .36, .52, .74, 1, 1.45, 2.05]);
+  const stepMultipliers = Object.freeze({ min: .1, max: 1.9, step: .05, default: 1 });
   const horizon = 48, extent = 1.45;
 
   function checkExponent(p) {
@@ -73,19 +74,23 @@
     return points;
   }
 
-  function compute(p) {
-    const eta = stepSize(p);
+  function compute(p, multiplier = stepMultipliers.default) {
+    if (!Number.isFinite(multiplier) || multiplier < stepMultipliers.min || multiplier > stepMultipliers.max) {
+      throw new RangeError("Choose a step-size multiplier in [0.1, 1.9]");
+    }
+    // Keep both methods at the same fraction of their smoothness steps.
+    const eta = multiplier * stepSize(p), referenceEta = multiplier * stepSize(2);
     const trajectories = angles.map(angle => {
       const hessian = hessianAt(angle);
       const runs = seeds.map(seed => {
         const start = rotate(angle, ...seed);
-        return { selected: descent(hessian, start, p, eta), euclidean: descent(hessian, start, 2, 1) };
+        return { selected: descent(hessian, start, p, eta), euclidean: descent(hessian, start, 2, referenceEta) };
       });
       return { angle, hessian, runs };
     });
-    return { p, trajectories, eta };
+    return { p, trajectories, eta, multiplier, referenceEta };
   }
 
-  return Object.freeze({ exponents, eigenvalues, seeds, horizon, extent, levels,
+  return Object.freeze({ exponents, eigenvalues, seeds, horizon, extent, levels, stepMultipliers,
     direction, stepSize, rotate, hessianAt, energy, contourPoint, compute });
 });

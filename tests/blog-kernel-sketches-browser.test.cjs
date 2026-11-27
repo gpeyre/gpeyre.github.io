@@ -158,11 +158,12 @@ async function main() {
     assert.equal(Number(await page.locator("#power").getAttribute("min")), .5);
     assert.equal(Number(await page.locator("#power").getAttribute("max")), 2);
     assert.equal(Number(await page.locator("#sketches").getAttribute("min")), 0);
-    assert.equal(Number(await page.locator("#sketches").getAttribute("max")), 11);
+    assert.equal(Number(await page.locator("#sketches").getAttribute("max")), 16);
+    assert.equal(Number(await page.locator("#sketches").getAttribute("step")), 1);
     const initial = await inspect(page);
     assert.ok(initial.grids.fourier.minimum < 0, "The default Fourier sketch must retain its negative entries");
     const parameterChecks = [];
-    for (const [p, r] of [[.5, 1], [.5, 2048], [1, 8], [1.5, 64], [2, 1], [2, 2048]]) {
+    for (const [p, r] of [[.5, 1], [.5, 2048], [.5, 65536], [1, 8], [1.5, 64], [2, 1], [2, 2048], [2, 65536]]) {
       const start = performance.now(); await setControls(page, p, r);
       const report = await inspect(page);
       parameterChecks.push({ p, r, elapsedMs: Math.round(performance.now() - start), stats: report.state.stats });
@@ -173,8 +174,19 @@ async function main() {
 
     // Requests superseded during a costly worker computation must not repaint
     // stale data under the newly selected parameter labels.
+    const maximumRequest = await page.evaluate(async () => {
+      for (const [id, value] of [["power", .5], ["sketches", 16]]) {
+        const input = document.getElementById(id); input.value = String(value);
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+      // Let the scheduled worker start before submitting replacement requests.
+      // Animation frames must still run while the numerical work is in flight.
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      return KernelSketchesApp.getState();
+    });
+    assert.equal(maximumRequest.p, .5); assert.equal(maximumRequest.r, 65536);
     const transient = await page.evaluate(() => {
-      for (const [p, exponent] of [[.5, 11], [2, 10], [.75, 9], [1.25, 3]]) {
+      for (const [p, exponent] of [[2, 16], [.75, 15], [1.25, 3]]) {
         for (const [id, value] of [["power", p], ["sketches", exponent]]) {
           const input = document.getElementById(id); input.value = String(value);
           input.dispatchEvent(new Event("input", { bubbles: true }));
@@ -192,6 +204,12 @@ async function main() {
     await page.keyboard.press("End"); await ready(page, 2, 8);
     await page.locator("#sketches").focus(); await page.keyboard.press("Home"); await ready(page, 2, 1);
     await page.keyboard.press("ArrowRight"); await ready(page, 2, 2);
+    const keyboardMaximumStart = performance.now();
+    await page.keyboard.press("End"); await ready(page, 2, 65536);
+    await inspect(page);
+    const keyboardMaximumElapsedMs = Math.round(performance.now() - keyboardMaximumStart);
+    assert.equal(await page.locator("#sketches").inputValue(), "16");
+    assert.match(await page.locator("#sketches").getAttribute("aria-valuetext"), /65536/);
 
     const layouts = [];
     for (const width of widths) {
@@ -243,7 +261,8 @@ async function main() {
     }
     const missingAnchors = await page.evaluate(() => [...document.querySelectorAll('a[href^="#"]')].filter(a => !document.getElementById(decodeURIComponent(a.hash.slice(1)))).map(a => a.href));
     assert.deepEqual(missingAnchors, []); assert.deepEqual(errors, []); assert.deepEqual(failed, []);
-    console.log(JSON.stringify({ live, article: article.url, parameterChecks, layouts, articleLayouts, errors, failed }, null, 2));
+    console.log(JSON.stringify({ live, article: article.url, parameterChecks, maximumRequestWasBusy: maximumRequest.busy,
+      keyboardMaximumElapsedMs, layouts, articleLayouts, errors, failed }, null, 2));
   } finally {
     if (browser) await browser.close();
     if (server?.listening) await new Promise(resolve => server.close(resolve));

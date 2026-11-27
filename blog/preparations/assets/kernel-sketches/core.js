@@ -14,6 +14,7 @@
   const colorRange = Object.freeze([-2, 2]);
   const pRange = Object.freeze([.5, 2]);
   const levels = Object.freeze([-1, -.5, -.25, 0, .25, .5, .75, 1, 1.5]);
+  const maxSamples = 2 ** 16;
 
   function exponent(p) {
     if (!Number.isFinite(p) || p < pRange[0] || p > pRange[1]) {
@@ -111,7 +112,7 @@
   }
 
   function compute(p,r,options={}) {
-    exponent(p);sampleCount(r,4096);
+    exponent(p);sampleCount(r,maxSamples);
     const size=options.size === undefined ? 129 : options.size;
     const seed=options.seed === undefined ? 42 : options.seed;
     if(!Number.isSafeInteger(size) || size<3 || size>257)throw new RangeError("Grid size must be between 3 and 257");
@@ -140,6 +141,6 @@
     return {p,r,size,seed,xs,exact,positive,fourier,stats:{
       exact:statistics(exact,exact),positive:statistics(positive,exact),fourier:statistics(fourier,exact)}};
   }
-  return Object.freeze({domain,colorRange,pRange,levels,createSamples,stableLogScale,
+  return Object.freeze({domain,colorRange,pRange,levels,maxSamples,createSamples,stableLogScale,
     positiveFeature,fourierFeature,evaluatePair,compute});
 });

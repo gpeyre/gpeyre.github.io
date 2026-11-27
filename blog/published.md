@@ -263,3 +263,105 @@ Topic: Other topics
 Published: 2026-11-14 · [Read post](https://www.gpeyre.com/blog/2026/11/14/in-context-composition/)
 
 > Each attention layer changes both a token and its context. Our in-context composition accounts for both updates; on the space of measure–point pairs, it is ordinary composition. https://www.gpeyre.com/blog/preparations/in-context-composition.html
+
+## 28. Orthostochastic matrices and optimal transport
+
+Topic: OT / Wasserstein geometry
+
+- [x] Ready to publish
+
+Published: 2026-11-15 · [Read post](https://www.gpeyre.com/blog/2026/11/15/orthostochastic-matrices/)
+
+> Squaring an orthogonal matrix entrywise gives a doubly stochastic matrix. Optimizing a linear transport cost this way preserves the optimum, but can introduce suboptimal local minima. https://www.gpeyre.com/blog/preparations/orthostochastic-matrices.html
+
+## 29. Polynomials of probability measures
+
+Topic: Other topics
+
+- [x] Ready to publish
+
+Published: 2026-11-16 · [Read post](https://www.gpeyre.com/blog/2026/11/16/wasserstein-polynomials/)
+
+> On a compact domain, polynomials of probability measures approximate every continuous functional. The proof is an application of Stone–Weierstrass. https://www.gpeyre.com/blog/preparations/wasserstein-polynomials.html
+
+## 30. Why optimal transport respects a density cap
+
+Topic: OT / Wasserstein geometry
+
+- [x] Ready to publish
+
+Published: 2026-11-17 · [Read post](https://www.gpeyre.com/blog/2026/11/17/wasserstein-geodesics-density-caps/)
+
+> If two densities share a constant upper bound, so does their quadratic Wasserstein interpolation on a convex Euclidean domain. The proof uses a determinant inequality. https://www.gpeyre.com/blog/preparations/wasserstein-geodesics-density-caps.html
+
+## 31. The covariance of SGD iterates
+
+Topic: Other topics
+
+- [x] Ready to publish
+
+Published: 2026-11-18 · [Read post](https://www.gpeyre.com/blog/2026/11/18/sgd-iterate-covariance/)
+
+> For least squares with constant noise variance, fixed-step SGD has an isotropic stationary covariance to first order. Fourth moments determine the next correction. https://www.gpeyre.com/blog/preparations/sgd-iterate-covariance.html
+
+## 32. Which statistics evolve on their own?
+
+Topic: OT / Wasserstein geometry
+
+- [x] Ready to publish
+
+Published: 2026-11-19 · [Read post](https://www.gpeyre.com/blog/2026/11/19/autonomous-wasserstein-statistics/)
+
+> When does a statistic satisfy a closed equation during a Wasserstein gradient flow? For energies depending on one observable, a condition on its gradient gives the answer. https://www.gpeyre.com/blog/preparations/autonomous-wasserstein-statistics.html
+
+## 33. Carefully placed particles versus random samples
+
+Topic: OT / Wasserstein geometry
+
+- [x] Ready to publish
+
+Published: 2026-11-20 · [Read post](https://www.gpeyre.com/blog/2026/11/20/optimal-particles-versus-random-sampling/)
+
+> For a uniform distribution on an interval, optimally placed particles have squared W2 error of order 1/n². Independent sampling gives order 1/n in expectation. https://www.gpeyre.com/blog/preparations/optimal-particles-versus-random-sampling.html
+
+## 34. Optimal conditioning of low-rank adaptation
+
+Topic: Other topics
+
+- [x] Ready to publish
+
+Published: 2026-11-21 · [Read post](https://www.gpeyre.com/blog/2026/11/21/balanced-low-rank-conditioning/)
+
+> Rescaling matrix factors can slow training without changing their product. For exact low-rank matrix recovery, balancing gives optimal positive Hessian conditioning. https://www.gpeyre.com/blog/preparations/balanced-low-rank-conditioning.html
+
+## 35. When the best low-rank tensor approximation does not exist
+
+Topic: Other topics
+
+- [x] Ready to publish
+
+Published: 2026-11-22 · [Read post](https://www.gpeyre.com/blog/2026/11/22/tensor-rank-without-best-approximation/)
+
+> A best low-rank tensor approximation need not exist: a sequence of rank-two tensors can converge to a rank-three tensor. Here is an example with a short proof. https://www.gpeyre.com/blog/preparations/tensor-rank-without-best-approximation.html
+
+## 36. Universality and invariance
+
+Topic: Other topics
+
+- [x] Ready to publish
+
+Published: 2026-11-23 · [Read post](https://www.gpeyre.com/blog/2026/11/23/universality-and-invariance/)
+
+Withdrawn from the website after publication; retained here for editorial history.
+
+> Expressive sum-message-passing GNNs distinguish the 1-WL classes. On compact sets of bounded-size graphs, a final MLP gives approximation of continuous functions constant on those classes. https://www.gpeyre.com/blog/preparations/universality-and-invariance.html
+
+## 37. Stein operators and probability discrepancies
+
+Topic: Other topics
+
+- [x] Ready to publish
+
+Published: 2026-11-24 · [Read post](https://www.gpeyre.com/blog/2026/11/24/stein-operators-discrepancies/)
+
+> Gaussian integration by parts characterizes the normal law. Taking the largest failure of a Stein identity over a unit ball relates Fisher information to sample-based discrepancies. https://www.gpeyre.com/blog/preparations/stein-operators-discrepancies.html

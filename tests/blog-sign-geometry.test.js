@@ -43,10 +43,18 @@ for (const p of [...G.exponents, 1 + Number.EPSILON]) {
 assert.equal(G.seeds.length, 5);
 assert.equal(new Set(G.seeds.map(seed => seed.join(","))).size, 5);
 assert.ok(Object.isFrozen(G.seeds) && G.seeds.every(Object.isFrozen));
-for (const p of G.exponents) {
-  const { trajectories, eta } = G.compute(p), [axis, rotated] = trajectories;
+assert.deepEqual(G.stepMultipliers, { min: .1, max: 1.9, step: .05, default: 1 });
+assert.ok(Object.isFrozen(G.stepMultipliers));
+const { min, max, step } = G.stepMultipliers;
+const multipliers = Array.from({ length: 1 + Math.round((max - min) / step) }, (_, k) => Number((min + k * step).toFixed(2)));
+for (const p of G.exponents) assert.deepEqual(G.compute(p), G.compute(p, 1));
+for (const p of G.exponents) for (const multiplier of multipliers) {
+  const result = G.compute(p, multiplier);
+  const { trajectories, eta, referenceEta } = result, [axis, rotated] = trajectories;
   assert.equal(trajectories.length, 2);
-  close(eta, G.stepSize(p));
+  assert.equal(result.multiplier, multiplier);
+  close(eta, multiplier * G.stepSize(p));
+  close(referenceEta, multiplier);
   const [soft, hard] = G.eigenvalues;
   for (const { hessian: [a, b, c], angle, runs } of trajectories) {
     close(a + c, soft + hard);
@@ -62,7 +70,7 @@ for (const p of G.exponents) {
       close(selected[0].y, start.y);
       assert.deepEqual(selected[0], euclidean[0]);
       close(selected[0].loss, (soft * u * u + hard * v * v) / 2);
-      for (const [series, exponent, step] of [[selected, p, eta], [euclidean, 2, 1]]) {
+      for (const [series, exponent, step] of [[selected, p, eta], [euclidean, 2, referenceEta]]) {
         assert.equal(series.length, G.horizon + 1);
         for (let i = 0; i < series.length; i++) {
           const { x, y, loss } = series[i];
@@ -76,7 +84,7 @@ for (const p of G.exponents) {
           close(x - previous.x, step * dx);
           close(y - previous.y, step * dy);
         }
-        assert.ok(series.at(-1).loss < series[0].loss * 1e-4);
+        if (multiplier === 1) assert.ok(series.at(-1).loss < series[0].loss * 1e-4);
       }
       if (p === 2) assert.deepEqual(selected, euclidean);
     }
@@ -96,6 +104,15 @@ assert.notDeepEqual(axisSign.selected[1], axisSign.euclidean[1]);
 assert.notDeepEqual(axisSign.selected[1], axisCoordinate.selected[1]);
 assert.ok(Math.abs(axisSign.selected[2].loss - rotatedSign.selected[2].loss) > .01);
 assert.notEqual(rotatedCoordinate.selected[1].loss, rotatedCoordinate.euclidean[1].loss);
+// For the axis-aligned Euclidean run, the stiff coordinate advances by
+// (1 − multiplier) each step. The largest step visibly crosses the valley.
+const firstEuclideanStep = multiplier => G.compute(2, multiplier).trajectories[0].runs[0].selected[1];
+for (const multiplier of [.1, 1, 1.9]) close(firstEuclideanStep(multiplier).y, (1 - multiplier) * G.seeds[0][1]);
+assert.ok(firstEuclideanStep(1.9).y < 0 && firstEuclideanStep(.1).y > 0);
+assert.equal(G.compute(2, .137).multiplier, .137);
+for (const multiplier of [0, .09, 1.91, 2, NaN, Infinity, "1", null]) {
+  assert.throws(() => G.compute(2, multiplier), RangeError);
+}
 assert.throws(() => G.compute(.9), RangeError);
 assert.throws(() => G.compute(NaN), RangeError);
-console.log("2D steepest descent: five matched starts, norm identities and endpoints, safe steps, true contours, decreasing losses and Euclidean rotation invariance passed.");
+console.log("2D steepest descent: five matched starts, norm endpoints, all step multipliers, overshoot, true contours, decreasing losses and Euclidean rotation invariance passed.");
