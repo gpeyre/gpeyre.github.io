@@ -13,7 +13,10 @@
     document.body.appendChild(script);
   }
   const start = () => load("app.js", () => {});
-  if (topic === "gaussian") { load("../gaussian-sinkhorn-core.js", start); return; }
+  if (topic === "gaussian") {
+    load("../gaussian-sinkhorn-core.js", () => load("../gaussian-sinkhorn-view.js", start));
+    return;
+  }
   if (topic === "sgd") { load("../sgd-covariance-core.js", start); return; }
   const computed = ["monge", "moments", "caps", "composition", "cdf", "matchings", "bernstein", "quantization", "independence", "envelope"];
   if (computed.includes(topic)) start();

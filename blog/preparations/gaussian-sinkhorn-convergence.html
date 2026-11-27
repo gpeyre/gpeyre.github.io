@@ -19,12 +19,12 @@
 
 <!-- Generated numerical summary image: start -->
 <meta property="og:image" content="https://www.gpeyre.com/blog/imgs/summaries/gaussian-sinkhorn-convergence.jpg">
-<meta property="og:image:alt" content="Gaussian Sinkhorn coupling ellipses, exact error decay, and the number of cycles required as temperature decreases.">
+<meta property="og:image:alt" content="A Gaussian Sinkhorn coupling ellipse with its aligned marginal densities above and to the left; dashed curves show the exact solution, and a dot marks the selected cycle on the marginal-error plot.">
 <meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="450">
+<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://www.gpeyre.com/blog/imgs/summaries/gaussian-sinkhorn-convergence.jpg">
-<meta name="twitter:image:alt" content="Gaussian Sinkhorn coupling ellipses, exact error decay, and the number of cycles required as temperature decreases.">
+<meta name="twitter:image:alt" content="A Gaussian Sinkhorn coupling ellipse with its aligned marginal densities above and to the left; dashed curves show the exact solution, and a dot marks the selected cycle on the marginal-error plot.">
 <!-- Generated numerical summary image: end -->
 </head>
 <body>
@@ -244,10 +244,16 @@
 <p>For comparison, if the potentials contain linear terms with coefficients \(\ell,m\), Gaussian integration gives \(\ell_{\rm new}=-R m/\varepsilon\), then \(m_{\rm new}=-S_{\rm new}\ell_{\rm new}/\varepsilon\). At the scalar covariance fixed point their full-cycle multiplier is \(S_*R_*/\varepsilon^2=\rho^2\). Our centered initialization sets these coefficients to zero throughout.</p>
 </div></details>
 
-<h2>Numerical experimentation</h2>
-<p>Use the temperature slider to follow this transition. The experiment fixes \(a=b=1\) and starts from \(s_0=2s_*\), an admissible centered, \(Y\)-normalized Gaussian. The left panel shows joint covariance ellipses, not two-dimensional marginals: each axis represents one of the two scalar random variables. The middle panel compares conditional-variance error with the exactly geometric cross-ratio error. The right panel shows the exact number of cycles for a millionfold cross-ratio reduction, together with its low-temperature asymptotic.</p>
-<iframe class="idea-experiment" data-experiment="gaussian" src="assets/ot-lab/index.html?topic=gaussian" title="Gaussian Sinkhorn covariance and convergence experiment" loading="lazy"></iframe>
-<p class="caption">The curves evaluate the exact recurrence in cross-ratio coordinates, with analytic interpolation between integer cycles; there is no discretization of the Gaussian tails and no fitted convergence rate. Both ellipses show the same Mahalanobis radius. The initialization depends on temperature so that the initial relative conditional-variance error is always one.</p>
+<h2>Numerical experiment: the coupling and its marginals</h2>
+<p>The experiment fixes \(\alpha=\beta=\mathcal N(0,1)\) and starts from \(s_0=2s_*\). In the left panel, the horizontal coordinate is \(x\) and the vertical coordinate is \(y\): the ellipse represents their <em>joint</em> Gaussian coupling, not a cloud of two-dimensional source or target points. The curve above it is the density of its \(x\)-marginal, on the same horizontal scale. The curve to its left is the density of its \(y\)-marginal, on the same vertical scale, drawn sideways. Solid teal is the current iterate; dashed gray is the exact entropic solution at the selected \(\varepsilon\).</p>
+<p>Move the iteration slider through integer full cycles, each consisting of both marginal corrections. Because we observe just after the \(Y\)-normalization, the left-hand marginal already equals \(\beta\): its solid and dashed curves coincide. The top marginal generally differs from \(\alpha\), then approaches it. The right panel plots its variance error</p>
+\[
+ E_k=|\widetilde a_k-1|,
+ \qquad \widetilde a_k=s_k+s_k^2/\varepsilon^2,
+\]
+<p>on a logarithmic vertical scale, with a dot at the selected cycle. For these centered Gaussian marginals, \(E_k=0\) is equivalent to having the correct first marginal; it is a variance diagnostic, not a general distance between probability measures. Lowering \(\varepsilon\) makes the optimal ellipse thinner and the error decay slower. The displayed cycle range adapts to include a millionfold reduction of the cross-ratio error; its numerical tick labels give the actual number of cycles. This is not an identical tolerance on \(E_k\).</p>
+<iframe class="idea-experiment" data-experiment="gaussian" src="assets/ot-lab/index.html?topic=gaussian" title="Gaussian Sinkhorn coupling with aligned one-dimensional marginals and marginal convergence error" loading="lazy"></iframe>
+<p class="caption">Both ellipses have Mahalanobis radius \(2\), enclosing \(1-e^{-2}\approx86.5\%\) of their respective joint laws. The spatial axes stay fixed at \([-4.5,4.5]\), with equal units in \(x\) and \(y\); the marginal-density scales also stay fixed. Tails outside this window are omitted without renormalization. The coupling, marginal densities and errors are evaluated from the exact Gaussian formulas, not from samples. Lines in the error plot connect integer-cycle values. Changing \(\varepsilon\) changes the initialization \(s_0=2s_*\), while retaining the selected cycle if it remains in range.</p>
 
 <h2>Comparison with worst-case contraction bounds</h2>
 <p>Classical Sinkhorn analysis uses the Hilbert projective metric <a href="#ref-franklin">[4]</a>, <a href="#ref-book">[5]</a>. For a bounded cost with oscillation \(C=\sup c-\inf c\), the kernel \(K=e^{-c/\varepsilon}\) has projective diameter at most \(2C/\varepsilon\). Birkhoff’s theorem then gives the full-cycle contraction bound</p>

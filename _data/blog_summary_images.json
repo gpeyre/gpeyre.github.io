@@ -276,28 +276,28 @@
     },
     "gaussian-sinkhorn-convergence": {
       "path": "/blog/imgs/summaries/gaussian-sinkhorn-convergence.jpg",
-      "alt": "Gaussian Sinkhorn coupling ellipses, exact error decay, and the number of cycles required as temperature decreases.",
+      "alt": "A Gaussian Sinkhorn coupling ellipse with its aligned marginal densities above and to the left; dashed curves show the exact solution, and a dot marks the selected cycle on the marginal-error plot.",
       "width": 1200,
-      "height": 450,
+      "height": 630,
       "source": "/blog/preparations/assets/ot-lab/index.html?topic=gaussian",
       "settings": {
-        "title": "Sinkhorn on centered Gaussians",
-        "status": "ε 0.1585 | asymptotic covariance factor q 0.728587 | asymptotic dual-gap factor q² 0.530839 | Var(X) 1.29788 → 1 | relative conditional-variance error 0.150 | 44 cycles for a 10⁶-fold cross-ratio reduction",
+        "title": "Gaussian Sinkhorn coupling",
+        "status": "ε = 0.100 · k = 2 · Var(Xₖ) = 2.4083 → 1 · Var(Yₖ) = 1 · marginal variance error = 1.41",
         "controls": [
           {
-            "label": "Temperature ε (log scale): 0.158",
-            "value": "-0.8"
+            "label": "Regularization ε (log scale): 0.100",
+            "value": "-1"
           },
           {
-            "label": "Full cycles k: 5 / 44",
-            "value": "5"
+            "label": "Full cycles k: 2 / 70",
+            "value": "2"
           }
         ],
-        "count": 3,
+        "count": 2,
         "finite": true,
-        "marks": 23
+        "marks": 33
       },
-      "sha256": "e1ac7876a7361ab65886b724e363df0b164a89f48ffa1f7cf3386b88a9cd55d9"
+      "sha256": "b7f28eaed3bd029ee2f3fde661d6b456007c246408a062f67713cce9727e497f"
     },
     "heat-equation-over-quantiles": {
       "path": "/blog/imgs/summaries/heat-equation-over-quantiles.jpg",

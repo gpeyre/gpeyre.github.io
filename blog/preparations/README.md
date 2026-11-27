@@ -493,12 +493,22 @@ previews as dated posts, and the existing RSS/Atom entries remain unchanged.
 
 `gaussian-sinkhorn-convergence.html` adds the centered Gaussian covariance
 recursion and its exact scalar convergence factor. Its interactive companion
-uses `assets/gaussian-sinkhorn-core.js` and the `gaussian` experiment topic.
+uses `assets/gaussian-sinkhorn-core.js`, `assets/gaussian-sinkhorn-view.js`,
+and the `gaussian` experiment topic.
 The temperature slider is logarithmic; all trajectories use closed-form
 cross-ratio coordinates, with errors evaluated directly in the log domain.
 The covariance ellipses are joint laws of two scalar variables, not spatial
-marginals. Run `node tests/blog-gaussian-sinkhorn.test.js` for independent
-recurrence, covariance, relative-entropy, and rate checks. This preview has
+marginals. The x marginal is aligned above the ellipse and the y marginal to
+its left; dashed curves show the exact coupling and target densities. Both
+spatial axes stay at [-4.5, 4.5], with equal units and fixed density scales.
+The integer-cycle slider observes each iterate after its y normalization, so
+that marginal is already exact. The right panel plots the first marginal's
+variance error on a logarithmic scale, with a dot at the selected cycle.
+Run `node tests/blog-gaussian-sinkhorn.test.js` for independent recurrence,
+covariance, marginal-error, relative-entropy, and rate checks, and
+`node tests/blog-gaussian-sinkhorn-browser.test.cjs` for controls, fixed axes,
+proofs, mathematics, and responsive embedding (`BLOG_SITE_ROOT` selects a safe
+build; `--live` checks the deployed preview). This preview has
 no date or feed entry, like the other forthcoming articles.
 
 ## Covariance of SGD iterates

@@ -14,7 +14,7 @@ const definitions = [
   ["autonomous-wasserstein-statistics", "moments", "Two different particle clouds approach the unit circle while their common signed-distance moment follows the same exponential decay.", [1.6]],
   ["bernstein-polynomials-on-measures", "bernstein", "The Bernstein particle polynomial smooths the corner of the absolute-value functional of a two-point probability law.", [10]],
   ["central-limit-wasserstein-constants", "clt", "Exact Wasserstein central-limit errors and rescaled CDF errors for symmetric Bernoulli and uniform random variables.", [4]],
-  ["gaussian-sinkhorn-convergence", "gaussian", "Gaussian Sinkhorn coupling ellipses, exact error decay, and the number of cycles required as temperature decreases.", [-0.8, 5]],
+  ["gaussian-sinkhorn-convergence", "gaussian", "A Gaussian Sinkhorn coupling ellipse with its aligned marginal densities above and to the left; dashed curves show the exact solution, and a dot marks the selected cycle on the marginal-error plot.", [-1, 2]],
   ["noncrossing-matchings-catalan", "matchings", "A noncrossing red-blue matching and the changing costs of one hundred uniformly sampled noncrossing matchings.", [10]],
   ["optimal-particles-versus-random-sampling", "quantization", "Empirical CDFs of random and optimally placed particles, compared with their exact Wasserstein error rates.", [18]],
   ["sgd-iterate-covariance", "sgd", "Exact covariance ellipses and transient and stationary variance curves for constant-step least-squares SGD.", [0.48, 7, 10]],
@@ -87,6 +87,16 @@ async function capture(page, job, output) {
       .plot { border:1px solid #d7e3e6!important; border-radius:8px!important; background:#fff!important; padding:13px 4px 7px!important; }
       .plot h3 { font:550 14px/1.3 system-ui,sans-serif!important; margin:0 8px 1px!important; min-height:2.6em!important; color:#31494f!important; }
     ` });
+    if (job.topic === "gaussian") {
+      // Preserve both full SVG view boxes inside the two-panel social image.
+      await page.addStyleTag({ content: `
+        .gaussian-lab h2 { margin-bottom:10px!important; }
+        .gaussian-lab .gs-legend { margin:0 0 12px!important; }
+        .gaussian-lab #plots svg { height:440px!important; width:100%!important; }
+        .gaussian-lab .plot h3 { min-height:0!important; margin-bottom:4px!important; }
+        .gaussian-lab .gs-panel-note { display:none!important; }
+      ` });
+    }
     await page.setViewportSize({ width: 1200, height });
     await fs.writeFile(output,stripMetadata(await page.screenshot({ type: "jpeg", quality: 88, fullPage: false })));
     const stat = await fs.stat(output);

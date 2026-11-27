@@ -110,11 +110,19 @@
     const xVariance = Math.abs(e) < .25 ?
       p.a * (1 + (1 + h) * e + h * e * e) :
       p.a * u * (p.oneMinusRhoSquared + h * u);
+    // (Var(X)-a)/a = e(1+h+he). Factoring out e avoids subtracting
+    // two nearly equal variances. The factor is positive for every u>0,
+    // and its logarithm preserves the error after exp(logRelativeError)
+    // has underflowed (or xVariance has rounded to a).
+    const marginalFactor = 1 + h + h * e;
+    const relativeMarginalError = e === 0 ? 0 : e * marginalFactor;
+    const logMarginalError = logRelativeError + Math.log(marginalFactor);
     const z0 = h * e0 / (1 + h * initialRatio);
     return {
       k, s, u, relativeConditionalError,
       relativeError: relativeConditionalError,
-      logRelativeError, xVariance, yVariance: p.b, crossCov,
+      logRelativeError, relativeMarginalError, logMarginalError,
+      xVariance, yVariance: p.b, crossCov,
       jointCov: [[xVariance, crossCov], [crossCov, p.b]],
       determinant: p.b * s,
       crossRatio: z0 * reduction,

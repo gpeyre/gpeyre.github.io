@@ -34,7 +34,7 @@ for (const a of [.2, 1, 7]) for (const b of [.3, 1, 4]) {
     close(derivative, p.q);
 
     for (const initialRatio of [.02, .5, 1, 2, 20]) {
-      let s = initialRatio*p.sStar, previousKL = Infinity;
+      let s = initialRatio*p.sStar, previousKL = Infinity, previousMarginalError = Infinity;
       for (let k=0; k<=60; k++) {
         const t = G.state(a, b, epsilon, initialRatio, k);
         close(t.s, s);
@@ -43,6 +43,20 @@ for (const a of [.2, 1, 7]) for (const b of [.3, 1, 4]) {
         assert.equal(t.jointCov[0][1], t.jointCov[1][0]);
         close(t.crossCov, b*t.s/epsilon);
         close(t.xVariance, t.s + b*t.s*t.s/(epsilon*epsilon));
+        // The marginal diagnostic agrees with the independent recurrence,
+        // not just with another expression computed from the same state.
+        const directMarginalError = (s + b*s*s/(epsilon*epsilon) - a)/a;
+        close(t.relativeMarginalError, directMarginalError, 3e-11);
+        close(t.relativeMarginalError, (t.xVariance-a)/a);
+        if (Math.abs(t.relativeMarginalError) > 1e-7) {
+          relativeClose(t.relativeMarginalError, (t.xVariance-a)/a, 1e-8);
+          close(Math.log(Math.abs(t.relativeMarginalError)), t.logMarginalError);
+        }
+        if (initialRatio === 2) {
+          assert.ok(t.relativeMarginalError >= 0 &&
+            t.relativeMarginalError <= previousMarginalError);
+          previousMarginalError = t.relativeMarginalError;
+        }
         const determinant = t.xVariance*b - t.crossCov*t.crossCov;
         assert.ok(determinant > 0, "the actual displayed covariance must be positive definite");
         assert.ok(Math.abs(determinant-b*t.s) <= 16*Number.EPSILON*
@@ -54,10 +68,15 @@ for (const a of [.2, 1, 7]) for (const b of [.3, 1, 4]) {
         if (initialRatio === 1) {
           assert.equal(t.relativeConditionalError, 0);
           assert.equal(t.logRelativeError, -Infinity);
+          assert.equal(t.relativeMarginalError, 0);
+          assert.equal(t.logMarginalError, -Infinity);
           assert.equal(t.kl, 0);
           assert.equal(t.logKL, -Infinity);
           assert.equal(t.xVariance, a);
         } else {
+          if (t.relativeMarginalError !== 0) {
+            assert.equal(Math.sign(t.relativeMarginalError), Math.sign(initialRatio-1));
+          }
           const z0 = (initialRatio*p.sStar-p.sStar)/(initialRatio*p.sStar-p.sMinus);
           close(t.crossRatio, z0*Math.exp(k*p.logq));
           if (Math.abs(t.relativeConditionalError)>1e-7) {
@@ -101,6 +120,7 @@ for (const epsilon of [.001, .1, 1, 10]) {
   const t = G.state(1, 1, epsilon, 2, k);
   const next = G.state(1, 1, epsilon, 2, k+1);
   close(next.logRelativeError-t.logRelativeError, p.logq, 2e-9);
+  close(next.logMarginalError-t.logMarginalError, p.logq, 3e-9);
   close(next.logKL-t.logKL, 2*p.logq, 3e-9);
   assert.ok(t.kl > 0 && t.logRelativeError < -19);
 }
@@ -108,13 +128,30 @@ for (const epsilon of [.001, .1, 1, 10]) {
 // Exact log diagnostics survive both rounding u to 1 and floating-point underflow.
 const belowRoundoff = G.state(1, 1, .1, 2, 300);
 assert.equal(belowRoundoff.u, 1);
+assert.equal(belowRoundoff.xVariance, 1);
 assert.ok(belowRoundoff.relativeConditionalError > 0 && belowRoundoff.kl > 0);
+assert.ok(belowRoundoff.relativeMarginalError > 0);
+close(belowRoundoff.logMarginalError, Math.log(belowRoundoff.relativeMarginalError));
 const underflow = G.state(1, 1, .1, 2, 10000);
 assert.equal(underflow.relativeConditionalError, 0);
 assert.equal(underflow.kl, 0);
+assert.equal(underflow.relativeMarginalError, 0);
 assert.ok(Number.isFinite(underflow.logRelativeError) && Number.isFinite(underflow.logKL));
+assert.ok(Number.isFinite(underflow.logMarginalError));
 const nextUnderflow = G.state(1, 1, .1, 2, 10001);
 close(nextUnderflow.logKL-underflow.logKL, 2*G.parameters(1,1,.1).logq);
+close(nextUnderflow.logMarginalError-underflow.logMarginalError, G.parameters(1,1,.1).logq);
+
+// An initialization below the optimum has a negative signed marginal error;
+// its logarithm still denotes the absolute error and survives underflow.
+for (const k of [0, 1, 30, 300, 10000]) {
+  const t = G.state(1, 1, .1, .5, k);
+  assert.ok(t.relativeMarginalError <= 0);
+  assert.ok(Number.isFinite(t.logMarginalError));
+  if (t.relativeMarginalError !== 0) {
+    close(t.logMarginalError, Math.log(-t.relativeMarginalError));
+  }
+}
 
 // The scalar KL has leading coefficient 1/4+rho/(2*delta).
 for (const epsilon of [.001, .3, 10]) {
@@ -133,6 +170,8 @@ for (const k of [0,1,10,100]) {
   const scaled = G.state(a*fx*fx,b*fy*fy,epsilon*fx*fy,2,k);
   close(t.u,scaled.u);
   close(t.kl,scaled.kl);
+  close(t.relativeMarginalError,scaled.relativeMarginalError);
+  close(t.logMarginalError,scaled.logMarginalError);
   close(scaled.s,t.s*fx*fx);
   close(scaled.xVariance,t.xVariance*fx*fx);
   close(scaled.crossCov,t.crossCov*fx*fy);
@@ -147,4 +186,4 @@ for(const args of [[0,1,.1],[1,-1,.1],[1,1,0],[1,1,Infinity]]) {
 assert.throws(()=>G.state(1,1,.1,0,1),RangeError);
 assert.throws(()=>G.state(1,1,.1,2,-1),RangeError);
 assert.throws(()=>G.trajectory(1,1,.1,2,1.5),RangeError);
-console.log("Gaussian Sinkhorn: recurrence, covariance, KL, asymptotic rates, scaling, and stable logarithms passed.");
+console.log("Gaussian Sinkhorn: recurrence, covariance, marginal errors, KL, asymptotic rates, scaling, and stable logarithms passed.");

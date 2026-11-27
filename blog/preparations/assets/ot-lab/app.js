@@ -418,13 +418,30 @@ function envelope(){
 }
 
 function gaussian(){
-  const G=window.GaussianSinkhorn;
-  setup("Sinkhorn on centered Gaussians",
-    "Lower the temperature, then move through full cycles. Teal: current coupling and variance error. Gray: optimal coupling. Blue dashed: exact cross-ratio decay. The right panel compares exact cycle counts (teal) with the low-temperature asymptotic (orange dashed).",
-    "Both target variances are 1. Initialization: conditional variance s₀ = 2s*. Ellipses have Mahalanobis radius 1.5 in the joint (X,Y) plane, with equal axis scales; Y already has its correct marginal. Errors are evaluated in stable closed form, without sampling or truncating the Gaussians. One cycle includes both marginal corrections.");
-  const temperature=slider("Temperature ε (log scale)",-3,1,-1,.02);
-  const cycle=slider("Full cycles k",0,70,0);
-  let running=false,frame=0,last=0,panes=[],horizon=1;
+  const G=window.GaussianSinkhorn,V=window.GaussianSinkhornView;
+  setup("Gaussian Sinkhorn coupling",
+    "Change ε, then move through complete Sinkhorn cycles. The joint ellipse is shown with its x marginal above and its y marginal on the left.",
+    "Both target marginals are N(0,1). Each ellipse has Mahalanobis radius 2 (about 86.5% joint probability). All spatial axes stay fixed at [−4.5,4.5], with equal units in x and y. The density scales also stay fixed; Gaussian tails outside the window are omitted, not renormalized. One full cycle corrects both marginals, ending with y, so its marginal is already exact.",2);
+  document.body.classList.add("gaussian-lab");
+  const temperature=slider("Regularization ε (log scale)",-3,1,-1,.02);
+  const cycle=slider("Full cycles k",0,70,0,1);
+  temperature.id="gs-epsilon";cycle.id="gs-cycle";
+  let running=false,frame=0,last=0,horizon=1,curve=[],state,target,epsilon=.1;
+  const legend=document.createElement("p");legend.className="gs-legend";
+  legend.innerHTML='<span><i class="gs-swatch"></i>Current iterate</span><span><i class="gs-swatch gs-dashed"></i>Exact solution</span>';
+  $("plots").before(legend);
+  function panel(title,id,viewBox,note){
+    const wrap=document.createElement("div");wrap.className="plot";
+    const h=document.createElement("h3");h.textContent=title;wrap.appendChild(h);
+    const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+    svg.id=id;svg.setAttribute("viewBox",viewBox);svg.setAttribute("role","img");svg.setAttribute("aria-label",title);
+    wrap.appendChild(svg);
+    const caption=document.createElement("p");caption.className="gs-panel-note";caption.textContent=note;wrap.appendChild(caption);
+    $("plots").appendChild(wrap);return svg;
+  }
+  const joint=panel("Joint coupling and marginals","gs-coupling","0 0 500 530","The y marginal already equals its target; the solid and dashed curves coincide.");
+  const decay=panel("First-marginal error","gs-error","0 0 430 530","The dot marks the selected cycle. Lines connect errors at integer cycles.");
+  for(const dimension of ["x","y"]){joint.dataset[dimension+"Min"]="-4.5";joint.dataset[dimension+"Max"]="4.5";}
   const play=button("Play cycles",()=>{
     if(running){stop();return;}
     if(+cycle.value>=horizon)cycle.value=0;
@@ -434,45 +451,36 @@ function gaussian(){
   function stop(){running=false;cancelAnimationFrame(frame);play.textContent="Play cycles";}
   function animate(now){
     if(!running)return;
-    if(now-last>65){cycle.value=Math.min(horizon,+cycle.value+Math.max(1,Math.ceil(horizon/180)));last=now;render();}
+    if(now-last>85){cycle.value=Math.min(horizon,+cycle.value+Math.max(1,Math.ceil(horizon/220)));last=now;render();}
     if(+cycle.value>=horizon)stop();else frame=requestAnimationFrame(animate);
   }
   function rebuild(){
-    stop();const epsilon=10**+temperature.value,p=G.parameters(1,1,epsilon);
-    horizon=Math.ceil(Math.log(1e-6)/p.logq);cycle.max=horizon;cycle.value=0;
+    stop();epsilon=10**+temperature.value;
+    const p=G.parameters(1,1,epsilon);
+    horizon=Math.ceil(Math.log(1e-6)/p.logq);
+    cycle.max=horizon;cycle.value=Math.min(+cycle.value,horizon);
+    curve=G.trajectory(1,1,epsilon,2,horizon);
+    target=G.state(1,1,epsilon,1,0);
     temperature.parentElement.querySelector("output").textContent=fmt(epsilon,3);
-    $("plots").replaceChildren();
-    const ticks=Array.from(new Set(Array.from({length:5},(_,i)=>Math.round(horizon*i/4)))).map(k=>[k,String(k)]);
-    const ymin=Math.floor(horizon*p.logq/Math.LN10)-1;
-    panes=[plot("Joint Gaussian: iterate and optimum",[-3.8,3.8],[-3.8,3.8],false),
-      plot("Error reduction versus full cycles",[0,horizon],[ymin,.1],true,{x:ticks,y:[0,-2,-4,-6,-8].filter(v=>v>=ymin).map(v=>[v,v===0?"1":"10^"+v])}),
-      plot("Cycles for a 10⁶-fold reduction",[-3,1],[-.35,4],true,{x:[[-3,"0.001"],[-2,"0.01"],[-1,"0.1"],[0,"1"],[1,"10"]],y:[0,1,2,3,4].map(v=>[v,v===0?"1":"10^"+v])})];
+    temperature.setAttribute("aria-valuetext","epsilon "+fmt(epsilon,3));
     render();
   }
   function render(){
-    const epsilon=10**+temperature.value,k=+cycle.value,p=G.parameters(1,1,epsilon),state=G.state(1,1,epsilon,2,k);
+    const k=+cycle.value;
+    state=curve[k];
     cycle.parentElement.querySelector("output").textContent=k+" / "+horizon;
-    const [joint,decay,counts]=panes;
-    const ellipse=(s,color,width,opacity,dash)=>joint.path(Array.from({length:241},(_,i)=>{
-      const theta=2*Math.PI*i/240;
-      return [1.5*(Math.sqrt(s)*Math.cos(theta)+s/epsilon*Math.sin(theta)),1.5*Math.sin(theta)];
-    }),color,width,opacity,dash);
-    joint.draw(joint.path([[-3.5,0],[3.5,0]],GRAY,.7,.5)+joint.path([[0,-3.5],[0,3.5]],GRAY,.7,.5)
-      +text(joint.project([3.5,-.4]),"X")+text(joint.project([.4,3.5]),"Y")
-      +ellipse(p.sStar,GRAY,3,.9,"5 3")+ellipse(state.s,TEAL,1.8,1)
-      +dot(joint.project([0,0]),TEAL,2));
-    const samples=Array.from({length:201},(_,i)=>horizon*i/200);
-    decay.draw(decay.path(samples.map(t=>[t,t*p.logq/Math.LN10]),BLUE,1.4,.85,"5 3")
-      +decay.path(samples.map(t=>[t,G.state(1,1,epsilon,2,t).logRelativeError/Math.LN10]),TEAL,2)
-      +dot(decay.project([k,state.logRelativeError/Math.LN10]),TEAL,4));
-    const temperatures=Array.from({length:401},(_,i)=>-3+4*i/400);
-    counts.draw(counts.path(temperatures.map(t=>[t,Math.log10(Math.ceil(Math.log(1e-6)/G.parameters(1,1,10**t).logq))]),TEAL,2)
-      +counts.path(temperatures.map(t=>[t,Math.log10(Math.log(1e6)/(2*10**t))]),"#ba7b25",1.5,.8,"5 3")
-      +dot(counts.project([Math.log10(epsilon),Math.log10(horizon)]),TEAL,4));
-    $("status").textContent=`ε ${fmt(epsilon,4)} | asymptotic covariance factor q ${fmt(p.q,6)} | asymptotic dual-gap factor q² ${fmt(p.q*p.q,6)} | Var(X) ${fmt(state.xVariance,6)} → 1 | relative conditional-variance error ${fmt(state.relativeError,3)} | ${horizon} cycles for a 10⁶-fold cross-ratio reduction`;
+    cycle.setAttribute("aria-valuetext",k+" complete cycles out of "+horizon);
+    joint.innerHTML=V.coupling(state,target);
+    decay.innerHTML=V.error(curve,state,horizon);
+    $("status").textContent=`ε = ${fmt(epsilon,3)} · k = ${k} · Var(Xₖ) = ${fmt(state.xVariance,5)} → 1 · Var(Yₖ) = 1 · marginal variance error = ${fmt(Math.abs(state.relativeMarginalError),3)}`;
   }
   temperature.addEventListener("input",rebuild);
   cycle.addEventListener("input",()=>{stop();render();});
+  document.addEventListener("visibilitychange",()=>{if(document.hidden)stop();});
+  new IntersectionObserver(entries=>{if(!entries[0].isIntersecting)stop();}).observe(document.querySelector("main"));
+  window.GaussianSinkhornExperiment=Object.freeze({getState:()=>({
+    epsilon,k:+cycle.value,horizon,axes:{x:[...V.bounds],y:[...V.bounds]},state,target,playing:running
+  })});
   cancel=stop;rebuild();
 }
 
