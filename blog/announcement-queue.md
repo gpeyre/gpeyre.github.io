@@ -19,15 +19,7 @@ Put approved entries first. An explicit publication order requested by the autho
 
 This is a private editorial file, excluded from the website build. Readiness changes must be committed and pushed before the scheduled publication run. Add every new forthcoming article with an unchecked readiness box and a short announcement.
 
-## 1. Doubly nonnegative and completely positive matrices
-
-Topic: Other topics
-
-- [x] Ready to publish
-
-> A positive semidefinite matrix with nonnegative entries need not have nonnegative Gram factors. A five-cycle gives a counterexample; Gaussian kernels do admit such features. https://www.gpeyre.com/blog/preparations/doubly-nonnegative-completely-positive.html
-
-## 2. Sinkhorn on Gaussians: an exact convergence rate
+## 1. Sinkhorn on Gaussians: an exact convergence rate
 
 Topic: OT / Wasserstein geometry
 
@@ -35,7 +27,7 @@ Topic: OT / Wasserstein geometry
 
 > For centered 1D Gaussians, Sinkhorn reduces to a scalar recursion. We can compute its convergence rate exactly and see how it depends on regularization. https://www.gpeyre.com/blog/preparations/gaussian-sinkhorn-convergence.html
 
-## 3. Conditioning of Non-Euclidean Gradient Descent
+## 2. Conditioning of Non-Euclidean Gradient Descent
 
 Topic: Other topics
 
@@ -43,7 +35,7 @@ Topic: Other topics
 
 > Euclidean gradient descent is rotation invariant; scaled sign descent is not. The relevant condition number depends on the norm used for descent. https://www.gpeyre.com/blog/preparations/sign-gradient-descent-geometry.html
 
-## 4. Different convergence rates in the central limit theorem
+## 3. Different convergence rates in the central limit theorem
 
 Topic: OT / Wasserstein geometry
 
@@ -51,7 +43,7 @@ Topic: OT / Wasserstein geometry
 
 > Coin flips and continuous uniform variables are both symmetric, but their normalized sums converge at different W1 rates: 1/√n and 1/n. The lattice explains the difference. https://www.gpeyre.com/blog/preparations/central-limit-wasserstein-constants.html
 
-## 5. Bernstein polynomials on probability measures
+## 4. Bernstein polynomials on probability measures
 
 Topic: Other topics
 
@@ -59,7 +51,7 @@ Topic: Other topics
 
 > Bernstein's averaging construction also applies to continuous functions of probability measures. On a compact space it gives uniform approximation, with an error controlled by sampling. https://www.gpeyre.com/blog/preparations/bernstein-polynomials-on-measures.html
 
-## 6. Wasserstein distance without quantiles
+## 5. Wasserstein distance without quantiles
 
 Topic: OT / Wasserstein geometry
 
@@ -67,7 +59,7 @@ Topic: OT / Wasserstein geometry
 
 > In 1D, quadratic Wasserstein distance can be computed directly from CDFs, without inverting them. A triangle-area argument gives the formula. https://www.gpeyre.com/blog/preparations/wasserstein-distance-without-quantiles.html
 
-## 7. Universal approximation from one nonlinearity
+## 6. Universal approximation from one nonlinearity
 
 Topic: Other topics
 
@@ -75,7 +67,7 @@ Topic: Other topics
 
 > On a compact space, a separating real linear family containing constants is dense if its closure is stable under one fixed continuous non-affine operation. https://www.gpeyre.com/blog/preparations/universality-from-one-nonlinearity.html
 
-## 8. Spectral Wasserstein distances
+## 7. Spectral Wasserstein distances
 
 Topic: OT / Wasserstein geometry
 
@@ -83,7 +75,7 @@ Topic: OT / Wasserstein geometry
 
 > Spectral Wasserstein distances account for the directions of transport displacements. I explain their robust-cost and dynamic formulations, with a point-cloud experiment. https://www.gpeyre.com/blog/preparations/spectral-wasserstein-distances.html
 
-## 9. c-transform as a generalized Legendre transform
+## 8. c-transform as a generalized Legendre transform
 
 Topic: OT / Wasserstein geometry
 

@@ -365,3 +365,13 @@ Topic: Other topics
 Published: 2026-11-24 · [Read post](https://www.gpeyre.com/blog/2026/11/24/stein-operators-discrepancies/)
 
 > Gaussian integration by parts characterizes the normal law. Taking the largest failure of a Stein identity over a unit ball relates Fisher information to sample-based discrepancies. https://www.gpeyre.com/blog/preparations/stein-operators-discrepancies.html
+
+## 38. Doubly nonnegative and completely positive matrices
+
+Topic: Other topics
+
+- [x] Ready to publish
+
+Published: 2026-11-27 · [Read post](https://www.gpeyre.com/blog/2026/11/27/doubly-nonnegative-completely-positive/)
+
+> A positive semidefinite matrix with nonnegative entries need not have nonnegative Gram factors. A five-cycle gives a counterexample; Gaussian kernels do admit such features. https://www.gpeyre.com/blog/preparations/doubly-nonnegative-completely-positive.html
