@@ -3,6 +3,7 @@ title: "Universality and invariance"
 subtitle: "What a graph neural network can distinguish, and which functions it can approximate."
 description: "Two questions for invariant neural networks: which inputs can they distinguish, and can they approximate every continuous function of those distinctions? A precise answer for message-passing GNNs, using 1-WL, feature concatenation, and Stone–Weierstrass."
 date: "2026-11-23"
+published: false
 topic: "Neural networks & invariance"
 keywords:
   - "universality"
