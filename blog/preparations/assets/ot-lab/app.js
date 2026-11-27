@@ -241,31 +241,90 @@ function composition(){
 
 function cdf(){
   setup("19 / A CDF-only formula for W2 squared",
-    "Compare a positive sinusoidal density with the uniform law on [0,1]. The colored triangle is the positive-part integrand; no inverse CDF is used in its quadrature.",
-    "The exact squared distance is 0.135/pi^2. Off-diagonal cells use midpoint quadrature; diagonal triangles use their centroids. The last panel measures actual error against the exact answer. A two-dimensional quadrature is not automatically cheaper than a quantile calculation.");
+    "Change either sinusoidal density on [0,1]. Red is α; dashed blue is β. Their cumulative distributions determine the colored integrand on the triangle x < y.",
+    "The estimate is twice the integral of H over the colored triangle. Quadrature samples square cells at their midpoints and diagonal triangles at their centroids. The displayed heatmap uses at most 80 cells per axis and a fixed scale from 0 to 0.6. No inverse CDF is used.");
+  document.body.classList.add("cdf-lab");
+  const a=slider("Alpha amplitude λₐ",-.9,.9,.6,.05),b=slider("Beta amplitude λᵦ",-.9,.9,-.45,.05);
   const s=slider("Quadrature cells per axis",20,400,100,10);
-  const p=plot("The two cumulative functions",[0,1],[0,1]);
-  const q=plot("CDF integrand on x < y",[0,1],[0,1]);
-  const errorplot=plot("Absolute quadrature error (log scales)",[Math.log10(20),Math.log10(400)],[-7,-3],true,{
-    x:[20,40,100,200,400].map(n=>[Math.log10(n),String(n)]),
-    y:[[-7,"10⁻⁷"],[-6,"10⁻⁶"],[-5,"10⁻⁵"],[-4,"10⁻⁴"],[-3,"10⁻³"]]});
-  const F=x=>x+.6*(1-Math.cos(2*Math.PI*x))/(2*Math.PI);
-  const H=(x,y)=>Math.max(F(x)-y,0)+Math.max(x-F(y),0);
-  const exact=.135/Math.PI**2;
-  const convergence=Array.from({length:39},(_,i)=>{const n=20+10*i;return {n,value:M.cdfSquaredDistance(F,x=>x,n)};});
-  function redraw(){p.draw(p.path(Array.from({length:201},(_,i)=>[i/200,F(i/200)]),RED)+p.path([[0,0],[1,1]],BLUE));
-    let ss="";const n=+s.value,size=Math.min(n,80);
+  a.id="cdf-alpha";b.id="cdf-beta";s.id="cdf-resolution";
+  const ticks=[0,.25,.5,.75,1].map(x=>[x,String(x)]);
+  const p=plot("Densities ρₐ and ρᵦ",[0,1],[0,2],true,{x:ticks,y:[0,.5,1,1.5,2].map(y=>[y,String(y)])});
+  const q=plot("Cumulative distributions",[0,1],[0,1],true,{x:ticks,y:ticks});
+  const h=plot("CDF integrand H(x,y)",[0,1],[0,1],false);
+  p.svg.id="cdf-density";q.svg.id="cdf-curves";h.svg.id="cdf-integrand";
+  p.svg.setAttribute("aria-label","Densities on [0,1]: alpha in solid red, beta in dashed blue.");
+  q.svg.setAttribute("aria-label","Cumulative distribution functions on [0,1]: alpha in solid red, beta in dashed blue.");
+  h.svg.setAttribute("aria-label","CDF integrand H on the upper triangle x less than y, with color scale from zero to 0.6. The lower triangle is excluded.");
+  const xs=Array.from({length:201},(_,i)=>i/200),integrandMax=.6,bins=48;
+  const rgb=index=>{
+    const t=index/(bins-1),lo=[245,251,250],hi=[0,98,106];
+    return "rgb("+lo.map((value,i)=>Math.round(value+t*(hi[i]-value))).join(",")+")";
+  };
+  const palette=Array.from({length:bins},(_,i)=>rgb(i));
+  const from=h.project([0,1]),to=h.project([1,0]),diagonalStart=h.project([0,0]),diagonalEnd=h.project([1,1]);
+  const triangle=`${from.join(",")} ${diagonalEnd.join(",")} ${diagonalStart.join(",")}`;
+  const formatPoint=point=>h.project(point).map(v=>v.toFixed(2)).join(" ");
+  let integrandFrame= `<defs>
+    <clipPath id="cdf-upper"><polygon points="${triangle}"/></clipPath>
+    <pattern id="cdf-excluded-pattern" width="8" height="8" patternUnits="userSpaceOnUse">
+      <rect width="8" height="8" fill="#e6ebec"/><path d="M -2 2 L 2 -2 M 0 8 L 8 0 M 6 10 L 10 6" stroke="#d6dedf" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="cdf-scale" x1="0" y1="100%" x2="0" y2="0">
+      <stop offset="0%" stop-color="${palette[0]}"/><stop offset="100%" stop-color="${palette[bins-1]}"/>
+    </linearGradient>
+  </defs>
+  <rect x="${from[0]}" y="${from[1]}" width="${to[0]-from[0]}" height="${to[1]-from[1]}" fill="none" stroke="#95aaae" stroke-width="1"/>
+  <rect x="329" y="70" width="13" height="130" rx="2" fill="url(#cdf-scale)" stroke="#9aafb0" stroke-width=".75"/>
+  ${text([335,58],"H")}
+  ${text([350,74],"0.6","start")}
+  ${text([350,139],"0.3","start")}
+  ${text([350,204],"0","start")}
+  ${text(h.project([.69,.22]),"Excluded")}
+  ${line([diagonalStart,diagonalEnd],"#698387",1,.9,"4 3")}`;
+  for(const tick of [0,.5,1]){
+    integrandFrame+=text([h.project([tick,0])[0],268],String(tick))
+      +text([from[0]-8,h.project([0,tick])[1]+4],String(tick),"end");
+  }
+  integrandFrame+=text([200,286],"x")+text([53,145],"y");
+  const integrandBackdrop=`<rect x="${from[0]}" y="${from[1]}" width="${to[0]-from[0]}" height="${to[1]-from[1]}" fill="url(#cdf-excluded-pattern)"/>
+    <polygon points="${triangle}" fill="${palette[0]}"/>`;
+  const drawCurves=(pane,alpha,beta)=>{
+    const curve=(fn,name,color,width,dash="")=>pane.path(xs.map(x=>[x,fn(x)]),color,width,1,dash)
+      .replace("<polyline ",`<polyline data-law="${name}" `);
+    pane.draw(curve(alpha,"alpha",RED,3.2)+curve(beta,"beta",BLUE,2.4,"7 4")+text([200,286],"x"));
+  };
+  let current, pending=0;
+  function redraw(){
+    pending=0;
+    const alpha=+a.value,beta=+b.value,n=+s.value;
+    const lawA=M.sinusoidalLaw(alpha),lawB=M.sinusoidalLaw(beta);
+    const F=lawA.cdf,G=lawB.cdf;
+    drawCurves(p,lawA.density,lawB.density);drawCurves(q,F,G);
+    const size=Math.min(n,80),shapes=Array(bins).fill("");
+    let maxRenderedValue=0;
     for(let i=0;i<size;i++)for(let j=i;j<size;j++){
-      const diagonal=i===j,x=(i+(diagonal?1/3:.5))/size,y=(j+(diagonal?2/3:.5))/size,h=H(x,y);
-      const corners=diagonal?[[i/size,i/size],[i/size,(i+1)/size],[(i+1)/size,(i+1)/size]]:
-        [[i/size,j/size],[i/size,(j+1)/size],[(i+1)/size,(j+1)/size],[(i+1)/size,j/size]];
-      ss+=`<polygon points="${corners.map(v=>q.project(v).join(",")).join(" ")}" fill="${TEAL}" opacity="${Math.min(1,h/(.6/Math.PI))}"/>`;
-    }q.draw(ss);
-    const val=convergence.find(point=>point.n===n).value,error=Math.abs(val-exact);
-    errorplot.draw(errorplot.path(convergence.map(v=>[Math.log10(v.n),Math.log10(Math.abs(v.value-exact))]),TEAL,1.8)
-      +dot(errorplot.project([Math.log10(n),Math.log10(error)]),RED,4));
-    $("status").textContent=`CDF quadrature ${fmt(val,8)} | exact ${fmt(exact,8)} | absolute error ${fmt(error,3)} | ${n*(n+1)/2} integration cells; heatmap resolution capped at 80 per axis`;
-  }s.addEventListener("input",redraw);redraw();
+      const same=i===j, x=(i+(same?1/3:.5))/size, y=(j+(same?2/3:.5))/size;
+      const value=M.cdfIntegrand(F,G,x,y);
+      maxRenderedValue=Math.max(maxRenderedValue,value);
+      const band=Math.min(bins-1,Math.round(value/integrandMax*(bins-1)));
+      if(!band)continue;
+      const corners=[[i/size,j/size],[i/size,(j+1)/size],[(i+1)/size,(j+1)/size]];
+      if(!same)corners.push([(i+1)/size,j/size]);
+      shapes[band]+="M "+corners.map(formatPoint).join(" L ")+" Z ";
+    }
+    const marks=shapes.map((d,i)=>d?`<path data-level="${i}" d="${d}" fill="${palette[i]}"/>`:"").join("");
+    h.draw(integrandBackdrop+`<g id="cdf-heat" clip-path="url(#cdf-upper)" shape-rendering="crispEdges">${marks}</g>`+integrandFrame);
+    const estimate=M.cdfSquaredDistance(F,G,n);
+    const exact=alpha===beta?0:alpha===0||beta===0?3*(alpha+beta)**2/(8*Math.PI**2):null;
+    current={alpha,beta,resolution:n,estimate,exact,integrandMax,meshSize:size,maxRenderedValue};
+    const benchmark=exact===null?"":` · Exact benchmark ${fmt(exact,7)} · Absolute error ${fmt(Math.abs(estimate-exact),3)}`;
+    $("status").textContent=`W₂² (CDF quadrature): ${fmt(estimate,8)}${benchmark} · ${n*(n+1)/2} integration cells`;
+  }
+  const schedule=()=>{if(!pending)pending=requestAnimationFrame(redraw);};
+  [a,b,s].forEach(control=>control.addEventListener("input",schedule));
+  cancel=()=>cancelAnimationFrame(pending);
+  redraw();
+  window.CDFExperiment=Object.freeze({getState:()=>({...current})});
 }
 
 function matchings(){

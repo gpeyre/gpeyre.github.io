@@ -738,14 +738,22 @@
     },
     "wasserstein-distance-without-quantiles": {
       "path": "/blog/imgs/summaries/wasserstein-distance-without-quantiles.jpg",
-      "alt": "Cumulative distributions, the CDF-only Wasserstein integrand, and its quadrature convergence.",
+      "alt": "Red and blue sinusoidal probability densities, their cumulative functions, and the CDF integrand H(x,y) on the triangle x less than y.",
       "width": 1200,
       "height": 450,
       "source": "/blog/preparations/assets/ot-lab/index.html?topic=cdf",
       "settings": {
         "title": "A CDF-only formula for W2 squared",
-        "status": "CDF quadrature 0.013662724 | exact 0.013678360 | absolute error 0.0000156 | 5050 integration cells; heatmap resolution capped at 80 per axis",
+        "status": "W₂² (CDF quadrature): 0.038353446 · 5050 integration cells",
         "controls": [
+          {
+            "label": "Alpha amplitude λₐ: 0.6",
+            "value": "0.6"
+          },
+          {
+            "label": "Beta amplitude λᵦ: -0.45",
+            "value": "-0.45"
+          },
           {
             "label": "Quadrature cells per axis: 100",
             "value": "100"
@@ -753,9 +761,9 @@
         ],
         "count": 3,
         "finite": true,
-        "marks": 3262
+        "marks": 19
       },
-      "sha256": "37574eea839a8cc3d08a9ec5c4da147db7beeb620ccc6efe65629df7812a715f"
+      "sha256": "d626cf87b100f1612e9a6912702a3064e22f1aeaa151cc0a892bfdfc5571f450"
     },
     "wasserstein-geodesics-density-caps": {
       "path": "/blog/imgs/summaries/wasserstein-geodesics-density-caps.jpg",

@@ -9,6 +9,7 @@ Explicit publication order approved on 27 November 2026:
 3. [Conditioning of Non-Euclidean Gradient Descent](https://www.gpeyre.com/blog/preparations/sign-gradient-descent-geometry.html)
 4. [Different convergence rates in the central limit theorem](https://www.gpeyre.com/blog/preparations/central-limit-wasserstein-constants.html)
 5. [c-transform as a generalized Legendre transform](https://www.gpeyre.com/blog/preparations/c-transforms-and-averaging.html)
+6. [Wasserstein distance without quantiles](https://www.gpeyre.com/blog/preparations/wasserstein-distance-without-quantiles.html)
 
 The author's explicit order takes precedence over topic alternation. The remaining entries are unchecked. The local `announcement-queue.html` is the editorial view of this list, not an article to publish.
 
@@ -52,7 +53,15 @@ Topic: OT / Wasserstein geometry
 
 > Averages of transport potentials stay in the class for metric costs and quadratic Euclidean costs. Other power costs can fail, as a one-dimensional counterexample shows. https://www.gpeyre.com/blog/preparations/c-transforms-and-averaging.html
 
-## 5. Bernstein polynomials on probability measures
+## 5. Wasserstein distance without quantiles
+
+Topic: OT / Wasserstein geometry
+
+- [x] Ready to publish
+
+> In 1D, quadratic Wasserstein distance can be computed directly from CDFs, without inverting them. A triangle-area argument gives the formula. https://www.gpeyre.com/blog/preparations/wasserstein-distance-without-quantiles.html
+
+## 6. Bernstein polynomials on probability measures
 
 Topic: Other topics
 
@@ -60,26 +69,18 @@ Topic: Other topics
 
 > Bernstein's averaging construction also applies to continuous functions of probability measures. On a compact space it gives uniform approximation, with an error controlled by sampling. https://www.gpeyre.com/blog/preparations/bernstein-polynomials-on-measures.html
 
-## 6. Wasserstein distance without quantiles
-
-Topic: OT / Wasserstein geometry
-
-- [ ] Ready to publish
-
-> In 1D, quadratic Wasserstein distance can be computed directly from CDFs, without inverting them. A triangle-area argument gives the formula. https://www.gpeyre.com/blog/preparations/wasserstein-distance-without-quantiles.html
-
-## 7. Universal approximation from one nonlinearity
-
-Topic: Other topics
-
-- [ ] Ready to publish
-
-> On a compact space, a separating real linear family containing constants is dense if its closure is stable under one fixed continuous non-affine operation. https://www.gpeyre.com/blog/preparations/universality-from-one-nonlinearity.html
-
-## 8. Spectral Wasserstein distances
+## 7. Spectral Wasserstein distances
 
 Topic: OT / Wasserstein geometry
 
 - [ ] Ready to publish
 
 > Spectral Wasserstein distances account for the directions of transport displacements. I explain their robust-cost and dynamic formulations, with a point-cloud experiment. https://www.gpeyre.com/blog/preparations/spectral-wasserstein-distances.html
+
+## 8. Universal approximation from one nonlinearity
+
+Topic: Other topics
+
+- [ ] Ready to publish
+
+> On a compact space, a separating real linear family containing constants is dense if its closure is stable under one fixed continuous non-affine operation. https://www.gpeyre.com/blog/preparations/universality-from-one-nonlinearity.html

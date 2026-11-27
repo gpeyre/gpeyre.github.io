@@ -18,7 +18,7 @@ const definitions = [
   ["noncrossing-matchings-catalan", "matchings", "A noncrossing red-blue matching and the changing costs of one hundred uniformly sampled noncrossing matchings.", [10]],
   ["optimal-particles-versus-random-sampling", "quantization", "Empirical CDFs of random and optimally placed particles, compared with their exact Wasserstein error rates.", [18]],
   ["sgd-iterate-covariance", "sgd", "Exact covariance ellipses and transient and stationary variance curves for constant-step least-squares SGD.", [0.48, 7, 10]],
-  ["wasserstein-distance-without-quantiles", "cdf", "Cumulative distributions, the CDF-only Wasserstein integrand, and its quadrature convergence.", [100]],
+  ["wasserstein-distance-without-quantiles", "cdf", "Red and blue sinusoidal probability densities, their cumulative functions, and the CDF integrand H(x,y) on the triangle x less than y.", [0.6, -0.45, 100]],
   ["wasserstein-geodesics-density-caps", "caps", "Two localized Gaussian mixtures and their intermediate Wasserstein density, below a common dashed density cap, beside their interpolated quantiles.", [0.5, 0.22, 2, 2]],
   ["weak-transport-and-convex-order", "weak", "A quadratic optimal-transport coupling, its barycentric projection, and the conditional means of a weak-transport solution.", []],
   ["composing-optimal-transport-maps", "composition", "Two Gaussian optimal transport maps composed together, the direct Brenier map, and their exact excess-cost comparison.", [35]],

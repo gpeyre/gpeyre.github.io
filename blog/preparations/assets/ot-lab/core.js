@@ -336,14 +336,24 @@
   function convexEnvelope(a,b,epsilon=0) {
     return Math.max(0,Math.abs(a-b)-epsilon*(a*(1-a)+b*(1-b)));
   }
+  function sinusoidalLaw(lambda) {
+    if(!Number.isFinite(lambda) || Math.abs(lambda)>.9)throw new RangeError("The amplitude must be in [-0.9, 0.9]");
+    const density=x=>x<0 || x>1?0:x===0 || x===1?1:1+lambda*Math.sin(2*Math.PI*x);
+    // (1−cos(2πx))/(2π) = sin²(πx)/π, avoiding cancellation near zero.
+    const cdf=x=>x<=0?0:x>=1?1:x+lambda*Math.sin(Math.PI*x)**2/Math.PI;
+    return {density,cdf};
+  }
+  // This integrand is used on the ordered triangle x <= y.
+  function cdfIntegrand(F,G,x,y) {
+    return Math.max(F(x)-G(y),0)+Math.max(G(x)-F(y),0);
+  }
   function cdfSquaredDistance(F,G,n,lower=0,upper=1) {
     const step=(upper-lower)/n;
-    const h=(x,y)=>Math.max(F(x)-G(y),0)+Math.max(G(x)-F(y),0);
     let value=0;
     for(let i=0;i<n;i++) {
       // Each diagonal cell contributes a triangle, sampled at its centroid.
-      value+=.5*h(lower+(i+1/3)*step,lower+(i+2/3)*step);
-      for(let j=i+1;j<n;j++)value+=h(lower+(i+.5)*step,lower+(j+.5)*step);
+      value+=.5*cdfIntegrand(F,G,lower+(i+1/3)*step,lower+(i+2/3)*step);
+      for(let j=i+1;j<n;j++)value+=cdfIntegrand(F,G,lower+(i+.5)*step,lower+(j+.5)*step);
     }
     return 2*step*step*value;
   }
@@ -351,7 +361,7 @@
     weakStep,weakAwayStep,weakCertificate,crossing,catalan,sampleMatching,sqrtSPD,matmul,transpose,solve,
     twoPointPlan,twoPointTransport,bernstein,uniformQuantization,uniformMongeGap,mongeRegression,
     gaussianCDF,gaussianMixture1D,gaussianMixtureDensityCap,gaussianDensityCapScene,gaussianDensityCapGeodesic,
-    bernoulliErrorCurve,convexEnvelope,cdfSquaredDistance};
+    bernoulliErrorCurve,convexEnvelope,sinusoidalLaw,cdfIntegrand,cdfSquaredDistance};
   if(typeof module!=="undefined" && module.exports)module.exports=api;
   root.BlogMath=api;
 })(typeof window!=="undefined"?window:globalThis);

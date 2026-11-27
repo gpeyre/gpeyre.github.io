@@ -455,6 +455,12 @@ The preview index groups articles by subject, with no publication dates.
 The Bernstein article complements the existing qualitative
 `wasserstein-polynomials.html` article with a constructive operator and rates.
 
+The CDF-only Wasserstein experiment uses two independently adjustable
+sinusoidal densities on [0,1]. It displays both densities, their CDFs and the
+positive-part integrand on the ordered triangle. The readout integrates that
+triangle by centroid/midpoint quadrature and checks the closed-form cost when
+one law is uniform. Run `node tests/blog-cdf-law-comparison.test.js`.
+
 ### Embedded experiments
 
 `assets/ot-lab/` adapts the supplied offline numerical companion. A single

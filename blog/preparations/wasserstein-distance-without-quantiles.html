@@ -19,12 +19,12 @@
 
 <!-- Generated numerical summary image: start -->
 <meta property="og:image" content="https://www.gpeyre.com/blog/imgs/summaries/wasserstein-distance-without-quantiles.jpg">
-<meta property="og:image:alt" content="Cumulative distributions, the CDF-only Wasserstein integrand, and its quadrature convergence.">
+<meta property="og:image:alt" content="Red and blue sinusoidal probability densities, their cumulative functions, and the CDF integrand H(x,y) on the triangle x less than y.">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="450">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://www.gpeyre.com/blog/imgs/summaries/wasserstein-distance-without-quantiles.jpg">
-<meta name="twitter:image:alt" content="Cumulative distributions, the CDF-only Wasserstein integrand, and its quadrature convergence.">
+<meta name="twitter:image:alt" content="Red and blue sinusoidal probability densities, their cumulative functions, and the CDF integrand H(x,y) on the triangle x less than y.">
 <!-- Generated numerical summary image: end -->
 </head>
 <body>
@@ -115,9 +115,10 @@
 <p>The integral of \((1-\cos(2\pi x))^2\) is \(3/2\). Its product with \(\sin(2\pi x)\) integrates to zero, either by symmetry under \(x\mapsto1-x\) or by direct differentiation. This gives the claimed value. \(\square\)</p>
 </div></details>
 <p>This provides an independent reference for the numerical CDF integral. With \(\lambda=0.6\), the value is \(0.135/\pi^2\). Refining the integration grid converges to this value, although individual errors need not decrease monotonically with every choice of grid size. The identity itself has no numerical error.</p>
+<p>In the experiment, both \(\alpha\) (red) and \(\beta\) (blue) belong to this sinusoidal family on \([0,1]\), with independent amplitudes \(\lambda_\alpha\) and \(\lambda_\beta\). A positive amplitude moves mass toward the left half; a negative one moves it toward the right. Set one amplitude to zero to make that law uniform and check the closed-form cost for the other amplitude, or set both amplitudes equal to see the integrand vanish.</p>
 <figure>
-  <iframe class="idea-experiment" data-experiment="cdf" title="CDF-only Wasserstein formula and triangular quadrature" src="assets/ot-lab/index.html?topic=cdf" loading="lazy"></iframe>
-  <figcaption>The first panel shows the two CDFs; the second shades \(H(x,y)\) on the ordered triangle. The slider changes the integration resolution, and the convergence panel compares the numerical result with the exact value \(0.135/\pi^2\). Off-diagonal cells use their midpoints; the diagonal half-cells use their triangular centroids. The heat map follows the resolution up to a display cap of 80 cells per axis.</figcaption>
+  <iframe class="idea-experiment" data-experiment="cdf" title="Two distributions, their cumulative functions, and the CDF-only Wasserstein integrand" src="assets/ot-lab/index.html?topic=cdf" loading="lazy"></iframe>
+  <figcaption>The first two panels show the densities and their cumulative functions, in the same colors. The third shades \(H(x,y)\) on the ordered triangle \(x&lt;y\), using a fixed color scale as the laws change. Twice the integral over this triangle is \(W_2^2\). The resolution slider controls the quadrature: off-diagonal cells use their midpoints and the diagonal half-cells use their triangular centroids. The heatmap uses a coarser grid if needed to keep the display responsive.</figcaption>
 </figure>
 
 <h2>An unbiased Monte Carlo estimator</h2>
