@@ -19,12 +19,12 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 
 <!-- Generated numerical summary image: start -->
 <meta property="og:image" content="https://www.gpeyre.com/blog/imgs/summaries/central-limit-wasserstein-constants.jpg">
-<meta property="og:image:alt" content="Exact Wasserstein central-limit errors and rescaled CDF errors for symmetric Bernoulli and uniform random variables.">
+<meta property="og:image:alt" content="Normalized Bernoulli sums in blue and continuous uniform sums in red, shown as probability-preserving bars against dashed standard Gaussian curves, above their Wasserstein and rescaled CDF errors.">
 <meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
+<meta property="og:image:height" content="1000">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://www.gpeyre.com/blog/imgs/summaries/central-limit-wasserstein-constants.jpg">
-<meta name="twitter:image:alt" content="Exact Wasserstein central-limit errors and rescaled CDF errors for symmetric Bernoulli and uniform random variables.">
+<meta name="twitter:image:alt" content="Normalized Bernoulli sums in blue and continuous uniform sums in red, shown as probability-preserving bars against dashed standard Gaussian curves, above their Wasserstein and rescaled CDF errors.">
 <!-- Generated numerical summary image: end -->
 </head>
 <body>
@@ -168,8 +168,10 @@ MathJax.Hub.Config({messageStyle:'none',tex2jax:{inlineMath:[['\\(','\\)']],disp
 <p>There are two distinct mechanisms: a rapidly oscillating lattice error of order \(n^{-1/2}\), and a smooth kurtosis error of order \(n^{-1}\). Both are visible before taking any absolute-value integral.</p>
 
 <h2>Numerical experimentation</h2>
-<p>Choose the number of summands to inspect the CDF error, then compare the convergence curves and the rescaled quantities \(\sqrt n\,W_1\) and \(nW_1\). The first approaches \(1/2\) for Bernoulli input, and the second approaches \(C_{\mathrm U}\) for continuous uniform input.</p>
-<figure><iframe class="idea-experiment" data-experiment="clt" title="Bernoulli and continuous uniform central-limit rates in Wasserstein distance" src="assets/ot-lab/index.html?topic=clt" loading="lazy"></iframe><figcaption>The Bernoulli calculation uses the exact binomial law. The uniform calculation uses the continuous Irwin–Hall convolution CDF, not an atomic approximation of the input. Distances are obtained by integrating absolute CDF errors, including the Gaussian tails. The right panel rescales the Bernoulli CDF error by \(\sqrt n\) and the uniform error by \(n\), so both leading shapes remain visible as the errors shrink.</figcaption></figure>
+<p>Choose the number of summands to compare the laws of \(S_n=(X_1+\cdots+X_n)/\sqrt n\). Both inputs are centered with variance one, so no further adjustment is needed to compare their sums with the standard Gaussian. The top panels show Bernoulli sums in blue and continuous uniform sums in red, with the same dashed Gaussian density and fixed horizontal and vertical scales.</p>
+<p>The bars preserve probability: their <em>area</em>, rather than their height, is the represented mass. For the Bernoulli sum, the atom at \(x_k=(2k-n)/\sqrt n\) has mass \(2^{-n}\binom nk\). Its bar is centered at \(x_k\), has the lattice width \(h_n=2/\sqrt n\), and height \(2^{-n}\binom nk/h_n\). These bars visualize a discrete law; they do not turn it into a density. The uniform sum is genuinely continuous. Its red bars show the exact probability of each interval of width \(0.25\), divided by that width, using the continuous Irwin–Hall CDF. The heights are not fitted to the Gaussian, and the window is not renormalized.</p>
+<figure><iframe class="idea-experiment" data-experiment="clt" title="Normalized Bernoulli and uniform sums as probability bars, with Gaussian comparison and Wasserstein convergence errors" src="assets/ot-lab/index.html?topic=clt" loading="lazy"></iframe><figcaption>The upper panels compare the distributions themselves. The lower-left panel shows \(W_1\) and its leading asymptotics, with dots at the selected \(n\). The lower-right panel rescales the Bernoulli CDF error by \(\sqrt n\) and the uniform error by \(n\), so both leading shapes remain visible as the errors shrink. Distances are computed independently by integrating absolute CDF errors, including the Gaussian tails; they are not computed from the displayed bars.</figcaption></figure>
+<p>The rescaled quantities \(\sqrt n\,W_1\) and \(nW_1\) approach \(1/2\) for Bernoulli input and \(C_{\mathrm U}\) for continuous uniform input, respectively. Both bar plots can look close to the Gaussian even while their errors decay at different rates.</p>
 <p>This distinction matters numerically. If we first replace a uniform variable by a fixed finite grid, we have changed it into a lattice law. At sufficiently large \(n\), the lattice term dominates and the asymptotic rate changes. Increasing the quadrature resolution for the continuous CDF is legitimate; changing the input into discrete mass is a different experiment.</p>
 <p>Likewise, the coin characteristic function \(\cos t\) returns to modulus one at arbitrarily large frequencies. It fails Cramér's condition. More generally, merely being nonlattice is weaker than satisfying that condition. Symmetry and arbitrarily many finite moments cannot remove the coin's lattice obstruction.</p>
 

@@ -450,8 +450,19 @@ the other numerical authoring tools.
 `data.js` contains the supplied fixed-seed CLT profiles, energy trajectories,
 weak-transport reference, and independent SciPy fixtures. Only those three
 experiments load this data bundle; the others use the small numerical core.
-Changing the CLT
-selection or energy time replays these computed data; the captions say so.
+Changing energy time replays these computed data; the captions say so.
+The CLT slider selects all 22 saved sample sizes. Its two added distribution
+panels use `assets/clt-distribution-core.js`: exact binomial probabilities are
+spread over lattice cells of width `2/sqrt(n)` for the blue bars, while red
+bar areas are exact continuous Irwin–Hall interval probabilities with bin width
+0.25. A positive CDF recurrence avoids cancellation at large n; neither input
+is replaced by a numerical grid. Both normalized sums have mean zero and
+variance one, and both panels keep x in [-4.5, 4.5] and the density scale in
+[0, 0.45], with the standard Gaussian dashed. Bars clipped by the window are
+not renormalized. Existing CDF profiles are reused; intermediate profiles use
+the same continuous CDF. The saved Wasserstein distances remain unchanged and
+are not estimated from the bars. Run `node tests/blog-clt-distribution.test.js`
+and `node tests/blog-clt-browser.test.cjs` for probability and browser checks.
 All other controls evaluate exact formulas or recompute the stated numerical
 optimization. Monge regression uses damped Newton and reports a
 strong-convexity bound for its smoothed objective error (with a roundoff floor);

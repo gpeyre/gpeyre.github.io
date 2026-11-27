@@ -18,6 +18,7 @@
     return;
   }
   if (topic === "sgd") { load("../sgd-covariance-core.js", start); return; }
+  if (topic === "clt") { load("data.js", () => load("../clt-distribution-core.js", start)); return; }
   const computed = ["monge", "moments", "caps", "composition", "cdf", "matchings", "bernstein", "quantization", "independence", "envelope"];
   if (computed.includes(topic)) start();
   else load("data.js", start); // Unknown selections fall back to weak transport.

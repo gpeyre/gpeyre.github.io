@@ -13,7 +13,7 @@ const base = process.env.BLOG_CAPTURE_BASE || "http://127.0.0.1:4197";
 const definitions = [
   ["autonomous-wasserstein-statistics", "moments", "Two different particle clouds approach the unit circle while their common signed-distance moment follows the same exponential decay.", [1.6]],
   ["bernstein-polynomials-on-measures", "bernstein", "The Bernstein particle polynomial smooths the corner of the absolute-value functional of a two-point probability law.", [10]],
-  ["central-limit-wasserstein-constants", "clt", "Exact Wasserstein central-limit errors and rescaled CDF errors for symmetric Bernoulli and uniform random variables.", [4]],
+  ["central-limit-wasserstein-constants", "clt", "Normalized Bernoulli sums in blue and continuous uniform sums in red, shown as probability-preserving bars against dashed standard Gaussian curves, above their Wasserstein and rescaled CDF errors.", [7]],
   ["gaussian-sinkhorn-convergence", "gaussian", "A Gaussian Sinkhorn coupling ellipse with its aligned marginal densities above and to the left; dashed curves show the exact solution, and a dot marks the selected cycle on the marginal-error plot.", [-1, 2]],
   ["noncrossing-matchings-catalan", "matchings", "A noncrossing red-blue matching and the changing costs of one hundred uniformly sampled noncrossing matchings.", [10]],
   ["optimal-particles-versus-random-sampling", "quantization", "Empirical CDFs of random and optimally placed particles, compared with their exact Wasserstein error rates.", [18]],
@@ -73,7 +73,7 @@ async function capture(page, job, output) {
     if (!state.finite || state.marks < 2 || errors.length) {
       throw Error(`Invalid plotted state for ${job.slug}: ${JSON.stringify({ state, errors })}`);
     }
-    const height = state.count === 3 ? 450 : 630;
+    const height = job.topic === "clt" ? 1000 : state.count === 3 ? 450 : 630;
     await page.addStyleTag({ content: `
       html, body { width:1200px!important; min-width:1200px!important; margin:0!important; background:#f5f9fa!important; }
       body { height:${height}px!important; overflow:hidden!important; }
@@ -95,6 +95,15 @@ async function capture(page, job, output) {
         .gaussian-lab #plots svg { height:440px!important; width:100%!important; }
         .gaussian-lab .plot h3 { min-height:0!important; margin-bottom:4px!important; }
         .gaussian-lab .gs-panel-note { display:none!important; }
+      ` });
+    }
+    if (job.topic === "clt") {
+      await page.addStyleTag({ content: `
+        .clt-lab h2 { margin-bottom:12px!important; }
+        .clt-lab .clt-legend { margin-bottom:14px!important; }
+        .clt-lab #plots { grid-template-columns:repeat(2,minmax(0,1fr))!important; }
+        .clt-lab #plots svg { height:360px!important; width:100%!important; }
+        .clt-lab .plot h3 { min-height:0!important; margin-bottom:5px!important; }
       ` });
     }
     await page.setViewportSize({ width: 1200, height });

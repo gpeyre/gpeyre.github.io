@@ -132,25 +132,62 @@ function weak() {
 }
 
 function clt(){
-  setup("6 / Wasserstein central-limit rates",
-    "Blue: symmetric Bernoulli. Red: continuous uniform. Select the number of summands. On the right, multiply the CDF errors by √n and n respectively to reveal their different leading shapes.",
-    "Bernoulli is evaluated from binomial masses; the uniform law uses a continuous Irwin-Hall spline CDF. Numerical integration is refined independently. Neither rate is estimated from a discretized uniform input.",2);
-  const s=slider("Number of summands n",0,D.clt.profiles.length-1,0);
+  const C=window.CLTDistribution,data=D.clt,cache=new Map();
+  setup("Gaussian approximation of normalized sums",
+    "Blue: symmetric Bernoulli. Red: continuous uniform. Increase the number of summands to compare the normalized sums with the same dashed standard Gaussian. The lower panels retain the Wasserstein errors and rescaled CDF errors.",
+    "Both inputs have mean zero and variance one; the displayed sum is (X₁ + ⋯ + Xₙ)/√n. Bar height is probability divided by bar width, not a fitted rescaling. Blue bars spread exact binomial masses over their lattice cells of width 2/√n. Red bars average the continuous Irwin–Hall density over bins of width 0.25; the uniform input has not been discretized. The density panels share fixed axes. Tails outside the window are clipped without renormalizing. The distance curves are computed from CDF errors, not from the bars.",2);
+  document.body.classList.add("clt-lab");
+  const s=slider("Number of summands n",0,data.n.length-1,0);s.id="clt-n";
+  const legend=document.createElement("p");legend.className="clt-legend";
+  legend.innerHTML='<span><i class="clt-swatch clt-blue"></i>Bernoulli</span><span><i class="clt-swatch clt-red"></i>Continuous uniform</span><span><i class="clt-swatch clt-dashed"></i>Standard Gaussian (top panels)</span>';
+  $("plots").before(legend);
+  const densityTicks={x:[-4,-2,0,2,4].map(x=>[x,String(x)]),y:[0,.1,.2,.3,.4].map(y=>[y,String(y)])};
+  const bernoulli=plot("Bernoulli sum: lattice masses / cell width",[-4.5,4.5],[0,.45],true,densityTicks);
+  const uniform=plot("Uniform sum: probability / bin width",[-4.5,4.5],[0,.45],true,densityTicks);
+  bernoulli.svg.id="clt-bernoulli";uniform.svg.id="clt-uniform";
+  for(const pane of [bernoulli,uniform]){
+    pane.svg.dataset.xMin="-4.5";pane.svg.dataset.xMax="4.5";pane.svg.dataset.yMin="0";pane.svg.dataset.yMax="0.45";
+  }
   const p=plot("W₁ error versus n (log scales)",[0,Math.log10(192)],[-4,0],true,{
-    x:[1,2,5,10,20,50,100,192].map(n=>[Math.log10(n),String(n)]),
+    x:[1,2,5,10,20,50,192].map(n=>[Math.log10(n),String(n)]),
     y:[[-4,"10⁻⁴"],[-3,"10⁻³"],[-2,"10⁻²"],[-1,"10⁻¹"],[0,"1"]]});
   const e=plot("Rescaled CDF errors: √n blue, n red",[-4,4],[-.42,.42]);
+  p.svg.id="clt-rates";e.svg.id="clt-errors";
+  const edges=Array.from({length:37},(_,i)=>-4.5+i/4);
+  const normal=Array.from({length:361},(_,i)=>{const x=-4.5+i/40;return [x,C.normalPdf(x)];});
+  function distributions(n){
+    if(!cache.has(n)){
+      const saved=data.profiles.find(profile=>profile.n===n);
+      const x=saved?saved.x:Array.from({length:401},(_,i)=>-4+i/50);
+      cache.set(n,{n,bernoulli:C.bernoulli(n),uniform:C.uniform(n,edges),
+        error:x.map((value,i)=>[value,n*(saved?saved.uniform[i]:C.uniformCdf(n,value)-M.gaussianCDF(value))])});
+    }return cache.get(n);
+  }
+  function drawDensity(pane,distribution,color){
+    const id=pane.svg.id+"-clip";
+    let shapes=`<defs><clipPath id="${id}"><rect x="40" y="30" width="320" height="220"/></clipPath></defs><g clip-path="url(#${id})">`;
+    for(const bar of distribution.bars){
+      const left=pane.project([bar.left,bar.height]),right=pane.project([bar.right,0]);
+      shapes+=`<rect class="clt-bar" x="${left[0]}" y="${left[1]}" width="${right[0]-left[0]}" height="${right[1]-left[1]}" fill="${color}" fill-opacity=".65" stroke="white" stroke-width=".55" data-left="${bar.left}" data-right="${bar.right}" data-center="${bar.center}" data-mass="${bar.mass}" data-height="${bar.height}"><title>Interval [${bar.left.toFixed(3)}, ${bar.right.toFixed(3)}]: probability ${bar.mass.toPrecision(4)}</title></rect>`;
+    }
+    shapes+=`<polyline class="clt-gaussian" points="${normal.map(point=>pane.project(point).join(',')).join(' ')}" fill="none" stroke="#374751" stroke-width="2" stroke-dasharray="6 4"/></g>`;
+    pane.draw(shapes+text([200,286],"normalized sum")+text([42,20],"density scale","start"));
+  }
+  let current;
   const redraw=()=>{
-    const data=D.clt,profile=data.profiles[+s.value],index=data.n.indexOf(profile.n);let a="";
-    s.parentElement.querySelector("output").textContent=String(profile.n);
+    const index=+s.value,n=data.n[index];current=distributions(n);let a="";
+    s.parentElement.querySelector("output").textContent=String(n);
+    s.setAttribute("aria-valuetext",n+" summands");
+    drawDensity(bernoulli,current.bernoulli,BLUE);drawDensity(uniform,current.uniform,RED);
     for(const [key,col] of [["bernoulli",BLUE],["uniform",RED]]){
       a+=p.path(data.n.map((n,i)=>[Math.log10(n),Math.log10(data[key][i])]),col);
       a+=p.path(data.n.map(n=>[Math.log10(n),Math.log10(key==="bernoulli"?.5/Math.sqrt(n):data.uniformConstant/n)]),col,1,.55,"4 3");
-      a+=dot(p.project([Math.log10(profile.n),Math.log10(data[key][index])]),col,3.5);
+      a+=dot(p.project([Math.log10(n),Math.log10(data[key][index])]),col,3.5);
     }p.draw(a);
-    e.draw(e.path(M.bernoulliErrorCurve(profile.n),BLUE,1.3)+e.path(profile.x.map((x,i)=>[x,profile.n*profile.uniform[i]]),RED,1.6));
-    $("status").textContent=`n = ${profile.n} | Bernoulli √n W₁ = ${fmt(Math.sqrt(profile.n)*data.bernoulli[index],6)} → 0.5 | uniform n W₁ = ${fmt(profile.n*data.uniform[index],6)} → ${fmt(data.uniformConstant,6)} | dashed curves: leading asymptotics; dots: selected n`;
+    e.draw(e.path(M.bernoulliErrorCurve(n),BLUE,1.3)+e.path(current.error,RED,1.6));
+    $("status").textContent=`n = ${n} · blue bar width = ${fmt(current.bernoulli.width,3)} · red bin width = 0.25 · Bernoulli √n W₁ = ${fmt(Math.sqrt(n)*data.bernoulli[index],6)} → 0.5 · uniform n W₁ = ${fmt(n*data.uniform[index],6)} → ${fmt(data.uniformConstant,6)}. Lower-left dashed curves: leading asymptotics; dots: selected n.`;
   };s.addEventListener("input",redraw);redraw();
+  window.CLTExperiment=Object.freeze({getState:()=>({n:current.n,axes:{x:[-4.5,4.5],y:[0,.45]},bernoulli:current.bernoulli,uniform:current.uniform})});
 }
 
 function energy(){

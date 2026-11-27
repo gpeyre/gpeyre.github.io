@@ -11,6 +11,14 @@ svg{display:block;width:100%;height:auto}svg text{font-family:system-ui,sans-ser
 .controls.mixture-count-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.controls.mixture-count-controls input[type=range]{width:100%}
 @media(max-width:680px){.controls.mixture-count-controls{grid-template-columns:1fr}}
 @media print{.controls,.controls.mixture-count-controls{display:none}}
+.clt-lab #plots{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.clt-lab .plot{padding:13px 6px 8px}.clt-lab .plot h3{min-height:0;margin-bottom:7px}
+.clt-lab .controls label{width:100%;max-width:520px}.clt-lab .controls input{width:100%}
+.clt-lab #clt-bernoulli text,.clt-lab #clt-uniform text{font-size:12px}
+.clt-legend{display:flex;justify-content:center;gap:10px 20px;flex-wrap:wrap;font:12px/1.5 system-ui,sans-serif;color:#53616d}
+.clt-legend span{display:flex;align-items:center;gap:7px}.clt-swatch{display:inline-block;width:22px;height:9px}.clt-blue{background:#2673b5}.clt-red{background:#c74b45}.clt-dashed{height:0;border-top:2px dashed #374751}
+@media(max-width:680px){.clt-lab #plots{grid-template-columns:1fr}.clt-lab .plot h3{font-size:13px}.clt-legend{justify-content:flex-start}}
+@media(max-width:420px){.clt-lab svg text,.clt-lab #clt-bernoulli text,.clt-lab #clt-uniform text{font-size:14px}}
 .gaussian-lab #plots{grid-template-columns:minmax(0,500fr) minmax(0,430fr);gap:16px}
 .gaussian-lab .controls{display:grid;grid-template-columns:1fr 1fr auto auto;align-items:end;gap:12px 18px}
 .gaussian-lab .controls label{min-width:0}.gaussian-lab input[type=range]{width:100%}

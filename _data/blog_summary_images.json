@@ -135,24 +135,24 @@
     },
     "central-limit-wasserstein-constants": {
       "path": "/blog/imgs/summaries/central-limit-wasserstein-constants.jpg",
-      "alt": "Exact Wasserstein central-limit errors and rescaled CDF errors for symmetric Bernoulli and uniform random variables.",
+      "alt": "Normalized Bernoulli sums in blue and continuous uniform sums in red, shown as probability-preserving bars against dashed standard Gaussian curves, above their Wasserstein and rescaled CDF errors.",
       "width": 1200,
-      "height": 630,
+      "height": 1000,
       "source": "/blog/preparations/assets/ot-lab/index.html?topic=clt",
       "settings": {
-        "title": "Same Gaussian limit, different powers of n",
-        "status": "n = 64 | Bernoulli √n W₁ = 0.500556 → 0.5 | uniform n W₁ = 0.0758599 → 0.0755007 | dashed curves: leading asymptotics; dots: selected n",
+        "title": "Gaussian approximation of normalized sums",
+        "status": "n = 9 · blue bar width = 0.667 · red bin width = 0.25 · Bernoulli √n W₁ = 0.504583 → 0.5 · uniform n W₁ = 0.0781621 → 0.0755007. Lower-left dashed curves: leading asymptotics; dots: selected n.",
         "controls": [
           {
-            "label": "Number of summands n: 64",
-            "value": "4"
+            "label": "Number of summands n: 9",
+            "value": "7"
           }
         ],
-        "count": 2,
+        "count": 4,
         "finite": true,
-        "marks": 20
+        "marks": 34
       },
-      "sha256": "a0bf6fd4272ee20ffaab46ea75f655e5bed8210129ebf2ecb7b2ebe1a64b25e5"
+      "sha256": "e041fd7a41177b4845948d5bab91d6f83b0cdf171bfabfb03aece034beb9abe4"
     },
     "composing-optimal-transport-maps": {
       "path": "/blog/imgs/summaries/composing-optimal-transport-maps.jpg",
