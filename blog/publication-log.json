@@ -1185,6 +1185,32 @@
         "mime_type": "image/jpeg",
         "size": 57018
       }
+    },
+    {
+      "slug": "doubly-nonnegative-completely-positive",
+      "title": "Doubly nonnegative and completely positive matrices",
+      "date": "2026-11-27",
+      "url": "https://www.gpeyre.com/blog/2026/11/27/doubly-nonnegative-completely-positive/",
+      "message": "A positive semidefinite matrix with nonnegative entries need not have nonnegative Gram factors. A five-cycle gives a counterexample; Gaussian kernels do admit such features. https://www.gpeyre.com/blog/2026/11/27/doubly-nonnegative-completely-positive/",
+      "status": "prepared",
+      "source_sha256": "365e236db380f3eb0375817f2f5684b83641ddc369fedb1b858c9df34052788c",
+      "base_commit": "d3c0a74961282b0d47c30b8e1a48a648aece1cf1",
+      "files": [
+        "blog/_posts/2026-11-27-doubly-nonnegative-completely-positive.md",
+        "blog/preparations/doubly-nonnegative-completely-positive.html",
+        "blog/preparations/index.html",
+        "js/blog-search-index.js",
+        "blog/publication-log.json"
+      ],
+      "publication_commit": null,
+      "bluesky_uri": null,
+      "bluesky_cid": null,
+      "working_sha256": {
+        "blog/_posts/2026-11-27-doubly-nonnegative-completely-positive.md": "c9b1c951746fbb0083a1f42e874eb7ac54ba980a068536287d96c4ebc9f421e0",
+        "blog/preparations/doubly-nonnegative-completely-positive.html": "fc8b3c748ac742de3b0830dce9c87ef985a03e2f05ce167714577c89fbdbd2dc",
+        "blog/preparations/index.html": "f4ad9dd8d7740a94e2d2624ac5de22781011fb68b93c0f118157ed57532f1b00",
+        "js/blog-search-index.js": "4ece12c4156ccd62a7c8169be4a936a3aca311d4e315cc4e46e401c51403fddf"
+      }
     }
   ]
 }
