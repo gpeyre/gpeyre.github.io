@@ -1,0 +1,362 @@
+---
+title: "Sinkhorn on Gaussians: an exact convergence rate"
+subtitle: "How entropic regularization affects Sinkhorn’s convergence rate for Gaussian marginals."
+description: "Sinkhorn between centered Gaussians reduces to a covariance recursion. In one dimension, a cross-ratio gives its exact convergence rate and explains the effect of entropic temperature."
+date: "2026-11-28"
+topic: "Entropic transport & convergence"
+keywords:
+  - "Sinkhorn algorithm"
+  - "entropic optimal transport"
+  - "Gaussian measures"
+  - "exact convergence rate"
+  - "conditional covariance recursion"
+  - "Gaussian conditioning"
+  - "Schur complement"
+  - "matrix quadratic equation"
+  - "matrix square root"
+  - "fractional-linear map"
+  - "Möbius transformation"
+  - "cross-ratio"
+  - "low-temperature asymptotics"
+  - "entropic regularization"
+  - "full-cycle contraction"
+  - "dual objective gap"
+  - "Kullback–Leibler divergence"
+  - "Hilbert projective metric"
+  - "Birkhoff contraction"
+  - "log-concave densities"
+  - "Schrödinger bridges"
+  - "Hicham Janati"
+  - "Boris Muzellec"
+  - "Marco Cuturi"
+  - "Lénaïc Chizat"
+  - "Alex Delalande"
+  - "Tomas Vaškevičius"
+  - "Pierre Del Moral"
+  - "Gabriel Peyré"
+  - "algorithme de Sinkhorn"
+  - "transport entropique"
+  - "vitesse de convergence"
+  - "covariance conditionnelle"
+  - "régularisation entropique"
+proofs: true
+embedded_experiment: true
+---
+
+<p>Sinkhorn’s algorithm alternately corrects the two marginals of a coupling. Its convergence rate depends strongly on the regularization. As the entropic temperature \(\varepsilon\) decreases, the transport plan becomes sharper and convergence usually slows down. How much slower: exponentially in \(1/\varepsilon\), or only proportionally to \(1/\varepsilon\)?</p>
+<p>For Gaussian marginals, this rate can be computed exactly. For a quadratic cost, the entropic optimal coupling is Gaussian, and Sinkhorn stays within Gaussian distributions. This closed-form structure is studied in our work with Hicham Janati, Boris Muzellec, and Marco Cuturi <a href="#ref-janati">[1]</a>, and in more detail by Akyildiz, Del Moral, and Miguez <a href="#ref-akyildiz">[2]</a>. In one dimension, the entire iteration becomes a fractional-linear map.</p>
+<p>For centered Gaussian iterates, the number of full Sinkhorn cycles needed for a fixed relative reduction of a suitable error is of order \(1/\varepsilon\) at low temperature. A recent paper of Lénaïc Chizat, Alex Delalande, and Tomas Vaškevičius <a href="#ref-chizat">[3]</a> proves related convergence bounds for broader classes of marginals.</p>
+
+<!--more-->
+
+<h2>Entropic transport between centered Gaussians</h2>
+<p>Let \(\alpha=\mathcal N(0,A)\) and \(\beta=\mathcal N(0,B)\), where \(A,B\) are positive-definite \(d\times d\) covariance matrices. We use the cost and regularized objective</p>
+
+$$
+ c(x,y)=\tfrac12|x-y|^2,
+ \qquad
+ J_\varepsilon(\pi)=\int c\,d\pi
+       +\varepsilon\operatorname{KL}(\pi\mid\alpha\otimes\beta),
+$$
+
+
+$$
+ \min_{\pi\in\Pi(\alpha,\beta)}J_\varepsilon(\pi).
+$$
+
+<p>Here \(\Pi(\alpha,\beta)\) is the set of joint laws with marginals \(\alpha,\beta\), and \(\operatorname{KL}(\pi\mid\eta)=\int\log(d\pi/d\eta)\,d\pi\), with value \(+\infty\) when absolute continuity fails. The factor \(1/2\) in the cost matters: changing it changes the temperature scale.</p>
+<p>Sinkhorn alternates the two potential updates</p>
+
+$$
+ \begin{aligned}
+ f_{k+1}(x)&=-\varepsilon\log\int
+       e^{(g_k(y)-c(x,y))/\varepsilon}\,d\beta(y),\\
+ g_{k+1}(y)&=-\varepsilon\log\int
+       e^{(f_{k+1}(x)-c(x,y))/\varepsilon}\,d\alpha(x).
+ \end{aligned}
+$$
+
+<p>The associated density relative to \(\alpha\otimes\beta\) is \(e^{(f+g-c)/\varepsilon}\). The first update enforces the \(X\)-marginal; the second enforces the \(Y\)-marginal. Throughout this post, <em>one cycle means both updates</em>. After a full cycle, the second marginal is exactly \(\beta\), but the first generally is not yet \(\alpha\).</p>
+
+<h2>Gaussian closure and the covariance recursion</h2>
+<p>Quadratic potentials whose Gibbs density is integrable produce Gaussian laws, and integrating a Gaussian produces another quadratic potential. Starting with an admissible centered Gaussian initialization therefore preserves centered Gaussian joint laws. The target covariances \(A,B\) do not evolve; the useful evolving quantities are the <em>conditional</em> covariances</p>
+
+$$
+ S_k=\operatorname{Cov}(X\mid Y),
+ \qquad R_k=\operatorname{Cov}(Y\mid X).
+$$
+
+<p>We observe the iteration just after each \(Y\)-normalization. It can be initialized at any \(S_0\succ0\) by taking \(Y\sim\beta\) and</p>
+
+$$
+ X\mid Y=y\ \sim\
+ \mathcal N(\varepsilon^{-1}S_0y,S_0).
+$$
+
+<p>The usual zero-potential initialization belongs to this family after its first full cycle. This indexing lets us state the recursion without a special first step.</p>
+
+<p id="theorem-1"><strong>Theorem 1 (the Gaussian Sinkhorn recursion).</strong> A full cycle is</p>
+
+$$
+ \begin{aligned}
+ R_k&=(B^{-1}+\varepsilon^{-2}S_k)^{-1},\\
+ S_{k+1}&=(A^{-1}+\varepsilon^{-2}R_k)^{-1}.
+ \end{aligned}
+$$
+
+<p>The joint covariance at the end of cycle \(k\) is</p>
+
+$$
+ \Sigma_k=
+ \begin{pmatrix}
+ S_k+\varepsilon^{-2}S_kBS_k & \varepsilon^{-1}S_kB\\
+ \varepsilon^{-1}BS_k & B
+ \end{pmatrix}.
+$$
+
+<p>These iterates converge to the unique positive-definite solution of</p>
+
+$$
+ S_*+\varepsilon^{-2}S_*BS_*=A.
+$$
+
+<p>The limiting joint law therefore has both prescribed marginals and is the entropic optimizer. The proof below gives an explicit matrix-square-root formula for \(S_*\).</p>
+<details class="blog-proof">
+<summary>Proof: Gaussian conditioning and a matrix quadratic equation</summary>
+<div class="blog-proof-body" markdown="1">
+
+<p><em>The updates.</em> A joint density in this family has the form</p>
+
+$$
+ p(x,y)\propto\exp\left(
+ -\tfrac12x^\top P x+\varepsilon^{-1}x^\top y
+ -\tfrac12y^\top Q y\right).
+$$
+
+<p>Here \(P,Q\) are diagonal blocks of the joint <em>precision</em>, not marginal precisions. Completing the square gives \(S=P^{-1}\), \(R=Q^{-1}\). To make the \(X\)-marginal have covariance \(A\), its Schur complement must be \(A^{-1}\): thus \(P_{\rm new}=A^{-1}+\varepsilon^{-2}Q^{-1}\). The following \(Y\)-normalization similarly gives \(Q_{\rm new}=B^{-1}+\varepsilon^{-2}P_{\rm new}^{-1}\). This proves the recursion. Finally, total covariance applied to \(X=\varepsilon^{-1}S_kY+Z\), with independent \(Z\sim\mathcal N(0,S_k)\), gives \(\Sigma_k\).</p>
+<p><em>The fixed point.</em> Substituting the first update into the second shows that a fixed point satisfies \(S+\varepsilon^{-2}SBS=A\). Set</p>
+
+$$
+ D=\varepsilon^{-2}B^{1/2}SB^{1/2},
+ \qquad M=\varepsilon^{-2}B^{1/2}AB^{1/2}.
+$$
+
+<p>The equation becomes \(D+D^2=M\). Taking its unique positive-definite solution and undoing the change of variables gives the closed form</p>
+
+$$
+ D_*=\tfrac12(\sqrt{I+4M}-I),
+$$
+
+
+$$
+ S_*=\varepsilon^2 B^{-1/2}D_*B^{-1/2}.
+$$
+
+<p>No commutativity of \(A\) and \(B\) is assumed.</p>
+<details class="blog-proof">
+<summary>Why all positive-definite initializations converge</summary>
+<div class="blog-proof-body" markdown="1">
+
+<p>In the same variables, the iteration is</p>
+
+$$
+ D_{k+1}=\Phi(D_k),\qquad
+ \Phi(D)=\big[M^{-1}+(I+D)^{-1}\big]^{-1}.
+$$
+
+<p>Matrix inversion reverses the positive-semidefinite order twice, so \(\Phi\) is order preserving, and \(0\prec\Phi(D)\prec M\) for \(D\succeq0\). The sequence started at \(0\) increases; the one started at \(M\) decreases. Both converge, and continuity forces both limits to solve \(D+D^2=M\). Uniqueness makes their limits equal to \(D_*\). For any positive-definite initialization, \(0\prec D_1\prec M\), hence</p>
+
+$$
+ \Phi^j(0)\preceq D_{j+1}\preceq\Phi^j(M)
+ \quad(j\ge0).
+$$
+
+<p>The bounding sequences converge to the same limit, so \(D_k\to D_*\).</p>
+
+</div>
+</details>
+<p><em>Optimality.</em> The limiting density has the form \(d\pi_*/d(\alpha\otimes\beta)=e^{(f_*+g_*-c)/\varepsilon}\) and the required marginals. For any feasible \(\pi\) of finite objective, cancellation of the two potential integrals yields</p>
+
+$$
+ J_\varepsilon(\pi)-J_\varepsilon(\pi_*)
+ =\varepsilon\operatorname{KL}(\pi\mid\pi_*)\ge0.
+$$
+
+<p>Equality forces \(\pi=\pi_*\). \(\square\)</p>
+
+</div>
+</details>
+
+<h2>Fractional-linear iteration in one dimension</h2>
+<p>Now let \(\alpha=\mathcal N(0,a)\), \(\beta=\mathcal N(0,b)\), where \(a,b&gt;0\) are <em>variances</em>, not standard deviations. Write \(s_k&gt;0\) for the conditional variance. The two inversions collapse to</p>
+
+$$
+ s_{k+1}=F(s_k),\qquad
+ F(s)=\frac{a(bs+\varepsilon^2)}{bs+ab+\varepsilon^2}.
+$$
+
+<p>The current first marginal has variance \(\widetilde a_k=s_k+bs_k^2/\varepsilon^2\), and the cross-covariance is \(bs_k/\varepsilon\). Thus following a single positive number follows the entire coupling.</p>
+<p>The two fixed points of the fractional-linear map are</p>
+
+$$
+ s_+=\frac{\varepsilon}{2b}
+       \big(\sqrt{\varepsilon^2+4ab}-\varepsilon\big),
+ \qquad
+ s_-=-\frac{\varepsilon}{2b}
+       \big(\sqrt{\varepsilon^2+4ab}+\varepsilon\big).
+$$
+
+<p>Only \(s_*=s_+\) is a variance. The negative root is nevertheless useful: measuring the distance to one fixed point relative to the other linearizes the dynamics.</p>
+
+<p id="theorem-2"><strong>Theorem 2 (an exact scalar convergence law).</strong> Define the optimal correlation and the full-cycle factor</p>
+
+$$
+ \rho=\frac{\sqrt{\varepsilon^2+4ab}-\varepsilon}{2\sqrt{ab}},
+ \qquad q=\rho^4\in(0,1).
+$$
+
+<p>For every \(s_0&gt;0\), the cross-ratio error satisfies</p>
+
+$$
+ z_k:=\frac{s_k-s_*}{s_k-s_-}=q^kz_0.
+$$
+
+<p>Consequently the entire trajectory is explicit:</p>
+
+$$
+ s_k=\frac{s_*-q^kz_0s_-}{1-q^kz_0}.
+$$
+
+<p>Unless \(s_0=s_*\), the asymptotic ratio of conditional-variance errors is</p>
+
+$$
+ \lim_{k\to\infty}
+ \frac{|s_{k+1}-s_*|}{|s_k-s_*|}=q.
+$$
+
+<details class="blog-proof">
+<summary>Proof: move the two fixed points to zero and infinity</summary>
+<div class="blog-proof-body" markdown="1">
+
+<p>A fractional-linear map fixing \(s_*\) and \(s_-\) becomes a multiplication in the coordinate \(z=(s-s_*)/(s-s_-)\). Here direct substitution gives</p>
+
+$$
+ \frac{F(s)-s_*}{F(s)-s_-}
+ =\left(
+ \frac{\sqrt{\varepsilon^2+4ab}-\varepsilon}
+      {\sqrt{\varepsilon^2+4ab}+\varepsilon}
+ \right)^2\frac{s-s_*}{s-s_-}.
+$$
+
+<p>The squared prefactor is \(\rho^4\), since the product of the two terms \(\sqrt{\varepsilon^2+4ab}\pm\varepsilon\) is \(4ab\). Iteration and solving for \(s_k\) prove the formulas. For \(s_0&gt;0\), \(-\rho^2&lt;z_0&lt;1\), so the denominator never vanishes. Finally,</p>
+
+$$
+ s_k-s_*=(s_*-s_-)\frac{q^kz_0}{1-q^kz_0},
+$$
+
+<p>which gives the limiting error ratio. \(\square\)</p>
+
+</div>
+</details>
+<p>The same asymptotic factor applies to the cross-covariance error and to the first-marginal variance error: the former is linear in \(s_k\), and the latter has a nonzero derivative at \(s_*\).</p>
+
+<h2>The small-regularization limit</h2>
+<p>The natural dimensionless temperature is \(\tau=\varepsilon/\sqrt{ab}\). Indeed, the optimal joint covariance is</p>
+
+$$
+ \Sigma_*=
+ \begin{pmatrix}a&\sqrt{ab}\,\rho\\\sqrt{ab}\,\rho&b\end{pmatrix},
+ \qquad
+ \rho=e^{-\operatorname{arsinh}(\tau/2)}.
+$$
+
+<p>Low temperature makes \(\rho\) close to one: the coupling concentrates near the deterministic map \(Y=\sqrt{b/a}\,X\). The two marginal corrections then undo much of each other’s progress. Quantitatively,</p>
+
+$$
+ -\log q=4\operatorname{arsinh}(\tau/2),
+ \qquad q=1-2\tau+O(\tau^2).
+$$
+
+<p>To reduce \(|z_k|\) by a factor \(\eta\in(0,1)\), a nonstationary initialization therefore needs exactly</p>
+
+$$
+ k_\eta=
+ \left\lceil\frac{\log(1/\eta)}{4\operatorname{arsinh}(\tau/2)}\right\rceil
+ \sim\frac{\sqrt{ab}}{2\varepsilon}\log\frac1\eta
+ \quad(\varepsilon\to0).
+$$
+
+<p>This is a statement about <em>relative reduction of the cross-ratio error</em>. Other errors have the same asymptotic geometric factor, but their initial sizes and the requested absolute tolerance also affect iteration counts. At high temperature, \(q\sim\tau^{-4}\), so only a few cycles are needed.</p>
+<aside class="note"><p><strong>Which error, and which iterates?</strong> The factor \(q=\rho^4\) concerns centered Gaussian covariance errors per <em>full</em> cycle. The normalized dual objective gap is locally quadratic in this error, so its asymptotic factor is \(q^2=\rho^8=1-4\tau+O(\tau^2)\). Arbitrary noncentered Gaussian initializations can have slower mean modes, with factor \(\rho^2\). Centered marginals alone do not remove such modes; our centered quadratic initialization does.</p></aside>
+<details class="blog-proof">
+<summary>Why the dual objective gap has the squared rate</summary>
+<div class="blog-proof-body" markdown="1">
+
+<p>For a normalized Gibbs coupling \(\pi_k\), define the dual value</p>
+
+$$
+ \mathcal D(f,g)=\int f\,d\alpha+\int g\,d\beta
+ -\varepsilon\int\big(e^{(f+g-c)/\varepsilon}-1\big)
+                   \,d\alpha\,d\beta.
+$$
+
+<p>Since \(\pi_k\) has total mass one, the last integral is zero. Using the marginals of \(\pi_*\) in the log-density ratio gives the exact identity</p>
+
+$$
+ \delta_k:=\mathcal D(f_*,g_*)-\mathcal D(f_k,g_k)
+ =\varepsilon\operatorname{KL}(\pi_*\mid\pi_k).
+$$
+
+<p>Both couplings have the same \(Y\)-marginal. Integrating the conditional Gaussian relative entropy, and putting \(u=s_k/s_*\), gives</p>
+
+$$
+ \frac{\delta_k}{\varepsilon}
+ =\frac12\left[
+ \log u+\frac1u-1
+ +\frac{\rho^2}{1-\rho^2}\frac{(u-1)^2}{u}\right].
+$$
+
+<p>This is a positive constant times \((u-1)^2\), to leading order near \(1\). Thus \(\delta_{k+1}/\delta_k\to q^2\) for a nonstationary trajectory. Notice that \(\pi_k\) generally has only one correct marginal: plugging it into the <em>primal</em> objective would not give a feasible primal optimality gap.</p>
+<p>For comparison, if the potentials contain linear terms with coefficients \(\ell,m\), Gaussian integration gives \(\ell_{\rm new}=-R m/\varepsilon\), then \(m_{\rm new}=-S_{\rm new}\ell_{\rm new}/\varepsilon\). At the scalar covariance fixed point their full-cycle multiplier is \(S_*R_*/\varepsilon^2=\rho^2\). Our centered initialization sets these coefficients to zero throughout.</p>
+
+</div>
+</details>
+
+<h2>Numerical experiment: the coupling and its marginals</h2>
+<p>The experiment fixes \(\alpha=\beta=\mathcal N(0,1)\) and starts from \(s_0=2s_*\). In the left panel, the horizontal coordinate is \(x\) and the vertical coordinate is \(y\): the ellipse represents their <em>joint</em> Gaussian coupling, not a cloud of two-dimensional source or target points. The curve above it is the density of its \(x\)-marginal, on the same horizontal scale. The curve to its left is the density of its \(y\)-marginal, on the same vertical scale, drawn sideways. Solid teal is the current iterate; dashed gray is the exact entropic solution at the selected \(\varepsilon\).</p>
+<p>Move the iteration slider through integer full cycles, each consisting of both marginal corrections. Because we observe just after the \(Y\)-normalization, the left-hand marginal already equals \(\beta\): its solid and dashed curves coincide. The top marginal generally differs from \(\alpha\), then approaches it. The right panel plots its variance error</p>
+
+$$
+ E_k=|\widetilde a_k-1|,
+ \qquad \widetilde a_k=s_k+s_k^2/\varepsilon^2,
+$$
+
+<p>on a logarithmic vertical scale, with a dot at the selected cycle. For these centered Gaussian marginals, \(E_k=0\) is equivalent to having the correct first marginal; it is a variance diagnostic, not a general distance between probability measures. Lowering \(\varepsilon\) makes the optimal ellipse thinner and the error decay slower. The displayed cycle range adapts to include a millionfold reduction of the cross-ratio error; its numerical tick labels give the actual number of cycles. This is not an identical tolerance on \(E_k\).</p>
+<iframe class="idea-experiment" data-experiment="gaussian" src="{{ '/blog/preparations/assets/ot-lab/index.html' | relative_url }}?topic=gaussian" title="Gaussian Sinkhorn coupling with aligned one-dimensional marginals and marginal convergence error" loading="lazy"></iframe>
+<p class="caption">Both ellipses have Mahalanobis radius \(2\), enclosing \(1-e^{-2}\approx86.5\%\) of their respective joint laws. The spatial axes stay fixed at \([-4.5,4.5]\), with equal units in \(x\) and \(y\); the marginal-density scales also stay fixed. Tails outside this window are omitted without renormalization. The coupling, marginal densities and errors are evaluated from the exact Gaussian formulas, not from samples. Lines in the error plot connect integer-cycle values. Changing \(\varepsilon\) changes the initialization \(s_0=2s_*\), while retaining the selected cycle if it remains in range.</p>
+
+<h2>Comparison with worst-case contraction bounds</h2>
+<p>Classical Sinkhorn analysis uses the Hilbert projective metric <a href="#ref-franklin">[4]</a>, <a href="#ref-book">[5]</a>. For a bounded cost with oscillation \(C=\sup c-\inf c\), the kernel \(K=e^{-c/\varepsilon}\) has projective diameter at most \(2C/\varepsilon\). Birkhoff’s theorem then gives the full-cycle contraction bound</p>
+
+$$
+ \overline q_{\mathrm H}=\tanh^2\!\left(\frac{C}{2\varepsilon}\right),
+ \qquad
+ 1-\overline q_{\mathrm H}\sim4e^{-C/\varepsilon}.
+$$
+
+<p>The exponentially small quantity is the <em>improvement</em> \(1-\overline q_{\mathrm H}\), not the contraction factor itself: that factor approaches one. This elementary guarantee can lead to a cycle count of order \(e^{C/\varepsilon}\log(1/\eta)\). For half-squared distance on a common ball of radius \(R\), one can take \(C\le2R^2\).</p>
+<p>This is a worst-case bound, not a prediction that every instance is exponentially slow. It uses extreme kernel ratios and ignores the geometry of the marginals. Moreover, Gaussian supports are unbounded, so the bounded-cost estimate is actually vacuous for them. The Gaussian calculation instead uses the form of the marginals: its decay exponent is proportional to \(\varepsilon\), not exponentially small in \(1/\varepsilon\).</p>
+
+<h2>Convergence rates under structural assumptions on the marginals</h2>
+<p>Replacing \(\tfrac12|x-y|^2\) by \(-\langle x,y\rangle\) subtracts fixed marginal integrals, so it preserves the optimizer and the temperature. For this bilinear cost, Chizat, Delalande, and Vaškevičius <a href="#ref-chizat">[3, Theorems 1.1–1.2]</a> prove substantially sharper bounds. With compact supports, a convex source domain, and a log-concave source density, their dual-gap bound has a full-cycle factor of the form \(1-c_0\varepsilon\) at low temperature, where \(c_0&gt;0\) depends on the fixed problem geometry. The target marginal need not have a density.</p>
+<p>For a source density bounded above and below by positive constants on a compact convex domain, they obtain a global \(1-c_1\varepsilon^2\) factor, improving eventually to \(1-c_2\varepsilon\). These are structural assumptions, not a claim that smoothness alone always suffices. Their Gaussian example separately establishes the sharp linear dependence on temperature for the asymptotic dual-gap rate; it is not an application of their compact-support theorem.</p>
+<p>For Gaussian marginals, the covariance recursion gives a better rate than the worst-case kernel estimate. The results above show how assumptions on other marginals can also improve that estimate.</p>
+
+<h2>References</h2>
+<ol class="references">
+  <li id="ref-janati">Hicham Janati, Boris Muzellec, Gabriel Peyré, and Marco Cuturi. <a href="https://arxiv.org/abs/2006.02572"><em>Entropic Optimal Transport between Unbalanced Gaussian Measures has a Closed Form.</em></a> NeurIPS, 2020.</li>
+  <li id="ref-akyildiz">Ömer Deniz Akyildiz, Pierre Del Moral, and Joaquín Miguez. <a href="https://doi.org/10.3934/fods.2026004"><em>Gaussian entropic optimal transport: Schrödinger bridges and the Sinkhorn algorithm.</em></a> Foundations of Data Science 11, 50–120, 2026. <a href="https://arxiv.org/abs/2412.18432">Open-access preprint.</a></li>
+  <li id="ref-chizat">Lénaïc Chizat, Alex Delalande, and Tomas Vaškevičius. <a href="https://doi.org/10.1007/s10107-025-02242-z"><em>Sharper exponential convergence rates for Sinkhorn’s algorithm in continuous settings.</em></a> Mathematical Programming 215, 809–858, 2026. <a href="https://arxiv.org/abs/2407.01202">Open-access preprint.</a></li>
+  <li id="ref-franklin">Joel Franklin and Jens Lorenz. <a href="https://doi.org/10.1016/0024-3795(89)90490-4"><em>On the scaling of multidimensional matrices.</em></a> Linear Algebra and its Applications 114–115, 717–735, 1989.</li>
+  <li id="ref-book">Gabriel Peyré and Marco Cuturi. <a href="https://arxiv.org/abs/1803.00567"><em>Computational Optimal Transport.</em></a> Foundations and Trends in Machine Learning 11(5–6), 355–607, 2019.</li>
+</ol>
