@@ -1227,7 +1227,7 @@
       "date": "2026-11-28",
       "url": "https://www.gpeyre.com/blog/2026/11/28/gaussian-sinkhorn-convergence/",
       "message": "For centered 1D Gaussians, Sinkhorn reduces to a scalar recursion. We can compute its convergence rate exactly and see how it depends on regularization. https://www.gpeyre.com/blog/2026/11/28/gaussian-sinkhorn-convergence/",
-      "status": "prepared",
+      "status": "announced",
       "source_sha256": "8fdedb570a15ca08561d35f8df7970e1bfab5f46ff4debca77ee071f8a2cea5a",
       "base_commit": "cf0bf7849c116732d875ce522a1f1a2cdf81d400",
       "files": [
@@ -1237,14 +1237,23 @@
         "js/blog-search-index.js",
         "blog/publication-log.json"
       ],
-      "publication_commit": null,
-      "bluesky_uri": null,
-      "bluesky_cid": null,
+      "publication_commit": "e3cc828ff3fb00192b48d59ade2c1d01e0d3223f",
+      "bluesky_uri": "at://did:plc:2ywwoi4lylknlhjcrlekq6za/app.bsky.feed.post/3n3dfhtms22mm",
+      "bluesky_cid": "bafyreigqh2lbmjbq2sow2x4b5dthnaewwhodd3wk4b6a4woukrxmzcu4jm",
       "working_sha256": {
         "blog/_posts/2026-11-28-gaussian-sinkhorn-convergence.md": "329ed5eabcbdb35a9848ca8c39c997ed1fad24172b2aabd1006c601ad14fa7a5",
         "blog/preparations/gaussian-sinkhorn-convergence.html": "06d4859130b2a135966f0aa7bf697463154276b4820dea83db9c93d2cd6b9878",
         "blog/preparations/index.html": "3e582a52f80eb3554fcb631194299bbd98ed2666eec5e2a7dca7ea695559cf6f",
         "js/blog-search-index.js": "d8f744f0d044b8e723aae6ad47bccff88e68636b469b495e756f9529d5dbe17a"
+      },
+      "announcement_image": {
+        "path": "/blog/imgs/summaries/gaussian-sinkhorn-convergence.jpg",
+        "alt": "A Gaussian Sinkhorn coupling ellipse with its aligned marginal densities above and to the left; dashed curves show the exact solution, and a dot marks the selected cycle on the marginal-error plot.",
+        "width": 1200,
+        "height": 630,
+        "sha256": "b7f28eaed3bd029ee2f3fde661d6b456007c246408a062f67713cce9727e497f",
+        "mime_type": "image/jpeg",
+        "size": 49064
       }
     }
   ]
